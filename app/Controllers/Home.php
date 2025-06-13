@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\admin\MainmenuModel;
 use App\Models\admin\SubmenuModel;
+use App\Models\ProductModel;
 
 
 class Home extends BaseController
@@ -12,19 +13,14 @@ class Home extends BaseController
     {
         $mainmenumodel = new MainmenuModel();
         $submenumodel = new SubmenuModel();
-
         $mainmenus = $mainmenumodel->where('flag !=', 0)->findAll();
         $submenus = $submenumodel->where('flag !=', 0)->findAll();
-
-        // Group submenus by menu_id
         $groupedSubmenus = [];
         foreach ($submenus as $submenu) {
             $groupedSubmenus[$submenu['menu_id']][] = $submenu;
         }
-
         $data['mainmenu'] = $mainmenus;
         $data['submenu'] = $groupedSubmenus;
-
         return view('index', $data);
     }
 
@@ -83,13 +79,16 @@ class Home extends BaseController
     }
     public function products()
     {
+        $productModel = new ProductModel();
+        $allProducts = $productModel->where('flag !=', 0, false)->findAll();
         $data = [
             'page_title' => 'Products',
             'breadcrumb_items' => [
                 ['label' => 'Home', 'url' => base_url()],
                 ['label' => 'Products']
             ],
-            'banner_image' => base_url('public/assets/img/banner/bg_4.png')
+            'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
+            'products' => $allProducts 
         ];
 
         return view('products', $data);
@@ -176,18 +175,37 @@ class Home extends BaseController
 
         return view('orderTracking', $data);
     }
-    public function productCategories()
-    {
-        $data = [
-            'page_title' => 'Product Categories',
-            'breadcrumb_items' => [
-                ['label' => 'Home', 'url' => base_url()],
-                ['label' => 'Product Categories']
-            ],
-            'banner_image' => base_url('public/assets/img/banner/bg_4.png')
-        ];
+    public function productCategories($slug)
+{
+    $MainmenuModel = new MainmenuModel();
+    $submenuModel = new SubmenuModel();
 
-        return view('productCategories', $data);
+    // Get main menu based on slug
+    $menuData = $MainmenuModel->where('slug', $slug)->first();
+
+    if (!$menuData) {
+        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Main menu not found");
     }
+
+    $menuId = $menuData['menu_id'];
+
+    // Get all submenus under this menu
+    $submenuData = $submenuModel->where('menu_id', $menuId)->findAll();
+
+    $data = [
+        'page_title' => $menuData['menu_name'],
+        'breadcrumb_items' => [
+            ['label' => 'Home', 'url' => base_url()],
+            ['label' => $menuData['menu_name']]
+        ],
+        'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
+        'submenus' => $submenuData
+    ];
+    // echo"<pre>";
+    // print_r($data);
+    // exit();
+    return view('productCategories', $data);
+}
+
 
 }

@@ -19,7 +19,7 @@ $routes->get('signin', 'Home::signin');
 $routes->get('terms-and-conditions', 'Home::termsAndConditions');
 $routes->get('privacy-policy', 'Home::privacyPolicy');
 $routes->get('order-tracking', 'Home::orderTracking');
-$routes->get('product-categories', 'Home::productCategories');
+$routes->get('product-categories/(:segment)', 'Home::productCategories/$1');
 
 
 
