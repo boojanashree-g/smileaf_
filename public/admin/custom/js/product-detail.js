@@ -5,7 +5,6 @@ $(document).ready(function () {
     dispCategoryDetails(JSON);
   });
 
-<<<<<<< HEAD
   // *************************** [  Filter  Submenu] **************************************************************
 
   $("#menu_id").change(function () {
@@ -47,12 +46,6 @@ $(document).ready(function () {
         },
       });
     }
-=======
-  // *************************** [Menu Change Functions] **************************************************************
-
-  $("#menu_id").change(function () {
-    alert("hiii");
->>>>>>> 6692b5b (Feat : UI & Admin)
   });
 
   // *************************** [Change Functions] ********************************************************************

@@ -196,11 +196,7 @@
                                             <h4 class="subcat-title mb-2"></h4>
                                         </div>
                                         <form id="product-form" class="row g-6" onsubmit="return false">
-<<<<<<< HEAD
                                             <div class="col-6 col-md-6">
-=======
-                                            <div class="col-4 col-md-4">
->>>>>>> 6692b5b (Feat : UI & Admin)
                                                 <label class="form-label">Menu</label>
                                                 <select class="form-select" for="menu_id" name="menu_id"
                                                     id="menu_id">
@@ -214,32 +210,20 @@
                                                 <span class="error text-danger menu_id mt-5"></span>
                                             </div>
 
-<<<<<<< HEAD
-                                            <div class="col-6 col-md-6">
-=======
                                             <div class="col-4 col-md-4">
->>>>>>> 6692b5b (Feat : UI & Admin)
                                                 <label class="form-label">Sub Menu</label>
                                                 <select class="form-select" for="submenu_id" name="submenu_id"
                                                     id="submenu_id">
                                                     <option value="">Select Sub Menu</option>
-<<<<<<< HEAD
-                                                  
-=======
                                                     <?php foreach($submenu as $menu)
                                                     { ?>
                                                       <option value="<?= $menu['sub_id'] ?>"><?= $menu['submenu'] ?></option>
                                                     <?php } ?>
->>>>>>> 6692b5b (Feat : UI & Admin)
                                                 
                                                 </select>
                                                 <span class="error text-danger submenu_id mt-5"></span>
                                             </div>
-<<<<<<< HEAD
-                                             <!-- <div class="col-4 col-md-4">
-=======
                                              <div class="col-4 col-md-4">
->>>>>>> 6692b5b (Feat : UI & Admin)
                                                 <label class="form-label">SubCategory</label>
                                                 <select class="form-select" for="subcat_id" name="subcat_id"
                                                     id="subcat_id">
@@ -251,37 +235,8 @@
                                                 
                                                 </select>
                                                 <span class="error text-danger subcat_id mt-5"></span>
-<<<<<<< HEAD
-                                            </div> -->
-
-
-
-                                             <div class="col-6 col-md-6">
-                                                <label class="form-label" for="prod_name">Product Name</label>
-                                                <input type="text" id="prod_name" name="prod_name"
-                                                    class="form-control" placeholder="Product Name*" />
-                                                <span class="error text-danger prod_name mt-5"></span>
                                             </div>
 
-                                            <div class="col-5 col-md-5">
-                                                <label for="main_image" class="form-label">Product Image</label>
-                                                <input class="form-control" type="file" id="main_image"
-                                                    name="main_image">
-                                               
-                                                <span class="error text-danger main_image mt-5"></span>
-                                            </div>
-                                            <div class="col-1 col-md-1">
-                                                 <img src="" id="main_image_url" alt="image" width="80px"
-                                                    style="display:none;">
-                                            </div>
-
-
-
-                                            
-=======
-                                            </div>
-
->>>>>>> 6692b5b (Feat : UI & Admin)
 
                                          
                                             <!--  Filter Start -->
@@ -330,9 +285,6 @@
 
 
 
-<<<<<<< HEAD
-                                           
-=======
                                             <div class="col-6 col-md-6">
                                                 <label class="form-label" for="prod_name">Product Name</label>
                                                 <input type="text" id="prod_name" name="prod_name"
@@ -351,7 +303,6 @@
                                                  <img src="" id="main_image_url" alt="image" width="80px"
                                                     style="display:none;">
                                             </div>
->>>>>>> 6692b5b (Feat : UI & Admin)
 
 
                                             

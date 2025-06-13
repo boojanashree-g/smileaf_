@@ -71,8 +71,6 @@ $routes->group('admin/sub-category', ['namespace' => 'App\Controllers\admin'], f
     $routes->post('update-status', 'SubCatController::updateStatus');
 });
 
-<<<<<<< HEAD
-=======
 
 $routes->group('admin/product-details', ['namespace' => 'App\Controllers\admin'], function ($routes) {
     $routes->get('/', 'ProductController::ProductDetails');
@@ -85,7 +83,6 @@ $routes->group('admin/product-details', ['namespace' => 'App\Controllers\admin']
 });
 
 
->>>>>>> 6692b5b (Feat : UI & Admin)
 // Filter Types
 $routes->group('admin/filter-types', ['namespace' => 'App\Controllers\admin'], function ($routes) {
     $routes->get('/', 'FilterTypeController::filterType');
@@ -115,7 +112,6 @@ $routes->group('admin/filter-size', ['namespace' => 'App\Controllers\admin'], fu
     $routes->post('update-data', 'FilterSizeController::updateData');
     $routes->post('delete-data', 'FilterSizeController::deleteData');
     $routes->post('update-status', 'FilterSizeController::updateStatus');
-<<<<<<< HEAD
 });
 
 
@@ -132,6 +128,3 @@ $routes->group('admin/product-details', ['namespace' => 'App\Controllers\admin']
 
 });
 
-=======
-});
->>>>>>> 6692b5b (Feat : UI & Admin)
