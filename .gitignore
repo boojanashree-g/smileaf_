@@ -7,10 +7,6 @@
 node_modules/
 dist/
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 6692b5b (Feat : UI & Admin)
 # Compiled Java class files
 *.class
 
@@ -52,10 +48,7 @@ Thumbs.db
 *.mov
 *.wmv
 
-<<<<<<< HEAD
 
 # 
 writable/
 
-=======
->>>>>>> 6692b5b (Feat : UI & Admin)
