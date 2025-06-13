@@ -26,17 +26,11 @@ class ProductController extends BaseController
         return view("admin/product_details", $res);
     }
 
-<<<<<<< HEAD
     public function getSubmenu()
     {
         $menuID = $this->request->getPost('menu_id');
         $query = $this->db->query("SELECT `sub_id` , `submenu`  FROM `tbl_submenu` WHERE  flag = 1")->getResultArray();
 
-=======
-    public function files()
-    {
-        return view("admin/files");
->>>>>>> 6692b5b (Feat : UI & Admin)
     }
 
     public function insertData()
