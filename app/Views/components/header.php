@@ -68,10 +68,11 @@
                         <div class="ltn__main-menu">
                             <ul>
                                 <li><a href="<?php echo base_url() ?>">Home</a></li>
+                                <li><a href="<?php echo base_url('products') ?>">Shop</a></li>
                                 <?php if (!empty($mainmenu)): ?>
                                     <?php foreach ($mainmenu as $menu): ?>
                                         <?php
-                                        $menuSlug = base_url($menu['slug']);
+                                        $menuSlug = base_url('/product-categories/' . $menu['slug']);
                                         $hasChildren = isset($submenu[$menu['menu_id']]);
                                         ?>
 
