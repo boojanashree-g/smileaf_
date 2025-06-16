@@ -1,15 +1,7 @@
 <!doctype html>
 <html class="no-js" lang="zxx">
 <?php require("components/head.php"); ?>
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Slick Slider CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
-
-<!-- Slick Slider JS -->
-<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
 <body>
     <div class="body-wrapper">
@@ -45,7 +37,7 @@
         <!-- SLIDER AREA END -->
 
         <!-- BANNER AREA START -->
-        <div class="ltn__banner-area mt-60">
+        <div class="ltn__banner-area mt-15">
             <div class="container">
                 <div class="row ltn__custom-gutter--- justify-content-center">
                     <div class="col-lg-4 col-md-6">
@@ -81,7 +73,7 @@
         <!-- BANNER AREA END -->
 
         <!-- PRODUCT AREA START (product-item-3) -->
-        <div class="ltn__product-area ltn__product-gutter pt-10 pb-70">
+        <div class="ltn__product-area ltn__product-gutter pt-10 pb-20">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
@@ -207,7 +199,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="ltn__video-bg-img ltn__video-popup-height-600 bg-overlay-black-10-- bg-image"
+                        <div class="ltn__video-bg-img ltn__video-popup-height-400 bg-overlay-black-10-- bg-image"
                             data-bg="<?php echo base_url() ?>public/assets/img/bg/15.jpg">
                             <a class="ltn__video-icon-2 ltn__video-icon-2-border"
                                 href="https://www.youtube.com/embed/ATI7vfCgwXE?autoplay=1&amp;showinfo=0"
@@ -222,7 +214,7 @@
         <!-- VIDEO AREA END -->
 
         <!-- TESTIMONIAL AREA START (testimonial-4) -->
-        <div class="ltn__testimonial-area section-bg-1 pt-290 pb-70">
+        <div class="ltn__testimonial-area section-bg-1 pt-200 pb-20">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
@@ -673,7 +665,7 @@
         $(document).ready(function(){
             if ($('.slick-banner-slider').children().length > 1) {
                 $('.slick-banner-slider').slick({
-                    dots: true,
+                    dots: false,
                     arrows: true,
                     autoplay: true,
                     autoplaySpeed: 4000,
@@ -690,7 +682,7 @@
                 slidesToShow: 2,
                 slidesToScroll: 3,
                 arrows: false,
-                dots: true,
+                dots: false,
                 autoplay: true,
                 autoplaySpeed: 3000,
                 responsive: [
