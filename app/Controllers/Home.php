@@ -92,7 +92,7 @@ class Home extends BaseController
                 ['label' => 'Products']
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
-            'products' => $allProducts 
+            'products' => $allProducts
         ];
 
         return view('products', $data);

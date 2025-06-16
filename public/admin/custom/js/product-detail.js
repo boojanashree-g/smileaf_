@@ -1,8 +1,8 @@
 $(document).ready(function () {
   var mode, JSON, res_DATA, cat_id;
 
-  $.when(getCategoryDetails()).done(function () {
-    dispCategoryDetails(JSON);
+  $.when(getProductDetails()).done(function () {
+    dispProductDetails(JSON);
   });
 
   // *************************** [  Filter  Submenu] **************************************************************
@@ -14,17 +14,17 @@ $(document).ready(function () {
         type: "POST",
         url: base_Url + "admin/product-details/submenu",
         data: { menu_id: menu_id },
-        success: function (data) {
-          var res = $.parseJSON(data);
+        dataType: "json",
+        success: function (res) {
           console.log(res);
 
           var subMenu = "";
 
           for (let i = 0; i < res.length; i++) {
             subMenu += `
-            <option value="${res[i]["sub_id "]}">${res[i]["submenu"]}</option>`;
+            <option value="${res[i]["sub_id"]}">${res[i]["submenu"]}</option>`;
           }
-          $("#submenu_id").html(subMenu);
+          $("#sub_id").html(subMenu);
         },
       });
     } else if (mode == "edit") {
@@ -48,7 +48,7 @@ $(document).ready(function () {
     }
   });
 
-  // *************************** [Change Functions] ********************************************************************
+  // *************************** [ Functions] ********************************************************************
 
   $("#add-detail").click(function () {
     mode = "new";
@@ -66,10 +66,21 @@ $(document).ready(function () {
   $("#hasVariant").change(function () {
     if (this.checked) {
       $("#variant-container").show();
+      $("#hasVariant").val(1);
       $("#defaultSection").hide();
+
+      // Clear all fields inside defaultSection
+      $("#defaultSection")
+        .find("input, select")
+        .val("")
+        .prop("checked", false)
+        .prop("selected", false);
     } else {
       $("#variant-container").hide();
       $("#defaultSection").show();
+      $("#hasVariant").val(0);
+
+      removeAllVariantBlocks();
     }
   });
 
@@ -83,11 +94,26 @@ $(document).ready(function () {
 
   $("#btn-submit").click(function () {
     $(".error").hide();
-    if ($("#submenu_id").val() === "" && mode == "new") {
-      $(".submenu_id").html("Please Select SubMenu*").show();
-    } else if ($("#cat_name").val() === "" && mode == "new") {
-      $(".cat_name").html("Please Enter Category*").show();
-    } else {
+    if ($("#menu_id").val() === "") {
+      $(".menu_id").html("Please Select Menu*").show();
+    }
+    //  else if ($("#type_id").val() === "" && mode == "new") {
+    //   $(".type_id").html("Please Select Type*").show();
+    // } else if ($("#shape_id").val() === "" && mode == "new") {
+    //   $(".shape_id").html("Please Select Shape*").show();
+    // } else if ($("#size_id").val() === "" && mode == "new") {
+    //   $(".size_id").html("Please Select Size*").show();
+    // } else if ($("#prod_name").val() === "" && mode == "new") {
+    //   $(".prod_name").html("Please Enter Productname*").show();
+    // } else if ($("#main_image").val() === "" && mode == "new") {
+    //   $(".main_image").html("Please Select Image*").show();
+    // } else if (description.getData() === "" && mode == "new") {
+    //   $(".description").html("Please Enter Description*").show();
+    // }
+    // else if (produsage.getData() === "" && mode == "new") {
+    //   $(".product_usage").html("Please Enter ProductUsage*").show();
+    // }
+    else {
       insertData();
     }
   });
@@ -97,12 +123,22 @@ $(document).ready(function () {
   function insertData() {
     var form = $("#product-form")[0];
     data = new FormData(form);
+    let proddesc = description.getData();
+    let usage = produsage.getData();
+    let hasVariant = $("#hasVariant").val();
+
+    selectedFiles.forEach((file, i) => {
+      data.append("images[]", file);
+    });
 
     var url;
     if (mode == "new") {
-      url = base_Url + "admin/sub-category/insert-data";
+      url = base_Url + "admin/product-details/insert-data";
+      data.append("description", proddesc);
+      data.append("product_usage", usage);
+      data.append("has_variant", hasVariant);
     } else if (mode == "edit") {
-      url = base_Url + "admin/sub-category/update-data";
+      url = base_Url + "admin/product-details/update-data";
       data.append("cat_id", cat_id);
     }
 
@@ -127,7 +163,7 @@ $(document).ready(function () {
           });
 
           $("#product-modal").modal("hide");
-          getCategoryDetails();
+          getProductDetails();
         } else {
           Swal.fire({
             title: "Failure",
@@ -135,7 +171,7 @@ $(document).ready(function () {
             icon: "danger",
           });
           $("#product-modal").modal("hide");
-          getCategoryDetails();
+          getProductDetails();
         }
       },
       error: function (xhr, status, error) {
@@ -150,14 +186,14 @@ $(document).ready(function () {
   }
 
   // *************************** [get Data] *************************************************************************
-  function getCategoryDetails() {
+  function getProductDetails() {
     $.ajax({
       type: "POST",
       url: base_Url + "admin/sub-category/get-data",
       dataType: "json",
       success: function (data) {
         res_DATA = data;
-        dispCategoryDetails(res_DATA);
+        dispProductDetails(res_DATA);
       },
       error: function () {
         console.log("Error");
@@ -166,7 +202,7 @@ $(document).ready(function () {
   }
   // *************************** [Display Data] *************************************************************************
 
-  function dispCategoryDetails(JSON) {
+  function dispProductDetails(JSON) {
     var i = 1;
 
     $("#datatable").DataTable({
@@ -235,9 +271,7 @@ $(document).ready(function () {
   });
 
   $("#submit-status").click(function () {
-    let status = $("#update-status").val();
-
-    if (status === "") {
+    if ($("#update-status").val()) {
       $(".update-status").html("Please Select Status*").show();
     } else {
       $.ajax({
@@ -262,7 +296,7 @@ $(document).ready(function () {
           }
 
           $("#status-modal").modal("hide");
-          getCategoryDetails();
+          getProductDetails();
         },
 
         error: function (xhr, status, error) {
@@ -344,7 +378,7 @@ $(document).ready(function () {
               });
 
               $("#model-data").modal("hide");
-              getCategoryDetails();
+              getProductDetails();
             } else {
               Swal.fire({
                 title: "Failure",
@@ -353,7 +387,7 @@ $(document).ready(function () {
               });
 
               $("#model-data").modal("hide");
-              getCategoryDetails();
+              getProductDetails();
             }
           },
           error: function (xhr, status, error) {

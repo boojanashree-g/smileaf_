@@ -72,16 +72,6 @@ $routes->group('admin/sub-category', ['namespace' => 'App\Controllers\admin'], f
 });
 
 
-$routes->group('admin/product-details', ['namespace' => 'App\Controllers\admin'], function ($routes) {
-    $routes->get('/', 'ProductController::ProductDetails');
-    $routes->post('insert-data', 'SubCatController::insertData');
-    $routes->post('get-data', 'SubCatController::getData');
-    $routes->post('update-data', 'SubCatController::updateData');
-    $routes->post('delete-data', 'SubCatController::deleteData');
-    $routes->post('update-status', 'SubCatController::updateStatus');
-    $routes->get('files', 'ProductController::files');
-});
-
 
 // Filter Types
 $routes->group('admin/filter-types', ['namespace' => 'App\Controllers\admin'], function ($routes) {
@@ -117,14 +107,14 @@ $routes->group('admin/filter-size', ['namespace' => 'App\Controllers\admin'], fu
 
 $routes->group('admin/product-details', ['namespace' => 'App\Controllers\admin'], function ($routes) {
     $routes->get('/', 'ProductController::ProductDetails');
-     $routes->get('submenu', 'ProductController::getSubmenu');
+    $routes->post('submenu', 'ProductController::getSubmenu');
+    $routes->post('insert-data', 'ProductController::insertData');
 
-    $routes->post('insert-data', 'SubCatController::insertData');
     $routes->post('get-data', 'SubCatController::getData');
     $routes->post('update-data', 'SubCatController::updateData');
     $routes->post('delete-data', 'SubCatController::deleteData');
     $routes->post('update-status', 'SubCatController::updateStatus');
-  
+
 
 });
 
