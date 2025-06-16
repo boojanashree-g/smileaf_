@@ -67,6 +67,13 @@ font-family: 'Roboto', sans-serif;
 /* ====================================================
     Gutter Code 
 ==================================================== */
+
+.allura-regular {
+  font-family: "Allura", cursive;
+  font-weight: 600;
+  font-style: normal;
+}
+
 .container,
 .container-fluid {
   padding-right: 15px;
@@ -6482,7 +6489,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 
 /* ltn__header-transparent */
 .ltn__header-transparent {
-  position: absolute;
+  /* position: absolute; */
   width: 100%;
   z-index: 999;
   background-color: transparent;

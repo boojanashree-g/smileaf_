@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\admin\MainmenuModel;
 use App\Models\admin\SubmenuModel;
+use App\Models\admin\BannerModel;
 use App\Models\ProductModel;
 
 
@@ -13,14 +14,20 @@ class Home extends BaseController
     {
         $mainmenumodel = new MainmenuModel();
         $submenumodel = new SubmenuModel();
+        $bannerModel = new BannerModel();
         $mainmenus = $mainmenumodel->where('flag !=', 0)->findAll();
         $submenus = $submenumodel->where('flag !=', 0)->findAll();
+        $bannerData = $bannerModel->where(['flag !=' => 0, 'has_banner' => 1])->findAll();
         $groupedSubmenus = [];
         foreach ($submenus as $submenu) {
             $groupedSubmenus[$submenu['menu_id']][] = $submenu;
         }
         $data['mainmenu'] = $mainmenus;
         $data['submenu'] = $groupedSubmenus;
+        $data['bannerData'] = $bannerData;
+        // echo"<pre>";
+        // print_r($data);
+        // exit();
         return view('index', $data);
     }
 
