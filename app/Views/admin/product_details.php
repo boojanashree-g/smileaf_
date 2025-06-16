@@ -5,124 +5,8 @@
     data-template="vertical-menu-template" data-style="light">
 
 <?php require "components/head.php"; ?>
-<style>
-   #defaultSection ,#variant-container{
-        padding:20px;
-        border : 1px solid #dfdfe3;
-
-    }
-   .upload-box {
-            border: 2px dashed #888;
-            padding: 20px;
-            text-align: center;
-            background: #f9f9f9;
-            border-radius: 5px;
-            max-width: 100%;
-            margin: auto;
-        }
-
-        .upload-box input[type="file"] {
-            display: none;
-        }
-
-       .upload-label {
-    background-color: #c7cce163;
-    color: #090814c2;
-    padding: 10px 25px;
-    cursor: pointer;
-    display: inline-block;
-    border-radius: 0px;
-    margin-bottom: 15px;
-}
-
-      .preview-imgs {
-     max-width: 100%;
-  height: auto;
-  display: flex;
-  margin: 0 auto 6px;
-  border-radius: 4px;
-  gap:10px;
-}
-
-
-.preview-box {
-
-   width: 160px;
-  padding: 10px;
-  border: 1px solid #eee;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  text-align: center;
-  border-radius: 8px;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-.remove-btn {
- 
-    top: 83px;
-    right: 115px;
-    /* background: red; */
-    color: #7367f0;
-    border: none;
-    /* color: white; */
-    /* border-radius: 50%; */
-    /* border-radius: 50%; */
-    /* height: 144px; */
-    font-size: 12px;
-
-}
-
-
-.preview-imgs div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 160px;
-    border: 2px solid #e6e6e8;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    padding: 15px;
-    border-radius: 8px;
-    background-color: #fff;
-}
-
-        .preview-imgs img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-           
-        }
-
-   .preview-box p {
-  margin: 4px 0;
-  font-size: 13px;
-  line-height: 1.4;
-  color: #555;
-  word-break: break-word;
- 
-}
-
-.preview-box p:first-of-type {
-   max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 14px;
-  margin: 0;
-  color: #444;
-}
-
-.preview-box .img-size {
-   font-size: 13px;
-  color: #888;
-  font-style: italic;
-  margin: 2px 0 0;
-}
-
-</style>
 
 <body>
-
-
     <div class="layout-wrapper layout-content-navbar  ">
         <div class="layout-container">
 
@@ -133,7 +17,7 @@
             <div class="layout-page">
 
                 <?php require "components/topnavbar.php"; ?>
-
+ 
 
                 <div class="content-wrapper">
                     <div class="container-xxl flex-grow-1 container-p-y">
@@ -184,9 +68,10 @@
                                 </div>
                             </div>
                         </div>
-
+                     
                         <!-- Add Modal -->
                         <div class="modal fade" id="product-modal" tabindex="-1" aria-hidden="true">
+                               
                             <div class="modal-dialog modal-xl modal-simple">
                                 <div class="modal-content">
                                     <div class="modal-body">
@@ -210,79 +95,60 @@
                                                 <span class="error text-danger menu_id mt-5"></span>
                                             </div>
 
-                                            <div class="col-4 col-md-4">
+                                            <div class="col-6 col-md-6">
                                                 <label class="form-label">Sub Menu</label>
-                                                <select class="form-select" for="submenu_id" name="submenu_id"
-                                                    id="submenu_id">
-                                                    <option value="">Select Sub Menu</option>
-                                                    <?php foreach($submenu as $menu)
-                                                    { ?>
-                                                      <option value="<?= $menu['sub_id'] ?>"><?= $menu['submenu'] ?></option>
-                                                    <?php } ?>
+                                                <select class="form-select" for="sub_id" name="sub_id"
+                                                    id="sub_id">
+                                                  
                                                 
                                                 </select>
-                                                <span class="error text-danger submenu_id mt-5"></span>
+                                                <span class="error text-danger sub_id mt-5"></span>
                                             </div>
-                                             <div class="col-4 col-md-4">
-                                                <label class="form-label">SubCategory</label>
-                                                <select class="form-select" for="subcat_id" name="subcat_id"
-                                                    id="subcat_id">
-                                                    <option value="">Select Sub Category</option>
-                                                    <?php foreach($submenu as $menu)
-                                                    { ?>
-                                                      <option value="<?= $menu['sub_id'] ?>"><?= $menu['submenu'] ?></option>
-                                                    <?php } ?>
-                                                
-                                                </select>
-                                                <span class="error text-danger subcat_id mt-5"></span>
-                                            </div>
+                                           
 
-
-                                         
                                             <!--  Filter Start -->
                                             <div class="col-4 col-md-4">
                                                 <label class="form-label">Filter Type</label>
-                                                <select class="form-select" for="menu_id" name="menu_id"
-                                                    id="menu_id">
+                                                <select class="form-select" for="type_id" name="type_id"
+                                                    id="type_id">
                                                     <option value="">Select Option</option>
-                                                    <?php foreach($submenu as $menu)
+                                                    <?php foreach($filter_type as $type)
                                                     { ?>
-                                                      <option value="<?= $menu['sub_id'] ?>"><?= $menu['submenu'] ?></option>
+                                                      <option value="<?= $type['type_id'] ?>"><?= $type['type_name'] ?></option>
                                                     <?php } ?>
                                                 
                                                 </select>
-                                                <span class="error text-danger menu_id mt-5"></span>
+                                                <span class="error text-danger type_id mt-5"></span>
                                             </div>
 
                                             <div class="col-4 col-md-4">
                                                 <label class="form-label">Filter Shapes</label>
-                                                <select class="form-select" for="submenu_id" name="submenu_id"
-                                                    id="submenu_id">
+                                                <select class="form-select" for="shape_id" name="shape_id"
+                                                    id="shape_id">
                                                     <option value="">Select Option</option>
-                                                    <?php foreach($submenu as $menu)
+                                                    <?php foreach($filter_shape as $shape)
                                                     { ?>
-                                                      <option value="<?= $menu['sub_id'] ?>"><?= $menu['submenu'] ?></option>
+                                                      <option value="<?= $shape['shape_id'] ?>"><?= $shape['shape_name'] ?></option>
                                                     <?php } ?>
                                                 
                                                 </select>
-                                                <span class="error text-danger submenu_id mt-5"></span>
+                                                <span class="error text-danger shape_id mt-5"></span>
                                             </div>
-                                             <div class="col-4 col-md-4">
+
+                                            <div class="col-4 col-md-4">
                                                 <label class="form-label">Filter Size</label>
-                                                <select class="form-select" for="subcat_id" name="subcat_id"
-                                                    id="subcat_id">
+                                                <select class="form-select" for="size_id" name="size_id"
+                                                    id="size_id">
                                                     <option value="">Select Option</option>
-                                                    <?php foreach($submenu as $menu)
+                                                    <?php foreach($filter_size as $size)
                                                     { ?>
-                                                      <option value="<?= $menu['sub_id'] ?>"><?= $menu['submenu'] ?></option>
+                                                      <option value="<?= $size['size_id'] ?>"><?= $size['size_name'] ?></option>
                                                     <?php } ?>
                                                 
                                                 </select>
-                                                <span class="error text-danger subcat_id mt-5"></span>
+                                                <span class="error text-danger size_id mt-5"></span>
                                             </div>
                                             <!--  Filter End -->
-
-
 
 
                                             <div class="col-6 col-md-6">
@@ -300,115 +166,103 @@
                                                 <span class="error text-danger main_image mt-5"></span>
                                             </div>
                                             <div class="col-1 col-md-1">
-                                                 <img src="" id="main_image_url" alt="image" width="80px"
+                                                 <img src="" id="main_image_url" alt="image" width="80px" height="80px" 
                                                     style="display:none;">
                                             </div>
 
 
-                                            
-
-
-
                                             <div class="col-lg-12 mt-3">
-                                                <label for="prod_desc" class="form-label">Product
+                                                <label for="description" class="form-label">Product
                                                     Description</label>
-                                                <input class="form-control" type="text" id="prod_desc" name="prod_desc"
+                                                <input class="form-control" type="text" id="description" name="description"
                                                     placeholder="Product Decription*">
-                                                <span class="error text-danger prod_desc mt-5"></span>
+                                                <span class="error text-danger description mt-5"></span>
                                             </div>
 
                                             <div class="col-lg-12 mt-3">
-                                                <label for="prod_usage" class="form-label">Product
+                                                <label for="product_usage" class="form-label">Product
                                                     Usage</label>
-                                                <input class="form-control" type="text" id="prod_usage" name="prod_usage"
+                                                <input class="form-control" type="text" id="product_usage" name="product_usage"
                                                     placeholder="Product Usage*">
-                                                <span class="error text-danger prod_usage mt-5"></span>
+                                                <span class="error text-danger product_usage mt-5"></span>
                                             </div> 
                                             
                                             <div class="col-12">
-                                                 <label for="prod_usage" class="form-label">Images (Allowed size below 20KB*)</label>
+                                                 <label for="images" class="form-label">Images (Allowed size below 20KB*)</label>
                                                 <div class="upload-box">
                                                     <label class="upload-label" for="images"><i class="fa-solid fa-arrow-up-from-bracket"></i>	&nbsp; 	&nbsp; Upload images</label>
                                                     <input type="file" name="images[]" id="images" multiple accept="image/*">
-                                                    <div class="preview-imgs" id="preview"></div>
-                                                    
-                                                    
+                                                    <div class="preview-imgs" id="preview"></div>    
                                                 </div>
                                             </div>
                                             <div class="col-lg-12 mt-3">
                                                 <div class="form-check form-switch mb-2">
-                                                    <input class="form-check-input" type="checkbox" id="hasVariant">
-                                                    <label class="form-check-label" for="">Has Variant?</label>
+                                                    <input class="form-check-input" type="checkbox" id="hasVariant" name="has_variant" value="0">
+                                                    <label class="form-check-label">Has Variant?</label>
                                                 </div>
                                             </div>
                                                   
                                             <!-- default section -->
-                                            <div id="defaultSection" class="row">
-                                                <div class="col-6 col-md-6">
-                                                    <label class="form-label" for="pack_qty">Pack Quantity</label>
-                                                    <input type="text" id="pack_qty" name="pack_qty"
-                                                        class="form-control" placeholder="Pack Quantity*" />
+                                            <div id="defaultSection" class="row g-3 mt-2">
+                                                <h5>Product Variants</h5>
+                                                <div class="col-3 col-md-3">
+                                                    <input type="text" name="pack_qty"
+                                                        class="form-control pack_qty" placeholder="Pack Quantity*" />
                                                     <span class="error text-danger pack_qty mt-5"></span>
                                                 </div>
 
-                                                 <div class="col-6 col-md-6">
-                                                    <label class="form-label" for="quantity">Quantity</label>
-                                                    <input type="text" id="quantity" name="quantity"
-                                                        class="form-control" placeholder="Quantity*" />
+                                                 <div class="col-3 col-md-3">                                                   
+                                                    <input type="text"  name="quantity"
+                                                        class="form-control quantity" placeholder="Quantity*" />
                                                     <span class="error text-danger quantity mt-5"></span>
                                                 </div>
 
 
                                                 <div class="col-3 col-md-3">
-                                                    <label class="form-label" for="mrp">MRP</label>
-                                                    <input type="text" id="mrp" name="mrp"
-                                                        class="form-control" placeholder="MRP*" />
+                                                    <input type="number"  name="mrp"
+                                                        class="form-control mrp" placeholder="MRP*" />
                                                     <span class="error text-danger mrp mt-5"></span>
                                                 </div>
-                                                <div class="col-3 col-md-3">
-                                                    <label class="form-label" for="offer_type">Offer Type</label>
-                                                     <select class="form-select" for="submenu_id" name="submenu_id"
-                                                    id="submenu_id">
-                                                    <option value="">Select Type</option>
-                                                    <?php foreach($submenu as $menu)
-                                                    { ?>
-                                                      <option value="<?= $menu['sub_id'] ?>"><?= $menu['submenu'] ?></option>
-                                                    <?php } ?>
                                                 
+                                                <div class="col-3 col-md-3">
+                                                     <select class="form-select offer_type" for="offer_type" name="offer_type"
+                                                    >
+                                                    <option value="">Select Offer Type</option>
+                                                    <option value="0">None</option>
+                                                    <option value="1">Flat Discount</option>
+                                                    <option value="2">Percentage</option>
                                                 </select>
                                                     <span class="error text-danger offer_type mt-5"></span>
+                                                
                                                 </div>
                                                   <div class="col-3 col-md-3">
-                                                    <label class="form-label" for="offer_details">Offer Details</label>
-                                                    <input type="text" id="offer_details	" name="offer_details	"
-                                                        class="form-control" placeholder="Offer type*" />
+                                                    <input type="text"  name="offer_details"
+                                                        class="form-control offer_details" placeholder="Offer Details*" />
                                                     <span class="error text-danger offer_details mt-5"></span>
                                                 </div>
 
-                                                   <div class="col-3 col-md-3">
-                                                    <label class="form-label" for="offer_details">Offer Price</label>
-                                                    <input type="text" id="offer_details" name="offer_details	"
-                                                        class="form-control" placeholder="Offer type*" />
-                                                    <span class="error text-danger offer_details mt-5"></span>
+                                                <div class="col-3 col-md-3">
+                                                    <input type="text"  name="offer_price"
+                                                        class="form-control offer_price" placeholder="Offer Price*" />
+                                                    <span class="error text-danger offer_price mt-5"></span>
                                                 </div>
 
-
-                                                 <div class="col-6 col-md-6">
-                                                    <label class="form-label" for="stock_status">Stock Status</label>
-                                                    <input type="text" id="stock_status" name="stock_status"
-                                                        class="form-control" placeholder="Pack Quantity*" />
+                                                <div class="col-3 col-md-3">
+                                                     <select class="form-select stock_status" for="stock_status" name="stock_status"
+                                                    >
+                                                    <option value="">Select Stock Status</option>
+                                                    <option value="1">Available</option>
+                                                    <option value="0">Out of Stock</option>
+                                                
+                                                </select>
                                                     <span class="error text-danger stock_status mt-5"></span>
                                                 </div>
 
-                                                 <div class="col-6 col-md-6">
-                                                    <label class="form-label" for="weight">Weight</label>
-                                                    <input type="text" id="weight" name="weight"
-                                                        class="form-control" placeholder="weight*" />
+                                               <div class="col-3 col-md-3">
+                                                    <input type="text"  name="weight"
+                                                        class="form-control weight" placeholder="Weight(g)*" />
                                                     <span class="error text-danger weight mt-5"></span>
                                                 </div>
-
-                                               
-
                                             </div>
 
 
@@ -468,7 +322,13 @@
                         </div>
 
                         <!-- /Modal -->
+
+
+                        
                     </div>
+
+
+                   
                 </div>
 
                 <!-- Footer -->
@@ -488,8 +348,8 @@
         document.addEventListener('DOMContentLoaded', (event) => {
 
             ClassicEditor
-                .create(document.querySelector('#prod_desc')).then(e => {
-                    prodDesc = e;
+                .create(document.querySelector('#description')).then(e => {
+                    description = e;
                 })
                 .catch(error => {
                     console.error(error);
@@ -500,8 +360,8 @@
          document.addEventListener('DOMContentLoaded', (event) => {
 
             ClassicEditor
-                .create(document.querySelector('#prod_usage')).then(e => {
-                    prodDesc = e;
+                .create(document.querySelector('#product_usage')).then(e => {
+                    produsage = e;
                 })
                 .catch(error => {
                     console.error(error);
@@ -513,141 +373,71 @@
     <script src="<?php echo base_url(); ?>public/admin/custom/js/product-detail.js"></script>
     <!-- <! File upload js---->
     <script src="<?php echo base_url() ?>public/admin/js/forms-file-upload.js"></script>
+    <script src="<?php echo base_url(); ?>public/admin/custom/js/product.js"></script>
 
 
 
-    <!-- Multiple File uplaod -->
-  <script>
-    let selectedFiles = [];
+    <!-- Variants js -->
+    <script>
+        let variantIndex = 0;
+        $(".add-variant").click(function () {
+            const variantHtml = `
+            <div class="variant-block row g-2" data-index="${variantIndex}">
+                <div class="row g-3 mt-2">
+                    <div class="col-md-3"><input type="text" name="variants[${variantIndex}][pack_qty]" class="form-control pack_qty" placeholder="Pack Quantity*"></div>
+                    <div class="col-md-3"><input type="text" name="variants[${variantIndex}][quantity]" class="form-control quantity" placeholder="Quantity*"></div>
+                    <div class="col-md-3"><input type="text" name="variants[${variantIndex}][mrp]" class="form-control mrp" placeholder="MRP*"></div>
+                    <div class="col-md-3">
+                        <select name="variants[${variantIndex}][offer_type]" class="form-select offer_type">
+                            <option value="">Select Offer Type</option>
+                            <option value="0">None</option>
+                            <option value="1">Flat</option>
+                            <option value="2">Percentage</option>   
+                        </select>
+                    </div>
+                    <div class="col-md-3"><input type="text" name="variants[${variantIndex}][offer_details]" class="form-control offer_details" placeholder="Offer Details*"></div>
+                    <div class="col-md-3"><input type="text" name="variants[${variantIndex}][offer_price]" class="form-control offer_price" placeholder="Offer Price*"></div>
+                    <div class="col-md-3">
+                        <select name="variants[${variantIndex}][stock_status]" class="form-select stock_status">
+                            <option value="1">Available</option>
+                            <option value="0">Out Of Stock</option> 
+                        </select>
+                    </div>
+                    <div class="col-md-3"><input type="text" class="form-control weight" name="variants[${variantIndex}][weight]" placeholder="Weight*"></div>
+                </div>
 
-    function formatFileSize(bytes) {
-        const kb = bytes / 1024;
-        return kb < 1024 ? kb.toFixed(2) + ' KB' : (kb / 1024).toFixed(2) + ' MB';
-    }
+                <div class="text-end mt-2">
+                    <button type="button" class="btn btn-label-danger waves-effect remove-variant" data-rid="${variantIndex}">
+                        <i class="fa-solid fa-trash-arrow-up"></i> &nbsp;&nbsp; Delete
+                    </button>
+                </div>
+                <hr>
+            </div>`;
 
-    $(document).ready(function () {
-        $('#images').on('change', function (e) {
-            const files = Array.from(e.target.files);
-            const $preview = $('#preview');
-
-            files.forEach(file => {
-                selectedFiles.push(file);
-                const reader = new FileReader();
-
-                reader.onload = function (event) {
-                    const $container = $('<div>').addClass('preview-box');
-                    const $img = $('<img>').attr('src', event.target.result);
-                    const size = formatFileSize(file.size);
-
-                    const $caption = $('<p>').text(file.name);
-                    const $sizeCaption = $('<p>').addClass('img-size').text(`(${size})`);
-
-                    const $removeBtn = $('<button>').addClass('remove-btn').text('Remove');
-                    $removeBtn.on('click', function () {
-                        $container.remove();
-                        selectedFiles = selectedFiles.filter(f => f !== file);
-                    });
-
-                    $container.append($img, $caption, $sizeCaption, $removeBtn);
-                    $preview.append($container);
-                };
-
-                reader.readAsDataURL(file);
-            });
-
-          
-            $(this).val('');
+            $("#variant-list").append(variantHtml);
+            variantIndex++;
         });
 
-        $('form').on('submit', function (e) {
-            e.preventDefault();
+        // delete
+        $("#variant-list").on("click", ".remove-variant", function () {
+            let deleteIndex = $(this).data("rid");
+            console.log("Deleting index:", deleteIndex);
 
-            const formData = new FormData();
-            selectedFiles.forEach(file => {
-                formData.append('images[]', file);
-            });
+            let containerIndex = $(this).closest(".variant-block").data("index");
+            console.log("Container Index:", containerIndex);
 
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    alert("Upload complete");
-                    location.reload();
-                },
-                error: function () {
-                    alert("Upload failed");
-                }
-            });
+            $(this).closest(".variant-block").remove();
         });
-    });
-  </script>
 
+        $(".add-variant").click();
 
-<!-- Variants js -->
- <script>
-    let variantIndex = 0;
+        function removeAllVariantBlocks() {
+        $("#variant-list").empty();
+         variantIndex = 0;
+        $(".add-variant").click();
+         }
 
-    $(".add-variant").click(function () {
-        const variantHtml = `
-        <div class="variant-block row g-2" data-index="${variantIndex}">
-            <div class="row g-3 mt-2">
-                <div class="col-md-3"><input type="text" name="variants[${variantIndex}][pack_qty]" class="form-control" placeholder="Pack Quantity*"></div>
-                <div class="col-md-3"><input type="text" name="variants[${variantIndex}][quantity]" class="form-control" placeholder="Quantity*"></div>
-                <div class="col-md-3"><input type="text" name="variants[${variantIndex}][mrp]" class="form-control" placeholder="MRP*"></div>
-                <div class="col-md-3">
-                    <select name="variants[${variantIndex}][offer_type]" class="form-select">
-                        <option value="0">None</option>
-                        <option value="1">Flat</option>
-                        <option value="2">Percentage</option>   
-                    </select>
-                </div>
-                <div class="col-md-3"><input type="text" name="variants[${variantIndex}][offer_details]" class="form-control" placeholder="Offer Details*"></div>
-                <div class="col-md-3"><input type="text" name="variants[${variantIndex}][offer_price]" class="form-control" placeholder="Offer Price*"></div>
-                <div class="col-md-3">
-                    <select name="variants[${variantIndex}][stock_status]" class="form-select">
-                        <option value="1">Available</option>
-                        <option value="0">Out Of Stock</option> 
-                    </select>
-                </div>
-                <div class="col-md-3"><input type="text" class="form-control" name="variants[${variantIndex}][weight]" placeholder="Weight*"></div>
-            </div>
-
-            <div class="text-end mt-2">
-                <button type="button" class="btn btn-label-danger waves-effect remove-variant" data-rid="${variantIndex}">
-                    <i class="fa-solid fa-trash-arrow-up"></i> &nbsp;&nbsp; Delete
-                </button>
-            </div>
-            <hr>
-        </div>`;
-
-        $("#variant-list").append(variantHtml);
-        variantIndex++;
-    });
-
-    // delete
-    $("#variant-list").on("click", ".remove-variant", function () {
-        let deleteIndex = $(this).data("rid");
-        console.log("Deleting index:", deleteIndex);
-
-        let containerIndex = $(this).closest(".variant-block").data("index");
-        console.log("Container Index:", containerIndex);
-
-        $(this).closest(".variant-block").remove();
-    });
-
-   
-    $(".add-variant").click();
-</script>
-
-
-
-
-
-
-
+    </script>
 
 </body>
 

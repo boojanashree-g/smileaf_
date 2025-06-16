@@ -61,8 +61,10 @@
     <link rel="stylesheet"
         href="<?php echo base_url() ?>public/admin/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css">
     <link rel="stylesheet" href="<?php echo base_url() ?>public/admin/vendor/libs/select2/select2.css">
-    <link rel="stylesheet" href="<?php echo base_url() ?>public/admin/custom/css/common-admin.css">
 
+    <!-- Custom css -->
+    <link rel="stylesheet" href="<?php echo base_url() ?>public/admin/custom/css/common-admin.css">
+    <link rel="stylesheet" href="<?php echo base_url() ?>public/admin/custom/css/product.css">
 
     <!-- Page CSS -->
     <!-- Page Auth -->
