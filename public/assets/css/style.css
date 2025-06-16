@@ -6981,8 +6981,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
     margin-top: 5px;
   }
 
-  .ltn__header-4 .site-logo-wrap,
-  .ltn__header-5 .site-logo-wrap {
+  .ltn__header-4 .site-logo-wrap {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 100%;
     flex: 0 0 100%;
@@ -8398,9 +8397,6 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 
   .ltn__slide-item-6 .slide-title {
     font-size: 30px;
-  }
-  .primaryHeader{
-    flex-direction: column;
   }
 
 }
