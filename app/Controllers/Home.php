@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\admin\MainmenuModel;
 use App\Models\admin\SubmenuModel;
+use App\Models\admin\BannerModel;
 use App\Models\ProductModel;
 
 
@@ -13,14 +14,17 @@ class Home extends BaseController
     {
         $mainmenumodel = new MainmenuModel();
         $submenumodel = new SubmenuModel();
+        $bannerModel = new BannerModel();
         $mainmenus = $mainmenumodel->where('flag !=', 0)->findAll();
         $submenus = $submenumodel->where('flag !=', 0)->findAll();
+        $bannerData = $bannerModel->where(['flag !=' => 0, 'has_banner' => 1])->findAll();
         $groupedSubmenus = [];
         foreach ($submenus as $submenu) {
             $groupedSubmenus[$submenu['menu_id']][] = $submenu;
         }
         $data['mainmenu'] = $mainmenus;
         $data['submenu'] = $groupedSubmenus;
+        $data['bannerData'] = $bannerData;
         return view('index', $data);
     }
 
@@ -177,20 +181,20 @@ class Home extends BaseController
     }
     public function productCategories($slug)
     {
-        $MainmenuModel = new MainmenuModel();
+        $mainmenuModel = new MainmenuModel(); 
         $submenuModel = new SubmenuModel();
-
-        // Get main menu based on slug
-        $menuData = $MainmenuModel->where('slug', $slug)->first();
-
+        $menuData = $mainmenuModel->where('slug', $slug)->first();
         if (!$menuData) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Main menu not found");
         }
-
         $menuId = $menuData['menu_id'];
-
-        // Get all submenus under this menu
         $submenuData = $submenuModel->where('menu_id', $menuId)->findAll();
+        $allMainMenus = $mainmenuModel->where('flag !=', 0)->findAll();
+        $allSubMenus = $submenuModel->where('flag !=', 0)->findAll();
+        $groupedSubmenus = [];
+        foreach ($allSubMenus as $sub) {
+            $groupedSubmenus[$sub['menu_id']][] = $sub;
+        }
 
         $data = [
             'page_title' => $menuData['menu_name'],
@@ -199,13 +203,11 @@ class Home extends BaseController
                 ['label' => $menuData['menu_name']]
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
-            'submenus' => $submenuData
+            'submenus' => $submenuData, 
+            'mainmenu' => $allMainMenus,
+            'submenu' => $groupedSubmenus 
         ];
-        // echo"<pre>";
-        // print_r($data);
-        // exit();
+
         return view('productCategories', $data);
     }
-
-
 }
