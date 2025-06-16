@@ -893,6 +893,37 @@ button:hover{
     .track::before{
         display: none;
     }
+    .banner-title {
+        font-size: 11px;
+    }
+
+    .banner-btn{
+        height: 15px;
+        font-size: 7px;
+        padding: 0 5px !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        margin-top: 3px;
+    }
+    .banner-title{
+        margin-bottom: 0 !important;
+    }
+    .banner-subtitle {
+        margin-bottom: 0 !important;
+        font-size: 10px !important;
+        color: #255201 !important;
+    }
+    .banner-content {
+        position: absolute;
+        top: 50%;
+        left: 15px !important;
+        transform: translateY(-50%);
+        color: #333;
+        max-width: 50% !important;
+        padding: 0 !important;
+    }
 }
 
 

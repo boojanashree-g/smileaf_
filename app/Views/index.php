@@ -1,6 +1,15 @@
 <!doctype html>
 <html class="no-js" lang="zxx">
 <?php require("components/head.php"); ?>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Slick Slider CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+
+<!-- Slick Slider JS -->
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
 <body>
     <div class="body-wrapper">
@@ -9,13 +18,13 @@
 
         <!-- SLIDER AREA START (slider-3) -->
                 <?php if (count($bannerData) > 0): ?>
-                <div class="<?= count($bannerData) > 1 ? 'slick-banner-slider' : '' ?>">
+                <div class="<?= count($bannerData) > 1 ? 'slick-banner-slider' : '' ?> ">
                     <?php foreach ($bannerData as $banner): ?>
                         <div class="banner-block">
                             <img src="<?= base_url($banner['banner_image']) ?>"
                                 alt="<?= esc($banner['banner_title'] ?? 'Banner Image') ?>"
                                 class="banner-image">
-                            <div class="banner-content">
+                            <div class="banner-content ">
                                 <h6 class="banner-subtitle allura-regular">
                                     <?= esc($banner['banner_desc1'] ?? 'Title here') ?>
                                 </h6>
@@ -224,6 +233,23 @@
                     </div>
                 </div>
                 <div class="row ltn__testimonial-slider-3-active slick-arrow-1 slick-arrow-1-inner">
+                    <div class="col-lg-12">
+                        <div class="ltn__testimonial-item ltn__testimonial-item-4">
+                            <div class="ltn__testimoni-img">
+                                <img src="<?php echo base_url() ?>public/assets/img/plate_img/cactus/icon2-removebg-preview.png"
+                                    alt="#">
+                            </div>
+                            <div class="ltn__testimoni-info">
+                                <p>“The wedding was great and the plates were awesome! Got lots of compliments
+                                    and impressed by how sturdy they are. Thank you!”</p>
+                                <h4>Raj Mahesh</h4>
+                                <h6>Chennai</h6>
+                            </div>
+                            <div class="ltn__testimoni-bg-icon">
+                                <i class="far fa-comments"></i>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-lg-12">
                         <div class="ltn__testimonial-item ltn__testimonial-item-4">
                             <div class="ltn__testimoni-img">
@@ -655,7 +681,38 @@
                 });
             }
         });
+        
     </script>
+    <script>
+        $(document).ready(function () {
+            $('.ltn__testimonial-slider-3-active').slick({
+                infinite: true,
+                slidesToShow: 2,
+                slidesToScroll: 3,
+                arrows: false,
+                dots: true,
+                autoplay: true,
+                autoplaySpeed: 3000,
+                responsive: [
+                    {
+                        breakpoint: 1200, // screens < 1200px
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 2
+                        }
+                    },
+                    {
+                        breakpoint: 768, // screens < 768px
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1
+                        }
+                    }
+                ]
+            });
+        });
+</script>
+
 
 </body>
 
