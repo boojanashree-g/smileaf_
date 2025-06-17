@@ -161,7 +161,7 @@
                                             <div class="col-5 col-md-5">
                                                 <label for="main_image" class="form-label">Product Image</label>
                                                 <input class="form-control" type="file" id="main_image"
-                                                    name="main_image">
+                                                    name="main_image" accept="image/*">
                                                
                                                 <span class="error text-danger main_image mt-5"></span>
                                             </div>

@@ -55,6 +55,7 @@ $(document).ready(function () {
     $("#product-form")[0].reset();
     $("#product-modal").val("");
     $("#product-modal").modal("show");
+    
     if (mode == "new") {
       $("#btn-submit").html("Submit");
       $(".subcat-title").text("Add Product Details");

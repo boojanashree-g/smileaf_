@@ -2,9 +2,11 @@
 namespace App\Controllers\admin;
 use App\Controllers\BaseController;
 
+use App\Models\admin\ImageModel;
 use App\Models\admin\SubcatModel;
 use App\Models\admin\ProductModel;
 use App\Models\admin\VariantModel;
+
 
 
 class ProductController extends BaseController
@@ -48,15 +50,15 @@ class ProductController extends BaseController
         $request = $this->request;
         $ProductModel = new ProductModel();
         $VariantModel = new VariantModel();
+        $ImageModel = new ImageModel();
 
-        $data = $this->request->getPost();
         try {
             $productName = $request->getPost('prod_name');
             $hasVariant = $request->getPost('has_variant');
             $variants = $request->getPost('variants');
 
 
-            $url = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $productName), '-'));
+            $url = strtolower(trim(preg_replace('/-+/', '-', preg_replace('/[^A-Za-z0-9-]+/', '-', $productName)), '-'));
 
             $MainImg = $request->getFile('main_image');
             $randomName = '';
@@ -104,7 +106,7 @@ class ProductController extends BaseController
 
                 if ($lastInsertedID) {
 
-                    if ($hasVariant == 0) {
+                    if ((int) $hasVariant == 0) {
                         $variantData = [
                             'prod_id' => $lastInsertedID,
                             'pack_qty' => $request->getPost('pack_qty'),
@@ -141,16 +143,21 @@ class ProductController extends BaseController
                             $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
                             if (in_array($subImg->getMimeType(), $allowedTypes)) {
-                                if ($subImg->getSize() <= 512000) {  // 500 KB
+                                if ($subImg->getSize() <= 512000) {  // 20 KB
                                     $randomName = $subImg->getRandomName();
                                     $subImg->move('./uploads/', $randomName);
 
+                                    $imageData = [
+                                        'prod_id' => $lastInsertedID,
+                                        'image_path' => '/uploads/' . $randomName,
+                                    ];
 
+                                    $ImageModel->insert($imageData);
                                 } else {
                                     return $this->response->setJSON([
                                         'code' => 400,
                                         'status' => 'error',
-                                        'msg' => 'Main image must be less than 500KB.'
+                                        'msg' => 'Images  must be less than 20KB.'
                                     ]);
                                 }
                             } else {
@@ -162,6 +169,12 @@ class ProductController extends BaseController
                             }
                         }
                     }
+
+                    return $this->response->setJSON([
+                        'code' => 200,
+                        'status' => 'success',
+                        'msg' => 'Data Inserted Successfully'
+                    ]);
 
 
                 } else {
