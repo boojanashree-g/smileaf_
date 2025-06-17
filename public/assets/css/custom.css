@@ -877,6 +877,25 @@ button:hover{
 .step .icon{
     padding:0;
 }
+.ltn__testimonial-item-4 {
+  max-width: 100%;
+  position: relative;
+  padding: 20px 40px;
+  background-color: var(--white);
+  -webkit-box-shadow: var(--ltn__box-shadow-2);
+  box-shadow: var(--ltn__box-shadow-2);
+  z-index: 2;
+  min-height: 215px;
+}
+
+.ltn__product-area .section-title-area{
+    margin-bottom: 7px;
+}
+
+.ltn__banner-item {
+    margin-bottom: 0px;
+}
+
 @media (max-width: 768px) {
     .track {
         flex-direction: column;

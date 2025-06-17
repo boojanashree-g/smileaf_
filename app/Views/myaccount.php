@@ -184,7 +184,7 @@
                     </div>
                     <!-- PRODUCT TAB AREA END -->
                     <!-- Add Address Modal -->
-                    <div class="modal fade slide-from-right" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+                    <div class="modal fade slide-from-center" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-md">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -244,7 +244,7 @@
                     </div>
 
                     <!-- Edit Address Modal -->
-                    <div class="modal fade slide-from-right"  id="editAddressModal" tabindex="-1" aria-labelledby="editAddressModalLabel" aria-hidden="true">
+                    <div class="modal fade slide-from-center"  id="editAddressModal" tabindex="-1" aria-labelledby="editAddressModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-md">
                             <div class="modal-content">
                                 <div class="modal-header">

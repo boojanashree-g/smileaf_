@@ -8416,7 +8416,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 ---------------------------------------------------- */
 .ltn__product-item {
   position: relative;
-  margin-bottom: 50px;
+  margin-bottom: 10px;
 }
 
 .product-img {
@@ -10043,7 +10043,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 }
 
 .ltn__section-title-2 .section-title {
-  font-size: 72px;
+  font-size: 40px;
   font-weight: 700;
   margin-bottom: 15px;
   line-height: 1;
