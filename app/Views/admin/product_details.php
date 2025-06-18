@@ -54,8 +54,8 @@
                                                         <th>S.No</th>
                                                         <th>Menu</th>
                                                         <th>SubMenu</th>
-                                                        <th>SubCategory</th>
-                                                        <th>Status</th>
+                                                        <th>Product Name</th>
+                                                        <th>Image</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -125,6 +125,8 @@
                                                 <label class="form-label">Filter Shapes</label>
                                                 <select class="form-select" for="shape_id" name="shape_id"
                                                     id="shape_id">
+
+                                                    
                                                     <option value="">Select Option</option>
                                                     <?php foreach($filter_shape as $shape)
                                                     { ?>
@@ -194,6 +196,7 @@
                                                     <input type="file" name="images[]" id="images" multiple accept="image/*">
                                                     <div class="preview-imgs" id="preview"></div>    
                                                 </div>
+                                                <span class="error text-danger images mt-5"></span>
                                             </div>
                                             <div class="col-lg-12 mt-3">
                                                 <div class="form-check form-switch mb-2">
@@ -280,7 +283,7 @@
 
 
                                             <div class="col-12 text-end">
-                                                <a class="btn btn-primary text-white" id="btn-submit"></a>
+                                                <a class="btn btn-primary text-white" id="btn-submit">Submit</a>
 
                                             </div>
                                         </form>
@@ -436,6 +439,11 @@
          variantIndex = 0;
         $(".add-variant").click();
          }
+
+        function removeVariantBlocks(){
+             $("#variant-list").empty();
+         variantIndex = 0;
+        }
 
     </script>
 
