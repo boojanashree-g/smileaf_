@@ -265,6 +265,8 @@ $(document).ready(function () {
 
   // *************************** [Edit Data] *************************************************************************
 
+
+
   $(document).on("click", ".btnEdit", function () {
     $("#banner-modal").modal("show");
     mode = "edit";
@@ -277,6 +279,7 @@ $(document).ready(function () {
     var index = $(this).attr("id");
 
     $("#banner_link").val(res_DATA[index].banner_link);
+    
 
     $("#banner_image_url").attr("src", base_Url + res_DATA[index].banner_image);
     $("#banner_image_url").addClass("active");

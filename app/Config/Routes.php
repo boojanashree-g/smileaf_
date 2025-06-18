@@ -109,12 +109,9 @@ $routes->group('admin/product-details', ['namespace' => 'App\Controllers\admin']
     $routes->get('/', 'ProductController::ProductDetails');
     $routes->post('submenu', 'ProductController::getSubmenu');
     $routes->post('insert-data', 'ProductController::insertData');
-
-    $routes->post('get-data', 'SubCatController::getData');
-    $routes->post('update-data', 'SubCatController::updateData');
-    $routes->post('delete-data', 'SubCatController::deleteData');
-    $routes->post('update-status', 'SubCatController::updateStatus');
-
+    $routes->post('get-data', 'ProductController::getData');
+    $routes->post('update-data', 'ProductController::updateData');
+    $routes->post('delete-data', 'ProductController::deleteData');
 
 });
 
