@@ -21,9 +21,12 @@ $routes->get('privacy-policy', 'Home::privacyPolicy');
 $routes->get('order-tracking', 'Home::orderTracking');
 $routes->get('product-categories/(:segment)', 'Home::productCategories/$1');
 
+$routes->post('signup-otp', 'SignupController::signupOTP');
 
 
-// Admin Page
+
+// *************************** [Admin Routes] *************************************************************************
+
 $routes->group('admin', ['namespace' => 'App\Controllers\admin'], function ($routes) {
     $routes->get('/', 'AdminController::login');
     $routes->post('check-login', 'AdminController::checkLogin');
@@ -103,7 +106,6 @@ $routes->group('admin/filter-size', ['namespace' => 'App\Controllers\admin'], fu
     $routes->post('delete-data', 'FilterSizeController::deleteData');
     $routes->post('update-status', 'FilterSizeController::updateStatus');
 });
-
 
 $routes->group('admin/product-details', ['namespace' => 'App\Controllers\admin'], function ($routes) {
     $routes->get('/', 'ProductController::ProductDetails');

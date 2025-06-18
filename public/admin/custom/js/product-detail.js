@@ -110,13 +110,17 @@ $(document).ready(function () {
 
     if ($("#menu_id").val() === "") {
       $(".menu_id").html("Please Select Menu*").show();
-    } else if ($("#type_id").val() === "" && mode == "new") {
-      $(".type_id").html("Please Select Type*").show();
-    } else if ($("#shape_id").val() === "" && mode == "new") {
-      $(".shape_id").html("Please Select Shape*").show();
-    } else if ($("#size_id").val() === "" && mode == "new") {
-      $(".size_id").html("Please Select Size*").show();
-    } else if ($("#prod_name").val() === "" && mode == "new") {
+    } 
+    // else if ($("#type_id").val() === "" && mode == "new") {
+    //   $(".type_id").html("Please Select Type*").show();
+    // } 
+    // else if ($("#shape_id").val() === "" && mode == "new") {
+    //   $(".shape_id").html("Please Select Shape*").show();
+    // }
+    //  else if ($("#size_id").val() === "" && mode == "new") {
+    //   $(".size_id").html("Please Select Size*").show();
+    // } 
+    else if ($("#prod_name").val() === "" && mode == "new") {
       $(".prod_name").html("Please Enter Productname*").show();
     } else if ($("#main_image").val() === "" && mode == "new") {
       $(".main_image").html("Please Select Image*").show();
@@ -495,6 +499,16 @@ $(document).ready(function () {
   }
 
   $(document).ready(function () {
+    $(window).on("keydown", function (e) {
+      if (e.key === "Enter" || e.keyCode === 13) {
+        // Prevent Enter ONLY if not focused on textarea or button
+        const tag = e.target.tagName.toLowerCase();
+        if (tag !== "textarea" && tag !== "button") {
+          e.preventDefault();
+          return false;
+        }
+      }
+    });
     $("#images").on("change", function (e) {
       const files = Array.from(e.target.files);
       const $preview = $("#preview");
