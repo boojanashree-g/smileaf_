@@ -48,7 +48,7 @@ $(document).ready(function () {
 
         // AJAX request
         $.ajax({
-            url: BASE_URL+'/products',
+            url: base_Url+'/products',
             method: 'GET',
             data: {
                 type_id: typeIds,
@@ -74,8 +74,8 @@ $(document).ready(function () {
                             <div class="col-xl-4 col-sm-6 col-6">
                                 <div class="ltn__product-item ltn__product-item-3 text-center">
                                     <div class="product-img">
-                                        <a href="<?= base_url() ?>${BASE_URL}${product.url || '#'}">
-                                            <img src="${BASE_URL}${product.main_image || 'default-image.jpg'}" alt="${product.prod_name || 'Product'}">
+                                        <a href="<?= base_url() ?>${base_Url }${product.url || '#'}">
+                                            <img src="${base_Url}${product.main_image || 'default-image.jpg'}" alt="${product.prod_name || 'Product'}">
                                         </a>
                                         <div class="product-badge">
                                             <ul>
