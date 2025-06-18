@@ -142,7 +142,7 @@ class ProductController extends BaseController
                             $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
                             if (in_array($subImg->getMimeType(), $allowedTypes)) {
-                                if ($subImg->getSize() <= 512000) {  // 20 KB
+                                if ($subImg->getSize() <= 512000) {  // 500 KB
                                     $randomName = $subImg->getRandomName();
                                     $subImg->move('./uploads/', $randomName);
 
@@ -344,6 +344,7 @@ class ProductController extends BaseController
                     $lastInsertedID = $ProductModel->insertID();
                 }
 
+                $affectedRows = $this->db->affectedRows();
 
                 if ($lastInsertedID) {
 
@@ -361,6 +362,7 @@ class ProductController extends BaseController
                         ];
 
                         $VariantModel->insert($variantData);
+                        $affectedRows = $this->db->affectedRows();
                     } else {
                         for ($i = 0; $i < count($variants); $i++) {
                             $variantData = [
@@ -375,6 +377,8 @@ class ProductController extends BaseController
                                 'weight' => $variants[$i]['weight'],
                             ];
                             $VariantModel->insert($variantData);
+                            $affectedRows = $this->db->affectedRows();
+
                         }
                     }
 
@@ -389,7 +393,7 @@ class ProductController extends BaseController
                         $existingImages = [];
                     }
 
-                  
+
 
                     $images = $this->request->getFiles();
                     $allOldImages = $ImageModel->where('prod_id', $productID)->findAll();
@@ -435,21 +439,36 @@ class ProductController extends BaseController
                                     'prod_id' => $productID,
                                     'image_path' => '/uploads/' . $randomName
                                 ]);
+                                $affectedRows = $this->db->affectedRows();
+
+
                             }
+
                         }
                     }
-                    return $this->response->setJSON([
-                        'code' => 200,
-                        'status' => 'success',
-                        'msg' => 'Data Updated Successfully'
-                    ]);
+
+
+                    if ($affectedRows > 0) {
+                        return $this->response->setJSON([
+                            'code' => 200,
+                            'status' => 'success',
+                            'msg' => 'Data Updated Successfully'
+                        ]);
+                    } else {
+                        return $this->response->setJSON([
+                            'code' => 400,
+                            'status' => 'error',
+                            'msg' => 'Product not updated.'
+                        ]);
+                    }
+
 
 
                 } else {
                     return $this->response->setJSON([
                         'code' => 400,
                         'status' => 'error',
-                        'msg' => 'Product not inserted.'
+                        'msg' => 'Product not updated.'
                     ]);
                 }
             } else {

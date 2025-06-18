@@ -8,6 +8,7 @@ use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use Firebase\JWT\JWT;
 
 /**
  * Class BaseController
@@ -51,8 +52,46 @@ abstract class BaseController extends Controller
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
-        // Preload any models, libraries, etc, here.
+        $this->session = \Config\Services::session();
+        $tempSecret = $_ENV['JWT_SECRET_TEMP'] ?? 'default_secret';
 
-        // E.g.: $this->session = \Config\Services::session();
+        if (!$this->session->get('user_id')) {
+            $Key = $this->tempKey(32) . date("ymdhis");
+            $token = $this->generateJWT($tempSecret);
+            $this->session->set('jwt', $token);
+            $this->session->set('user_id', $Key);
+            $this->session->set('loginStatus', "NO");
+            $this->session->set('otp_verify', "NO");
+        }
     }
+
+
+    private function generateJWT($secret)
+    {
+
+        $issuedAt = time();
+        $expirationTime = $issuedAt + 3600; // Token valid for 1 hour
+
+        $payload = [
+            'iat' => $issuedAt,
+            'exp' => $expirationTime,
+            'data' => [
+                'user_id' => $this->tempKey(32)
+            ]
+        ];
+        return JWT::encode($payload, $secret, 'HS256');
+    }
+
+    private function tempKey($value)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $value; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
+
 }
