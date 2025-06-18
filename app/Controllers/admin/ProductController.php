@@ -213,7 +213,7 @@ class ProductController extends BaseController
         ON
             c.sub_id = a.`submenu_id`
         WHERE
-            a.`flag` = 1 AND b.status = 1 AND b.flag = 1 AND c.status = 1 AND c.flag = 1;")->getResultArray();
+            a.`flag` = 1 AND b.status = 1 AND b.flag = 1 AND c.status = 1 AND c.flag = 1 ORDER BY a.`prod_id` DESC;")->getResultArray();
 
         $productDetails = [];
 
@@ -382,13 +382,19 @@ class ProductController extends BaseController
 
                     $existingImages = $this->request->getPost('existing_images');
 
+                    // Ensure no duplicates
+                    if (is_array($existingImages)) {
+                        $existingImages = array_unique($existingImages);
+                    } else {
+                        $existingImages = [];
+                    }
+
+                  
+
                     $images = $this->request->getFiles();
-
-
                     $allOldImages = $ImageModel->where('prod_id', $productID)->findAll();
 
-
-                    // delete from uploads
+                    // Delete from uploads if not in existingImages
                     foreach ($allOldImages as $img) {
                         $imgPath = $img['image_path'];
                         if (!in_array($imgPath, $existingImages)) {
