@@ -81,22 +81,94 @@ class Home extends BaseController
 
         return view('contact', $data);
     }
-    public function products()
-    {
-        $productModel = new ProductModel();
-        $allProducts = $productModel->where('flag !=', 0, false)->findAll();
-        $data = [
-            'page_title' => 'Products',
-            'breadcrumb_items' => [
-                ['label' => 'Home', 'url' => base_url()],
-                ['label' => 'Products']
-            ],
-            'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
-            'products' => $allProducts
-        ];
+       public function products()
+        {
+            $db = \Config\Database::connect();
+            
+            // Get filter parameters
+            $typeIds = $this->request->getGet('type_id');
+            $sizeIds = $this->request->getGet('size_id');
+            $availability = $this->request->getGet('availability');
+            
+            // Check if it's an AJAX request
+            $isAjax = $this->request->isAJAX() ||
+                    $this->request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest' ||
+                    $this->request->getGet('ajax') == '1';
+            
+            // Get filter options for dropdowns (only for non-AJAX requests)
+            if (!$isAjax) {
+                $typeQuery = $db->table('tbl_filter_type')->where('flag !=', 0)->get();
+                $sizeQuery = $db->table('tbl_filter_size')->where('flag !=', 0)->get();
+                $productTypes = $typeQuery->getResult();
+                $productsize = $sizeQuery->getResult();
+            }
+            
+            // Build products query
+            $productsQuery = $db->table('tbl_products a')
+                ->select('a.*, b.size_name, d.type_name')
+                ->join('tbl_filter_size b', 'a.size_id = b.size_id', 'left')
+                ->join('tbl_filter_type d', 'a.type_id = d.type_id', 'left')
+                ->where('a.flag !=', 0);
+            
+            // Apply type filter
+            if (!empty($typeIds)) {
+                if (is_array($typeIds)) {
+                    $productsQuery->whereIn('a.type_id', $typeIds);
+                } else {
+                    $productsQuery->where('a.type_id', $typeIds);
+                }
+            }
+            
+            // Apply size filter
+            if (!empty($sizeIds)) {
+                if (is_array($sizeIds)) {
+                    $productsQuery->whereIn('a.size_id', $sizeIds);
+                } else {
+                    $productsQuery->where('a.size_id', $sizeIds);
+                }
+            }
+            
+            // Apply availability filter
+            if (!empty($availability)) {
+                if (is_array($availability)) {
+                    $productsQuery->whereIn('a.availability', $availability);
+                } else {
+                    $productsQuery->where('a.availability', $availability);
+                }
+            }
+            
+            // Execute query
+            $products = $productsQuery->get()->getResult();
+            
+            // Handle AJAX request
+            if ($isAjax) {
+                $this->response->setContentType('application/json');
+                
+                return $this->response->setJSON([
+                    'success' => true,
+                    'products' => $products, // Send the raw product data
+                    'count' => count($products)
+                ]);
+            }
+            
+            // Handle regular page request
+            $data = [
+                'page_title' => 'Products',
+                'breadcrumb_items' => [
+                    ['label' => 'Home', 'url' => base_url()],
+                    ['label' => 'Products']
+                ],
+                'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
+                'products' => $products,
+                'productTypes' => $productTypes ?? [],
+                'productsize' => $productsize ?? []
+            ];
+            
+            return view('products', $data);
+        }
 
-        return view('products', $data);
-    }
+
+
     public function wishlist()
     {
         $data = [

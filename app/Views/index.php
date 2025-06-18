@@ -44,7 +44,7 @@
                         <div class="ltn__banner-item">
                             <div class="ltn__banner-img">
                                 <a href="shop.html">
-                                    <img src="<?php echo base_url() ?>public/assets/img/banner/650_image.png" alt="Banner Image">
+                                    <img src="<?php echo base_url() ?>public/assets/img/adcard/card_1.jpg" alt="Banner Image">
                                 </a>
                             </div>
                         </div>
@@ -53,7 +53,7 @@
                         <div class="ltn__banner-item">
                             <div class="ltn__banner-img">
                                 <a href="shop.html">
-                                    <img src="<?php echo base_url() ?>public/assets/img/banner/card_3.png" alt="Banner Image">
+                                    <img src="<?php echo base_url() ?>public/assets/img/adcard/card_2.jpg" alt="Banner Image">
                                 </a>
                             </div>
                         </div>
@@ -62,7 +62,7 @@
                         <div class="ltn__banner-item">
                             <div class="ltn__banner-img">
                                 <a href="shop.html">
-                                    <img src="<?php echo base_url() ?>public/assets/img/banner/card_2.png" alt="Banner Image">
+                                    <img src="<?php echo base_url() ?>public/assets/img/adcard/card_3.jpg" alt="Banner Image">
                                 </a>
                             </div>
                         </div>

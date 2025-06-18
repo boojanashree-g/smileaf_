@@ -63,9 +63,8 @@
                                                 <div class="col-xl-4 col-sm-6 col-6">
                                                     <div class="ltn__product-item ltn__product-item-3 text-center">
                                                         <div class="product-img">
-                                                            <a href="<?= base_url( $product['url']) ?>">
-                                                                <img src="<?= base_url( $product['main_image']) ?>" alt="#">
-                                                             <!--    <?= base_url($product['url']) ?>-->
+                                                            <a href="<?= base_url($product->url) ?>">
+                                                                <img src="<?= base_url($product->main_image) ?>" alt="#">
                                                             </a>
                                                             <div class="product-badge">
                                                                 <ul>
@@ -94,8 +93,8 @@
                                                         </div>
                                                         <div class="product-info">
                                                             <h2 class="product-title">
-                                                                <a href="<?= base_url($product['url']) ?>">
-                                                                    <?= esc($product['prod_name']) ?>
+                                                                <a href="<?= base_url($product->url) ?>">
+                                                                    <?= esc($product->prod_name) ?>
                                                                 </a>
                                                             </h2>
                                                             <div class="product-price">
@@ -112,402 +111,60 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="liton_product_list">
-                                <div class="ltn__product-tab-content-inner ltn__product-list-view">
-                                    <div class="row">
-                                        <!-- ltn__product-item -->
-                                        <div class="col-lg-12">
-                                            <div class="ltn__product-item ltn__product-item-3">
-                                                <div class="product-img">
-                                                    <a href="<?php echo base_url('productDetails') ?>"><img
-                                                            src="<?php echo base_url() ?>public/assets/img/plate_img/square-plate/4square.png"
-                                                            alt="#"></a>
-                                                    <div class="product-badge">
-                                                        <ul>
-                                                            <li class="sale-badge">New</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div class="product-info">
-                                                    <h2 class="product-title"><a href="<?php echo base_url('productDetails') ?>">Areca palm plates</a></h2>
-                                                    
-                                                    <div class="product-price">
-                                                        <span>₹165.00</span>
-                                                        <del>₹1720.00</del>
-                                                    </div>
-                                                    <div class="product-brief">
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                                            Recusandae asperiores sit odit nesciunt, aliquid, deleniti
-                                                            non et ut dolorem!</p>
-                                                    </div>
-                                                    <div class="product-hover-action">
-                                                        <ul>
-                                                            <li>
-                                                                <a href="#" title="Quick View" data-bs-toggle="modal"
-                                                                    data-bs-target="#quick_view_modal">
-                                                                    <i class="far fa-eye"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" title="Add to Cart" data-bs-toggle="modal"
-                                                                    data-bs-target="#add_to_cart_modal">
-                                                                    <i class="fas fa-shopping-cart"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" title="Wishlist" data-bs-toggle="modal"
-                                                                    data-bs-target="#liton_wishlist_modal">
-                                                                    <i class="far fa-heart"></i></a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- ltn__product-item -->
-                                        <div class="col-lg-12">
-                                            <div class="ltn__product-item ltn__product-item-3">
-                                                <div class="product-img">
-                                                    <a href="<?php echo base_url('productDetails') ?>"><img
-                                                            src="<?php echo base_url() ?>public/assets/img/plate_img/square-plate/4square.png"
-                                                            alt="#"></a>
-                                                </div>
-                                                <div class="product-info">
-                                                    <h2 class="product-title"><a href="<?php echo base_url('productDetails') ?>">Areca palm plates</a></h2>
-                                                    
-                                                    <div class="product-price">
-                                                        <span>₹165.00</span>
-                                                        <del>₹1720.00</del>
-                                                    </div>
-                                                    <div class="product-brief">
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                                            Recusandae asperiores sit odit nesciunt, aliquid, deleniti
-                                                            non et ut dolorem!</p>
-                                                    </div>
-                                                    <div class="product-hover-action">
-                                                        <ul>
-                                                            <li>
-                                                                <a href="#" title="Quick View" data-bs-toggle="modal"
-                                                                    data-bs-target="#quick_view_modal">
-                                                                    <i class="far fa-eye"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" title="Add to Cart" data-bs-toggle="modal"
-                                                                    data-bs-target="#add_to_cart_modal">
-                                                                    <i class="fas fa-shopping-cart"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" title="Wishlist" data-bs-toggle="modal"
-                                                                    data-bs-target="#liton_wishlist_modal">
-                                                                    <i class="far fa-heart"></i></a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- ltn__product-item -->
-                                        <div class="col-lg-12">
-                                            <div class="ltn__product-item ltn__product-item-3">
-                                                <div class="product-img">
-                                                    <a href="<?php echo base_url('productDetails') ?>"><img
-                                                            src="<?php echo base_url() ?>public/assets/img/plate_img/square-plate/4square.png"
-                                                            alt="#"></a>
-                                                    <div class="product-badge">
-                                                        <ul>
-                                                            <li class="sale-badge">New</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div class="product-info">
-                                                    <h2 class="product-title"><a href="<?php echo base_url('productDetails') ?>">Areca palm plates</a></h2>
-                                                    
-                                                    <div class="product-price">
-                                                        <span>₹165.00</span>
-                                                        <del>₹1720.00</del>
-                                                    </div>
-                                                    <div class="product-brief">
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                                            Recusandae asperiores sit odit nesciunt, aliquid, deleniti
-                                                            non et ut dolorem!</p>
-                                                    </div>
-                                                    <div class="product-hover-action">
-                                                        <ul>
-                                                            <li>
-                                                                <a href="#" title="Quick View" data-bs-toggle="modal"
-                                                                    data-bs-target="#quick_view_modal">
-                                                                    <i class="far fa-eye"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" title="Add to Cart" data-bs-toggle="modal"
-                                                                    data-bs-target="#add_to_cart_modal">
-                                                                    <i class="fas fa-shopping-cart"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" title="Wishlist" data-bs-toggle="modal"
-                                                                    data-bs-target="#liton_wishlist_modal">
-                                                                    <i class="far fa-heart"></i></a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- ltn__product-item -->
-                                        <div class="col-lg-12">
-                                            <div class="ltn__product-item ltn__product-item-3">
-                                                <div class="product-img">
-                                                    <a href="<?php echo base_url('productDetails') ?>"><img
-                                                            src="<?php echo base_url() ?>public/assets/img/plate_img/square-plate/4square.png"
-                                                            alt="#"></a>
-                                                </div>
-                                                <div class="product-info">
-                                                    <h2 class="product-title"><a href="<?php echo base_url('productDetails') ?>">Red Hot
-                                                            Tomato</a></h2>
-                                                    
-                                                    <div class="product-price">
-                                                        <span>₹165.00</span>
-                                                        <del>₹1720.00</del>
-                                                    </div>
-                                                    <div class="product-brief">
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                                            Recusandae asperiores sit odit nesciunt, aliquid, deleniti
-                                                            non et ut dolorem!</p>
-                                                    </div>
-                                                    <div class="product-hover-action">
-                                                        <ul>
-                                                            <li>
-                                                                <a href="#" title="Quick View" data-bs-toggle="modal"
-                                                                    data-bs-target="#quick_view_modal">
-                                                                    <i class="far fa-eye"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" title="Add to Cart" data-bs-toggle="modal"
-                                                                    data-bs-target="#add_to_cart_modal">
-                                                                    <i class="fas fa-shopping-cart"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" title="Wishlist" data-bs-toggle="modal"
-                                                                    data-bs-target="#liton_wishlist_modal">
-                                                                    <i class="far fa-heart"></i></a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- ltn__product-item -->
-                                        <div class="col-lg-12">
-                                            <div class="ltn__product-item ltn__product-item-3">
-                                                <div class="product-img">
-                                                    <a href="<?php echo base_url('productDetails') ?>"><img
-                                                            src="<?php echo base_url() ?>public/assets/img/plate_img/square-plate/4square.png"
-                                                            alt="#"></a>
-                                                    <div class="product-badge">
-                                                        <ul>
-                                                            <li class="sale-badge">Hot</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div class="product-info">
-                                                    <h2 class="product-title"><a href="<?php echo base_url('productDetails') ?>">Areca palm plates</a></h2>
-                                                    
-                                                    <div class="product-price">
-                                                        <span>₹165.00</span>
-                                                        <del>₹1720.00</del>
-                                                    </div>
-                                                    <div class="product-brief">
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                                            Recusandae asperiores sit odit nesciunt, aliquid, deleniti
-                                                            non et ut dolorem!</p>
-                                                    </div>
-                                                    <div class="product-hover-action">
-                                                        <ul>
-                                                            <li>
-                                                                <a href="#" title="Quick View" data-bs-toggle="modal"
-                                                                    data-bs-target="#quick_view_modal">
-                                                                    <i class="far fa-eye"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" title="Add to Cart" data-bs-toggle="modal"
-                                                                    data-bs-target="#add_to_cart_modal">
-                                                                    <i class="fas fa-shopping-cart"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" title="Wishlist" data-bs-toggle="modal"
-                                                                    data-bs-target="#liton_wishlist_modal">
-                                                                    <i class="far fa-heart"></i></a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- ltn__product-item -->
-                                        <div class="col-lg-12">
-                                            <div class="ltn__product-item ltn__product-item-3">
-                                                <div class="product-img">
-                                                    <a href="<?php echo base_url('productDetails') ?>"><img
-                                                            src="<?php echo base_url() ?>public/assets/img/plate_img/square-plate/4square.png"
-                                                            alt="#"></a>
-                                                    <div class="product-badge">
-                                                        <ul>
-                                                            <li class="sale-badge">New</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div class="product-info">
-                                                    <h2 class="product-title"><a href="<?php echo base_url('productDetails') ?>">Areca palm plates</a></h2>
-                                                    
-                                                    <div class="product-price">
-                                                        <span>₹165.00</span>
-                                                        <del>₹1720.00</del>
-                                                    </div>
-                                                    <div class="product-brief">
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                                            Recusandae asperiores sit odit nesciunt, aliquid, deleniti
-                                                            non et ut dolorem!</p>
-                                                    </div>
-                                                    <div class="product-hover-action">
-                                                        <ul>
-                                                            <li>
-                                                                <a href="#" title="Quick View" data-bs-toggle="modal"
-                                                                    data-bs-target="#quick_view_modal">
-                                                                    <i class="far fa-eye"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" title="Add to Cart" data-bs-toggle="modal"
-                                                                    data-bs-target="#add_to_cart_modal">
-                                                                    <i class="fas fa-shopping-cart"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" title="Wishlist" data-bs-toggle="modal"
-                                                                    data-bs-target="#liton_wishlist_modal">
-                                                                    <i class="far fa-heart"></i></a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- ltn__product-item -->
-                                        <div class="col-lg-12">
-                                            <div class="ltn__product-item ltn__product-item-3">
-                                                <div class="product-img">
-                                                    <a href="<?php echo base_url('productDetails') ?>"><img
-                                                            src="<?php echo base_url() ?>public/assets/img/plate_img/square-plate/4square.png"
-                                                            alt="#"></a>
-                                                </div>
-                                                <div class="product-info">
-                                                    <h2 class="product-title"><a href="<?php echo base_url('productDetails') ?>">Red Hot
-                                                            Tomato</a></h2>
-                                                    
-                                                    <div class="product-price">
-                                                        <span>₹165.00</span>
-                                                        <del>₹1720.00</del>
-                                                    </div>
-                                                    <div class="product-brief">
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                                            Recusandae asperiores sit odit nesciunt, aliquid, deleniti
-                                                            non et ut dolorem!</p>
-                                                    </div>
-                                                    <div class="product-hover-action">
-                                                        <ul>
-                                                            <li>
-                                                                <a href="#" title="Quick View" data-bs-toggle="modal"
-                                                                    data-bs-target="#quick_view_modal">
-                                                                    <i class="far fa-eye"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" title="Add to Cart" data-bs-toggle="modal"
-                                                                    data-bs-target="#add_to_cart_modal">
-                                                                    <i class="fas fa-shopping-cart"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" title="Wishlist" data-bs-toggle="modal"
-                                                                    data-bs-target="#liton_wishlist_modal">
-                                                                    <i class="far fa-heart"></i></a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!--  -->
-                                    </div>
-                                </div>
-                            </div>
                         </div>
-                        <div class="ltn__pagination-area text-center">
-                            <div class="ltn__pagination">
-                                <ul>
-                                    <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
-                                    <li><a href="#">1</a></li>
-                                    <li class="active"><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#">...</a></li>
-                                    <li><a href="#">10</a></li>
-                                    <li><a href="#"><i class="fas fa-angle-double-right"></i></a></li>
-                                </ul>
-                            </div>
+                        <div class="text-center mt-4">
+                            <button id="loadMoreBtn" class="btn btn-primary">Load More</button>
                         </div>
+
                     </div>
                     <div class="col-lg-4  mb-120">
                         <aside class="sidebar ltn__shop-sidebar">
-
-                            <!-- Category Widget -->
                             <div class="widget ltn__menu-widget">
-                                <h4 class="ltn__widget-title ltn__widget-title-border">Product categories</h4>
+                                <h4 class="ltn__widget-title ltn__widget-title-border">Product Availability</h4>
                                 <ul>
-                                    <li><a href="#">Body <span><i class="fas fa-long-arrow-alt-right"></i></span></a>
+                                    <li>
+                                        <label><input type="checkbox" class="filter-checkbox" name="availability[]" value="in_stock">&nbsp;&nbsp; Available</label>
                                     </li>
-                                    <li><a href="#">Interior <span><i
-                                                    class="fas fa-long-arrow-alt-right"></i></span></a></li>
-                                    <li><a href="#">Lights <span><i class="fas fa-long-arrow-alt-right"></i></span></a>
-                                    </li>
-                                    <li><a href="#">Parts <span><i class="fas fa-long-arrow-alt-right"></i></span></a>
-                                    </li>
-                                    <li><a href="#">Tires <span><i class="fas fa-long-arrow-alt-right"></i></span></a>
-                                    </li>
-                                    <li><a href="#">Uncategorized <span><i
-                                                    class="fas fa-long-arrow-alt-right"></i></span></a></li>
-                                    <li><a href="#">Wheel <span><i class="fas fa-long-arrow-alt-right"></i></span></a>
+                                    <li>
+                                        <label><input type="checkbox" class="filter-checkbox" name="availability[]" value="out_of_stock">&nbsp;&nbsp; Out of Stock</label>
                                     </li>
                                 </ul>
                             </div>
-                            <!-- Price Filter Widget -->
-                            <div class="widget ltn__price-filter-widget">
-                                <h4 class="ltn__widget-title ltn__widget-title-border">Filter by price</h4>
-                                <div class="price_filter">
-                                    <div class="price_slider_amount">
-                                        <input type="submit" value="Your range:" />
-                                        <input type="text" class="amount" name="price" placeholder="Add Your Price" />
-                                    </div>
-                                    <div class="slider-range"></div>
-                                </div>
+
+                            <!-- Category Widget -->
+                            <div class="widget ltn__menu-widget">
+                                <h4 class="ltn__widget-title ltn__widget-title-border">Product Types</h4>
+                                <ul>
+                                    <?php if (!empty($productTypes)): ?>
+                                        <?php foreach ($productTypes as $type): ?>
+                                            <li>
+                                                <label>
+                                                    <input type="checkbox" class="filter-checkbox" name="type_id[]" value="<?= esc($type->type_id) ?>"> 
+                                                    &nbsp;&nbsp;<?= esc($type->type_name) ?>
+                                                </label>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <li>No product types found.</li>
+                                    <?php endif; ?>
+                                </ul>
                             </div>
 
-                            <!-- Size Widget -->
-                            <div class="widget ltn__tagcloud-widget ltn__size-widget">
+                            <div class="widget ltn__menu-widget">
                                 <h4 class="ltn__widget-title ltn__widget-title-border">Product Size</h4>
                                 <ul>
-                                    <li><a href="#">S</a></li>
-                                    <li><a href="#">M</a></li>
-                                    <li><a href="#">L</a></li>
-                                    <li><a href="#">XL</a></li>
-                                    <li><a href="#">XXL</a></li>
+                                    <?php if (!empty($productsize)): ?>
+                                        <?php foreach ($productsize as $size): ?>
+                                            <li>
+                                                <label>
+                                                    <input type="checkbox" class="filter-checkbox" name="size_id[]" value="<?= esc($size->size_id) ?>">
+                                                    &nbsp;&nbsp;<?= esc($size->size_name) ?>
+                                                </label>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <li>No product types found.</li>
+                                    <?php endif; ?>
                                 </ul>
                             </div>
                         </aside>
@@ -515,8 +172,6 @@
                 </div>
             </div>
         </div>
-        <!-- PRODUCT DETAILS AREA END -->
-
 
         <!-- FOOTER AREA START -->
         <?php require("components/footer.php") ?>
@@ -732,6 +387,8 @@
     <script src="<?php echo base_url() ?>public/assets/js/plugins.js"></script>
     <!-- Main JS -->
     <script src="<?php echo base_url() ?>public/assets/js/main.js"></script>
+    <script src="<?php echo base_url() ?>public/assets/js/filter.js"></script>
+
 
 </body>
 

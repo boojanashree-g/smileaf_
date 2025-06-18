@@ -4042,8 +4042,8 @@ ul.wp-block-latest-posts.is-grid.alignwide {
     Widgets
 -------------------------------------------------------------- */
 .widget {
-  margin-bottom: 40px;
-  padding: 35px 30px 40px 35px;
+  margin-bottom: 15px;
+  padding: 20px;
   border: 2px solid var(--border-color-11);
 }
 
@@ -4053,7 +4053,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 
 .ltn__widget-title {
   font-size: 20px;
-  margin-bottom: 35px;
+  margin-bottom: 15px;
   text-transform: capitalize;
 }
 
@@ -10043,10 +10043,10 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 }
 
 .ltn__section-title-2 .section-title {
-  font-size: 40px;
-  font-weight: 700;
-  margin-bottom: 15px;
-  line-height: 1;
+    font-size: 30px;
+    font-weight: 700;
+    margin: 15px 0;
+    line-height: 1;
 }
 
 .ltn__section-title-2 p {
