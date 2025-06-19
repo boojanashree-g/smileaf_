@@ -8566,7 +8566,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
   display: inline-block;
   font-size: 13px;
   font-weight: 700;
-  background-color: var(--ltn__secondary-color);
+  background-color:#cf1300;
   color: var(--white);
   padding: 1px 12px;
   text-transform: uppercase;
