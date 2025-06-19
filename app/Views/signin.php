@@ -24,33 +24,23 @@
     <!-- LOGIN AREA START -->
     <div class="ltn__login-area pb-65">
         <div class="container">
-            <div class="row">
+            <div class="row justify-content-center">
                 <div class="col-lg-6 signin_wrapper">
                     <div class="account-login-inner">
                         <!-- Tabs to choose login type -->
                         <ul class="nav nav-tabs" id="loginTabs" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-login" type="button" role="tab">Login with Password</button>
+                                <button class="nav-link active" id="otp-tab" data-bs-toggle="tab" data-bs-target="#otp-login" type="button" role="tab">Login with OTP</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="otp-tab" data-bs-toggle="tab" data-bs-target="#otp-login" type="button" role="tab">Login with OTP</button>
+                                <button class="nav-link " id="password-tab" data-bs-toggle="tab" data-bs-target="#password-login" type="button" role="tab">Login with Password</button>
+
                             </li>
                         </ul>
 
                         <div class="tab-content" id="loginTabContent">
-                            <!-- Username/Password Login -->
-                            <div class="tab-pane fade show active" id="password-login" role="tabpanel">
-                                <form action="#" class="ltn__form-box contact-form-box">
-                                    <input type="text" name="username" placeholder="Username or Email*" required>
-                                    <input type="password" name="password" placeholder="Password*" required>
-                                    <div class="btn-wrapper mt-0">
-                                        <button type="submit" class="theme-btn-1 btn reverse-color btn-block">Login</button>
-                                    </div>
-                                </form>
-                            </div>
-
                             <!-- OTP Login -->
-                            <div class="tab-pane fade" id="otp-login" role="tabpanel">
+                             <div class="tab-pane fade show active" id="otp-login" role="tabpanel">
                                 <form class="ltn__form-box contact-form-box">
                                     <input type="text" id="number" placeholder="Mobile Number*" name="number">
                                     <div class="btn-wrapper mt-0">
@@ -59,11 +49,22 @@
                                     </div>
                                 </form>
                             </div>
+
+                            <!-- Username/Password Login -->
+                            <div class="tab-pane fade " id="password-login" role="tabpanel">
+                                <form action="#" class="ltn__form-box contact-form-box">
+                                    <input type="text" name="username" placeholder="Username or Email*" required>
+                                    <input type="password" name="password" placeholder="Password*" required>
+                                    <div class="btn-wrapper mt-0">
+                                        <button type="submit" class="theme-btn-1 btn reverse-color btn-block">Login</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-6">
+                <!-- <div class="col-lg-6">
                     <div class="account-create text-center pt-50">
                         <h4>DON'T HAVE AN ACCOUNT?</h4>
                         <p>Add items to your wishlist, get personalised recommendations,<br>check out more quickly, track your orders, register</p>
@@ -71,7 +72,7 @@
                             <a href="<?php echo base_url('signup') ?>" class="theme-btn-1 btn black-btn">CREATE ACCOUNT</a>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
