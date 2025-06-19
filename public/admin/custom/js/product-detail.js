@@ -108,34 +108,48 @@ $(document).ready(function () {
   $("#btn-submit").click(function () {
     $(".error").hide();
 
+    var mainImageInput = $("#main_image")[0];
+    var file = mainImageInput.files[0];
+    var maxSize = 500 * 1024; // 500 KB
+
     if ($("#menu_id").val() === "") {
       $(".menu_id").html("Please Select Menu*").show();
-    } 
-    // else if ($("#type_id").val() === "" && mode == "new") {
-    //   $(".type_id").html("Please Select Type*").show();
-    // } 
-    // else if ($("#shape_id").val() === "" && mode == "new") {
-    //   $(".shape_id").html("Please Select Shape*").show();
-    // }
-    //  else if ($("#size_id").val() === "" && mode == "new") {
-    //   $(".size_id").html("Please Select Size*").show();
-    // } 
-    else if ($("#prod_name").val() === "" && mode == "new") {
-      $(".prod_name").html("Please Enter Productname*").show();
-    } else if ($("#main_image").val() === "" && mode == "new") {
-      $(".main_image").html("Please Select Image*").show();
-    } else if (description.getData() === "" && mode == "new") {
-      $(".description").html("Please Enter Description*").show();
-    } else if (produsage.getData() === "" && mode == "new") {
-      $(".product_usage").html("Please Enter ProductUsage*").show();
-    } else {
-      insertData();
+      return;
     }
+
+    if ($("#prod_name").val() === "" && mode == "new") {
+      $(".prod_name").html("Please Enter Product Name*").show();
+      return;
+    }
+
+    if (mainImageInput.files.length === 0 && mode == "new") {
+      $(".main_image").html("Please Select Image*").show();
+      return;
+    }
+
+    if (file && file.size > maxSize && mode == "new") {
+      $(".main_image").html("Image size must be less than 500KB*").show();
+      return;
+    }
+
+    if (description.getData() === "" && mode == "new") {
+      $(".description").html("Please Enter Description*").show();
+      return;
+    }
+
+    if (produsage.getData() === "" && mode == "new") {
+      $(".product_usage").html("Please Enter ProductUsage*").show();
+      return;
+    }
+
+    console.log("Calling insertData()");
+    insertData();
   });
 
   //*************************** [Insert] **************************************************************************
 
   function insertData() {
+    mode == "new";
     var form = $("#product-form")[0];
     data = new FormData(form);
     let proddesc = description.getData();

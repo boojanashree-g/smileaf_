@@ -69,11 +69,6 @@ $(document).ready(function () {
       showToast(errorMessage, "error");
       return;
     }
-
-    // Open OTP modal
-    const modal = new bootstrap.Modal(document.getElementById("otpModal"));
-    modal.show();
-    startOTPTimer();
   });
 
   function isValidEmail(email) {
@@ -103,11 +98,11 @@ $(document).ready(function () {
         localStorage.setItem("token", JSONdata.token);
 
         if (JSONdata.code == 400) {
-          $("#loading").addClass("d-none");
-          $("#invalid-data").text(JSONdata.msg).removeClass("d-none");
+          showToast(JSONdata.message, "error");
         } else if (JSONdata.code == 200) {
-          $("#loading").hide();
-          window.location.href = base_Url + "verify-email-otp";
+          // Open OTP modal
+          $("#otpModal").modal("show");
+          startOTPTimer();
         }
       },
       error: function (xhr, status, error) {
@@ -118,6 +113,69 @@ $(document).ready(function () {
       },
     });
   }
+
+  // *************************** [ResendOTP] *************************************************************************
+  $("#verify-otp").click(function (event) {
+    event.preventDefault();
+
+    let otpInputs = $(".otp-input input");
+    let otp = "";
+    let isValid = true;
+
+    otpInputs.each(function () {
+      if ($(this).val() === "" || $(this).val().length !== 1) {
+        isValid = false;
+        return false;
+      }
+      otp += $(this).val();
+    });
+
+    if (!isValid) {
+      showToast("Please enter all 4 digits", "error");
+    } else {
+      let btn = $(this);
+      btn.prop("disabled", true);
+      let originalText = btn.html();
+      btn.html('<i class="fa fa-refresh fa-spin fa-fw"></i> Verifying...');
+
+      checkOTP(otp);
+
+      // insertData(otp, function () {
+      //   // Re-enable and restore the button after OTP is processed
+      //   $btn.prop("disabled", false);
+      //   $btn.html(originalText);
+      // });
+    }
+  });
+
+  const checkOTP = (otp) => {
+    $.ajax({
+      type: "POST",
+      url: base_Url + "check-signotp",
+      data: { otp: otp },
+      processData: false,
+      contentType: false,
+      cache: false,
+      dataType: "json",
+      success: function (JSONdata) {
+        localStorage.setItem("token", JSONdata.token);
+
+        if (JSONdata.code == 400) {
+          showToast(JSONdata.message, "error");
+        } else if (JSONdata.code == 200) {
+          // Open OTP modal
+          $("#otpModal").modal("show");
+          startOTPTimer();
+        }
+      },
+      error: function (xhr, status, error) {
+        $("#loading").addClass("d-none");
+        $("#invalid-data")
+          .text("Error inserting data. Please try again.")
+          .removeClass("d-none");
+      },
+    });
+  };
 
   // *************************** [OTP Timer functions] *************************************************************************
 
@@ -184,7 +242,7 @@ $(document).ready(function () {
       })
       .get()
       .join("");
-    if (otp.length === 6) {
+    if (otp.length === 4) {
       if (timeLeft > 0) {
         showToast("Verifying OTP...", "info");
         setTimeout(() => {
@@ -198,7 +256,7 @@ $(document).ready(function () {
         showToast("OTP has expired. Please request a new one.", "error");
       }
     } else {
-      showToast("Please enter a 6-digit OTP", "error");
+      showToast("Please enter a 4-digit OTP", "error");
     }
   }
 

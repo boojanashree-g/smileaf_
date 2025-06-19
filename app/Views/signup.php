@@ -68,17 +68,16 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body text-center">
-                        <p>Enter the 6-digit code sent to your device</p>
+                        <p>Enter the 4-digit code sent to your device</p>
                         <div id="timer">Time remaining: 1:00</div>
                         <div class="otp-input d-flex justify-content-center my-3">
                             <input type="number" min="0" max="9" required>
                             <input type="number" min="0" max="9" required>
                             <input type="number" min="0" max="9" required>
                             <input type="number" min="0" max="9" required>
-                            <input type="number" min="0" max="9" required>
-                            <input type="number" min="0" max="9" required>
+
                         </div>
-                        <button class="btn btn-success" onclick="verifyOTP()">Verify</button>
+                        <button class="btn btn-success" id="verify-otp">Verify</button>
                         <button class="btn btn-link" id="resendButton" onclick="resendOTP()" disabled>Resend
                             Code</button>
                     </div>

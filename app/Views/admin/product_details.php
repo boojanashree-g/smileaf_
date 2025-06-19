@@ -161,7 +161,7 @@
                                             </div>
 
                                             <div class="col-5 col-md-5">
-                                                <label for="main_image" class="form-label">Product Image</label>
+                                                <label for="main_image" class="form-label">Product Image(Allowed size below 500KB)</label>
                                                 <input class="form-control" type="file" id="main_image"
                                                     name="main_image" accept="image/*">
                                                
@@ -209,13 +209,13 @@
                                             <div id="defaultSection" class="row g-3 mt-2">
                                                 <h5>Product Variants</h5>
                                                 <div class="col-3 col-md-3">
-                                                    <input type="text" name="pack_qty"
+                                                    <input type="number" name="pack_qty"
                                                         class="form-control pack_qty" placeholder="Pack Quantity*" />
                                                     <span class="error text-danger pack_qty mt-5"></span>
                                                 </div>
 
                                                  <div class="col-3 col-md-3">                                                   
-                                                    <input type="text"  name="quantity"
+                                                    <input type="number"  name="quantity"
                                                         class="form-control quantity" placeholder="Quantity*" />
                                                     <span class="error text-danger quantity mt-5"></span>
                                                 </div>
@@ -387,8 +387,8 @@
             const variantHtml = `
             <div class="variant-block row g-2" data-index="${variantIndex}">
                 <div class="row g-3 mt-2">
-                    <div class="col-md-3"><input type="text" name="variants[${variantIndex}][pack_qty]" class="form-control pack_qty" placeholder="Pack Quantity*"></div>
-                    <div class="col-md-3"><input type="text" name="variants[${variantIndex}][quantity]" class="form-control quantity" placeholder="Quantity*"></div>
+                    <div class="col-md-3"><input type="number" name="variants[${variantIndex}][pack_qty]" class="form-control pack_qty" placeholder="Pack Quantity*"></div>
+                    <div class="col-md-3"><input type="number" name="variants[${variantIndex}][quantity]" class="form-control quantity" placeholder="Quantity*"></div>
                     <div class="col-md-3"><input type="text" name="variants[${variantIndex}][mrp]" class="form-control mrp" placeholder="MRP*"></div>
                     <div class="col-md-3">
                         <select name="variants[${variantIndex}][offer_type]" class="form-select offer_type">
@@ -438,12 +438,12 @@
         $("#variant-list").empty();
          variantIndex = 0;
         $(".add-variant").click();
-         }
+         } 
 
         function removeVariantBlocks(){
              $("#variant-list").empty();
          variantIndex = 0;
-        }
+        } 
 
     </script>
 
