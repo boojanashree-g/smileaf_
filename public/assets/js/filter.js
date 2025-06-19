@@ -6,6 +6,7 @@ $(document).ready(function () {
         let typeIds = [];
         let sizeIds = [];
         let availability = [];
+        let shapeIds = [];
 
         $('input[name="type_id[]"]:checked').each(function () {
             typeIds.push($(this).val()); 
@@ -18,7 +19,9 @@ $(document).ready(function () {
         $('input[name="availability[]"]:checked').each(function () {
             availability.push($(this).val());
         });
-
+         $('input[name="shape_id[]"]:checked').each(function () {
+            shapeIds.push($(this).val());
+        });
         // Debug: Check if the target element exists
         let targetElement = $('.ltn__product-tab-content-inner .ltn__product-grid-view .row');
         console.log('Target element found:', targetElement.length);
@@ -54,6 +57,7 @@ $(document).ready(function () {
                 type_id: typeIds,
                 size_id: sizeIds,
                 availability: availability,
+                shape_id: shapeIds,
                 ajax: '1'
             },
             headers: {
@@ -61,7 +65,7 @@ $(document).ready(function () {
             },
             dataType: 'json',
             success: function (response) {
-                console.log('AJAX Success', response);
+                console.log('AJAX Success', response.products);
                 console.log('Products count:', response.products ? response.products.length : 0);
                 
                 if (response.success && response.products && response.products.length > 0) {
