@@ -51,11 +51,15 @@ class ProductController extends BaseController
         $ProductModel = new ProductModel();
         $VariantModel = new VariantModel();
         $ImageModel = new ImageModel();
+        $data = $request->getPost();
 
         try {
             $productName = $request->getPost('prod_name');
             $hasVariant = $request->getPost('has_variant');
             $variants = $request->getPost('variants');
+            $data = $request->getPost();
+
+
 
             $url = strtolower(trim(preg_replace('/-+/', '-', preg_replace('/[^A-Za-z0-9-]+/', '-', $productName)), '-'));
 
@@ -66,7 +70,7 @@ class ProductController extends BaseController
                 $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
                 if (in_array($MainImg->getMimeType(), $allowedTypes)) {
-                    if ($MainImg->getSize() <= 512000) {  // 500 KB
+                    if ($MainImg->getSize() < 512000) {  // 500 KB
                         $randomName = $MainImg->getRandomName();
                         $MainImg->move('./uploads/', $randomName);
                     } else {
@@ -104,23 +108,31 @@ class ProductController extends BaseController
                 $lastInsertedID = $ProductModel->insertID();
 
                 if ($lastInsertedID) {
-
+                    $quantity = $request->getPost('quantity');
                     if ((int) $hasVariant == 0) {
                         $variantData = [
                             'prod_id' => $lastInsertedID,
-                            'pack_qty' => $request->getPost('pack_qty'),
+                            'pack_qty' => $request->getPost('pack_qty') ?? 0,
                             'mrp' => $request->getPost('mrp'),
                             'offer_type' => $request->getPost('offer_type'),
                             'offer_details' => $request->getPost('offer_details'),
                             'offer_price' => $request->getPost('offer_price'),
                             'stock_status' => $request->getPost('stock_status'),
-                            'quantity' => $request->getPost('quantity'),
+                            'quantity' => $quantity,
                             'weight' => $request->getPost('weight'),
                         ];
 
                         $VariantModel->insert($variantData);
+                        $affected = $this->db->affectedRows();
+                        if ($affected > 0) {
+                            $updateQry = "UPDATE tbl_products SET main_quantity = ? WHERE prod_id = ?";
+                            $updateData = $this->db->query($updateQry, [$quantity, $lastInsertedID]);
+                        }
+
                     } else {
                         for ($i = 0; $i < count($variants); $i++) {
+                            $totalQuantity += (int) $variants[$i]['quantity'];
+
                             $variantData = [
                                 'prod_id' => $lastInsertedID,
                                 'pack_qty' => $variants[$i]['pack_qty'],
@@ -134,6 +146,9 @@ class ProductController extends BaseController
                             ];
                             $VariantModel->insert($variantData);
                         }
+
+                        $updateQry = "UPDATE tbl_products SET main_quantity = ? WHERE prod_id = ?";
+                        $updateData = $this->db->query($updateQry, [$totalQuantity, $lastInsertedID]);
                     }
 
                     $images = $this->request->getFiles();
@@ -349,22 +364,31 @@ class ProductController extends BaseController
                 if ($lastInsertedID) {
 
                     if ((int) $hasVariant == 0) {
+                        $quantity = $request->getPost('quantity');
                         $variantData = [
                             'prod_id' => $lastInsertedID,
-                            'pack_qty' => $request->getPost('pack_qty'),
+                            'pack_qty' => $request->getPost('pack_qty') ?? 0,
                             'mrp' => $request->getPost('mrp'),
                             'offer_type' => $request->getPost('offer_type'),
                             'offer_details' => $request->getPost('offer_details'),
                             'offer_price' => $request->getPost('offer_price'),
                             'stock_status' => $request->getPost('stock_status'),
-                            'quantity' => $request->getPost('quantity'),
+                            'quantity' => $quantity,
                             'weight' => $request->getPost('weight'),
                         ];
 
                         $VariantModel->insert($variantData);
-                        $affectedRows = $this->db->affectedRows();
+
+
+                        $affected = $this->db->affectedRows();
+                        if ($affected > 0) {
+                            $updateQry = "UPDATE tbl_products SET main_quantity = ? WHERE prod_id = ?";
+                            $updateData = $this->db->query($updateQry, [$quantity, $lastInsertedID]);
+                        }
                     } else {
                         for ($i = 0; $i < count($variants); $i++) {
+
+                            $totalQuantity += (int) $variants[$i]['quantity'];
                             $variantData = [
                                 'prod_id' => $lastInsertedID,
                                 'pack_qty' => $variants[$i]['pack_qty'],
@@ -380,6 +404,9 @@ class ProductController extends BaseController
                             $affectedRows = $this->db->affectedRows();
 
                         }
+
+                        $updateQry = "UPDATE tbl_products SET main_quantity = ? WHERE prod_id = ?";
+                        $updateData = $this->db->query($updateQry, [$totalQuantity, $lastInsertedID]);
                     }
 
 

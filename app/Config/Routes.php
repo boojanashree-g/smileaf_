@@ -22,6 +22,7 @@ $routes->get('order-tracking', 'Home::orderTracking');
 $routes->get('product-categories/(:segment)', 'Home::productCategories/$1');
 
 $routes->post('signup-otp', 'SignupController::signupOTP');
+$routes->post('check-signotp', 'SignupController::checkSignOTP');
 
 
 
