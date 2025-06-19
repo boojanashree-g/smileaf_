@@ -22,7 +22,7 @@
         <div class="ltn__product-area ltn__product-gutter">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-8 order-lg-2 mb-120">
+                    <div class="col-lg-9 order-lg-2 mb-120">
                         <div class="ltn__shop-options">
                             <ul>
                                 <li>
@@ -450,16 +450,16 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4  mb-120">
+                    <div class="col-lg-3 mb-120">
                         <aside class="sidebar ltn__shop-sidebar">
                             <div class="widget ltn__menu-widget">
                                 <h4 class="ltn__widget-title ltn__widget-title-border">Product Availability</h4>
                                 <ul>
                                     <li>
-                                        <label><input type="checkbox" class="filter-checkbox" name="availability[]" value="in_stock">&nbsp;&nbsp; Available</label>
+                                        <label><input type="checkbox" class="filter-checkbox" name="availability[]" value="1">&nbsp;&nbsp; Available</label>
                                     </li>
                                     <li>
-                                        <label><input type="checkbox" class="filter-checkbox" name="availability[]" value="out_of_stock">&nbsp;&nbsp; Out of Stock</label>
+                                        <label><input type="checkbox" class="filter-checkbox" name="availability[]" value="0">&nbsp;&nbsp; Out of Stock</label>
                                     </li>
                                 </ul>
                             </div>
@@ -482,7 +482,23 @@
                                     <?php endif; ?>
                                 </ul>
                             </div>
-
+                            <div class="widget ltn__menu-widget">
+                                <h4 class="ltn__widget-title ltn__widget-title-border">Product Shape</h4>
+                                <ul>
+                                    <?php  if (!empty($productShape)): ?>
+                                        <?php foreach ($productShape as $shape): ?>
+                                            <li>
+                                                <label>
+                                                    <input type="checkbox" class="filter-checkbox" name="shape_id[]" value="<?= esc($shape->shape_id) ?>">
+                                                    &nbsp;&nbsp;<?= esc($shape->shape_name) ?>
+                                                </label>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <li>No product types found.</li>
+                                    <?php endif; ?>
+                                </ul>
+                            </div>
                             <div class="widget ltn__menu-widget">
                                 <h4 class="ltn__widget-title ltn__widget-title-border">Product Size</h4>
                                 <ul>

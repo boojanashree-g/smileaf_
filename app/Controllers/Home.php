@@ -88,8 +88,7 @@ class Home extends BaseController
             // Get filter parameters
             $typeIds = $this->request->getGet('type_id');
             $sizeIds = $this->request->getGet('size_id'); 
-            $availability = $this->request->getGet('availability');
-            
+            $shapeIds = $this->request->getGet('shape_id'); 
             // Check if it's an AJAX request
             $isAjax = $this->request->isAJAX() || 
                     $this->request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest' ||
@@ -99,8 +98,10 @@ class Home extends BaseController
             if (!$isAjax) {
                 $typeQuery = $db->table('tbl_filter_type')->where('flag !=', 0)->get();
                 $sizeQuery = $db->table('tbl_filter_size')->where('flag !=', 0)->get();
+                $shapeQuery = $db->table('tbl_filter_shapes')->where('flag !=', 0)->get();
                 $productTypes = $typeQuery->getResult();
                 $productsize = $sizeQuery->getResult();
+                $productShape = $shapeQuery->getResult();
             }
 
             // Build products query with joins
@@ -126,12 +127,11 @@ class Home extends BaseController
                     $productsQuery->where('a.size_id', $sizeIds);
                 }
             }
-                                                        
-            if (!empty($availability)) {
-                if (is_array($availability)) {
-                    $productsQuery->whereIn('a.availability', $availability);
+            if (!empty($shapeIds)) {
+                if (is_array($shapeIds)) {
+                    $productsQuery->whereIn('a.shape_id', $shapeIds);
                 } else {
-                    $productsQuery->where('a.availability', $availability);
+                    $productsQuery->where('a.shape_id', $shapeIds);
                 }
             }
 
@@ -157,7 +157,8 @@ class Home extends BaseController
                 'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
                 'products' => $products,
                 'productTypes' => $productTypes,
-                'productsize' => $productsize
+                'productsize' => $productsize,
+                'productShape' => $productShape
             ];
 
             return view('products', $data);
