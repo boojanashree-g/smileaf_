@@ -106,9 +106,10 @@ class Home extends BaseController
 
             // Build products query with joins
             $productsQuery = $db->table('tbl_products a')
-                ->select('a.*, b.size_name, d.type_name')
+                ->select('a.*, b.size_name, d.type_name , e.mrp, e.stock_status, e.offer_price')
                 ->join('tbl_filter_size b', 'a.size_id = b.size_id', 'left')
                 ->join('tbl_filter_type d', 'a.type_id = d.type_id', 'left')
+                ->join('tbl_variants e', 'a.prod_id = e.prod_id', 'left')
                 ->where('a.flag !=', 0);
 
             // Apply filters if they exist
@@ -164,8 +165,6 @@ class Home extends BaseController
             return view('products', $data);
         }
     }  
-
-
 
     public function wishlist()
     {

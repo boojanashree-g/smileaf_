@@ -19,39 +19,24 @@ $(document).ready(function () {
         $('input[name="availability[]"]:checked').each(function () {
             availability.push($(this).val());
         });
-         $('input[name="shape_id[]"]:checked').each(function () {
+        
+        $('input[name="shape_id[]"]:checked').each(function () {
             shapeIds.push($(this).val());
         });
-        // Debug: Check if the target element exists
-        let targetElement = $('.ltn__product-tab-content-inner .ltn__product-grid-view .row');
-        console.log('Target element found:', targetElement.length);
-        console.log('Target element:', targetElement);
 
-        // Try alternative selectors if the main one doesn't work
-        if (targetElement.length === 0) {
-            // Try broader selector
-            targetElement = $('.ltn__product-grid-view .row');
-            console.log('Alternative selector 1 found:', targetElement.length);
-            
-            if (targetElement.length === 0) {
-                // Try even broader
-                targetElement = $('#liton_product_grid .row');
-                console.log('Alternative selector 2 found:', targetElement.length);
-                
-                if (targetElement.length === 0) {
-                    // Try the most basic
-                    targetElement = $('.row').first();
-                    console.log('Basic selector found:', targetElement.length);
-                }
-            }
-        }
+        // Get target elements for both views
+        let gridTargetElement = getTargetElement('grid');
+        let listTargetElement = getTargetElement('list');
+        
+        console.log('Grid target element found:', gridTargetElement.length);
+        console.log('List target element found:', listTargetElement.length);
 
-        // Show loading indicator
-        targetElement.html('<div class="col-12 text-center"><p>Loading products...</p></div>');
+        // Show loading indicator in both views
+        showLoadingIndicator(gridTargetElement, listTargetElement);
 
         // AJAX request
         $.ajax({
-            url: base_Url+'/products',
+            url: base_Url + '/products',
             method: 'GET',
             data: {
                 type_id: typeIds,
@@ -69,78 +54,238 @@ $(document).ready(function () {
                 console.log('Products count:', response.products ? response.products.length : 0);
                 
                 if (response.success && response.products && response.products.length > 0) {
-                    let productsHtml = '';
+                    // Generate HTML for both views
+                    let gridHtml = generateGridHtml(response.products);
+                    let listHtml = generateListHtml(response.products);
                     
-                    response.products.forEach(function(product) {
-                        console.log('Processing product:', product.prod_name);
-                        
-                        productsHtml += `
-                            <div class="col-xl-4 col-sm-6 col-6">
-                                <div class="ltn__product-item ltn__product-item-3 text-center">
-                                    <div class="product-img">
-                                        <a href="<?= base_url() ?>${base_Url }${product.url || '#'}">
-                                            <img src="${base_Url}${product.main_image || 'default-image.jpg'}" alt="${product.prod_name || 'Product'}">
-                                        </a>
-                                        <div class="product-badge">
-                                            <ul>
-                                                <li class="sale-badge">New</li>
-                                            </ul>
-                                        </div>
-                                        <div class="product-hover-action">
-                                            <ul>
-                                                <li>
-                                                    <a href="#" title="Quick View" data-bs-toggle="modal" data-bs-target="#quick_view_modal">
-                                                        <i class="far fa-eye"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal">
-                                                        <i class="fas fa-shopping-cart"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" title="Wishlist" data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal">
-                                                        <i class="far fa-heart"></i>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="product-info">
-                                        <h2 class="product-title">
-                                            <a href="${product.url || '#'}">
-                                                ${product.prod_name || 'Product Name'}
-                                            </a>
-                                        </h2>
-                                        <div class="product-price">
-                                            <span>₹${product.current_price || product.price || '300'}</span>
-                                            ${product.original_price ? `<del>₹${product.original_price}</del>` : '<del>₹200</del>'}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    });
+                    // Update both views
+                    gridTargetElement.html(gridHtml);
+                    listTargetElement.html(listHtml);
                     
-                    console.log('Generated HTML length:', productsHtml.length);
-                    console.log('First 200 chars of HTML:', productsHtml.substring(0, 200));
-                    
-                    targetElement.html(productsHtml);
-                    
-                    // Verify the content was updated
-                    console.log('Content updated. New element count:', targetElement.children().length);
+                    console.log('Content updated for both views');
                     
                 } else {
                     console.log('No products found or response failed');
-                    targetElement.html('<div class="col-12"><p class="text-center">No products found.</p></div>');
+                    showNoProductsMessage(gridTargetElement, listTargetElement);
                 }
             },
             error: function (xhr, status, error) {
                 console.error('AJAX Error:', error);
                 console.error('Status:', status);
                 console.error('Response:', xhr.responseText);
-                targetElement.html('<div class="col-12"><p class="text-center text-danger">Error fetching products.</p></div>');
+                showErrorMessage(gridTargetElement, listTargetElement);
             }
         });
-    });    
+    });
+
+    // Function to get target element with fallback selectors
+    function getTargetElement(viewType) {
+        let selectors = [];
+        
+        if (viewType === 'grid') {
+            selectors = [
+                '.ltn__product-tab-content-inner .ltn__product-grid-view .row',
+                '.ltn__product-grid-view .row',
+                '#liton_product_grid .row',
+                '#product-grid-container'
+            ];
+        } else if (viewType === 'list') {
+            selectors = [
+                '.ltn__product-tab-content-inner .ltn__product-list-view .row',
+                '.ltn__product-list-view .row',
+                '#liton_product_list .row',
+                '#product-list-container'
+            ];
+        }
+        
+        for (let selector of selectors) {
+            let element = $(selector);
+            if (element.length > 0) {
+                console.log(`Found ${viewType} element with selector: ${selector}`);
+                return element;
+            }
+        }
+        
+        // Last resort - create the container if it doesn't exist
+        if (viewType === 'grid') {
+            $('#liton_product_grid').append('<div class="row" id="product-grid-container"></div>');
+            return $('#product-grid-container');
+        } else {
+            $('#liton_product_list').append('<div class="row" id="product-list-container"></div>');
+            return $('#product-list-container');
+        }
+    }
+
+    // Function to show loading indicator
+    function showLoadingIndicator(gridElement, listElement) {
+        const loadingHtml = '<div class="col-12 text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Loading products...</p></div>';
+        gridElement.html(loadingHtml);
+        listElement.html(loadingHtml);
+    }
+
+    // Function to generate grid view HTML
+    function generateGridHtml(products) {
+        let html = '';
+        
+        products.forEach(function(product) {
+            html += `
+                <div class="col-xl-4 col-sm-6 col-6 product-item" 
+                     data-name="${(product.prod_name || '').toLowerCase()}"
+                     data-price="${product.current_price || product.price || product.mrp || '0'}"
+                     data-category="${(product.category || '').toLowerCase()}"
+                     data-stock="${product.stock_status || '1'}">
+                    <div class="ltn__product-item ltn__product-item-3 text-center">
+                        <div class="product-img">
+                            <a href="${base_Url}${product.url || '#'}">
+                                <img src="${base_Url}${product.main_image || 'default-image.jpg'}" alt="${product.prod_name || 'Product'}">
+                            </a>
+                            ${product.stock_status == 0 ? 
+                                `<div class="product-badge">
+                                    <ul><li class="sale-badge">Out of Stock</li></ul>
+                                </div>` : 
+                                (product.badge ? 
+                                    `<div class="product-badge">
+                                        <ul><li class="sale-badge">${product.badge}</li></ul>
+                                    </div>` : 
+                                    `<div class="product-badge">
+                                        <ul><li class="sale-badge">New</li></ul>
+                                    </div>`
+                                )
+                            }
+                            <div class="product-hover-action">
+                                <ul>
+                                    <li>
+                                        <a href="#" title="Quick View" data-bs-toggle="modal" data-bs-target="#quick_view_modal">
+                                            <i class="far fa-eye"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Wishlist" data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal">
+                                            <i class="far fa-heart"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h2 class="product-title">
+                                <a href="${base_Url}${product.url || '#'}">
+                                    ${product.prod_name || 'Product Name'}
+                                </a>
+                            </h2>
+                            <div class="product-price">
+                                <span>₹${product.current_price || product.price || product.mrp || '0'}</span>
+                                ${(product.original_price || product.offer_price) && 
+                                  (product.original_price || product.offer_price) !== (product.current_price || product.price || product.mrp) ? 
+                                    `<del>₹${product.original_price || product.offer_price}</del>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        return html;
+    }
+
+    // Function to generate list view HTML
+    function generateListHtml(products) {
+        let html = '';
+        
+        products.forEach(function(product) {
+            html += `
+                <div class="col-lg-12 product-item" 
+                     data-name="${(product.prod_name || '').toLowerCase()}"
+                     data-price="${product.current_price || product.price || product.mrp || '0'}"
+                     data-category="${(product.category || '').toLowerCase()}"
+                     data-stock="${product.stock_status || '1'}">
+                    <div class="ltn__product-item ltn__product-item-3">
+                        <div class="product-img">
+                            <a href="${base_Url}${product.url || '#'}">
+                                <img src="${base_Url}${product.main_image || 'default-image.jpg'}" alt="${product.prod_name || 'Product'}">
+                            </a>
+                            ${product.stock_status == 0 ? 
+                                `<div class="product-badge">
+                                    <ul><li class="sale-badge">Out of Stock</li></ul>
+                                </div>` : 
+                                (product.badge ? 
+                                    `<div class="product-badge">
+                                        <ul><li class="sale-badge">${product.badge}</li></ul>
+                                    </div>` : ''
+                                )
+                            }
+                        </div>
+                        <div class="product-info">
+                            <h2 class="product-title">
+                                <a href="${base_Url}${product.url || '#'}">
+                                    ${product.prod_name || 'Product Name'}
+                                </a>
+                            </h2>
+                            <div class="product-price">
+                                <span>₹${product.current_price || product.price || product.mrp || '0'}</span>
+                                ${(product.original_price || product.offer_price) && 
+                                  (product.original_price || product.offer_price) !== (product.current_price || product.price || product.mrp) ? 
+                                    `<del>₹${product.original_price || product.offer_price}</del>` : ''}
+                            </div>
+                            <div class="product-brief">
+                                <p>${product.description || product.prod_description || 'Premium quality product available at best prices.'}</p>
+                            </div>
+                            <div class="product-hover-action">
+                                <ul>
+                                    <li>
+                                        <a href="#" title="Quick View" data-bs-toggle="modal" data-bs-target="#quick_view_modal">
+                                            <i class="far fa-eye"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Wishlist" data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal">
+                                            <i class="far fa-heart"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        return html;
+    }
+
+    // Function to show no products message
+    function showNoProductsMessage(gridElement, listElement) {
+        const noProductsHtml = '<div class="col-12"><p class="text-center">No products found matching your criteria.</p></div>';
+        gridElement.html(noProductsHtml);
+        listElement.html(noProductsHtml);
+    }
+
+    // Function to show error message
+    function showErrorMessage(gridElement, listElement) {
+        const errorHtml = '<div class="col-12"><p class="text-center text-danger">Error fetching products. Please try again.</p></div>';
+        gridElement.html(errorHtml);
+        listElement.html(errorHtml);
+    }
+
+    // Optional: Add view switching functionality
+    $('.view-toggle').on('click', function() {
+        const viewType = $(this).data('view');
+        if (viewType === 'grid') {
+            $('#liton_product_grid').addClass('active show');
+            $('#liton_product_list').removeClass('active show');
+        } else if (viewType === 'list') {
+            $('#liton_product_list').addClass('active show');
+            $('#liton_product_grid').removeClass('active show');
+        }
+    });
 });
