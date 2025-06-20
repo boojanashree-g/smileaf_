@@ -99,7 +99,7 @@
                                                 <ul class="sub-menu">
                                                     <?php foreach ($submenu[$menu['menu_id']] as $child): ?>
                                                         <li>
-                                                            <a href="<?= base_url('/product-categories/' . $child['slug']) ?>">
+                                                            <a href="<?= base_url('/products/' . base64_encode($child['sub_id']))  ?>">
                                                                 <?= esc($child['submenu']) ?>
                                                             </a>
                                                         </li>
