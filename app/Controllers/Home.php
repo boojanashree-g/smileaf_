@@ -92,93 +92,99 @@ class Home extends BaseController
 
         return view('contact', $data);
     }
-        public function products()
-        {
-            $db = \Config\Database::connect();
-            
-            $menuData = $this->getMenuData();
-            // Get filter parameters
-            $typeIds = $this->request->getGet('type_id');
-            $sizeIds = $this->request->getGet('size_id'); 
-            $shapeIds = $this->request->getGet('shape_id'); 
-            // Check if it's an AJAX request
-            $isAjax = $this->request->isAJAX() || 
-                    $this->request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest' ||
-                    $this->request->getGet('ajax') == '1';
+    
+    public function products($encodedSubmenuId = null)
+    {
+        $db = \Config\Database::connect();
+        $menuData = $this->getMenuData();
 
-            // Get filter options for dropdowns (only for non-AJAX requests)
-            if (!$isAjax) {
-                $typeQuery = $db->table('tbl_filter_type')->where('flag !=', 0)->get();
-                $sizeQuery = $db->table('tbl_filter_size')->where('flag !=', 0)->get();
-                $shapeQuery = $db->table('tbl_filter_shapes')->where('flag !=', 0)->get();
-                $productTypes = $typeQuery->getResult();
-                $productsize = $sizeQuery->getResult();
-                $productShape = $shapeQuery->getResult();
+        // Decode submenu ID from URL
+        $submenuId = null;
+        if ($encodedSubmenuId) {
+            $submenuId = base64_decode($encodedSubmenuId);
+            if (!is_numeric($submenuId)) {
+                throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Invalid product category");
             }
-
-            // Build products query with joins
-            $productsQuery = $db->table('tbl_products a')
-                ->select('a.*, b.size_name, d.type_name , e.mrp, e.stock_status, e.offer_price')
-                ->join('tbl_filter_size b', 'a.size_id = b.size_id', 'left')
-                ->join('tbl_filter_type d', 'a.type_id = d.type_id', 'left')
-                ->join('tbl_variants e', 'a.prod_id = e.prod_id', 'left')
-                ->where('a.flag !=', 0);
-
-            // Apply filters if they exist
-            if (!empty($typeIds)) {
-                if (is_array($typeIds)) {
-                    $productsQuery->whereIn('a.type_id', $typeIds);
-                } else {
-                    $productsQuery->where('a.type_id', $typeIds);
-                }
-            }
-
-            if (!empty($sizeIds)) {
-                if (is_array($sizeIds)) {
-                    $productsQuery->whereIn('a.size_id', $sizeIds);
-                } else {
-                    $productsQuery->where('a.size_id', $sizeIds);
-                }
-            }
-            if (!empty($shapeIds)) {
-                if (is_array($shapeIds)) {
-                    $productsQuery->whereIn('a.shape_id', $shapeIds);
-                } else {
-                    $productsQuery->where('a.shape_id', $shapeIds);
-                }
-            }
-
-            // Execute the query
-            $products = $productsQuery->get()->getResult();
-
-            // If AJAX request, return JSON data
-            if ($isAjax) {
-                $this->response->setContentType('application/json');
-                return $this->response->setJSON([
-                    'success' => true,
-                    'products' => $products,
-                    'count' => count($products),
-                    'mainmenus' => $menuData,
-                    'groupedSubmenus' => $menuData['submenu']
-                ]);
-            }else{
-            // Default behavior: return full page view
-            $data = array_merge($menuData, [
-                'page_title' => 'Products',
-                'breadcrumb_items' => [
-                    ['label' => 'Home', 'url' => base_url()],
-                    ['label' => 'Products']
-                ],
-                'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
-                'products' => $products,
-                'productTypes' => $productTypes,
-                'productsize' => $productsize,
-                'productShape' => $productShape
-            ]);
-
-            return view('products', $data);
         }
-    }  
+
+        // Filter parameters from query string
+        $typeIds = $this->request->getGet('type_id');
+        $sizeIds = $this->request->getGet('size_id');
+        $shapeIds = $this->request->getGet('shape_id');
+
+        // Detect AJAX
+        $isAjax = $this->request->isAJAX() ||
+            $this->request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest' ||
+            $this->request->getGet('ajax') == '1';
+
+        // Load filter dropdowns only if not AJAX
+        if (!$isAjax) {
+            $typeQuery = $db->table('tbl_filter_type')->where('flag !=', 0)->get();
+            $sizeQuery = $db->table('tbl_filter_size')->where('flag !=', 0)->get();
+            $shapeQuery = $db->table('tbl_filter_shapes')->where('flag !=', 0)->get();
+
+            $productTypes = $typeQuery->getResult();
+            $productsize = $sizeQuery->getResult();
+            $productShape = $shapeQuery->getResult();
+        }
+
+        // Build products query
+        $productsQuery = $db->table('tbl_products a')
+            ->select('a.*, b.size_name, d.type_name, e.mrp, e.stock_status, e.offer_price')
+            ->join('tbl_filter_size b', 'a.size_id = b.size_id', 'left')
+            ->join('tbl_filter_type d', 'a.type_id = d.type_id', 'left')
+            ->join('tbl_variants e', 'a.prod_id = e.prod_id', 'left')
+            ->where('a.flag !=', 0);
+
+        // Apply submenu ID filter
+        if ($submenuId) {
+            $productsQuery->where('a.submenu_id', $submenuId);
+        }
+
+        // Apply other filters
+        if (!empty($typeIds)) {
+            $productsQuery->whereIn('a.type_id', (array)$typeIds);
+        }
+
+        if (!empty($sizeIds)) {
+            $productsQuery->whereIn('a.size_id', (array)$sizeIds);
+        }
+
+        if (!empty($shapeIds)) {
+            $productsQuery->whereIn('a.shape_id', (array)$shapeIds);
+        }
+
+        // Fetch product data
+        $products = $productsQuery->get()->getResult();
+
+        // Return JSON for AJAX
+        if ($isAjax) {
+            return $this->response->setJSON([
+                'success' => true,
+                'products' => $products,
+                'count' => count($products),
+                'mainmenus' => $menuData,
+                'groupedSubmenus' => $menuData['submenu']
+            ]);
+        }
+
+        // For normal page rendering
+        $data = array_merge($menuData, [
+            'page_title' => 'Products',
+            'breadcrumb_items' => [
+                ['label' => 'Home', 'url' => base_url()],
+                ['label' => 'Products']
+            ],
+            'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
+            'products' => $products,
+            'productTypes' => $productTypes ?? [],
+            'productsize' => $productsize ?? [],
+            'productShape' => $productShape ?? [],
+        ]);
+
+        return view('products', $data);
+    }
+
 
     public function wishlist()
     {

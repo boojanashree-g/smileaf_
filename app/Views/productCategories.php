@@ -36,14 +36,9 @@
                                                     <div class="col-xl-3 col-sm-6 col-6">
                                                         <div class="ltn__product-item ltn__product-item-3 text-center">
                                                             <div class="product-img">
-                                                                <a href="<?= base_url( $submenu['slug']) ?>">
+                                                                <a href="<?= base_url( 'products/' . base64_encode($submenu['sub_id'])) ?>">
                                                                     <img src="<?= base_url($submenu['image_url']) ?>" alt="#">
                                                                 </a>
-                                                                <!-- <div class="product-badge">
-                                                                    <ul>
-                                                                        <li class="sale-badge">New</li>
-                                                                    </ul>
-                                                                </div> -->
                                                             </div>
                                                             <div class="product-info mt-3">
                                                                 <h2 class="product-title">
