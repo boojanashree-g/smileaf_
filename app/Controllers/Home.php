@@ -11,73 +11,84 @@ use App\Models\ProductModel;
 class Home extends BaseController
 {
     public function index()
-    {
-        $mainmenumodel = new MainmenuModel();
-        $submenumodel = new SubmenuModel();
+    {    
+        $mainmenu = $this->getMenuData();
         $bannerModel = new BannerModel();
-        $mainmenus = $mainmenumodel->where('flag !=', 0)->findAll();
-        $submenus = $submenumodel->where('flag !=', 0)->findAll();
         $bannerData = $bannerModel->where(['flag !=' => 0, 'has_banner' => 1])->findAll();
+        $data = array_merge($this->getMenuData(), [
+            'bannerData' => $bannerData
+        ]);
+        return view('index', $data);
+    }
+
+    private function getMenuData()
+    {
+        $mainmenuModel = new MainmenuModel();
+        $submenuModel = new SubmenuModel();
+
+        $mainmenus = $mainmenuModel->where('flag !=', 0)->findAll();
+        $submenus = $submenuModel->where('flag !=', 0)->findAll();
+
         $groupedSubmenus = [];
         foreach ($submenus as $submenu) {
             $groupedSubmenus[$submenu['menu_id']][] = $submenu;
         }
-        $data['mainmenu'] = $mainmenus;
-        $data['submenu'] = $groupedSubmenus;
-        $data['bannerData'] = $bannerData;
-        return view('index', $data);
-    }
 
+        return [
+            'mainmenu' => $mainmenus,
+            'submenu' => $groupedSubmenus
+        ];
+    }
 
     public function productDetails()
     {
-        $data = [
+        $data = array_merge($this->getMenuData(), [
             'page_title' => 'Product View',
             'breadcrumb_items' => [
                 ['label' => 'Home', 'url' => base_url()],
                 ['label' => 'Product View']
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
-        ];
+        ]);
 
         return view('productsView', $data);
     }
     public function cart()
     {
-        $data = [
+        $data = array_merge($this->getMenuData(), [
             'page_title' => 'cart',
             'breadcrumb_items' => [
                 ['label' => 'Home', 'url' => base_url()],
                 ['label' => 'cart']
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
-        ];
+        ]);
 
         return view('cart', $data);
     }
     public function checkout()
     {
-        $data = [
+        $data = array_merge($this->getMenuData(), [
             'page_title' => 'checkout',
             'breadcrumb_items' => [
                 ['label' => 'Home', 'url' => base_url()],
                 ['label' => 'checkout']
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
-        ];
+        ]);
 
         return view('checkout', $data);
     }
     public function contact()
     {
-        $data = [
+        $data = array_merge($this->getMenuData(), [
             'page_title' => 'contact',
             'breadcrumb_items' => [
                 ['label' => 'Home', 'url' => base_url()],
                 ['label' => 'contact']
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
-        ];
+        ]);
 
         return view('contact', $data);
     }
@@ -85,6 +96,7 @@ class Home extends BaseController
         {
             $db = \Config\Database::connect();
             
+            $menuData = $this->getMenuData();
             // Get filter parameters
             $typeIds = $this->request->getGet('type_id');
             $sizeIds = $this->request->getGet('size_id'); 
@@ -145,11 +157,13 @@ class Home extends BaseController
                 return $this->response->setJSON([
                     'success' => true,
                     'products' => $products,
-                    'count' => count($products)
+                    'count' => count($products),
+                    'mainmenus' => $menuData,
+                    'groupedSubmenus' => $menuData['submenu']
                 ]);
             }else{
             // Default behavior: return full page view
-            $data = [
+            $data = array_merge($menuData, [
                 'page_title' => 'Products',
                 'breadcrumb_items' => [
                     ['label' => 'Home', 'url' => base_url()],
@@ -160,7 +174,7 @@ class Home extends BaseController
                 'productTypes' => $productTypes,
                 'productsize' => $productsize,
                 'productShape' => $productShape
-            ];
+            ]);
 
             return view('products', $data);
         }
@@ -168,115 +182,126 @@ class Home extends BaseController
 
     public function wishlist()
     {
-        $data = [
+        $menuData = $this->getMenuData();
+
+        $data = array_merge($menuData, [
+
             'page_title' => 'Wishlist',
             'breadcrumb_items' => [
                 ['label' => 'Home', 'url' => base_url()],
                 ['label' => 'Wishlist']
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
-        ];
+        ]);
 
         return view('wishlist', $data);
     }
     public function myaccount()
     {
-        return view('myaccount');
+        $menuData = $this->getMenuData();
+
+        return view('myaccount',$menuData);
     }
     public function signup()
     {
-        $data = [
+        $menuData = $this->getMenuData();
+
+        $data = array_merge($menuData, [
             'page_title' => 'Sign-Up',
             'breadcrumb_items' => [
                 ['label' => 'Home', 'url' => base_url()],
                 ['label' => 'Sign-Up']
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
-        ];
+        ]);
 
         return view('signup', $data);
     }
     public function signin()
     {
-        $data = [
+        $menuData = $this->getMenuData();
+        $data = array_merge($menuData, [
             'page_title' => 'Sign-In',
             'breadcrumb_items' => [
                 ['label' => 'Home', 'url' => base_url()],
                 ['label' => 'Sign-In']
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
-        ];
+        ]);
 
         return view('signin', $data);
     }
     public function termsAndConditions()
     {
-        $data = [
+        $menuData = $this->getMenuData();
+        $data = array_merge($menuData, [
             'page_title' => 'Terms & Conditions',
             'breadcrumb_items' => [
                 ['label' => 'Home', 'url' => base_url()],
                 ['label' => 'Terms & Conditions']
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
-        ];
+        ]);
 
         return view('termsAndConditions', $data);
     }
     public function privacyPolicy()
     {
-        $data = [
+        $menuData = $this->getMenuData();
+        $data = array_merge($menuData, [
             'page_title' => 'Privacy Policy',
             'breadcrumb_items' => [
                 ['label' => 'Home', 'url' => base_url()],
                 ['label' => 'Privacy Policy']
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
-        ];
+        ]);
 
         return view('privacyPolicy', $data);
     }
     public function orderTracking()
     {
-        $data = [
+        $menuData = $this->getMenuData();
+        $data = array_merge($menuData, [
             'page_title' => 'Order Tracking',
             'breadcrumb_items' => [
                 ['label' => 'Home', 'url' => base_url()],
                 ['label' => 'Order Tracking']
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
-        ];
+        ]);
 
         return view('orderTracking', $data);
     }
     public function productCategories($slug)
-    {
-        $mainmenuModel = new MainmenuModel(); 
-        $submenuModel = new SubmenuModel();
-        $menuData = $mainmenuModel->where('slug', $slug)->first();
-        if (!$menuData) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Main menu not found");
-        }
-        $menuId = $menuData['menu_id'];
-        $submenuData = $submenuModel->where('menu_id', $menuId)->findAll();
-        $allMainMenus = $mainmenuModel->where('flag !=', 0)->findAll();
-        $allSubMenus = $submenuModel->where('flag !=', 0)->findAll();
-        $groupedSubmenus = [];
-        foreach ($allSubMenus as $sub) {
-            $groupedSubmenus[$sub['menu_id']][] = $sub;
-        }
+{
+    $mainmenuModel = new MainmenuModel(); 
+    $submenuModel = new SubmenuModel();
 
-        $data = [
-            'page_title' => $menuData['menu_name'],
-            'breadcrumb_items' => [
-                ['label' => 'Home', 'url' => base_url()],
-                ['label' => $menuData['menu_name']]
-            ],
-            'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
-            'submenus' => $submenuData, 
-            'mainmenu' => $allMainMenus,
-            'submenu' => $groupedSubmenus 
-        ];
+    $menuData = $mainmenuModel->where('slug', $slug)->first();
 
-        return view('productCategories', $data);
+    if (!$menuData) {
+        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Main menu not found");
     }
+
+    $menuId = $menuData['menu_id'];
+    $submenuData = $submenuModel->where('menu_id', $menuId)->findAll();
+
+    // Get common menu data
+    $menus = $this->getMenuData();
+
+    // Merge everything
+    $data = array_merge($menus, [
+        'page_title' => $menuData['menu_name'],
+        'breadcrumb_items' => [
+            ['label' => 'Home', 'url' => base_url()],
+            ['label' => $menuData['menu_name']]
+        ],
+        'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
+        'submenus' => $submenuData
+    ]);
+
+    return view('productCategories', $data);
+}
+
 }
