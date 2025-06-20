@@ -36,7 +36,7 @@ $(document).ready(function () {
 
         // AJAX request
         $.ajax({
-            url: base_Url + '/products',
+            url:  window.location.href,
             method: 'GET',
             data: {
                 type_id: typeIds,
