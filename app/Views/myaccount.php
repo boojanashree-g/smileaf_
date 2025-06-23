@@ -33,7 +33,7 @@
                                             <a class="active show" data-bs-toggle="tab" href="#liton_tab_1_2">Orders <i class="fas fa-file-alt"></i></a>
                                             <a data-bs-toggle="tab" href="#liton_tab_1_4">Address <i class="fas fa-map-marker-alt"></i></a>
                                             <a data-bs-toggle="tab" href="#liton_tab_1_5">Account Details <i class="fas fa-user"></i></a>
-                                            <a href="#" onclick="alert('Logout functionality would go here')">Logout <i class="fas fa-sign-out-alt"></i></a>
+                                            <a href="<?=base_url()?>logout" >Logout <i class="fas fa-sign-out-alt"></i></a>
                                         </div>
                                     </div>
                                 </div>
@@ -155,23 +155,23 @@
                                                 <h3>Account Details</h3>
                                                 <p>The following information will be used on the checkout page by default.</p>
                                                 <div class="ltn__form-box">
-                                                    <form action="#">
+                                                    <form  id="account-form">
                                                         <div class="row mb-4">
                                                             <div class="col-md-6 mb-3">
                                                                 <label class="form-label">Name:</label>
-                                                                <input type="text" name="name" class="form-control">
+                                                                <input type="text" name="username" class="form-control" value="<?= $userData[0]['username'] ?>">
                                                             </div>
                                                             <div class="col-md-6 mb-3">
                                                                 <label class="form-label">Mobile:</label>
-                                                                <input type="text" name="mobile" class="form-control">
+                                                                <input type="text" name="number" class="form-control" value="<?= $userData[0]['number'] ?>">
                                                             </div>
                                                             <div class="col-md-6 mb-3">
                                                                 <label class="form-label"> Email:</label>
-                                                                <input type="email" name="display_email" class="form-control" placeholder="example@example.com">
+                                                                <input type="email" name="email" class="form-control" value="<?= $userData[0]['email'] ?>">
                                                             </div>
                                                         </div>
                                                         <div class="btn-wrapper">
-                                                            <button type="submit" class="theme-btn-1 btn-effect-1 text-uppercase">Save Changes</button>
+                                                            <button class="theme-btn-1 btn-effect-1 text-uppercase" id="btn-account">Save Changes</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -386,6 +386,10 @@
     <!-- Main JS -->
     <script src="<?php echo base_url()?>public/assets/js/main.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <script src="<?php echo base_url()?>custom/js/myaccount.js"></script>
+
+    
 
   <script>
       const addressData = {

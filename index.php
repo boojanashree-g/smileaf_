@@ -44,7 +44,7 @@ require_once SYSTEMPATH . 'Config/DotEnv.php';
 (new CodeIgniter\Config\DotEnv(ROOTPATH))->load();
 
 // Define ENVIRONMENT
-if (! defined('ENVIRONMENT')) {
+if (!defined('ENVIRONMENT')) {
     define('ENVIRONMENT', env('CI_ENVIRONMENT', 'production'));
 }
 
@@ -85,3 +85,5 @@ $app->run();
 // Exits the application, setting the exit code for CLI-based applications
 // that might be watching.
 exit(EXIT_SUCCESS);
+
+
