@@ -195,7 +195,7 @@ header .ltn__header-middle-area {
 }
 
 .otp-input input {
-    width: 40px;
+    /* width: 40px; */
     height: 40px;
     margin: 0 5px;
     text-align: center;

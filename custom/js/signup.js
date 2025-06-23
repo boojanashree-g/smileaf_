@@ -6,8 +6,9 @@ $(document).ready(function () {
   const resendButton = $("#resendButton");
 
   // Form validation and modal control
-  $("#registerButton").on("click", function (e) {
+  $(document).on("click", "#registerButton", function (e) {
     e.preventDefault();
+
     e.stopPropagation();
 
     const form = $(".signup_form");
@@ -82,6 +83,11 @@ $(document).ready(function () {
   }
 
   // *************************** [sendOTP] *************************************************************************
+  $("#otpModal").modal({
+    backdrop: "static",
+    keyboard: false,
+  });
+
   function sendOTP() {
     var form = $("#register-form")[0];
     var formData = new FormData(form);
@@ -96,12 +102,14 @@ $(document).ready(function () {
       dataType: "json",
       success: function (JSONdata) {
         localStorage.setItem("token", JSONdata.token);
+        console.log(JSONdata);
 
         if (JSONdata.code == 400) {
           showToast(JSONdata.message, "error");
         } else if (JSONdata.code == 200) {
           // Open OTP modal
           $("#otpModal").modal("show");
+          $("#otpModal input").val("");
           startOTPTimer();
         }
       },
@@ -149,12 +157,11 @@ $(document).ready(function () {
   });
 
   const checkOTP = (otp) => {
+    console.log(otp);
     $.ajax({
       type: "POST",
       url: base_Url + "check-signotp",
       data: { otp: otp },
-      processData: false,
-      contentType: false,
       cache: false,
       dataType: "json",
       success: function (JSONdata) {

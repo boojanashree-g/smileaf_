@@ -54,7 +54,7 @@ class AdminController extends BaseController
 
             $this->session->set($sessionData);
 
-            
+
 
             $response = [
                 'code' => 200,
@@ -77,7 +77,7 @@ class AdminController extends BaseController
     public function logout()
     {
         $session = $this->session = \Config\Services::session();
-        $session->destroy();
+        $session->remove(['admin_login', 'admin_type', 'admin_name']);
         return redirect()->to('admin/');
     }
 

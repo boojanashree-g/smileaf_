@@ -28,65 +28,88 @@ class SignupController extends BaseController
         $password = $this->request->getPost('password');
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
+        $data = $this->request->getPost();
+
+
         $apiKey = $_ENV['SMS_API_KEY'];
         $templateName = $_ENV['SIGNUP_TEMPLATE'];
         $otp = rand(1000, 9999);
+        $otp_expiry = date("Y-m-d H:i:s", strtotime("+1 minute"));
+
+        $userQry = "SELECT * FROM tbl_users WHERE number = ? AND flag = 1;";
+        $user = $this->db->query($userQry, [$number])->getRow();
+
+        $emailQry = "SELECT * FROM tbl_users WHERE email = ? AND flag = 1;";
+        $emailExists = $this->db->query($emailQry, [$email])->getRow();
 
 
-        $query = "SELECT COUNT('user_id') AS  count FROM `tbl_users` WHERE `number` = ? AND `flag` = 1";
-        $number_count = $this->db->query($query, [$number])->getRow();
+        if ($user && $user->is_verfied == 1) {
+            return json_encode([
+                'code' => 400,
+                'message' => 'The mobile number has already been registered'
+            ]);
+        }
 
-        $query1 = "SELECT COUNT('user_id') AS count FROM `tbl_users` WHERE `email` = ? AND `flag` = 1";
-        $email_count = $this->db->query($query1, [$email])->getRow();
+        if ($emailExists && $emailExists->is_verfied == 1) {
+            return json_encode([
+                'code' => 400,
+                'message' => 'The Email has already been registered'
+            ]);
+        }
 
-        if ($number_count->count != 0) {
-            $response['code'] = 400;
-            $response['message'] = 'The mobile number has already been registered';
-            return json_encode($response);
-        } else if ($email_count->count != 0) {
-            $response['code'] = 400;
-            $response['message'] = 'The Email has already been registered';
-            return json_encode($response);
-        } else {
+        //  If user exists but not verified 
+        if ($user && $user->is_verfied == 0) {
+            $userID = $this->session->get('user_id');
+            print_r($otp);
             $response = $this->signupAPI($apiKey, $number, $otp, $templateName);
-            $status = $response['Status'];
+            if ($response['Status'] == "Success") {
 
-            $otp_expiry = date("Y-m-d H:i:s", strtotime("+1 minute"));
+                $updateQry = "UPDATE tbl_users SET otp = ?  , otp_expiry = ? WHERE user_id = ?";
+                $updateData = $this->db->query($updateQry, [$otp, $otp_expiry, $userID]);
 
-            if ($status == "Success") {
-                $userData = [
-                    'username' => $username,
-                    'number' => $number,
-                    'email' => $email,
-                    'password' => $passwordHash,
-                    'otp' => $otp,
-                    'otp_expiry' => $otp_expiry,
-                    'is_verfied' => 0
-
-                ];
-
-                $UserModel->insert($userData);
-                $affectedRows = $this->db->affectedRows();
-                $lastInsertID = $this->db->insertID();
-
-                if ($affectedRows == 1) {
-
-                    $response['code'] = 200;
-                    $response['user_id'] = $lastInsertID;
-                    $response['username'] = $username;
-                    return $this->signupSessionSMS($response);
-
-                } else {
-                    $response['code'] = 400;
-
-                    return $this->signupSessionSMS($response);
-                }
-
+                return $this->signupSessionSMS([
+                    'code' => 200,
+                    'user_id' => $userID,
+                    'username' => $user->username,
+                    'message' => 'OTP re-sent. Please verify.'
+                ]);
             } else {
-                $response['code'] = 400;
-
-                return $this->signupSessionSMS($response);
+                return $this->signupSessionSMS([
+                    'code' => 400,
+                    'message' => 'Failed to send OTP'
+                ]);
             }
+        }
+
+        //New user
+        $response = $this->signupAPI($apiKey, $number, $otp, $templateName);
+        if ($response['Status'] == "Success") {
+
+            $userData = [
+                'username' => $username,
+                'number' => $number,
+                'email' => $email,
+                'password' => $passwordHash,
+                'otp' => $otp,
+                'otp_expiry' => $otp_expiry,
+                'is_verfied' => 0,
+                'flag' => 1
+            ];
+
+            $UserModel->insert($userData);
+            $lastInsertID = $this->db->insertID();
+
+            return $this->signupSessionSMS([
+                'code' => 200,
+                'user_id' => $lastInsertID,
+                'username' => $username,
+                'message' => 'OTP sent. Please verify.'
+            ]);
+        } else {
+            return $this->signupSessionSMS([
+                'code' => 400,
+                'message' => 'Failed to send OTP'
+            ]);
         }
     }
 
@@ -165,11 +188,11 @@ class SignupController extends BaseController
             $response['message'] = 'Signup successfully';
             $response['token'] = $newToken;
 
-            return json_encode($response);
+            return $this->response->setJSON($response);
         } else {
             $response['code'] = 400;
             $response['message'] = 'Invalid Credentials';
-            return json_encode($response);
+            return $this->response->setJSON($response);
         }
     }
 
@@ -197,7 +220,7 @@ class SignupController extends BaseController
         $data = $this->session->get();
 
         echo "<pre>";
-        print_r($data);
+        print_r($OTP);
         die;
 
     }
