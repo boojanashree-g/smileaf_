@@ -1,5 +1,6 @@
 .icon-search.for-search-show,
 .ltn__utilize-toggle,
+.header-icons,
 .user-menu ,
 .header-search-1 {
     background: #43493a !important;
@@ -163,13 +164,13 @@ header .ltn__header-middle-area {
 }
 
 .quantity-options label {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid #2d6a4f;
-    color: #2d6a4f;
+    border: 1px solid #000;
+    color: #000;
     font-weight: bold;
     border-radius: 3px;
     cursor: pointer;
@@ -177,7 +178,7 @@ header .ltn__header-middle-area {
 }
 
 .quantity-options input[type="radio"]:checked+label {
-    background-color: #2d6a4f;
+    background-color: #000;
     color: white;
 }
 
@@ -1233,4 +1234,54 @@ button:hover{
 
 .mobile-menu-toggle svg path#middle, .mobile-menu-toggle svg path#top, .mobile-menu-toggle svg path#bottom{
     stroke: #fff;
+}
+
+.quick_btn{
+    padding: 10px 30px;
+}
+.ltn__product-item-3{
+    
+    padding: 10px;
+    min-height: 400px;
+}
+.product-img img {
+    max-height: 200px;
+    min-height: 200px;
+    object-fit: contain;
+}
+/* .product-img a {
+    max-height: 150px;
+}
+.ltn__product-item-3 .product-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 140px;
+    padding: 0;
+} */
+
+.quick_btn{
+    padding: 10px 20px !important;
+}
+a.theme-btn-1.btn:focus{
+    box-shadow: unset !important;
+    color: #fff !important;
+}
+.checkout-login-btn {
+    padding: 10px 30px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0;
+    margin: 0 0 0 10px;
+}
+
+.login-input{
+    height: 50px !important;
+    margin-bottom: 0 !important;
+}
+
+.accordion-button:hover{
+    color: #000;
 }
