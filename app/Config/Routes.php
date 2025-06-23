@@ -11,8 +11,8 @@ $routes->get('productDetails', 'Home::productDetails');
 $routes->get('cart', 'Home::cart');
 $routes->get('checkout', 'Home::checkout');
 $routes->get('contact', 'Home::contact');
-$routes->get('products/(:segment)', 'Home::products/$1'); 
-$routes->get('products', 'Home::products'); 
+$routes->get('products/(:segment)', 'Home::products/$1');
+$routes->get('products', 'Home::products');
 $routes->get('wishlist', 'Home::wishlist');
 $routes->get('myaccount', 'Home::myaccount');
 $routes->get('signup', 'Home::signup');
@@ -21,8 +21,18 @@ $routes->get('terms-and-conditions', 'Home::termsAndConditions');
 $routes->get('privacy-policy', 'Home::privacyPolicy');
 $routes->get('order-tracking', 'Home::orderTracking');
 $routes->get('product-categories/(:segment)', 'Home::productCategories/$1');
-$routes->post('signup-otp', 'SignupController::signupOTP');
-$routes->post('check-signotp', 'SignupController::checkSignOTP');
+// $routes->post('signup-otp', 'SignupController::signupOTP');
+// $routes->post('check-signotp', 'SignupController::checkSignOTP');
+
+
+// new
+$routes->post('signin-otp', 'SigninController::signinOTP');
+$routes->post('verify-otp', 'SigninController::verifyOTP');
+$routes->post('resend-otp', 'SigninController::resendOTP');
+$routes->get('logout', 'SigninController::logout');
+
+// Myaccount 
+$routes->post('insert-account', 'MyaccountController::insertAccount');
 
 
 

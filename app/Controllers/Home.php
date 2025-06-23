@@ -10,14 +10,27 @@ use App\Models\ProductModel;
 
 class Home extends BaseController
 {
+
+    protected $db;
+    protected $session;
+
+    public function __construct()
+    {
+        $this->db = \Config\Database::connect();
+        $this->session = \Config\Services::session();
+    }
     public function index()
-    {    
+    {
+        $data = $this->session->get();
+
         $mainmenu = $this->getMenuData();
         $bannerModel = new BannerModel();
         $bannerData = $bannerModel->where(['flag !=' => 0, 'has_banner' => 1])->findAll();
         $data = array_merge($this->getMenuData(), [
             'bannerData' => $bannerData
         ]);
+
+
         return view('index', $data);
     }
 
@@ -92,7 +105,7 @@ class Home extends BaseController
 
         return view('contact', $data);
     }
-    
+
     public function products($encodedSubmenuId = null)
     {
         $db = \Config\Database::connect();
@@ -143,15 +156,15 @@ class Home extends BaseController
 
         // Apply other filters
         if (!empty($typeIds)) {
-            $productsQuery->whereIn('a.type_id', (array)$typeIds);
+            $productsQuery->whereIn('a.type_id', (array) $typeIds);
         }
 
         if (!empty($sizeIds)) {
-            $productsQuery->whereIn('a.size_id', (array)$sizeIds);
+            $productsQuery->whereIn('a.size_id', (array) $sizeIds);
         }
 
         if (!empty($shapeIds)) {
-            $productsQuery->whereIn('a.shape_id', (array)$shapeIds);
+            $productsQuery->whereIn('a.shape_id', (array) $shapeIds);
         }
 
         // Fetch product data
@@ -204,9 +217,11 @@ class Home extends BaseController
     }
     public function myaccount()
     {
-        $menuData = $this->getMenuData();
+        $res['menuData'] = $this->getMenuData();
+        $userID = $this->session->get("user_id");
+        $res['userData'] = $this->db->query("SELECT * FROM `tbl_users` WHERE `flag` = 1 AND `user_id` = $userID")->getResultArray();
 
-        return view('myaccount',$menuData);
+        return view('myaccount', $res);
     }
     public function signup()
     {
@@ -225,15 +240,14 @@ class Home extends BaseController
     }
     public function signin()
     {
-        $menuData = $this->getMenuData();
-        $data = array_merge($menuData, [
-            'page_title' => 'Sign-In',
+        $data = [
+            'page_title' => 'Login / Signup',
             'breadcrumb_items' => [
                 ['label' => 'Home', 'url' => base_url()],
-                ['label' => 'Sign-In']
+                ['label' => 'Login / Signup']
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
-        ]);
+        ];
 
         return view('signin', $data);
     }
@@ -280,34 +294,34 @@ class Home extends BaseController
         return view('orderTracking', $data);
     }
     public function productCategories($slug)
-{
-    $mainmenuModel = new MainmenuModel(); 
-    $submenuModel = new SubmenuModel();
+    {
+        $mainmenuModel = new MainmenuModel();
+        $submenuModel = new SubmenuModel();
 
-    $menuData = $mainmenuModel->where('slug', $slug)->first();
+        $menuData = $mainmenuModel->where('slug', $slug)->first();
 
-    if (!$menuData) {
-        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Main menu not found");
+        if (!$menuData) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Main menu not found");
+        }
+
+        $menuId = $menuData['menu_id'];
+        $submenuData = $submenuModel->where('menu_id', $menuId)->findAll();
+
+        // Get common menu data
+        $menus = $this->getMenuData();
+
+        // Merge everything
+        $data = array_merge($menus, [
+            'page_title' => $menuData['menu_name'],
+            'breadcrumb_items' => [
+                ['label' => 'Home', 'url' => base_url()],
+                ['label' => $menuData['menu_name']]
+            ],
+            'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
+            'submenus' => $submenuData
+        ]);
+
+        return view('productCategories', $data);
     }
-
-    $menuId = $menuData['menu_id'];
-    $submenuData = $submenuModel->where('menu_id', $menuId)->findAll();
-
-    // Get common menu data
-    $menus = $this->getMenuData();
-
-    // Merge everything
-    $data = array_merge($menus, [
-        'page_title' => $menuData['menu_name'],
-        'breadcrumb_items' => [
-            ['label' => 'Home', 'url' => base_url()],
-            ['label' => $menuData['menu_name']]
-        ],
-        'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
-        'submenus' => $submenuData
-    ]);
-
-    return view('productCategories', $data);
-}
 
 }
