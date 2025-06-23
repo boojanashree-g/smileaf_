@@ -46,20 +46,20 @@
                         </div>
                         <!-- mini-cart -->
                         <div class="mini-cart-icon dsmnone dmdnone d-block">
-                            <a href="#ltn__utilize-cart-menu" class="ltn__utilize-toggle">
+                            <a href="<?php echo base_url('cart') ?>" class="header-icons">
                                 <i class="icon-shopping-cart"></i>
                                 <sup>2</sup>
                             </a>
                         </div>
                         <div class="mini-cart-icon dsmnone dmdnone d-block">
-                            <a href="#ltn__utilize-cart-menu" class="ltn__utilize-toggle">
+                            <a href="<?php echo base_url('wishlist') ?>" class="header-icons">
                                 <i class="far fa-heart"></i>
                                 <sup>0</sup>
                             </a>
                         </div>
                         <div class="ltn__header-options ltn__header-options-2 d-lg-none">
                             <div class="mobile-menu-toggle d-xl-none ">
-                                <a href="#ltn__utilize-mobile-menu" class="ltn__utilize-toggle">
+                                <a href="#ltn__utilize-mobile-menu" class="header-icons">
                                     <svg viewBox="0 0 800 600">
                                         <path
                                             d="M300,220 C300,220 520,220 540,220 C740,220 640,540 520,420 C440,340 300,200 300,200"
