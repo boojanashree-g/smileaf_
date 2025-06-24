@@ -64,17 +64,14 @@
 
 
                                                 <div class="col-xl-4 col-sm-6 col-6 product-item"
-                                                    data-name="<?= strtolower(esc($product['prod_name'])) ?>"
-                                                    data-price="<?= esc($product['mrp']) ?>"
-                                                    data-category="<?= strtolower(esc($product['category'] ?? '')) ?>"
-                                                    data-stock="<?= esc($product['stock_status']) ?>">
+                                                    data-name="<?= strtolower(esc($product['prod_name'])) ?>">
                                                     <div class="ltn__product-item ltn__product-item-3 text-center">
                                                         <div class="product-img">
                                                             <a href="<?= base_url("") ?>">
                                                                 <img src="<?= base_url($product['main_image']) ?>"
                                                                     alt="<?= esc($product['prod_name']) ?>">
                                                             </a>
-                                                            <?php if ($product->stock_status == 0): ?>
+                                                            <?php if ($product['lowest_quantity'] == 0): ?>
                                                                 <div class="product-badge">
                                                                     <ul>
                                                                         <li class="sale-badge">
@@ -102,9 +99,9 @@
                                                                 </a>
                                                             </h2>
                                                             <div class="product-price">
-                                                                <span>₹<?= esc($product['mrp']) ?></span>
-                                                                <?php if (!empty($product['offer_price']) && $product['offer_price'] != $product['mrp']): ?>
-                                                                    <del>₹<?= esc($product['offer_price']) ?></del>
+                                                                <span>₹<?= esc($product['lowest_mrp'] ?? '0') ?></span>
+                                                                <?php if (!empty($product['lowest_offer_price']) && $product['lowest_offer_price'] != $product['lowest_mrp']): ?>
+                                                                    <del>₹<?= esc($product['lowest_offer_price']) ?></del>
                                                                 <?php endif; ?>
                                                             </div>
                                                         </div>
@@ -136,26 +133,20 @@
                                         <?php if (!empty($products)): ?>
                                             <?php foreach ($products as $product): ?>
                                                 <div class="col-lg-12 product-item"
-                                                    data-name="<?= strtolower(esc($product['prod_name'])) ?>"
-                                                    data-price="<?= esc($product['mrp']) ?>"
-                                                    data-category="<?= strtolower(esc($product['category'] ?? '')) ?>"
-                                                    data-stock="<?= esc($product['stock_status']) ?>">
+                                                    data-name="<?= strtolower(esc($product['prod_name'])) ?>">
+
                                                     <div class="ltn__product-item ltn__product-item-3">
                                                         <div class="product-img">
                                                             <a href="<?= base_url($product['url']) ?>">
                                                                 <img src="<?= base_url($product['main_image']) ?>"
                                                                     alt="<?= esc($product['prod_name']) ?>">
                                                             </a>
-                                                            <?php if ($product->stock_status == 0): ?>
+                                                            <?php if ($product['lowest_quantity'] == 0): ?>
                                                                 <div class="product-badge">
                                                                     <ul>
-                                                                        <li class="sale-badge">Out of Stock</li>
-                                                                    </ul>
-                                                                </div>
-                                                            <?php elseif (!empty($product['badge'])): ?>
-                                                                <div class="product-badge">
-                                                                    <ul>
-                                                                        <li class="sale-badge"><?= esc($product['badge']) ?></li>
+                                                                        <li class="sale-badge">
+                                                                            Out of Stock
+                                                                        </li>
                                                                     </ul>
                                                                 </div>
                                                             <?php endif; ?>
@@ -167,14 +158,13 @@
                                                                 </a>
                                                             </h2>
                                                             <div class="product-price">
-                                                                <span>₹<?= esc($product['mrp']) ?></span>
-                                                                <?php if (!empty($product['offer_price']) && $product['offer_price'] != $product['mrp']): ?>
-                                                                    <del>₹<?= esc($product['offer_price']) ?></del>
+                                                                <span>₹<?= esc($product['lowest_mrp'] ?? '0') ?></span>
+                                                                <?php if (!empty($product['lowest_offer_price']) && $product['lowest_offer_price'] != $product['lowest_mrp']): ?>
+                                                                    <del>₹<?= esc($product['lowest_offer_price']) ?></del>
                                                                 <?php endif; ?>
                                                             </div>
                                                             <div class="product-brief">
-                                                                <p><?= esc($product['description'] ?? 'Premium quality product available at best prices.') ?>
-                                                                </p>
+                                                                <?= $product['description'] ?? 'Premium quality product available at best prices.' ?>
                                                             </div>
                                                             <div class="product-hover-action">
                                                                 <ul>
