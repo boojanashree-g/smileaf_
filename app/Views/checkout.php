@@ -130,13 +130,23 @@
                                             </div>
                                             <div class="form-row">
                                                 <div class="form-col">
-                                                    <h6>Town / City</h6>
-                                                    <input type="text" class="input-field" placeholder="City">
+                                                    <!-- <label for="city" class="form-label"> -->
+                                                        <h6>Town / City</h6>
+                                                    <!-- </label> -->
+                                                    <select id="city" name="city" class="input-field" required>
+                                                        <option value="">Select City</option>
+                                                        <option value="chennai">Chennai</option>
+                                                        <option value="coimbatore">Coimbatore</option>
+                                                        <option value="madurai">Madurai</option>
+                                                        <option value="trichy">Tiruchirappalli</option>
+                                                    </select>
                                                 </div>
+
                                                 <div class="form-col">
                                                     <h6>State</h6>
                                                     <input type="text" class="input-field" placeholder="State">
                                                 </div>
+
                                                 <div class="form-col">
                                                     <h6>Zip</h6>
                                                     <input type="text" class="input-field" placeholder="Zip">
@@ -148,7 +158,7 @@
                                             <textarea class="textarea-field"
                                                 placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
                                         </div>
-                                    <button class="continue-btn" onclick="proceedToOrderSummary()">CONTINUE</button>
+                                        <button class="continue-btn" onclick="proceedToOrderSummary()">CONTINUE</button>
 
                                     </div>
                                 </div>
@@ -242,10 +252,10 @@
 
     }
 
-   function togglePersonalAddress() {
-    const personalDetails = document.getElementById("personalDetaila");
-    personalDetails.style.display = "block";
-}
+    function togglePersonalAddress() {
+        const personalDetails = document.getElementById("personalDetaila");
+        personalDetails.style.display = "block";
+    }
 
 
 
