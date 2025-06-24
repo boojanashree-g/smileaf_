@@ -298,11 +298,29 @@ class Home extends BaseController
             $product['variants'] = $variantQuery;
             $product['product_images'] = array_column($imageQuery, 'image_path');
 
+
+            $lowestOffer = null;
+            foreach ($variantQuery as $variant) {
+                if ($lowestOffer === null || $variant['offer_price'] < $lowestOffer['offer_price']) {
+                    $lowestOffer = $variant;
+                }
+            }
+
+            if ($lowestOffer) {
+                $product['lowest_mrp'] = $lowestOffer['mrp'];
+                $product['lowest_offer_price'] = $lowestOffer['offer_price'];
+                $product['lowest_quantity'] = $lowestOffer['quantity'];
+            } else {
+                $product['lowest_mrp'] = null;
+                $product['lowest_offer_price'] = null;
+                $product['lowest_quantity'] = null;
+            }
+
+
             $products[] = $product;
         }
 
-
-
+    
         // Return JSON for AJAX
         if ($isAjax) {
             return $this->response->setJSON([
@@ -327,11 +345,6 @@ class Home extends BaseController
             'productsize' => $productsize ?? [],
             'productShape' => $productShape ?? [],
         ]);
-
-
-     
-
-
         return view('products', $data);
     }
 

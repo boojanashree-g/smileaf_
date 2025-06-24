@@ -63,7 +63,7 @@
                                             <?php foreach ($products as $product): ?>
 
 
-                                                <div class="col-xl-4 col-sm-6 col-12 product-item"
+                                                <div class="col-xl-4 col-sm-12   col-12 product-item"
                                                     data-name="<?= strtolower(esc($product['prod_name'])) ?>">
                                                     <div class="ltn__product-item ltn__product-item-3 text-center">
                                                         <div class="product-img">
@@ -105,7 +105,7 @@
                                                                 <?php endif; ?>
                                                             </div>
                                                         </div>
-                                                        <div class="d-flex justify-content-evenly">
+                                                         <div class="d-flex justify-content-evenly">
                                                             <a href="#" title="Wishlist" class="wishlist-btn">
                                                                             <i class="far fa-heart"></i>
                                                                         </a>
@@ -136,7 +136,7 @@
                                                 <div class="col-lg-12 product-item"
                                                     data-name="<?= strtolower(esc($product['prod_name'])) ?>">
 
-                                                    <div class="ltn__product-item ltn__product-item-3" style="min-height:auto;>
+                                                    <div class="ltn__product-item ltn__product-item-3" style="min-height:auto;">
                                                         <div class="product-img">
                                                             <a href="<?= base_url($product['url']) ?>">
                                                                 <img src="<?= base_url($product['main_image']) ?>"
@@ -163,15 +163,11 @@
                                                                 <?php if (!empty($product['lowest_offer_price']) && $product['lowest_offer_price'] != $product['lowest_mrp']): ?>
                                                                     <del>₹<?= esc($product['lowest_offer_price']) ?></del>
                                                                 <?php endif; ?>
-                                                                <!-- <a href="#" title="Wishlist" data-bs-toggle="modal"  data-bs-target="#liton_wishlist_modal">
-                                                                    <i class="far fa-heart"></i>
-                                                                </a> -->
                                                             </div>
-                                                            
                                                             <div class="product-brief">
                                                                 <?= $product['description'] ?? 'Premium quality product available at best prices.' ?>
                                                             </div>
-                                                            <div class="product-hover-action">
+                                                            <!-- <div class="product-hover-action">
                                                                 <ul>
 
                                                                     <li>
@@ -181,7 +177,7 @@
                                                                         </a>
                                                                     </li>
                                                                 </ul>
-                                                            </div>
+                                                            </div> -->
                                                         </div>
                                                     </div>
                                                 </div>
