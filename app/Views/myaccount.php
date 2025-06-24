@@ -259,7 +259,10 @@
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <label for="addCity" class="form-label">City *</label>
-                                                    <input type="text" class="form-control" id="addCity" required>
+                                                     <select name="" id="">
+                                                        <option value="">r</option>
+                                                        <option value="">r</option>
+                                                    </select>
                                                 </div>
 
                                                 <div class="col-md-6    mb-3">

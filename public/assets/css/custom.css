@@ -1239,7 +1239,7 @@ button:hover{
 .quick_btn{
     padding: 10px 30px;
 }
-.ltn__product-item-3{
+.products_page .ltn__product-item-3{
     
     padding: 10px;
     min-height: 400px;
@@ -1529,7 +1529,7 @@ a.theme-btn-1.btn:focus{
     font-weight: 600;
     color: #333;
 }
-input{
+.checkout_page input{
     height:45px !important;
     margin-bottom: 0 !important;
 }
@@ -1594,3 +1594,31 @@ input{
     justify-content: space-between;
     align-items: center;
 }
+
+.nice-select{
+    width:100%;
+}
+
+/* End checkout */
+
+/* Home UI update */
+    .viewall-span{
+        position: absolute;
+        right: 0;
+        margin: auto 0;
+        bottom: 0;
+        top: 0;
+        background: #577477;
+        width: 100px;
+        border-radius: 5px;
+        font-size: 14px;
+        display: flex    ;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        color: #fff;
+        height: 30px;
+    }
+    .ltn__product-area .ltn__section-title-2{
+        position: relative;
+    }

@@ -3,7 +3,7 @@
 <?php require("components/head.php"); ?>
 
 
-<body>
+<body class="home_page">
     <div class="body-wrapper">
 
         <?php require("components/header.php"); ?>       
@@ -40,7 +40,7 @@
         <div class="ltn__banner-area mt-15">
             <div class="container">
                 <div class="row ltn__custom-gutter--- justify-content-center">
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-4 col-md-6 mb-2">
                         <div class="ltn__banner-item">
                             <div class="ltn__banner-img">
                                 <a href="shop.html">
@@ -49,7 +49,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-4 col-md-6 mb-2">
                         <div class="ltn__banner-item">
                             <div class="ltn__banner-img">
                                 <a href="shop.html">
@@ -58,7 +58,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-4 col-md-6 mb-2">
                         <div class="ltn__banner-item">
                             <div class="ltn__banner-img">
                                 <a href="shop.html">
@@ -73,16 +73,261 @@
         <!-- BANNER AREA END -->
 
         <!-- PRODUCT AREA START (product-item-3) -->
-        <div class="ltn__product-area ltn__product-gutter pt-10 pb-20">
+        <div class="ltn__product-area ltn__product-gutter">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="section-title-area ltn__section-title-2 text-center">
-                            <h1 class="section-title">Featured Products</h1>
+                        <div class="section-title-area ltn__section-title-2 text-center featured_product_header">
+                            <h1 class="section-title">Areca Palm Leaf</h1>
+                            <span class="viewall-span">View all</span>
                         </div>
                     </div>
                 </div>
-                <div class="row ltn__tab-product-slider-one-active--- slick-arrow-1">
+                <div class="row slider ltn__tab-product-slider-one-active slick-arrow-1">
+                    <!-- ltn__product-item -->
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                        <div class="ltn__product-item ltn__product-item-3 text-left">
+                            <div class="product-img">
+                                <a href="<?php echo base_url('productDetails') ?>"><img
+                                        src="<?php echo base_url() ?>public/assets/img/plate_img/square-plate/deep_square.png"
+                                        alt="#"></a>
+                                <div class="product-badge">
+                                    <ul>
+                                        <li class="sale-badge">New</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="home_products product-info">
+                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Squares</a></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ltn__product-item -->
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                        <div class="ltn__product-item ltn__product-item-3 text-left">
+                            <div class="product-img">
+                                <a href="<?php echo base_url('productDetails') ?>"><img
+                                        src="<?php echo base_url() ?>public/assets/img/plate_img/round-plate/9ROP.jpg"
+                                        alt="#"></a>
+                            </div>
+                            <div class="home_products product-info">
+                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Rounds</a></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ltn__product-item -->
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                        <div class="ltn__product-item ltn__product-item-3 text-center">
+                            <div class="product-img">
+                                <a href="<?php echo base_url('productDetails') ?>"><img
+                                        src="<?php echo base_url() ?>public/assets/img/plate_img/rectangle-plate/8rectangle.jpg"
+                                        alt="#"></a>
+                                <div class="product-badge">
+                                    <ul>
+                                        <li class="sale-badge">New</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="home_products product-info">
+                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Rectangles</a>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ltn__product-item -->
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                        <div class="ltn__product-item ltn__product-item-3 text-center">
+                            <div class="product-img">
+                                <a href="<?php echo base_url('productDetails') ?>"><img
+                                        src="<?php echo base_url() ?>public/assets/img/plate_img/bowl-plate/4bowl.jpg"
+                                        alt="#"></a>
+                                <div class="product-badge">
+                                    <ul>
+                                        <li class="sale-badge">New</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="home_products product-info">
+                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Bowls</a></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ltn__product-item -->
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                        <div class="ltn__product-item ltn__product-item-3 text-center">
+                            <div class="product-img">
+                                <a href="<?php echo base_url('productDetails') ?>"><img
+                                        src="<?php echo base_url() ?>public/assets/img/plate_img/extra-curves/boat.jpg"
+                                        alt="#"></a>
+                                <div class="product-badge">
+                                    <ul>
+                                        <li class="sale-badge">New</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="home_products product-info">
+                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Extra Curves</a>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ltn__product-item -->
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                        <div class="ltn__product-item ltn__product-item-3 text-center">
+                            <div class="product-img">
+                                <a href="<?php echo base_url('productDetails') ?>"><img
+                                        src="<?php echo base_url() ?>public/assets/img/plate_img/combo-pack/scal25.jpg"
+                                        alt="#"></a>
+                                <div class="product-badge">
+                                    <ul>
+                                        <li class="sale-badge">New</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="home_products product-info">
+                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Combo Packs</a>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- PRODUCT AREA END -->
+         <!-- PRODUCT AREA START (product-item-3) -->
+        <div class="ltn__product-area ltn__product-gutter">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="section-title-area ltn__section-title-2 text-center featured_product_header">
+                            <h1 class="section-title">Sugarcane Bagasse</h1>
+                            <span class="viewall-span">View all</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row slider ltn__tab-product-slider-one-active slick-arrow-1">
+                    <!-- ltn__product-item -->
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                        <div class="ltn__product-item ltn__product-item-3 text-left">
+                            <div class="product-img">
+                                <a href="<?php echo base_url('productDetails') ?>"><img
+                                        src="<?php echo base_url() ?>public/assets/img/plate_img/square-plate/deep_square.png"
+                                        alt="#"></a>
+                                <div class="product-badge">
+                                    <ul>
+                                        <li class="sale-badge">New</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="home_products product-info">
+                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Squares</a></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ltn__product-item -->
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                        <div class="ltn__product-item ltn__product-item-3 text-left">
+                            <div class="product-img">
+                                <a href="<?php echo base_url('productDetails') ?>"><img
+                                        src="<?php echo base_url() ?>public/assets/img/plate_img/round-plate/9ROP.jpg"
+                                        alt="#"></a>
+                            </div>
+                            <div class="home_products product-info">
+                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Rounds</a></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ltn__product-item -->
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                        <div class="ltn__product-item ltn__product-item-3 text-center">
+                            <div class="product-img">
+                                <a href="<?php echo base_url('productDetails') ?>"><img
+                                        src="<?php echo base_url() ?>public/assets/img/plate_img/rectangle-plate/8rectangle.jpg"
+                                        alt="#"></a>
+                                <div class="product-badge">
+                                    <ul>
+                                        <li class="sale-badge">New</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="home_products product-info">
+                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Rectangles</a>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ltn__product-item -->
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                        <div class="ltn__product-item ltn__product-item-3 text-center">
+                            <div class="product-img">
+                                <a href="<?php echo base_url('productDetails') ?>"><img
+                                        src="<?php echo base_url() ?>public/assets/img/plate_img/bowl-plate/4bowl.jpg"
+                                        alt="#"></a>
+                                <div class="product-badge">
+                                    <ul>
+                                        <li class="sale-badge">New</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="home_products product-info">
+                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Bowls</a></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ltn__product-item -->
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                        <div class="ltn__product-item ltn__product-item-3 text-center">
+                            <div class="product-img">
+                                <a href="<?php echo base_url('productDetails') ?>"><img
+                                        src="<?php echo base_url() ?>public/assets/img/plate_img/extra-curves/boat.jpg"
+                                        alt="#"></a>
+                                <div class="product-badge">
+                                    <ul>
+                                        <li class="sale-badge">New</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="home_products product-info">
+                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Extra Curves</a>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ltn__product-item -->
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                        <div class="ltn__product-item ltn__product-item-3 text-center">
+                            <div class="product-img">
+                                <a href="<?php echo base_url('productDetails') ?>"><img
+                                        src="<?php echo base_url() ?>public/assets/img/plate_img/combo-pack/scal25.jpg"
+                                        alt="#"></a>
+                                <div class="product-badge">
+                                    <ul>
+                                        <li class="sale-badge">New</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="home_products product-info">
+                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Combo Packs</a>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- PRODUCT AREA END -->
+         <!-- PRODUCT AREA START (product-item-3) -->
+        <div class="ltn__product-area ltn__product-gutter">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="section-title-area ltn__section-title-2 text-center featured_product_header">
+                            <h1 class="section-title">Rice husk dinnerware</h1>
+                            <span class="viewall-span">View all</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row slider ltn__tab-product-slider-one-active slick-arrow-1">
                     <!-- ltn__product-item -->
                     <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                         <div class="ltn__product-item ltn__product-item-3 text-left">
@@ -653,6 +898,38 @@
                 ]
             });
         });
+</script>
+<script>
+    $(document).ready(function(){
+        $('.slider').slick({
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            arrows: false,
+            dots: false,
+            autoplay: true,
+            autoplaySpeed: 3000,
+            responsive: [
+                {
+                    breakpoint: 992,
+                    settings: {
+                        slidesToShow: 3,
+                    }
+                },
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 2,
+                    }
+                },
+                {
+                    breakpoint: 576,
+                    settings: {
+                        slidesToShow: 1,
+                    }
+                }
+            ]
+        });
+    });
 </script>
 
 
