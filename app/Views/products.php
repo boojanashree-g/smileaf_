@@ -63,7 +63,7 @@
                                             <?php foreach ($products as $product): ?>
 
 
-                                                <div class="col-xl-4 col-sm-6 col-6 product-item"
+                                                <div class="col-xl-4 col-sm-6 col-12 product-item"
                                                     data-name="<?= strtolower(esc($product['prod_name'])) ?>">
                                                     <div class="ltn__product-item ltn__product-item-3 text-center">
                                                         <div class="product-img">
@@ -80,7 +80,7 @@
                                                                     </ul>
                                                                 </div>
                                                             <?php endif; ?>
-                                                            <div class="product-hover-action">
+                                                            <!-- <div class="product-hover-action">
                                                                 <ul>
 
                                                                     <li>
@@ -90,7 +90,7 @@
                                                                         </a>
                                                                     </li>
                                                                 </ul>
-                                                            </div>
+                                                            </div> -->
                                                         </div>
                                                         <div class="product-info">
                                                             <h2 class="product-title">
@@ -105,10 +105,11 @@
                                                                 <?php endif; ?>
                                                             </div>
                                                         </div>
-                                                        <div>
-                                                            <a href="#" class="theme-btn-1 btn " title="Add to Cart"
-                                                                data-bs-toggle="modal" data-bs-target="#quick_buy_modal"
-                                                                class="quick_btn">
+                                                        <div class="d-flex justify-content-evenly">
+                                                            <a href="#" title="Wishlist" class="wishlist-btn">
+                                                                            <i class="far fa-heart"></i>
+                                                                        </a>
+                                                            <a href="#" class="theme-btn-1 btn quick_btn" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#quick_buy_modal">
                                                                 <i class="fas fa-shopping-cart"></i>
                                                                 <span>Quick Buy</span>
                                                             </a>
@@ -135,7 +136,7 @@
                                                 <div class="col-lg-12 product-item"
                                                     data-name="<?= strtolower(esc($product['prod_name'])) ?>">
 
-                                                    <div class="ltn__product-item ltn__product-item-3">
+                                                    <div class="ltn__product-item ltn__product-item-3" style="min-height:auto;>
                                                         <div class="product-img">
                                                             <a href="<?= base_url($product['url']) ?>">
                                                                 <img src="<?= base_url($product['main_image']) ?>"
@@ -151,7 +152,7 @@
                                                                 </div>
                                                             <?php endif; ?>
                                                         </div>
-                                                        <div class="product-info">
+                                                        <div class="product-info h-100">
                                                             <h2 class="product-title">
                                                                 <a href="<?= base_url($product['url']) ?>">
                                                                     <?= esc($product['prod_name']) ?>
@@ -162,7 +163,11 @@
                                                                 <?php if (!empty($product['lowest_offer_price']) && $product['lowest_offer_price'] != $product['lowest_mrp']): ?>
                                                                     <del>₹<?= esc($product['lowest_offer_price']) ?></del>
                                                                 <?php endif; ?>
+                                                                <!-- <a href="#" title="Wishlist" data-bs-toggle="modal"  data-bs-target="#liton_wishlist_modal">
+                                                                    <i class="far fa-heart"></i>
+                                                                </a> -->
                                                             </div>
+                                                            
                                                             <div class="product-brief">
                                                                 <?= $product['description'] ?? 'Premium quality product available at best prices.' ?>
                                                             </div>
