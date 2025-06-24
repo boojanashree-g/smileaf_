@@ -1529,7 +1529,7 @@ a.theme-btn-1.btn:focus{
     font-weight: 600;
     color: #333;
 }
-input{
+.checkout_page input{
     height:45px !important;
     margin-bottom: 0 !important;
 }

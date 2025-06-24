@@ -3,8 +3,8 @@
 
 <?php require("components/head.php") ?>
 
-<body>
-    <div class="body-wrapper checkout_page">
+<body class="checkout_page">
+    <div class="body-wrapper">
         <!-- HEADER AREA START (header-5) -->
         <?php require("components/header.php") ?>
 
