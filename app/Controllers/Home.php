@@ -203,7 +203,7 @@ class Home extends BaseController
 
         return view('products', $data);
     }
-    public function productsOLD($encodedSubmenu, $encodedSubmenuId = null)
+    public function productsOLD($encodedSubmenu = null, $encodedSubmenuId = null)
     {
         $db = \Config\Database::connect();
         $menuData = $this->getMenuData();
