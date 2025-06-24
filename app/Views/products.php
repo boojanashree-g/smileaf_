@@ -13,10 +13,10 @@
     <div class="wrapper">
 
         <!-- HEADER AREA START (header-5) -->
-            <?php require("components/header.php") ?>
+        <?php require("components/header.php") ?>
         <!-- HEADER AREA END -->
 
-        <?php require("components/breadcrumbs.php")?>
+        <?php require("components/breadcrumbs.php") ?>
 
         <!-- PRODUCT DETAILS AREA START -->
         <div class="ltn__product-area ltn__product-gutter">
@@ -61,39 +61,34 @@
                                         <!-- ltn__product-item -->
                                         <?php if (!empty($products)): ?>
                                             <?php foreach ($products as $product): ?>
-                                                <div class="col-xl-4 col-sm-6 col-6 product-item" 
-                                                    data-name="<?= strtolower(esc($product->prod_name)) ?>"
-                                                    data-price="<?= esc($product->mrp) ?>"
-                                                    data-category="<?= strtolower(esc($product->category ?? '')) ?>"
-                                                    data-stock="<?= esc($product->stock_status) ?>">
+
+
+                                                <div class="col-xl-4 col-sm-6 col-6 product-item"
+                                                    data-name="<?= strtolower(esc($product['prod_name'])) ?>"
+                                                    data-price="<?= esc($product['mrp']) ?>"
+                                                    data-category="<?= strtolower(esc($product['category'] ?? '')) ?>"
+                                                    data-stock="<?= esc($product['stock_status']) ?>">
                                                     <div class="ltn__product-item ltn__product-item-3 text-center">
                                                         <div class="product-img">
-                                                            <a href="<?= base_url($product->url) ?>">
-                                                                <img src="<?= base_url($product->main_image) ?>" alt="<?= esc($product->prod_name) ?>">
+                                                            <a href="<?= base_url("") ?>">
+                                                                <img src="<?= base_url($product['main_image']) ?>"
+                                                                    alt="<?= esc($product['prod_name']) ?>">
                                                             </a>
-                                                            <?php if($product->stock_status == 0): ?>
-                                                            <div class="product-badge">
-                                                                <ul>
-                                                                    <li class="sale-badge">
-                                                                        Out of Stock
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
+                                                            <?php if ($product->stock_status == 0): ?>
+                                                                <div class="product-badge">
+                                                                    <ul>
+                                                                        <li class="sale-badge">
+                                                                            Out of Stock
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
                                                             <?php endif; ?>
                                                             <div class="product-hover-action">
                                                                 <ul>
+
                                                                     <li>
-                                                                        <a href="#" title="Quick View" data-bs-toggle="modal" data-bs-target="#quick_buy_modal">
-                                                                            <i class="far fa-eye"></i>
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="#" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal">
-                                                                            <i class="fas fa-shopping-cart"></i>
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="#" title="Wishlist" data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal">
+                                                                        <a href="#" title="Wishlist" data-bs-toggle="modal"
+                                                                            data-bs-target="#quick_buy_modal">
                                                                             <i class="far fa-heart"></i>
                                                                         </a>
                                                                     </li>
@@ -102,19 +97,21 @@
                                                         </div>
                                                         <div class="product-info">
                                                             <h2 class="product-title">
-                                                                <a href="<?= base_url($product->url) ?>">
-                                                                    <?= esc($product->prod_name) ?>
+                                                                <a href="<?= base_url($product['url']) ?>">
+                                                                    <?= esc($product['prod_name']) ?>
                                                                 </a>
                                                             </h2>
                                                             <div class="product-price">
-                                                                <span>₹<?= esc($product->mrp) ?></span>
-                                                                <?php if(!empty($product->offer_price) && $product->offer_price != $product->mrp): ?>
-                                                                    <del>₹<?= esc($product->offer_price) ?></del>
+                                                                <span>₹<?= esc($product['mrp']) ?></span>
+                                                                <?php if (!empty($product['offer_price']) && $product['offer_price'] != $product['mrp']): ?>
+                                                                    <del>₹<?= esc($product['offer_price']) ?></del>
                                                                 <?php endif; ?>
                                                             </div>
                                                         </div>
                                                         <div>
-                                                            <a href="#" class="theme-btn-1 btn " title="Add to Cart" data-bs-toggle="modal" data-bs-target="#quick_buy_modal" class="quick_btn">
+                                                            <a href="#" class="theme-btn-1 btn " title="Add to Cart"
+                                                                data-bs-toggle="modal" data-bs-target="#quick_buy_modal"
+                                                                class="quick_btn">
                                                                 <i class="fas fa-shopping-cart"></i>
                                                                 <span>Quick Buy</span>
                                                             </a>
@@ -123,7 +120,9 @@
                                                 </div>
                                             <?php endforeach; ?>
                                         <?php else: ?>
-                                            <div class="col-12"><p>No products found.</p></div>
+                                            <div class="col-12">
+                                                <p>No products found.</p>
+                                            </div>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -136,70 +135,66 @@
                                         <!-- ltn__product-item -->
                                         <?php if (!empty($products)): ?>
                                             <?php foreach ($products as $product): ?>
-                                                <div class="col-lg-12 product-item" 
-                                                    data-name="<?= strtolower(esc($product->prod_name)) ?>"
-                                                    data-price="<?= esc($product->mrp) ?>"
-                                                    data-category="<?= strtolower(esc($product->category ?? '')) ?>"
-                                                    data-stock="<?= esc($product->stock_status) ?>">
+                                                <div class="col-lg-12 product-item"
+                                                    data-name="<?= strtolower(esc($product['prod_name'])) ?>"
+                                                    data-price="<?= esc($product['mrp']) ?>"
+                                                    data-category="<?= strtolower(esc($product['category'] ?? '')) ?>"
+                                                    data-stock="<?= esc($product['stock_status']) ?>">
                                                     <div class="ltn__product-item ltn__product-item-3">
                                                         <div class="product-img">
-                                                            <a href="<?= base_url($product->url) ?>">
-                                                                <img src="<?= base_url($product->main_image) ?>" alt="<?= esc($product->prod_name) ?>">
+                                                            <a href="<?= base_url($product['url']) ?>">
+                                                                <img src="<?= base_url($product['main_image']) ?>"
+                                                                    alt="<?= esc($product['prod_name']) ?>">
                                                             </a>
-                                                            <?php if($product->stock_status == 0): ?>
-                                                            <div class="product-badge">
-                                                                <ul>
-                                                                    <li class="sale-badge">Out of Stock</li>
-                                                                </ul>
-                                                            </div>
-                                                            <?php elseif(!empty($product->badge)): ?>
-                                                            <div class="product-badge">
-                                                                <ul>
-                                                                    <li class="sale-badge"><?= esc($product->badge) ?></li>
-                                                                </ul>
-                                                            </div>
+                                                            <?php if ($product->stock_status == 0): ?>
+                                                                <div class="product-badge">
+                                                                    <ul>
+                                                                        <li class="sale-badge">Out of Stock</li>
+                                                                    </ul>
+                                                                </div>
+                                                            <?php elseif (!empty($product['badge'])): ?>
+                                                                <div class="product-badge">
+                                                                    <ul>
+                                                                        <li class="sale-badge"><?= esc($product['badge']) ?></li>
+                                                                    </ul>
+                                                                </div>
                                                             <?php endif; ?>
                                                         </div>
                                                         <div class="product-info">
                                                             <h2 class="product-title">
-                                                                <a href="<?= base_url($product->url) ?>">
-                                                                    <?= esc($product->prod_name) ?>
+                                                                <a href="<?= base_url($product['url']) ?>">
+                                                                    <?= esc($product['prod_name']) ?>
                                                                 </a>
                                                             </h2>
                                                             <div class="product-price">
-                                                                <span>₹<?= esc($product->mrp) ?></span>
-                                                                <?php if(!empty($product->offer_price) && $product->offer_price != $product->mrp): ?>
-                                                                    <del>₹<?= esc($product->offer_price) ?></del>
+                                                                <span>₹<?= esc($product['mrp']) ?></span>
+                                                                <?php if (!empty($product['offer_price']) && $product['offer_price'] != $product['mrp']): ?>
+                                                                    <del>₹<?= esc($product['offer_price']) ?></del>
                                                                 <?php endif; ?>
                                                             </div>
                                                             <div class="product-brief">
-                                                                <p><?= esc($product->description ?? 'Premium quality product available at best prices.') ?></p>
+                                                                <p><?= esc($product['description'] ?? 'Premium quality product available at best prices.') ?>
+                                                                </p>
                                                             </div>
                                                             <div class="product-hover-action">
                                                                 <ul>
+
                                                                     <li>
-                                                                        <a href="#" title="Quick View" data-bs-toggle="modal" data-bs-target="#quick_view_modal">
-                                                                            <i class="far fa-eye"></i>
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="#" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal">
-                                                                            <i class="fas fa-shopping-cart"></i>
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="#" title="Wishlist" data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal">
+                                                                        <a href="#" title="Wishlist" data-bs-toggle="modal"
+                                                                            data-bs-target="#liton_wishlist_modal">
                                                                             <i class="far fa-heart"></i>
                                                                         </a>
                                                                     </li>
-                                                                </ul>
+                                                                </ul>   
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             <?php endforeach; ?>
                                         <?php else: ?>
-                                            <div class="col-12"><p>No products found.</p></div>
+                                            <div class="col-12">
+                                                <p>No products found.</p>
+                                            </div>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -212,10 +207,12 @@
                                 <h4 class="ltn__widget-title ltn__widget-title-border">Product Availability</h4>
                                 <ul>
                                     <li>
-                                        <label><input type="checkbox" class="filter-checkbox" name="availability[]" value="1">&nbsp;&nbsp; Available</label>
+                                        <label><input type="checkbox" class="filter-checkbox" name="availability[]"
+                                                value="1">&nbsp;&nbsp; Available</label>
                                     </li>
                                     <li>
-                                        <label><input type="checkbox" class="filter-checkbox" name="availability[]" value="0">&nbsp;&nbsp; Out of Stock</label>
+                                        <label><input type="checkbox" class="filter-checkbox" name="availability[]"
+                                                value="0">&nbsp;&nbsp; Out of Stock</label>
                                     </li>
                                 </ul>
                             </div>
@@ -228,7 +225,8 @@
                                         <?php foreach ($productTypes as $type): ?>
                                             <li>
                                                 <label>
-                                                    <input type="checkbox" class="filter-checkbox" name="type_id[]" value="<?= esc($type->type_id) ?>"> 
+                                                    <input type="checkbox" class="filter-checkbox" name="type_id[]"
+                                                        value="<?= esc($type->type_id) ?>">
                                                     &nbsp;&nbsp;<?= esc($type->type_name) ?>
                                                 </label>
                                             </li>
@@ -241,11 +239,12 @@
                             <div class="widget ltn__menu-widget">
                                 <h4 class="ltn__widget-title ltn__widget-title-border">Product Shape</h4>
                                 <ul>
-                                    <?php  if (!empty($productShape)): ?>
+                                    <?php if (!empty($productShape)): ?>
                                         <?php foreach ($productShape as $shape): ?>
                                             <li>
                                                 <label>
-                                                    <input type="checkbox" class="filter-checkbox" name="shape_id[]" value="<?= esc($shape->shape_id) ?>">
+                                                    <input type="checkbox" class="filter-checkbox" name="shape_id[]"
+                                                        value="<?= esc($shape->shape_id) ?>">
                                                     &nbsp;&nbsp;<?= esc($shape->shape_name) ?>
                                                 </label>
                                             </li>
@@ -262,7 +261,8 @@
                                         <?php foreach ($productsize as $size): ?>
                                             <li>
                                                 <label>
-                                                    <input type="checkbox" class="filter-checkbox" name="size_id[]" value="<?= esc($size->size_id) ?>">
+                                                    <input type="checkbox" class="filter-checkbox" name="size_id[]"
+                                                        value="<?= esc($size->size_id) ?>">
                                                     &nbsp;&nbsp;<?= esc($size->size_name) ?>
                                                 </label>
                                             </li>
@@ -305,7 +305,7 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-12">
-                                            <div class="modal-product-info">                                                
+                                            <div class="modal-product-info">
                                                 <h3>Vegetables Juices</h3>
                                                 <div class="product-price">
                                                     <span>₹149.00</span>
@@ -388,7 +388,7 @@
         <!-- MODAL AREA END -->
 
         <!-- MODAL AREA START (Add To Cart Modal) -->
-    <?php include("components/common_modal.php")?>
+        <?php include("components/common_modal.php") ?>
         <!-- MODAL AREA END -->
 
         <!-- MODAL AREA START (Wishlist Modal) -->
@@ -411,7 +411,8 @@
                                                     alt="#">
                                             </div>
                                             <div class="modal-product-info">
-                                                <h5><a href="<?php echo base_url('productDetails') ?>">Vegetables Juices</a></h5>
+                                                <h5><a href="<?php echo base_url('productDetails') ?>">Vegetables
+                                                        Juices</a></h5>
                                                 <p class="added-cart"><i class="fa fa-check-circle"></i> Successfully
                                                     added to your Wishlist</p>
                                                 <div class="btn-wrapper">

@@ -299,5 +299,11 @@ $(document).ready(function () {
       },
     });
   });
-  
+
+  // *************************** [Logout page ] *************************************************************************
+
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get("expired") === "1") {
+    localStorage.clear();
+  }
 });
