@@ -140,55 +140,17 @@ $(document).ready(function () {
 
     products.forEach(function (product) {
       html += `
-                <div class="col-xl-4 col-sm-6 col-6 product-item" 
-                     data-name="${(product.prod_name || "").toLowerCase()}"
-                     data-price="${
-                       product.current_price ||
-                       product.price ||
-                       product.mrp ||
-                       "0"
-                     }"
-                     data-category="${(product.category || "").toLowerCase()}"
-                     data-stock="${product.stock_status || "1"}">
+                <div class="col-xl-4 col-sm-6 col-6 product-item" data-name="${(product.prod_name || "").toLowerCase()}" data-price="${product.current_price || product.price || product.mrp || "0"}" data-category="${(product.category || "").toLowerCase()}"data-stock="${product.stock_status || "1"}">
                     <div class="ltn__product-item ltn__product-item-3 text-center">
                         <div class="product-img">
                             <a href="${base_Url}${product.url || "#"}">
-                                <img src="${base_Url}${
-        product.main_image || "default-image.jpg"
-      }" alt="${product.prod_name || "Product"}">
+                                <img src="${base_Url}${product.main_image || "default-image.jpg"}" alt="${product.prod_name || "Product"}">
                             </a>
-                            ${
-                              product.stock_status == 0
-                                ? `<div class="product-badge">
-                                    <ul><li class="sale-badge">Out of Stock</li></ul>
-                                </div>`
-                                : product.badge
-                                ? `<div class="product-badge">
+                            ${product.stock_status == 0 ? `<div class="product-badge"><ul><li class="sale-badge">Out of Stock</li></ul></div>` : product.badge ? `<div class="product-badge">
                                         <ul><li class="sale-badge">${product.badge}</li></ul>
                                     </div>`
-                                : `<div class="product-badge">
-                                        <ul><li class="sale-badge">New</li></ul>
-                                    </div>`
-                            }
-                            <div class="product-hover-action">
-                                <ul>
-                                    <li>
-                                        <a href="#" title="Quick View" data-bs-toggle="modal" data-bs-target="#quick_view_modal">
-                                            <i class="far fa-eye"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal">
-                                            <i class="fas fa-shopping-cart"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="Wishlist" data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal">
-                                            <i class="far fa-heart"></i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+          : ""
+        }
                         </div>
                         <div class="product-info">
                             <h2 class="product-title">
@@ -197,28 +159,25 @@ $(document).ready(function () {
                                 </a>
                             </h2>
                             <div class="product-price">
-                                <span>₹${
-                                  product.current_price ||
-                                  product.price ||
-                                  product.mrp ||
-                                  "0"
-                                }</span>
-                                ${
-                                  (product.original_price ||
-                                    product.offer_price) &&
-                                  (product.original_price ||
-                                    product.offer_price) !==
-                                    (product.current_price ||
-                                      product.price ||
-                                      product.mrp)
-                                    ? `<del>₹${
-                                        product.original_price ||
-                                        product.offer_price
-                                      }</del>`
+                            <span>₹${product.lowest_mrp || "0"}</span>
+                            ${
+                                product.lowest_offer_price &&
+                                product.lowest_offer_price != product.lowest_mrp
+                                    ? `<del>₹${product.lowest_offer_price}</del>`
                                     : ""
-                                }
-                            </div>
+                            }
                         </div>
+
+                        </div>
+                        <div class="d-flex justify-content-evenly">
+                        <a href="#" title="Wishlist" class="wishlist-btn">
+                            <i class="far fa-heart"></i>
+                        </a>
+                        <a href="#" class="theme-btn-1 btn quick_btn" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#quick_buy_modal">
+                            <i class="fas fa-shopping-cart me-2"></i>
+                            <span>Quick Buy</span>
+                        </a>
+                    </div>
                     </div>
                 </div>
             `;
@@ -227,103 +186,60 @@ $(document).ready(function () {
     return html;
   }
 
-  // Function to generate list view HTML
   function generateListHtml(products) {
-    let html = "";
+  let html = "";
 
-    products.forEach(function (product) {
-      html += `
-                <div class="col-lg-12 product-item" 
-                     data-name="${(product.prod_name || "").toLowerCase()}"
-                     data-price="${
-                       product.current_price ||
-                       product.price ||
-                       product.mrp ||
-                       "0"
-                     }"
-                     data-category="${(product.category || "").toLowerCase()}"
-                     data-stock="${product.stock_status || "1"}">
-                    <div class="ltn__product-item ltn__product-item-3">
-                        <div class="product-img">
-                            <a href="${base_Url}${product.url || "#"}">
-                                <img src="${base_Url}${
-        product.main_image || "default-image.jpg"
-      }" alt="${product.prod_name || "Product"}">
-                            </a>
-                            ${
-                              product.stock_status == 0
-                                ? `<div class="product-badge">
-                                    <ul><li class="sale-badge">Out of Stock</li></ul>
-                                </div>`
-                                : product.badge
-                                ? `<div class="product-badge">
-                                        <ul><li class="sale-badge">${product.badge}</li></ul>
-                                    </div>`
-                                : ""
-                            }
-                        </div>
-                        <div class="product-info">
-                            <h2 class="product-title">
-                                <a href="${base_Url}${product.url || "#"}">
-                                    ${product.prod_name || "Product Name"}
-                                </a>
-                            </h2>
-                            <div class="product-price">
-                                <span>₹${
-                                  product.current_price ||
-                                  product.price ||
-                                  product.mrp ||
-                                  "0"
-                                }</span>
-                                ${
-                                  (product.original_price ||
-                                    product.offer_price) &&
-                                  (product.original_price ||
-                                    product.offer_price) !==
-                                    (product.current_price ||
-                                      product.price ||
-                                      product.mrp)
-                                    ? `<del>₹${
-                                        product.original_price ||
-                                        product.offer_price
-                                      }</del>`
-                                    : ""
-                                }
-                            </div>
-                            <div class="product-brief">
-                                <p>${
-                                  product.description ||
-                                  product.prod_description ||
-                                  "Premium quality product available at best prices."
-                                }</p>
-                            </div>
-                            <div class="product-hover-action">
-                                <ul>
-                                    <li>
-                                        <a href="#" title="Quick View" data-bs-toggle="modal" data-bs-target="#quick_view_modal">
-                                            <i class="far fa-eye"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal">
-                                            <i class="fas fa-shopping-cart"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="Wishlist" data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal">
-                                            <i class="far fa-heart"></i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-    });
+  products.forEach(function (product) {
+    const baseUrl = base_Url || "/";
+    const name = (product.prod_name || "Product Name").toLowerCase();
+    const url = product.url || "#";
+    const img = product.main_image || "default-image.jpg";
+    const price = product.lowest_mrp || "0";
+    const offer = product.lowest_offer_price || null;
+    const outOfStock = parseInt(product.lowest_quantity) === 0;
+    const showOffer = offer && offer !== price;
+    const description = product.description || "Premium quality product available at best prices.";
 
-    return html;
-  }
+    html += `
+      <div class="col-lg-12 product-item" 
+           data-name="${name}"
+           data-price="${price}"
+           data-stock="${outOfStock ? "0" : "1"}">
+        <div class="ltn__product-item ltn__product-item-3" style="min-height:auto;">
+          <div class="product-img">
+            <a href="${baseUrl}${url}">
+              <img src="${baseUrl}${img}" alt="${product.prod_name || "Product"}">
+            </a>
+            ${
+              outOfStock
+                ? `<div class="product-badge"><ul><li class="sale-badge">Out of Stock</li></ul></div>`
+                : ""
+            }
+          </div>
+          <div class="product-info h-100">
+            <h2 class="product-title">
+              <a href="${baseUrl}${url}">${product.prod_name || "Product Name"}</a>
+            </h2>
+            <div class="product-price">
+              <span>₹${price}</span>
+              ${
+                showOffer
+                  ? `<del>₹${offer}</del>`
+                  : ""
+              }
+            </div>
+            <div class="product-brief">
+              ${description}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  return html;
+}
+
 
   // Function to show no products message
   function showNoProductsMessage(gridElement, listElement) {
