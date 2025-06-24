@@ -1594,3 +1594,7 @@ input{
     justify-content: space-between;
     align-items: center;
 }
+
+.nice-select{
+    width:100%;
+}
