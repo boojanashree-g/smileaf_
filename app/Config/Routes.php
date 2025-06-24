@@ -12,7 +12,7 @@ $routes->get('cart', 'Home::cart');
 $routes->get('checkout', 'Home::checkout');
 $routes->get('contact', 'Home::contact');
 $routes->get('products/(:segment)/(:segment)', 'Home::productsOLD/$1/$2');
-// $routes->get('products', 'Home::products');
+$routes->get('products', 'Home::productsOLD');
 $routes->get('wishlist', 'Home::wishlist');
 $routes->get('myaccount', 'Home::myaccount', ['filter' => 'SessionAuth']);
 $routes->get('signup', 'Home::signup');
