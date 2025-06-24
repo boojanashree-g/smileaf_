@@ -185,7 +185,7 @@
                                                                             <i class="far fa-heart"></i>
                                                                         </a>
                                                                     </li>
-                                                                </ul>   
+                                                                </ul>
                                                             </div>
                                                         </div>
                                                     </div>
