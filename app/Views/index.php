@@ -78,8 +78,8 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="section-title-area ltn__section-title-2 text-center featured_product_header">
-                            <h1 class="section-title">Areca Palm Leaf</h1>
-                            <span class="viewall-span">View all</span>
+                            <h1 class="section-title">Featured Products</h1>
+                            <!-- <span class="viewall-span">View all</span> -->
                         </div>
                     </div>
                 </div>
@@ -194,247 +194,42 @@
             </div>
         </div>
         <!-- PRODUCT AREA END -->
-         <!-- PRODUCT AREA START (product-item-3) -->
-        <div class="ltn__product-area ltn__product-gutter">
+          <!-- PRODUCT AREA START (product-item-3) -->
+        <div class="ltn__product-area ltn__product-gutter mb-3">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="section-title-area ltn__section-title-2 text-center featured_product_header">
-                            <h1 class="section-title">Sugarcane Bagasse</h1>
-                            <span class="viewall-span">View all</span>
+                        <div class="section-title-area ltn__section-title-2 text-center featured_product_header mb-5">
+                            <h1 class="section-title">Try our Bestsellers</h1>
+                            <!-- <span class="viewall-span">View all</span> -->
                         </div>
                     </div>
                 </div>
-                <div class="row slider ltn__tab-product-slider-one-active slick-arrow-1">
-                    <!-- ltn__product-item -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
-                        <div class="ltn__product-item ltn__product-item-3 text-left">
-                            <div class="product-img">
-                                <a href="<?php echo base_url('productDetails') ?>"><img
-                                        src="<?php echo base_url() ?>public/assets/img/plate_img/square-plate/deep_square.png"
-                                        alt="#"></a>
-                                <div class="product-badge">
-                                    <ul>
-                                        <li class="sale-badge">New</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="home_products product-info">
-                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Squares</a></h2>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ltn__product-item -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
-                        <div class="ltn__product-item ltn__product-item-3 text-left">
-                            <div class="product-img">
-                                <a href="<?php echo base_url('productDetails') ?>"><img
-                                        src="<?php echo base_url() ?>public/assets/img/plate_img/round-plate/9ROP.jpg"
-                                        alt="#"></a>
-                            </div>
-                            <div class="home_products product-info">
-                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Rounds</a></h2>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ltn__product-item -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
-                        <div class="ltn__product-item ltn__product-item-3 text-center">
-                            <div class="product-img">
-                                <a href="<?php echo base_url('productDetails') ?>"><img
-                                        src="<?php echo base_url() ?>public/assets/img/plate_img/rectangle-plate/8rectangle.jpg"
-                                        alt="#"></a>
-                                <div class="product-badge">
-                                    <ul>
-                                        <li class="sale-badge">New</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="home_products product-info">
-                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Rectangles</a>
-                                </h2>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ltn__product-item -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
-                        <div class="ltn__product-item ltn__product-item-3 text-center">
-                            <div class="product-img">
-                                <a href="<?php echo base_url('productDetails') ?>"><img
-                                        src="<?php echo base_url() ?>public/assets/img/plate_img/bowl-plate/4bowl.jpg"
-                                        alt="#"></a>
-                                <div class="product-badge">
-                                    <ul>
-                                        <li class="sale-badge">New</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="home_products product-info">
-                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Bowls</a></h2>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ltn__product-item -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
-                        <div class="ltn__product-item ltn__product-item-3 text-center">
-                            <div class="product-img">
-                                <a href="<?php echo base_url('productDetails') ?>"><img
-                                        src="<?php echo base_url() ?>public/assets/img/plate_img/extra-curves/boat.jpg"
-                                        alt="#"></a>
-                                <div class="product-badge">
-                                    <ul>
-                                        <li class="sale-badge">New</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="home_products product-info">
-                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Extra Curves</a>
-                                </h2>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ltn__product-item -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
-                        <div class="ltn__product-item ltn__product-item-3 text-center">
-                            <div class="product-img">
-                                <a href="<?php echo base_url('productDetails') ?>"><img
-                                        src="<?php echo base_url() ?>public/assets/img/plate_img/combo-pack/scal25.jpg"
-                                        alt="#"></a>
-                                <div class="product-badge">
-                                    <ul>
-                                        <li class="sale-badge">New</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="home_products product-info">
-                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Combo Packs</a>
-                                </h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- PRODUCT AREA END -->
-         <!-- PRODUCT AREA START (product-item-3) -->
-        <div class="ltn__product-area ltn__product-gutter">
-            <div class="container">
+                <?php if (!empty($bestSeller)): ?>
                 <div class="row">
-                    <div class="col-lg-12">
-                        <div class="section-title-area ltn__section-title-2 text-center featured_product_header">
-                            <h1 class="section-title">Rice husk dinnerware</h1>
-                            <span class="viewall-span">View all</span>
+                    <?php foreach ($bestSeller as $product): ?>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                            <div class="ltn__product-item ltn__product-item-3 text-left ">
+                                <div class="product-img">
+                                    <a href="<?= base_url('productDetails/' . $product['prod_id']) ?>">
+                                        <img src="<?= base_url() . $product['main_image'] ?>" alt="#">
+                                    </a>
+                                </div>
+                                <div class="home_products product-info">
+                                    <h2 class="product-title">
+                                        <a href="<?= base_url('products/' . $product['prod_id']) ?>">
+                                            <?= esc($product['prod_name']) ?>
+                                        </a>
+                                    </h2>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
-                <div class="row slider ltn__tab-product-slider-one-active slick-arrow-1">
-                    <!-- ltn__product-item -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
-                        <div class="ltn__product-item ltn__product-item-3 text-left">
-                            <div class="product-img">
-                                <a href="<?php echo base_url('productDetails') ?>"><img
-                                        src="<?php echo base_url() ?>public/assets/img/plate_img/square-plate/deep_square.png"
-                                        alt="#"></a>
-                                <div class="product-badge">
-                                    <ul>
-                                        <li class="sale-badge">New</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="home_products product-info">
-                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Squares</a></h2>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ltn__product-item -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
-                        <div class="ltn__product-item ltn__product-item-3 text-left">
-                            <div class="product-img">
-                                <a href="<?php echo base_url('productDetails') ?>"><img
-                                        src="<?php echo base_url() ?>public/assets/img/plate_img/round-plate/9ROP.jpg"
-                                        alt="#"></a>
-                            </div>
-                            <div class="home_products product-info">
-                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Rounds</a></h2>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ltn__product-item -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
-                        <div class="ltn__product-item ltn__product-item-3 text-center">
-                            <div class="product-img">
-                                <a href="<?php echo base_url('productDetails') ?>"><img
-                                        src="<?php echo base_url() ?>public/assets/img/plate_img/rectangle-plate/8rectangle.jpg"
-                                        alt="#"></a>
-                                <div class="product-badge">
-                                    <ul>
-                                        <li class="sale-badge">New</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="home_products product-info">
-                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Rectangles</a>
-                                </h2>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ltn__product-item -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
-                        <div class="ltn__product-item ltn__product-item-3 text-center">
-                            <div class="product-img">
-                                <a href="<?php echo base_url('productDetails') ?>"><img
-                                        src="<?php echo base_url() ?>public/assets/img/plate_img/bowl-plate/4bowl.jpg"
-                                        alt="#"></a>
-                                <div class="product-badge">
-                                    <ul>
-                                        <li class="sale-badge">New</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="home_products product-info">
-                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Bowls</a></h2>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ltn__product-item -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
-                        <div class="ltn__product-item ltn__product-item-3 text-center">
-                            <div class="product-img">
-                                <a href="<?php echo base_url('productDetails') ?>"><img
-                                        src="<?php echo base_url() ?>public/assets/img/plate_img/extra-curves/boat.jpg"
-                                        alt="#"></a>
-                                <div class="product-badge">
-                                    <ul>
-                                        <li class="sale-badge">New</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="home_products product-info">
-                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Extra Curves</a>
-                                </h2>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ltn__product-item -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
-                        <div class="ltn__product-item ltn__product-item-3 text-center">
-                            <div class="product-img">
-                                <a href="<?php echo base_url('productDetails') ?>"><img
-                                        src="<?php echo base_url() ?>public/assets/img/plate_img/combo-pack/scal25.jpg"
-                                        alt="#"></a>
-                                <div class="product-badge">
-                                    <ul>
-                                        <li class="sale-badge">New</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="home_products product-info">
-                                <h2 class="product-title"><a href="<?php echo base_url('products') ?>">Combo Packs</a>
-                                </h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <?php else: ?>
+                <p>No best sellers found.</p>
+            <?php endif; ?>
+
             </div>
         </div>
         <!-- PRODUCT AREA END -->

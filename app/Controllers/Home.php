@@ -21,6 +21,7 @@ class Home extends BaseController
     }
     public function index()
     {
+        $db = \Config\Database::connect();
         $data = $this->session->get();
 
         $mainmenu = $this->getMenuData();
@@ -30,7 +31,11 @@ class Home extends BaseController
             'bannerData' => $bannerData
         ]);
 
-
+        $data['bestSeller'] = $db->table('tbl_products')
+               ->where('flag !=', 0)
+               ->where('best_seller', 1)
+               ->get()
+               ->getResultArray();
         return view('index', $data);
     }
 
