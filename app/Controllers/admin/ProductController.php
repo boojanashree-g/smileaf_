@@ -263,7 +263,9 @@ class ProductController extends BaseController
                 'variants' => $variantData,
                 'product_images' => $imagePaths
             ];
+
         }
+
         echo json_encode($productDetails);
     }
 

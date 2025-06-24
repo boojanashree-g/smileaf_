@@ -40,12 +40,14 @@ class Home extends BaseController
         $submenuModel = new SubmenuModel();
 
         $mainmenus = $mainmenuModel->where('flag !=', 0)->findAll();
+
         $submenus = $submenuModel->where('flag !=', 0)->findAll();
 
         $groupedSubmenus = [];
         foreach ($submenus as $submenu) {
             $groupedSubmenus[$submenu['menu_id']][] = $submenu;
         }
+
 
         return [
             'mainmenu' => $mainmenus,
@@ -106,7 +108,9 @@ class Home extends BaseController
         return view('contact', $data);
     }
 
-    public function products($encodedSubmenuId = null)
+
+
+    public function products($encodedSubmenu, $encodedSubmenuId = null)
     {
         $db = \Config\Database::connect();
         $menuData = $this->getMenuData();
@@ -195,6 +199,139 @@ class Home extends BaseController
             'productShape' => $productShape ?? [],
         ]);
 
+
+
+        return view('products', $data);
+    }
+    public function productsOLD($encodedSubmenu, $encodedSubmenuId = null)
+    {
+        $db = \Config\Database::connect();
+        $menuData = $this->getMenuData();
+
+        // Decode submenu ID from URL
+        $submenuId = null;
+        if ($encodedSubmenuId) {
+            $submenuId = base64_decode($encodedSubmenuId);
+            if (!is_numeric($submenuId)) {
+                throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Invalid product category");
+            }
+        }
+
+        // Filter parameters from query string
+        $typeIds = $this->request->getGet('type_id');
+        $sizeIds = $this->request->getGet('size_id');
+        $shapeIds = $this->request->getGet('shape_id');
+
+        // Detect AJAX
+        $isAjax = $this->request->isAJAX() ||
+            $this->request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest' ||
+            $this->request->getGet('ajax') == '1';
+
+        // Load filter dropdowns only if not AJAX
+        if (!$isAjax) {
+            $typeQuery = $db->table('tbl_filter_type')->where('flag !=', 0)->get();
+            $sizeQuery = $db->table('tbl_filter_size')->where('flag !=', 0)->get();
+            $shapeQuery = $db->table('tbl_filter_shapes')->where('flag !=', 0)->get();
+
+            $productTypes = $typeQuery->getResult();
+            $productsize = $sizeQuery->getResult();
+            $productShape = $shapeQuery->getResult();
+        }
+
+        // Build products query
+        $productsQuery = $db->table('tbl_products a')
+            ->select(' a.*,b.size_name,c.type_name,d.shape_name')
+            ->join('tbl_filter_size b', 'a.size_id = b.size_id', 'left')
+            ->join('tbl_filter_type c', 'a.type_id = c.type_id', 'left')
+            ->join('tbl_filter_shapes d', 'a.shape_id = d.shape_id', 'left')
+            ->where([
+                'a.flag' => 1,
+                'b.status' => 1,
+                'b.flag' => 1,
+                'c.type_status' => 1,
+                'c.flag' => 1
+            ])->orderBy('a.prod_id', 'ASC');
+
+
+
+
+        // Apply submenu ID filter
+        if ($submenuId) {
+            $productsQuery->where('a.submenu_id', $submenuId);
+        }
+
+
+        // Apply other filters
+        if (!empty($typeIds)) {
+
+            $productsQuery->whereIn('a.type_id', (array) $typeIds);
+        }
+
+        if (!empty($sizeIds)) {
+            $productsQuery->whereIn('a.size_id', (array) $sizeIds);
+        }
+
+        if (!empty($shapeIds)) {
+            $productsQuery->whereIn('a.shape_id', (array) $shapeIds);
+        }
+
+        // Fetch product data
+        $rawProducts = $productsQuery->get()->getResultArray();
+
+        $products = [];
+
+        foreach ($rawProducts as $product) {
+            $prodId = $product['prod_id'];
+
+            // Fetch variants
+            $variantQuery = $db->table('tbl_variants')
+                ->select('variant_id, pack_qty, mrp, offer_type, offer_details, offer_price, stock_status, quantity, weight')
+                ->where(['flag' => 1, 'prod_id' => $prodId])
+                ->get()->getResultArray();
+
+            // Fetch product images
+            $imageQuery = $db->table('tbl_images')
+                ->select('image_path')
+                ->where(['flag' => 1, 'prod_id' => $prodId])
+                ->get()->getResultArray();
+
+            $product['variants'] = $variantQuery;
+            $product['product_images'] = array_column($imageQuery, 'image_path');
+
+            $products[] = $product;
+        }
+
+
+
+        // Return JSON for AJAX
+        if ($isAjax) {
+            return $this->response->setJSON([
+                'success' => true,
+                'products' => $products,
+                'count' => count($products),
+                'mainmenus' => $menuData,
+                'groupedSubmenus' => $menuData['submenu']
+            ]);
+        }
+
+        // For normal page rendering
+        $data = array_merge($menuData, [
+            'page_title' => 'Products',
+            'breadcrumb_items' => [
+                ['label' => 'Home', 'url' => base_url()],
+                ['label' => 'Products']
+            ],
+            'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
+            'products' => $products,
+            'productTypes' => $productTypes ?? [],
+            'productsize' => $productsize ?? [],
+            'productShape' => $productShape ?? [],
+        ]);
+
+
+     
+
+
         return view('products', $data);
     }
 
@@ -219,6 +356,8 @@ class Home extends BaseController
     {
         $res['menuData'] = $this->getMenuData();
         $userID = $this->session->get("user_id");
+
+
         $res['userData'] = $this->db->query("SELECT * FROM `tbl_users` WHERE `flag` = 1 AND `user_id` = $userID")->getResultArray();
 
         return view('myaccount', $res);
@@ -240,6 +379,10 @@ class Home extends BaseController
     }
     public function signin()
     {
+
+        $data = $this->session->get();
+
+
         $data = [
             'page_title' => 'Login / Signup',
             'breadcrumb_items' => [

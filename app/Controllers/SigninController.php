@@ -290,6 +290,13 @@ class SigninController extends BaseController
 
                 if ($update && $affectedRow == 1) {
 
+                    $this->session->set([
+                        'otp_verify' => "YES",
+                        'user_id' => $userID,
+                        'loginStatus' => "YES"
+                    ]);
+
+
                     $res['code'] = 200;
                     $res['status'] = 'Success';
                     $res['message'] = 'OTP resent successfully';
