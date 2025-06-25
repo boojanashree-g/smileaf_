@@ -128,3 +128,12 @@ $routes->group('admin/product-details', ['namespace' => 'App\Controllers\admin']
 
 });
 
+$routes->group('admin/featured-products', ['namespace' => 'App\Controllers\admin'], function ($routes) {
+    $routes->get('/', 'ProductController::featuredProductDetails');
+    $routes->post('getFeaturedProductDetails', 'ProductController::getFeaturedProductDetails');
+    $routes->post('insert-data', 'ProductController::insertFeaturedData');
+    $routes->post('update-data', 'ProductController::updateFeaturedData');
+    $routes->post('delete-data', 'ProductController::deleteFeaturedData');
+
+});
+
