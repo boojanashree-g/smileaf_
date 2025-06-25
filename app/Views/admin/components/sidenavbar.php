@@ -121,6 +121,11 @@
                         <div data-i18n="Product Details">Product Details</div>
                     </a>
                 </li>
+                <li class="menu-item">
+                    <a href="<?= base_url('admin/featured-products') ?>" class="menu-link">
+                        <div data-i18n="Product Details">Featured Product </div>
+                    </a>
+                </li>
             </ul>
         </li>
 

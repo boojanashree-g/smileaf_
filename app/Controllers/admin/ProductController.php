@@ -613,5 +613,205 @@ class ProductController extends BaseController
 
     }
 
+    public function featuredProducts()
+    {
+        $res['meta_title'] = "Featured Products";
+        $res['submenu'] = $this->db->query("SELECT `sub_id` , `submenu`  FROM `tbl_submenu` WHERE flag = 1")->getResultArray();
+
+        return view("admin/featured_products", $res);
+    }
+
+  public function insertFeaturedData()
+    {
+        $sub_id     = $this->request->getPost('sub_id');
+        $prod_name  = $this->request->getPost('prod_name');
+        $file       = $this->request->getFile('main_image');
+
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $newName = $file->getRandomName();
+            $file->move(FCPATH . 'uploads', $newName);
+            $imagePath = 'uploads/' . $newName;
+        } else {
+            return $this->response->setJSON([
+                'code' => 500,
+                'msg'  => 'Image upload failed.',
+            ]);
+        }
+
+        $data = [
+            'sub_id'     => $sub_id,
+            'prod_name'  => $prod_name,
+            'image_url'  => $imagePath,
+            'flag'       => 1,
+            'created_at' => date('Y-m-d H:i:s'),
+        ];
+
+        $inserted = $this->db->table('tbl_featured_products')->insert($data);
+
+        if ($inserted) {
+            return $this->response->setJSON([
+                'code' => 200,
+                'msg'  => 'Product added successfully.',
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'code' => 500,
+                'msg'  => 'Database insertion failed.',
+            ]);
+        }
+    }
+
+    public function featuredProductDetails()
+    {
+        $res['meta_title'] = "Featured Products";
+        $res['submenu'] = $this->db->query("SELECT `sub_id` , `submenu`  FROM `tbl_submenu` WHERE flag = 1")->getResultArray();
+
+        return view("admin/featured_products", $res);
+    }
+
+
+    public function getFeaturedProductDetails(){
+         $featuredProdData = $this->db->query("SELECT  a.* , b.submenu
+        FROM
+            `tbl_featured_products` AS a
+        INNER JOIN tbl_submenu AS b
+        ON
+            a.sub_id = b.sub_id
+        WHERE
+             a.flag = '1'")->getResultArray();
+
+        $featuredProductDetails = [];
+
+       foreach ($featuredProdData as $prod) {
+            $featuredProductDetails[] = [
+                'prod_id' => $prod['featured_prod_id'],
+                'prod_name' => $prod['prod_name'],
+                'submenu_id' => $prod['sub_id'],
+                'submenu' => $prod['submenu'],
+                'image_url' => $prod['image_url'], // use correct key here
+            ];
+        }
+
+        echo json_encode($featuredProductDetails);
+    }
+
+    
+    public function deleteFeaturedData()
+    {
+        try {
+            $prod_id = $this->request->getPost('prod_id');
+            
+            if ($prod_id) {
+                $query = "UPDATE tbl_featured_products SET flag = '0' WHERE featured_prod_id = ?";
+                $update = $this->db->query($query, [$prod_id]);
+                $affected_rows = $this->db->affectedRows();
+                if ($affected_rows > 0) {
+                    return $this->response->setJSON([
+                        'code' => 200,
+                        'status' => 'success',
+                        'message' => 'Deleted Successfully'
+                    ]);
+                } else {
+                    return $this->response->setJSON([
+                        'code' => 400,
+                        'status' => 'failure',
+                        'message' => 'Something went wrong'
+                    ]);
+                }
+            }
+
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'code' => 500,
+                'status' => 'error',
+                'msg' => 'Server Error: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function updateFeaturedData()
+{
+    try {
+        $request = $this->request;
+
+        $productID = $request->getPost('prod_id');
+        $productName = $request->getPost('prod_name');
+        $subID = $request->getPost('sub_id');
+        $MainImg = $request->getFile('main_image');
+
+        if (!$productID || !$productName || !$subID) {
+            return $this->response->setJSON([
+                'code' => 400,
+                'status' => 'error',
+                'msg' => 'Required fields are missing.'
+            ]);
+        }
+
+        // Prepare image
+        $image_url = null;
+
+        if ($MainImg && $MainImg->isValid()) {
+            // Get old image
+            $query = "SELECT image_url FROM tbl_featured_products WHERE featured_prod_id = ?";
+            $result = $this->db->query($query, [$productID])->getRow();
+
+            if ($result && $result->image_url) {
+                $oldPath = FCPATH . ltrim($result->image_url, '/');
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+            if (!in_array($MainImg->getMimeType(), $allowedTypes)) {
+                return $this->response->setJSON([
+                    'code' => 400,
+                    'status' => 'error',
+                    'msg' => 'Only JPG, JPEG, PNG allowed.'
+                ]);
+            }
+
+            if ($MainImg->getSize() > 512000) {
+                return $this->response->setJSON([
+                    'code' => 400,
+                    'status' => 'error',
+                    'msg' => 'Image must be less than 500KB.'
+                ]);
+            }
+
+            $randomName = $MainImg->getRandomName();
+            $MainImg->move('uploads/', $randomName);
+            $image_url = '/uploads/' . $randomName;
+        }
+
+        // Prepare update data
+        $updateData = [
+            'prod_name' => $productName,
+            'sub_id' => $subID
+        ];
+
+        if ($image_url) {
+            $updateData['image_url'] = $image_url;
+        }
+
+        // Perform update
+        $this->db->table('tbl_featured_products')
+            ->where('featured_prod_id', $productID)
+            ->update($updateData);
+
+        return $this->response->setJSON([
+            'code' => 200,
+            'status' => 'success',
+            'msg' => 'Featured product updated successfully.'
+        ]);
+    } catch (\Exception $e) {
+        return $this->response->setJSON([
+            'code' => 500,
+            'status' => 'error',
+            'msg' => 'Server Error: ' . $e->getMessage()
+        ]);
+    }
+}
 
 }
+
