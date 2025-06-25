@@ -36,6 +36,12 @@ class Home extends BaseController
                ->where('best_seller', 1)
                ->get()
                ->getResultArray();
+
+        $data['featured_products'] = $db->table('tbl_featured_products')
+               ->where('flag !=', 0)
+               ->get()
+               ->getResultArray();
+               
         return view('index', $data);
     }
 
