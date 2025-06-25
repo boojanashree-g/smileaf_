@@ -1800,6 +1800,14 @@ a.theme-btn-1.btn:focus {
     position: relative;
 }
 
+.featured_product_wrapper .product-img img{
+    max-height: inherit;
+    min-height: fit-content;
+
+}
+.featured_product_wrapper .ltn__product-item-3{
+    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+}
 .wishlist-btn {
     font-size: 15px;
     border: 1px solid #d3d3d3;
