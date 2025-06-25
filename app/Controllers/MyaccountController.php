@@ -37,12 +37,12 @@ class MyaccountController extends BaseController
 
 
 
-        if ($userDetails[0]['total_count'] > 0) {
-            return $this->response->setJSON([
-                'code' => 400,
-                'message' => 'This mobile number already registered'
-            ]);
-        }
+        // if ($userDetails[0]['total_count'] > 0) {
+        //     return $this->response->setJSON([
+        //         'code' => 400,
+        //         'message' => 'This mobile number already registered'
+        //     ]);
+        // }
         $UserModel->update($userID, $userData);
 
         $affectedRows = $UserModel->db->affectedRows();
