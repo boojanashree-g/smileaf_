@@ -34,6 +34,10 @@ $routes->get('logout', 'SigninController::logout');
 // Myaccount 
 $routes->post('insert-account', 'MyaccountController::insertAccount');
 
+// ProductList
+$routes->post('quick-view-details', 'QuickViewController::quickViewDetails');
+$routes->post('insert-cart', 'CartController::insertCart');
+
 
 
 // *************************** [Admin Routes] *************************************************************************
@@ -53,7 +57,6 @@ $routes->group('admin/banner', ['namespace' => 'App\Controllers\admin'], functio
     $routes->post('delete-data', 'BannerController::deleteData');
     $routes->post('update-data', 'BannerController::updateData');
     $routes->post('update-status', 'BannerController::updateStatus');
-
 
 });
 

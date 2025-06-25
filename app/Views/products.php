@@ -2,13 +2,22 @@
 <html class="no-js" lang="zxx">
 <?php require("components/head.php") ?>
 
+<style>
+    .color-circle {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    .color-circle.border {
+        border: 2px solid #ccc;
+    }
+</style>
+
+
 <body class="products_page">
-    <!--[if lte IE 9]>
-        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-    <![endif]-->
-
-    <!-- Add your site or application content here -->
-
     <!-- Body main wrapper start -->
     <div class="wrapper">
 
@@ -80,17 +89,7 @@
                                                                     </ul>
                                                                 </div>
                                                             <?php endif; ?>
-                                                            <!-- <div class="product-hover-action">
-                                                                <ul>
 
-                                                                    <li>
-                                                                        <a href="#" title="Wishlist" data-bs-toggle="modal"
-                                                                            data-bs-target="#quick_buy_modal">
-                                                                            <i class="far fa-heart"></i>
-                                                                        </a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div> -->
                                                         </div>
                                                         <div class="product-info">
                                                             <h2 class="product-title">
@@ -99,17 +98,20 @@
                                                                 </a>
                                                             </h2>
                                                             <div class="product-price">
-                                                                <span>₹<?= esc($product['lowest_mrp'] ?? '0') ?></span>
+                                                                <span>₹<?= esc($product['lowest_offer_price'] ?? 0) ?></span>
                                                                 <?php if (!empty($product['lowest_offer_price']) && $product['lowest_offer_price'] != $product['lowest_mrp']): ?>
-                                                                    <del>₹<?= esc($product['lowest_offer_price']) ?></del>
+                                                                    <del>₹<?= esc($product['lowest_mrp']) ?></del>
                                                                 <?php endif; ?>
                                                             </div>
                                                         </div>
-                                                         <div class="d-flex justify-content-evenly">
+                                                        <div class="d-flex justify-content-evenly">
                                                             <a href="#" title="Wishlist" class="wishlist-btn">
-                                                                            <i class="far fa-heart"></i>
-                                                                        </a>
-                                                            <a href="#" class="theme-btn-1 btn quick_btn" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#quick_buy_modal">
+                                                                <i class="far fa-heart"></i>
+                                                            </a>
+                                                            <a class="theme-btn-1 btn quick_btn"
+                                                                data-prodid="<?= esc($product['prod_id']) ?>"
+                                                                data-menuid="<?= $product['menu_id'] ?>"
+                                                                data-submenuid=<?= $product['submenu_id'] ?>>
                                                                 <i class="fas fa-shopping-cart"></i>
                                                                 <span>Quick Buy</span>
                                                             </a>
@@ -167,17 +169,25 @@
                                                             <div class="product-brief">
                                                                 <?= $product['description'] ?? 'Premium quality product available at best prices.' ?>
                                                             </div>
-                                                            <!-- <div class="product-hover-action">
+                                                            <div class="product-hover-action">
                                                                 <ul>
-
+                                                                    <li>
+                                                                        <a class="quick_btn_list"
+                                                                            data-prodid="<?= esc($product['prod_id']) ?>"
+                                                                            data-menuid="<?= $product['menu_id'] ?>"
+                                                                            data-submenuid=<?= $product['submenu_id'] ?>>
+                                                                            <i class="far fa-eye"></i>
+                                                                        </a>
+                                                                    </li>
                                                                     <li>
                                                                         <a href="#" title="Wishlist" data-bs-toggle="modal"
                                                                             data-bs-target="#liton_wishlist_modal">
                                                                             <i class="far fa-heart"></i>
                                                                         </a>
                                                                     </li>
+
                                                                 </ul>
-                                                            </div> -->
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -274,173 +284,25 @@
 
         <!-- FOOTER AREA END -->
 
-        <!-- MODAL AREA START (Quick View Modal) -->
-        <div class="ltn__modal-area ltn__quick-view-modal-area">
-            <div class="modal fade" id="quick_view_modal" tabindex="-1">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                <!-- <i class="fas fa-times"></i> -->
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="ltn__quick-view-modal-inner">
-                                <div class="modal-product-item">
-                                    <div class="row">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="modal-product-img">
-                                                <img src="<?php echo base_url() ?>public/assets/img/plate_img/square-plate/4square.png"
-                                                    alt="#">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div class="modal-product-info">
-                                                <h3>Vegetables Juices</h3>
-                                                <div class="product-price">
-                                                    <span>₹149.00</span>
-                                                    <del>₹165.00</del>
-                                                </div>
-                                                <div class="modal-product-meta ltn__product-details-menu-1">
-                                                    <ul>
-                                                        <li>
-                                                            <strong>Categories:</strong>
-                                                            <span>
-                                                                <a href="#">Parts</a>
-                                                                <a href="#">Car</a>
-                                                                <a href="#">Seat</a>
-                                                                <a href="#">Cover</a>
-                                                            </span>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="ltn__product-details-menu-2">
-                                                    <ul>
-                                                        <li>
-                                                            <div class="cart-plus-minus">
-                                                                <input type="text" value="02" name="qtybutton"
-                                                                    class="cart-plus-minus-box">
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <a href="#" class="theme-btn-1 btn btn-effect-1"
-                                                                title="Add to Cart" data-bs-toggle="modal"
-                                                                data-bs-target="#add_to_cart_modal">
-                                                                <i class="fas fa-shopping-cart"></i>
-                                                                <span>ADD TO CART</span>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="ltn__product-details-menu-3">
-                                                    <ul>
-                                                        <li>
-                                                            <a href="#" class="" title="Wishlist" data-bs-toggle="modal"
-                                                                data-bs-target="#liton_wishlist_modal">
-                                                                <i class="far fa-heart"></i>
-                                                                <span>Add to Wishlist</span>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="#" class="" title="Compare" data-bs-toggle="modal"
-                                                                data-bs-target="#quick_view_modal">
-                                                                <i class="fas fa-exchange-alt"></i>
-                                                                <span>Compare</span>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <hr>
-                                                <div class="ltn__social-media">
-                                                    <ul>
-                                                        <li>Share:</li>
-                                                        <li><a href="#" title="Facebook"><i
-                                                                    class="fab fa-facebook-f"></i></a></li>
-                                                        <li><a href="#" title="Twitter"><i
-                                                                    class="fab fa-twitter"></i></a></li>
-                                                        <li><a href="#" title="Linkedin"><i
-                                                                    class="fab fa-linkedin"></i></a></li>
-                                                        <li><a href="#" title="Instagram"><i
-                                                                    class="fab fa-instagram"></i></a></li>
-
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- MODAL AREA END -->
-
         <!-- MODAL AREA START (Add To Cart Modal) -->
-        <?php include("components/common_modal.php") ?>
-        <!-- MODAL AREA END -->
-
-        <!-- MODAL AREA START (Wishlist Modal) -->
-        <div class="ltn__modal-area ltn__add-to-cart-modal-area">
-            <div class="modal fade" id="liton_wishlist_modal" tabindex="-1">
-                <div class="modal-dialog modal-md" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="ltn__quick-view-modal-inner">
-                                <div class="modal-product-item">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="modal-product-img">
-                                                <img src="<?php echo base_url() ?>public/assets/img/plate_img/square-plate/4square.png"
-                                                    alt="#">
-                                            </div>
-                                            <div class="modal-product-info">
-                                                <h5><a href="<?php echo base_url('productDetails') ?>">Vegetables
-                                                        Juices</a></h5>
-                                                <p class="added-cart"><i class="fa fa-check-circle"></i> Successfully
-                                                    added to your Wishlist</p>
-                                                <div class="btn-wrapper">
-                                                    <a href="<?php echo base_url('wishlist') ?>"
-                                                        class="theme-btn-1 btn btn-effect-1">View Wishlist</a>
-                                                </div>
-                                            </div>
-                                            <!-- additional-info -->
-                                            <div class="additional-info d-none">
-                                                <p>We want to give you <b>10% discount</b> for your first order, <br>
-                                                    Use discount code at checkout</p>
-                                                <div class="payment-method">
-                                                    <img src="<?php echo base_url() ?>public/assets/img/icons/payment.png"
-                                                        alt="#">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <div class="modal fade" id="quick_buy_modal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered ">
+                <div class="modal-content border-0 shadow-lg p-3 quick-modal-view">
+                    <!-- Dynamic Modal Data -->
                 </div>
             </div>
         </div>
-        <!-- MODAL AREA END -->
-
-    </div>
-    <!-- Body main wrapper end -->
-
-    <!-- All JS Plugins -->
-    <script src="<?php echo base_url() ?>public/assets/js/plugins.js"></script>
-    <!-- Main JS -->
-    <script src="<?php echo base_url() ?>public/assets/js/main.js"></script>
-    <script src="<?php echo base_url() ?>public/assets/js/filter.js"></script>
 
 
+
+        <!-- Main JS -->
+
+        <script src="<?php echo base_url() ?>public/assets/js/filter.js"></script>
+        <script src="<?php echo base_url() ?>custom/js/productlist.js"></script>
+        <script src="<?php echo base_url() ?>public/assets/js/main.js"></script>
+
+        <!-- All JS Plugins -->
+        <script src="<?php echo base_url() ?>public/assets/js/plugins.js"></script>
 </body>
 
 </html>

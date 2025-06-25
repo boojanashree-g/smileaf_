@@ -1,5 +1,3 @@
-
-
 // *************************** [  Offer Price calculation] *****************************************************
 
 $(document).on("change", ".offer_type", function () {
