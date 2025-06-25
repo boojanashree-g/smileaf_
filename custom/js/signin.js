@@ -68,8 +68,6 @@ $(document).ready(function () {
       cache: false,
       dataType: "json",
       success: function (JSONdata) {
-        localStorage.setItem("token", JSONdata.token);
-
         if (JSONdata.code == 400) {
           showToast(JSONdata.message, "error");
         } else if (JSONdata.code == 200) {
@@ -216,6 +214,7 @@ $(document).ready(function () {
       cache: false,
       dataType: "json",
       success: function (JSONdata) {
+        localStorage.setItem("token", JSONdata.token);
         if (JSONdata.c_url == "") {
           var redirectURL = base_Url;
         } else {

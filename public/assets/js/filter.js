@@ -159,11 +159,11 @@ $(document).ready(function () {
                                 </a>
                             </h2>
                             <div class="product-price">
-                            <span>₹${product.lowest_mrp || "0"}</span>
+                            <span>₹${product.lowest_offer_price || "0"}</span>
                             ${
-                                product.lowest_offer_price &&
+                                product.lowest_mrp &&
                                 product.lowest_offer_price != product.lowest_mrp
-                                    ? `<del>₹${product.lowest_offer_price}</del>`
+                                    ? `<del>₹${product.lowest_mrp}</del>`
                                     : ""
                             }
                         </div>

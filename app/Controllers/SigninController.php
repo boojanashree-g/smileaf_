@@ -21,95 +21,117 @@ class SigninController extends BaseController
 
     public function signinOTP()
     {
-
         $UserModel = new UserModel;
         $number = $this->request->getPost('number');
 
         $apiKey = $_ENV['SMS_API_KEY'];
-        $templateName = $_ENV['SIGNUP_TEMPLATE'];
+        $login1 = $_ENV['LOGIN_TEMPLATE1'];
+        $login2 = $_ENV['LOGIN_TEMPLATE2'];
+        $templates = [$login1, $login2];
+        $templateName = $templates[array_rand($templates)];
+
         $otp = rand(1000, 9999);
         $otp_expiry = date("Y-m-d H:i:s", strtotime("+1 minute"));
 
         $userQry = "SELECT * FROM tbl_users WHERE number = ? AND flag = 1;";
         $user = $this->db->query($userQry, [$number])->getRow();
 
+        $old_session_userid = $this->session->get('user_id');
 
         if ($user && $user->is_verfied == 1) {
             $oldUserID = $user->user_id;
-
             $response = $this->signinAPI($apiKey, $number, $otp, $templateName);
 
             if ($response['Status'] == "Success") {
-                $updateQry = "UPDATE tbl_users SET otp = ?  , otp_expiry = ? WHERE user_id = ?";
+                $updateQry = "UPDATE tbl_users SET otp = ?, otp_expiry = ? WHERE user_id = ?";
                 $updateData = $this->db->query($updateQry, [$otp, $otp_expiry, $oldUserID]);
 
-                return $this->signinSessionSMS([
-                    'code' => 200,
-                    'user_id' => $oldUserID,
-                    'message' => 'OTP sent. Please verify.'
-                ]);
-            } else {
-                return $this->signinSessionSMS([
-                    'code' => 400,
-                    'message' => 'Failed to send OTP'
-                ]);
+
+                if ($updateData) {
+                    $sessionData = [
+                        'user_id' => $oldUserID,
+                        'old_userid' => $old_session_userid
+                    ];
+                    $this->session->set($sessionData);
+
+                    $response['code'] = 200;
+                    $response['message'] = 'OTP successfully';
+                } else {
+                    $response['code'] = 400;
+                    $response['message'] = 'OTP sent failed!';
+                }
+                return $this->response->setJSON($response);
             }
         }
 
         if ($user && $user->is_verfied == 0) {
             $oldUserID = $user->user_id;
-
             $response = $this->signinAPI($apiKey, $number, $otp, $templateName);
 
             if ($response['Status'] == "Success") {
-                $updateQry = "UPDATE tbl_users SET otp = ?  , otp_expiry = ? WHERE user_id = ?";
+                $updateQry = "UPDATE tbl_users SET otp = ?, otp_expiry = ? WHERE user_id = ?";
                 $updateData = $this->db->query($updateQry, [$otp, $otp_expiry, $oldUserID]);
 
-                return $this->signinSessionSMS([
-                    'code' => 200,
-                    'user_id' => $oldUserID,
-                    'message' => 'OTP sent. Please verify.'
-                ]);
-            } else {
-                return $this->signinSessionSMS([
-                    'code' => 400,
-                    'message' => 'Failed to send OTP'
-                ]);
+                if ($updateData) {
+                    $sessionData = [
+                        'user_id' => $oldUserID,
+                        'old_userid' => $old_session_userid
+                    ];
+                    $this->session->set($sessionData);
+                    $response['code'] = 200;
+                    $response['message'] = 'OTP successfully';
+                } else {
+                    $response['code'] = 400;
+                    $response['message'] = 'OTP sent failed!';
+                }
+                return $this->response->setJSON($response);
             }
         }
 
-        //New user
-        $response = $this->signinAPI($apiKey, $number, $otp, $templateName);
-        if ($response['Status'] == "Success") {
+        // New user (no record found)
+        if (!$user) {
+            $response = $this->signinAPI($apiKey, $number, $otp, $templateName);
 
-            $userData = [
-                'number' => $number,
-                'otp' => $otp,
-                'otp_expiry' => $otp_expiry,
-                'is_verfied' => 0,
-            ];
+            if ($response['Status'] == "Success") {
+                $userData = [
+                    'number' => $number,
+                    'otp' => $otp,
+                    'otp_expiry' => $otp_expiry,
+                    'is_verfied' => 0,
+                ];
 
-            $UserModel->insert($userData);
-            $lastInsertID = $this->db->insertID();
+                $UserModel->insert($userData);
+                $lastInsertID = $this->db->insertID();
 
-            return $this->signinSessionSMS([
-                'code' => 200,
-                'user_id' => $lastInsertID,
-                'message' => 'OTP sent. Please verify.'
-            ]);
-        } else {
-            return $this->signinSessionSMS([
-                'code' => 400,
-                'message' => 'Failed to send OTP'
-            ]);
+
+                if ($lastInsertID) {
+                    $sessionData = [
+                        'user_id' => $oldUserID,
+                        'old_userid' => $old_session_userid
+                    ];
+                    $this->session->set($sessionData);
+                    $response['code'] = 200;
+                    $response['message'] = 'OTP successfully';
+                } else {
+                    $response['code'] = 400;
+                    $response['message'] = 'User insertion failed!';
+                }
+            } else {
+                $response['code'] = 400;
+                $response['message'] = 'OTP sent failed!';
+            }
+
+            return $this->response->setJSON($response);
         }
     }
+
 
 
     public function verifyOTP()
     {
         $verifyOTP = $this->request->getPost('otp');
         $userID = $this->session->get('user_id');
+
 
         // Fetch user data including OTP and expiry
         $userData = $this->db->query("SELECT otp, user_id, otp_expiry FROM tbl_users WHERE flag = 1 AND user_id = ?", [$userID])->getRow();
@@ -118,7 +140,8 @@ class SigninController extends BaseController
             return $this->response->setJSON([
                 'code' => 400,
                 'status' => 'failure',
-                'message' => 'User not found'
+                'message' => 'User not found',
+                'token' => null
             ]);
         }
 
@@ -129,7 +152,8 @@ class SigninController extends BaseController
             return $this->response->setJSON([
                 'code' => 400,
                 'status' => 'failure',
-                'message' => 'OTP has expired. Please request a new one.'
+                'message' => 'OTP has expired. Please request a new one.',
+                'token' => null
             ]);
         }
 
@@ -138,33 +162,26 @@ class SigninController extends BaseController
             $updateQuery = "UPDATE tbl_users SET is_verified = 1 WHERE flag = 1 AND user_id = ?";
             $this->db->query($updateQuery, [$userID]);
 
-            $this->session->set([
-                'otp_verify' => "YES",
-                'user_id' => $userID,
-                'loginStatus' => "YES"
-            ]);
-
             $callbackURL = $this->session->get('callback_url');
+
             if ($callbackURL) {
-                $this->session->remove('callback_url');
                 $res['c_url'] = $callbackURL;
             } else {
                 $res['c_url'] = "";
             }
 
 
-
-            return $this->response->setJSON([
+            return $this->signinSessionSMS([
                 'code' => 200,
-                'status' => 'Success',
-                'message' => 'OTP Verified Successfully',
+                'user_id' => $userID,
+                'message' => 'OTP sent. Please verify.',
                 'c_url' => $res['c_url']
             ]);
+
         } else {
-            return $this->response->setJSON([
+            return $this->signinSessionSMS([
                 'code' => 400,
-                'status' => 'failure',
-                'message' => 'Invalid OTP'
+                'message' => 'Failed to send OTP'
             ]);
         }
     }
@@ -192,34 +209,59 @@ class SigninController extends BaseController
 
         if ($response['code'] == 200) {
 
-            $db = \Config\Database::connect();
-            $this->session = \Config\Services::session();
 
             $data = $this->request->getPost();
-            $oldUserID = session()->get('user_id');
 
             $newUserID = $response['user_id'];
+            $oldUserID = $this->session->get('old_userid');
 
-            // Check cart table if any of the products stored in session?
-            // $query = "SELECT * FROM tbl_user_cart WHERE user_id = ? AND flag = 1";
-            // $resultData = $db->query($query, [$oldUserID])->getResultArray();
 
-            // if (count($resultData) > 0) {
-            //     foreach ($resultData as $item) {
-            //         $prodID = $item['prod_id'];
-            //         $tblName = $item['table_name'];
-            //         $query = "SELECT * FROM tbl_user_cart WHERE prod_id = ? AND user_id = ? AND table_name = ? AND flag = 1";
-            //         $count = $db->query($query, [$prodID, $oldUserID, $tblName])->getNumRows();
+            // Cart Updates
+            $query = "SELECT * FROM tbl_user_cart WHERE user_id = ? AND flag = 1";
+            $resultData = $this->db->query($query, [$oldUserID])->getResultArray();
 
-            //         if ($count > 0) {
-            //             $qty = $item['quantity'];
-            //             $updateQry = "UPDATE tbl_user_cart 
-            //                       SET user_id = ?, quantity = quantity + ? 
-            //                       WHERE user_id = ? AND prod_id = ? AND table_name = ? AND flag = 1";
-            //             $db->query($updateQry, [$newUserID, $qty, $oldUserID, $prodID, $tblName]);
-            //         }
-            //     }
-            // }
+            if (count($resultData) > 0) {
+                foreach ($resultData as $item) {
+                    $prodID = $item['prod_id'];
+                    $qty = $item['quantity'];
+
+                    $prodPrice = $item["prod_price"];
+                    $subtotal = $prodPrice * $qty;
+
+                    $IDpresntQuery = "SELECT * FROM tbl_user_cart WHERE prod_id = ? AND user_id = ?  AND flag = 1";
+                    $countID = $this->db->query($IDpresntQuery, [$prodID, $newUserID])->getNumRows();
+                    if ($countID > 0) {
+
+                        $updateQry = "UPDATE tbl_user_cart 
+                                  SET quantity = ? , total_price = ? 
+                                  WHERE user_id = ? AND prod_id = ? AND flag = 1";
+                        $updateOld = $this->db->query($updateQry, [$qty, $subtotal, $newUserID, $prodID]);
+
+                        $affectedRows = $this->db->affectedRows();
+                        if ($updateOld && $affectedRows == 1) {
+                            $dltsession = "DELETE FROM tbl_user_cart WHERE user_id = ?";
+                            $this->db->query($dltsession, $oldUserID);
+                        }
+
+                        $this->db->query($updateQry, [$qty, $subtotal, $newUserID, $prodID]);
+                    } else {
+                        $query = "SELECT * FROM tbl_user_cart WHERE prod_id = ? AND user_id = ?  AND flag = 1";
+                        $count = $this->db->query($query, [$prodID, $oldUserID])->getNumRows();
+
+                        if ($count > 0) {
+
+                            $updateQry = "UPDATE tbl_user_cart 
+                                    SET user_id = ?, quantity = ?,total_price = ?
+                                    WHERE user_id = ? AND prod_id = ? AND flag = 1";
+                            $this->db->query($updateQry, [$newUserID, $qty, $subtotal, $oldUserID, $prodID]);
+                        }
+                    }
+
+                }
+            }
+
+            // Cart Updates End
+
 
             $jwtSecret = $_ENV['JWT_SECRET'];
 
@@ -228,10 +270,13 @@ class SigninController extends BaseController
             $sess = [
                 'user_id' => $newUserID,
                 'loginStatus' => "YES",
-                'otp_verify' => "NO",
+                'otp_verify' => "YES",
                 'type' => 'SMS',
-                'jwt' => $newToken
+                'jwt' => $newToken,
+                'c_url' => $response['c_url']
             ];
+
+
             $this->session->set($sess);
 
             $response['code'] = 200;
@@ -278,7 +323,13 @@ class SigninController extends BaseController
             $apiKey = $_ENV['SMS_API_KEY'];
             // for login otp
 
-            $templateName = $_ENV['SIGNUP_TEMPLATE'];
+
+            $login1 = $_ENV['LOGIN_TEMPLATE2'];
+            $login2 = $_ENV['LOGIN_TEMPLATE1'];
+
+            $templates = [$login1, $login2];
+            // Randomly select one template from the array
+            $templateName = $templates[array_rand($templates)];
 
             $response = $this->signinAPI($apiKey, $to, $otp, $templateName);
             $status = $response['Status'];

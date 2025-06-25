@@ -52,7 +52,8 @@
                                         </div>
                                     </li>
                                     <li>
-                                        <a href="#ltn__utilize-cart-menu" class="ltn__utilize-toggle theme-btn-1 btn" style="width:auto;     background-color: #37724f !important;" >
+                                        <a href="#ltn__utilize-cart-menu" class="ltn__utilize-toggle theme-btn-1 btn"
+                                            style="width:auto;     background-color: #37724f !important;">
                                             <span><i class="icon-shopping-cart pe-2"></i>ADD TO CART</span>
                                         </a>
                                     </li>
@@ -61,12 +62,12 @@
                             <div class="ltn__product-details-menu-3">
                                 <ul>
                                     <li>
-                                        <a href="<?php echo base_url('checkout') ?>" class="buy_now_btn" >
+                                        <a href="<?php echo base_url('checkout') ?>" class="buy_now_btn">
                                             <span>Buy Now</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#ltn__utilize-cart-menu" class="view_details" >
+                                        <a href="#ltn__utilize-cart-menu" class="view_details">
                                             <span>View details </span>
                                         </a>
                                     </li>
@@ -89,6 +90,24 @@
         </div>
     </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
     <!-- MODAL AREA START (Add To Cart Modal) -->
     <div class="ltn__modal-area ltn__add-to-cart-modal-area">
         <div class="modal fade" id="add_to_cart_modal" tabindex="-1">
@@ -100,119 +119,122 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                         <div class="ltn__quick-view-modal-inner">
-                             <div class="modal-product-item">
+                        <div class="ltn__quick-view-modal-inner">
+                            <div class="modal-product-item">
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="modal-product-img">
-                                            <img src="<?php echo base_url() ?>public/assets/img/plate_img/square-plate/4square.png" alt="#">
+                                            <img src="<?php echo base_url() ?>public/assets/img/plate_img/square-plate/4square.png"
+                                                alt="#">
                                         </div>
-                                         <div class="modal-product-info">
-                                            <h5><a href="<?php echo base_url('productDetails') ?>">10"Square Plates</a></h5>
-                                            <p class="added-cart"><i class="fa fa-check-circle"></i>  Successfully added to your Cart</p>
+                                        <div class="modal-product-info">
+                                            <h5><a href="<?php echo base_url('productDetails') ?>">10"Square Plates</a>
+                                            </h5>
+                                            <p class="added-cart"><i class="fa fa-check-circle"></i> Successfully added
+                                                to your Cart</p>
                                             <div class="btn-wrapper">
-                                                <a href="<?php echo base_url('cart') ?>" class="theme-btn-1 btn ">View Cart</a>
-                                                <a href=""<?php echo base_url('checkout') ?>" class="theme-btn-2 btn btn-effect-2">Checkout</a>
+                                                <a href="<?php echo base_url('cart') ?>" class="theme-btn-1 btn ">View
+                                                    Cart</a>
+                                                <a href="" <?php echo base_url('checkout') ?>"
+                                                    class="theme-btn-2 btn btn-effect-2">Checkout</a>
                                             </div>
-                                         </div>
-                                         <!-- additional-info -->
-                                         <div class="additional-info d-none">
-                                            <p>We want to give you <b>10% discount</b> for your first order, <br>  Use discount code at checkout</p>
+                                        </div>
+                                        <!-- additional-info -->
+                                        <div class="additional-info d-none">
+                                            <p>We want to give you <b>10% discount</b> for your first order, <br> Use
+                                                discount code at checkout</p>
                                             <div class="payment-method">
-                                                <img src="<?php echo base_url() ?>public/assets/img/icons/payment.png" alt="#">
+                                                <img src="<?php echo base_url() ?>public/assets/img/icons/payment.png"
+                                                    alt="#">
                                             </div>
-                                         </div>
+                                        </div>
                                     </div>
                                 </div>
-                             </div>
-                         </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- MODAL AREA END -->
- <div id="ltn__utilize-cart-menu" class="ltn__utilize ltn__utilize-cart-menu">
-            <div class="ltn__utilize-menu-inner ltn__scrollbar">
-                <div class="ltn__utilize-menu-head">
-                    <span class="ltn__utilize-menu-title">Cart</span>
-                    <button class="ltn__utilize-close">×</button>
-                </div>
-                <div class="mini-cart-product-area ltn__scrollbar">
-                    <div class="mini-cart-item clearfix">
-                        <div class="mini-cart-img">
-                            <a href="#"><img
-                                    src="<?php echo base_url() ?>public/assets/img/plate_img/round-plate/10RSP.jpg"
-                                    alt="Image"></a>
-                            <span class="mini-cart-item-delete"><i class="icon-cancel"></i></span>
-                        </div>
-                        <div class="mini-cart-info">
-                            <h6><a href="#">Red Hot Tomato</a></h6>
-                            <span class="mini-cart-quantity">1 x $65.00</span>
-                        </div>
-                    </div>
-                    <div class="mini-cart-item clearfix">
-                        <div class="mini-cart-img">
-                            <a href="#"><img
-                                    src="<?php echo base_url() ?>public/assets/img/plate_img/round-plate/10RSP.jpg"
-                                    alt="Image"></a>
-                            <span class="mini-cart-item-delete"><i class="icon-cancel"></i></span>
-                        </div>
-                        <div class="mini-cart-info">
-                            <h6><a href="#">Vegetables Juices</a></h6>
-                            <span class="mini-cart-quantity">1 x $85.00</span>
-                        </div>
-                    </div>
-                    <div class="mini-cart-item clearfix">
-                        <div class="mini-cart-img">
-                            <a href="#"><img
-                                    src="<?php echo base_url() ?>public/assets/img/plate_img/round-plate/10RSP.jpg"
-                                    alt="Image"></a>
-                            <span class="mini-cart-item-delete"><i class="icon-cancel"></i></span>
-                        </div>
-                        <div class="mini-cart-info">
-                            <h6><a href="#">Orange Sliced Mix</a></h6>
-                            <span class="mini-cart-quantity">1 x $92.00</span>
-                        </div>
-                    </div>
-                    <div class="mini-cart-item clearfix">
-                        <div class="mini-cart-img">
-                            <a href="#"><img
-                                    src="<?php echo base_url() ?>public/assets/img/plate_img/round-plate/10RSP.jpg"
-                                    alt="Image"></a>
-                            <span class="mini-cart-item-delete"><i class="icon-cancel"></i></span>
-                        </div>
-                        <div class="mini-cart-info">
-                            <h6><a href="#">Orange Fresh Juice</a></h6>
-                            <span class="mini-cart-quantity">1 x $68.00</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="mini-cart-footer">
-                    <div class="mini-cart-sub-total">
-                        <h5>Subtotal: <span>$310.00</span></h5>
-                    </div>
-                    <div class="btn-wrapper">
-                        <a href="<?php echo base_url('cart') ?>" class="theme-btn-1 btn btn-effect-1">View Cart</a>
-                        <a href="<?php echo base_url('checkout') ?>" class="theme-btn-2 btn btn-effect-2">Checkout</a>
-                    </div>
-                    <p>Free Shipping on All Orders Over $100!</p>
-                </div>
-
+    <div id="ltn__utilize-cart-menu" class="ltn__utilize ltn__utilize-cart-menu">
+        <div class="ltn__utilize-menu-inner ltn__scrollbar">
+            <div class="ltn__utilize-menu-head">
+                <span class="ltn__utilize-menu-title">Cart</span>
+                <button class="ltn__utilize-close">×</button>
             </div>
+            <div class="mini-cart-product-area ltn__scrollbar">
+                <div class="mini-cart-item clearfix">
+                    <div class="mini-cart-img">
+                        <a href="#"><img src="<?php echo base_url() ?>public/assets/img/plate_img/round-plate/10RSP.jpg"
+                                alt="Image"></a>
+                        <span class="mini-cart-item-delete"><i class="icon-cancel"></i></span>
+                    </div>
+                    <div class="mini-cart-info">
+                        <h6><a href="#">Red Hot Tomato</a></h6>
+                        <span class="mini-cart-quantity">1 x $65.00</span>
+                    </div>
+                </div>
+                <div class="mini-cart-item clearfix">
+                    <div class="mini-cart-img">
+                        <a href="#"><img src="<?php echo base_url() ?>public/assets/img/plate_img/round-plate/10RSP.jpg"
+                                alt="Image"></a>
+                        <span class="mini-cart-item-delete"><i class="icon-cancel"></i></span>
+                    </div>
+                    <div class="mini-cart-info">
+                        <h6><a href="#">Vegetables Juices</a></h6>
+                        <span class="mini-cart-quantity">1 x $85.00</span>
+                    </div>
+                </div>
+                <div class="mini-cart-item clearfix">
+                    <div class="mini-cart-img">
+                        <a href="#"><img src="<?php echo base_url() ?>public/assets/img/plate_img/round-plate/10RSP.jpg"
+                                alt="Image"></a>
+                        <span class="mini-cart-item-delete"><i class="icon-cancel"></i></span>
+                    </div>
+                    <div class="mini-cart-info">
+                        <h6><a href="#">Orange Sliced Mix</a></h6>
+                        <span class="mini-cart-quantity">1 x $92.00</span>
+                    </div>
+                </div>
+                <div class="mini-cart-item clearfix">
+                    <div class="mini-cart-img">
+                        <a href="#"><img src="<?php echo base_url() ?>public/assets/img/plate_img/round-plate/10RSP.jpg"
+                                alt="Image"></a>
+                        <span class="mini-cart-item-delete"><i class="icon-cancel"></i></span>
+                    </div>
+                    <div class="mini-cart-info">
+                        <h6><a href="#">Orange Fresh Juice</a></h6>
+                        <span class="mini-cart-quantity">1 x $68.00</span>
+                    </div>
+                </div>
+            </div>
+            <div class="mini-cart-footer">
+                <div class="mini-cart-sub-total">
+                    <h5>Subtotal: <span>$310.00</span></h5>
+                </div>
+                <div class="btn-wrapper">
+                    <a href="<?php echo base_url('cart') ?>" class="theme-btn-1 btn btn-effect-1">View Cart</a>
+                    <a href="<?php echo base_url('checkout') ?>" class="theme-btn-2 btn btn-effect-2">Checkout</a>
+                </div>
+                <p>Free Shipping on All Orders Over $100!</p>
+            </div>
+
         </div>
+    </div>
     <!-- Styling -->
     <style>
-    .color-circle {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        cursor: pointer;
-        display: inline-block;
-    }
+        .color-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: inline-block;
+        }
 
-    .color-circle.border {
-        border: 2px solid #ccc;
-    }
+        .color-circle.border {
+            border: 2px solid #ccc;
+        }
     </style>
     <!-- MODAL AREA END -->

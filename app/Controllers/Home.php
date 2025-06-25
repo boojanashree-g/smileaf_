@@ -32,16 +32,16 @@ class Home extends BaseController
         ]);
 
         $data['bestSeller'] = $db->table('tbl_products')
-               ->where('flag !=', 0)
-               ->where('best_seller', 1)
-               ->get()
-               ->getResultArray();
+            ->where('flag !=', 0)
+            ->where('best_seller', 1)
+            ->get()
+            ->getResultArray();
 
         $data['featured_products'] = $db->table('tbl_featured_products')
-               ->where('flag !=', 0)
-               ->get()
-               ->getResultArray();
-               
+            ->where('flag !=', 0)
+            ->get()
+            ->getResultArray();
+
         return view('index', $data);
     }
 
@@ -81,16 +81,45 @@ class Home extends BaseController
     }
     public function cart()
     {
-        $data = array_merge($this->getMenuData(), [
-            'page_title' => 'cart',
+        $res = array_merge($this->getMenuData(), [
+            'page_title' => 'Your Shopping Cart',
             'breadcrumb_items' => [
                 ['label' => 'Home', 'url' => base_url()],
-                ['label' => 'cart']
+                ['label' => 'Cart']
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
 
-        return view('cart', $data);
+
+        $userID = session()->get('user_id');
+
+        $query = "SELECT * FROM tbl_user_cart WHERE user_id = ? AND flag =1";
+        $cartData = $this->db->query($query, [$userID])->getResultArray();
+        if ($cartData > 0) {
+            $res['cart_count'] = sizeof($cartData);
+
+        } else {
+            $res['cart_count'] = 0;
+        }
+        
+        $productDetails = [];
+        foreach($cartData as $item)
+        {
+            $prodID = $item['prod_id'];
+            $packQty = $item['pack_qty'];
+            $quantity = $item['quantity'];
+        }
+
+
+        echo "<pre>";
+        print_r($cartData);
+        die;
+
+
+
+
+
+        return view('cart', $res);
     }
     public function checkout()
     {
@@ -331,7 +360,7 @@ class Home extends BaseController
             $products[] = $product;
         }
 
-    
+
         // Return JSON for AJAX
         if ($isAjax) {
             return $this->response->setJSON([
@@ -399,6 +428,7 @@ class Home extends BaseController
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
 
+
         return view('signup', $data);
     }
     public function signin()
@@ -415,6 +445,7 @@ class Home extends BaseController
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ];
+        $this->session->set('callback_url', previous_url());
 
         return view('signin', $data);
     }
