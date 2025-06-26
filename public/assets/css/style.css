@@ -8608,11 +8608,6 @@ ul.wp-block-latest-posts.is-grid.alignwide {
   font-size: 18px;
 }
 
-.product-price del {
-  /* opacity: 0.6; */
-  margin-left: 5px;
-  font-size: 60%;
-}
 
 /* .ltn__product-item .product-price {
   margin-bottom: 12px;
@@ -8717,15 +8712,15 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 }
 
 .ltn__product-item-3 .product-price {
-  font-size: 20px;
-  color: var(--ltn__secondary-color);
+  font-size: 21px;
   font-weight: 700;
   margin:  0 0 10px 0;
+  color:#000;
 }
 
 .ltn__product-item-3 .product-price del {
-  font-size: 20px;
-  opacity: 0.6;
+    font-size: 15px;
+    opacity: 0.6;
 }
 
 .ltn__product-item-3 .product-info-brief {

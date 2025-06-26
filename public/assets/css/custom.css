@@ -1377,15 +1377,16 @@ a.account-card .card:active {
     stroke: #fff;
 }
 
-.quick_btn {
-    padding: 10px;
-    width: 160px;
+
+.fa-shopping-cart{
+    margin-right: 5px;
 }
 
 .products_page .ltn__product-item-3 {
+    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
 
     padding: 10px;
-    min-height: 350px;
+    min-height: auto;
 }
 
 .product-img img {
@@ -1394,12 +1395,9 @@ a.account-card .card:active {
     object-fit: contain;
 }
 
-.products_page .ltn__product-item-3 .product-info {
-    flex-direction: column;
-    display: flex;
-    justify-content: space-between;
-    height: 105px;
-    padding: 10px 0 0 0;
+.products_page .ltn__product-item-3 .product-info {    
+    padding: 10px;
+    padding-bottom: 0;
 }
 
 .product-title {
@@ -1424,17 +1422,25 @@ a.account-card .card:active {
 } */
 
 .quick_btn {
-
-    width: 170px;
-    height: 40px;
+    padding: 10px;
+    width: 100%;
+    height: 35px;
     font-size: 17px;
     font-weight: 500;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #778b5a;
+    background-color: #fff !important;
+    color: #000;
+    border: 1px solid;
+    border-radius: 3px;
 }
+.quick_btn:hover{
+    background-color: #fff !important;
+    color: #000;
+    border: 1px solid;
 
+}
 a.theme-btn-1.btn:focus {
     box-shadow: unset !important;
     color: #fff !important;
@@ -1806,21 +1812,19 @@ a.theme-btn-1.btn:focus {
 
 }
 
-.featured_product_wrapper .ltn__product-item-3 {
+.featured_product_wrapper .ltn__product-item-3,
+.bestseller_product_wrapper .ltn__product-item-3 
+ {
     box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
 }
 
 .wishlist-btn {
-    font-size: 15px;
-    border: 1px solid #d3d3d3;
+    font-size: 21px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: #778b5a;
-    color: #fff;
+    color: #df0000;
 }
 
 .home_page .ltn__product-area .section-title::before {
@@ -1874,9 +1878,23 @@ a.theme-btn-1.btn:focus {
 .quickbuy_span {
     border: 1px solid;
     padding: 5px 10px;
+    cursor: pointer;
 }
 
 .topseller_price {
     font-weight: 600;
     font-size: 18px;
+}
+.product_price_wrapper{
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    align-items: center;
+}
+.prod_name_span{
+    font-size: 19px;
+    font-weight: 500;
+    /* width: 100px; */
+    overflow: hidden;
+    white-space: nowrap;
 }

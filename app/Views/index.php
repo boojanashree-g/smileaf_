@@ -112,7 +112,7 @@
         </div>
         <!-- PRODUCT AREA END -->
           <!-- PRODUCT AREA START (product-item-3) -->
-        <div class="ltn__product-area ltn__product-gutter mb-3">
+        <div class="ltn__product-area ltn__product-gutter mb-3 bestseller_product_wrapper">
             <div class="container">
                         <div class="section-title-area ltn__section-title-2 text-center featured_product_header mb-4">
                             <h1 class="section-title">Try our Bestsellers</h1>
