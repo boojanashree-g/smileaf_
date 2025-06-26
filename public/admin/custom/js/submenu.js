@@ -143,6 +143,9 @@ $(document).ready(function () {
           mDataProp: "submenu",
         },
         {
+          mDataProp: "gst",
+        },
+        {
           mDataProp: "status",
           render: (data, type, row, meta) => {
             const isActive = data == 1;
@@ -263,6 +266,7 @@ $(document).ready(function () {
 
     $("#submenu").val(res_DATA[index].submenu);
     $("#menu_id").val(res_DATA[index].menu_id);
+    $("#gst").val(res_DATA[index].gst); 
 
     sub_id = res_DATA[index].sub_id;
   });
