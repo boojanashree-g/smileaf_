@@ -68,9 +68,10 @@ font-family: 'Roboto', sans-serif;
     Gutter Code 
 ==================================================== */
 
-.allura-regular {
-  font-family: "Allura", cursive;
-  font-weight: 600;
+.jost {
+  font-family: "Jost", sans-serif;
+  font-optical-sizing: auto;
+  /* font-weight: 500; */
   font-style: normal;
 }
 
@@ -341,30 +342,25 @@ font-family: 'Roboto', sans-serif;
 /* -------------------------------------
     Typography
 ------------------------------------- */
-html {
+/* html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   font-family: var(--ltn__body-font);
-}
+  
+} */
 
 * {
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  outline: none;
-  -moz-osx-font-smoothing: grayscale;
-  /* Firefox */
-  -webkit-font-smoothing: antialiased;
-  /* WebKit  */
+ font-family: "Jost", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }
 
 body {
-  color: var(--ltn__paragraph-color);
-  font-weight: 400;
+ font-family: "Jost", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
   font-style: normal;
-  font-size: 16px;
-  font-family: var(--ltn__body-font);
-  line-height: 1.8;
-  margin: 0 auto;
 }
 
 h1,
@@ -8715,6 +8711,9 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 .ltn__product-item-3 .product-title {
   font-size: 16px;
   margin-bottom: 3px;
+  text-align: start;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
 .ltn__product-item-3 .product-price {

@@ -3,7 +3,7 @@
 <?php require("components/head.php"); ?>
 
 
-<body class="home_page">
+<body class="home_page jost">
     <div class="body-wrapper">
 
         <?php require("components/header.php"); ?>       
@@ -95,8 +95,9 @@
                                     </div>
                                     <div class="home_products product-info">
                                         <h2 class="product-title">
-                                            <a href="<?= base_url('products/' . $product['featured_prod_id']) ?>">
-                                                <?= esc($product['prod_name']) ?>
+                                            <a href="<?= base_url('products/' . $product['featured_prod_id']) ?>" class="featured_prod_name">
+                                                <span><?= esc($product['prod_name']) ?></span>
+                                               <i class="fas fa-arrow-alt-circle-right"></i>
                                             </a>
                                         </h2>
                                     </div>
@@ -113,13 +114,8 @@
           <!-- PRODUCT AREA START (product-item-3) -->
         <div class="ltn__product-area ltn__product-gutter mb-3">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="section-title-area ltn__section-title-2 text-center featured_product_header mb-5">
+                        <div class="section-title-area ltn__section-title-2 text-center featured_product_header mb-4">
                             <h1 class="section-title">Try our Bestsellers</h1>
-                            <!-- <span class="viewall-span">View all</span> -->
-                        </div>
-                    </div>
                 </div>
                 <?php if (!empty($bestSeller)): ?>
                 <div class="row">
@@ -133,9 +129,15 @@
                                 </div>
                                 <div class="home_products product-info">
                                     <h2 class="product-title">
-                                        <a href="<?= base_url('products/' . $product['prod_id']) ?>">
-                                            <?= esc($product['prod_name']) ?>
+                                        <a href="<?= base_url('products/' . $product['prod_id']) ?>" class="featured_prod_name">
+                                            <span><?= esc($product['prod_name']) ?></span>
+                                            
                                         </a>
+                                        <p class="product-price-info">
+                                        <span class="topseller_price">₹1000.00</span>
+                                        <span class="quickbuy_span">View Details <i class="fas fa-arrow-alt-circle-right"></i></span>
+                                        </p>
+                                       
                                     </h2>
                                 </div>
                             </div>
