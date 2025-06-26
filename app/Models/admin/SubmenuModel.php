@@ -16,6 +16,7 @@ class SubmenuModel extends Model
     protected $allowedFields = [
         'menu_id',
         'submenu',
+        'gst',
         'image_url',
         'slug',
         'status',

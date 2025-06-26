@@ -30,6 +30,7 @@ class SubmenuController extends BaseController
         try {
             $menu = $this->request->getPost('menu_id');
             $subMenu = $this->request->getPost('submenu');
+            $gst = $this->request->getPost('gst');
             $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $subMenu), '-'));
 
             if (!$subMenu) {
@@ -56,6 +57,7 @@ class SubmenuController extends BaseController
                             'menu_id' => $menu,
                             'submenu' => $subMenu,
                             'slug' => $slug,
+                            'gst' => $gst,
                         ];
 
                         $SubmenuModel->insert($data);
@@ -128,6 +130,7 @@ class SubmenuController extends BaseController
         $submenu = $this->request->getPost('submenu');
         $menuID = $this->request->getPost('menu_id');
         $subID = $this->request->getPost('sub_id');
+        $gst = $this->request->getPost('gst');
         $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $submenu), '-'));
 
         $SubmenuModel = new SubmenuModel();
@@ -138,6 +141,7 @@ class SubmenuController extends BaseController
                 'submenu' => $submenu,
                 'menu_id' => $menuID,
                 'slug' => $slug,
+                'gst' => $gst,
                 'status' => 1
             ];
 
