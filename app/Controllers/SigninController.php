@@ -50,7 +50,8 @@ class SigninController extends BaseController
                 if ($updateData) {
                     $sessionData = [
                         'user_id' => $oldUserID,
-                        'old_userid' => $old_session_userid
+                        'old_userid' => $old_session_userid,
+                        'type' => 'SMS'
                     ];
                     $this->session->set($sessionData);
 
@@ -75,7 +76,8 @@ class SigninController extends BaseController
                 if ($updateData) {
                     $sessionData = [
                         'user_id' => $oldUserID,
-                        'old_userid' => $old_session_userid
+                        'old_userid' => $old_session_userid,
+                        'type' => 'SMS'
                     ];
                     $this->session->set($sessionData);
                     $response['code'] = 200;
@@ -107,7 +109,8 @@ class SigninController extends BaseController
                 if ($lastInsertID) {
                     $sessionData = [
                         'user_id' => $oldUserID,
-                        'old_userid' => $old_session_userid
+                        'old_userid' => $old_session_userid,
+                        'type' => 'SMS'
                     ];
                     $this->session->set($sessionData);
                     $response['code'] = 200;
