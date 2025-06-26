@@ -14,6 +14,11 @@
     .color-circle.border {
         border: 2px solid #ccc;
     }
+    .wishlist-active {
+        background-color: red !important;
+        color:#fff;
+    }
+
 </style>
 
 
@@ -70,8 +75,6 @@
                                         <!-- ltn__product-item -->
                                         <?php if (!empty($products)): ?>
                                             <?php foreach ($products as $product): ?>
-
-
                                                 <div class="col-xl-4 col-sm-12   col-12 product-item"
                                                     data-name="<?= strtolower(esc($product['prod_name'])) ?>">
                                                     <div class="ltn__product-item ltn__product-item-3 text-center">
@@ -89,7 +92,6 @@
                                                                     </ul>
                                                                 </div>
                                                             <?php endif; ?>
-
                                                         </div>
                                                         <div class="product-info">
                                                             <h2 class="product-title">
@@ -107,8 +109,7 @@
                                                                 <a href="#" title="Wishlist" class="wishlist-btn">  
                                                                     <i class="far fa-heart"></i>
                                                                 </a>
-                                                            </div>
-                                                            
+                                                            </div>                                                            
                                                         </div>
                                                         <div class="d-flex justify-content-evenly">                                                            
                                                             <a class="theme-btn-1 btn quick_btn"
@@ -306,6 +307,8 @@
 
         <!-- All JS Plugins -->
         <script src="<?php echo base_url() ?>public/assets/js/plugins.js"></script>
+            
+
 </body>
 
 </html>

@@ -1824,7 +1824,7 @@ a.theme-btn-1.btn:focus {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #df0000;
+    color: #df0000 !important;
 }
 
 .home_page .ltn__product-area .section-title::before {
@@ -1894,7 +1894,29 @@ a.theme-btn-1.btn:focus {
 .prod_name_span{
     font-size: 19px;
     font-weight: 500;
-    /* width: 100px; */
     overflow: hidden;
     white-space: nowrap;
+}
+
+.modal-product-info .product-price del{
+    font-size: 20px;
+}
+.view_details span{
+    display: flex;
+    align-items: center;
+    font-size: 17px;
+}
+.view_details i{
+    margin-left: 10px;
+}
+
+.view_socialmedia_wrappers{
+    display: flex !important;
+    justify-content: space-between;
+    width: 75%;    
+    align-items: center;
+}
+.view_socialmedia_wrappers li{
+    margin-top: 0;
+
 }

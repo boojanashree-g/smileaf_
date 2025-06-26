@@ -134,10 +134,9 @@
                                             
                                         </a>
                                         <p class="product-price-info">
-                                        <span class="topseller_price">₹1000.00</span>
-                                        <span class="quickbuy_span">View Details <i class="fas fa-arrow-alt-circle-right"></i></span>
-                                        </p>
-                                       
+                                            <span class="topseller_price">₹1000.00</span>
+                                            <span class="quickbuy_span">View Details <i class="fas fa-arrow-alt-circle-right"></i></span>                                        
+                                        </p>                                       
                                     </h2>
                                 </div>
                             </div>
@@ -150,7 +149,6 @@
             </div>
         </div>
         <!-- PRODUCT AREA END -->
-
         <!-- VIDEO AREA START -->
         <div class="ltn__video-popup-area ltn__video-popup-margin">
             <div class="container">
