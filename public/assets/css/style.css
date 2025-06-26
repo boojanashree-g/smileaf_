@@ -8853,17 +8853,17 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 }
 
 .modal-product-info h3 {
-  font-size: 24px;
+  font-size: 30px;
   margin-bottom: 10px;
 }
 
 .modal-product-info hr {
-  margin-top: 20px;
-  margin-bottom: 20px;
+    margin-top: 25px;
+    margin-bottom: 10px;
 }
 
 .modal-product-info .product-price {
-  font-size: 40px;
+  font-size: 25px;
   margin-bottom: 10px;
   color: #638908;
   line-height: 1.2;
@@ -12878,11 +12878,11 @@ blockquote::before {
     Cart plus minus
 ---------------------------------------------------- */
 .cart-plus-minus {
-  border: 2px solid;
-  height: 63px;
-  line-height: 56px;
-  width: 140px;
-  text-align: center;
+    border: 2px solid;
+    height: 50px;
+    line-height: 45px;
+    width: 140px;
+    text-align: center;
 }
 
 .qtybutton {
@@ -16818,8 +16818,7 @@ input.cart-plus-minus-box {
 }
 
 .view_details{
-  font-size: 19px;
-  text-decoration: underline;
+    font-size: 16px;
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
