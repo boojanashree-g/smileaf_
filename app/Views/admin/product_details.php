@@ -421,16 +421,39 @@
             variantIndex++;
         });
 
-        // delete
-        $("#variant-list").on("click", ".remove-variant", function () {
-            let deleteIndex = $(this).data("rid");
-            console.log("Deleting index:", deleteIndex);
+        console.log("Container Index:", containerIndex);
 
-            let containerIndex = $(this).closest(".variant-block").data("index");
-            console.log("Container Index:", containerIndex);
 
-            $(this).closest(".variant-block").remove();
+            title: "Are you sure?",
+
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                button.closest(".variant-block").remove();
+
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "The variant has been removed.",
+                    icon: "success",
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            }
         });
+    });
+
+
+
+        $(".add-variant").click();
+
+
+        $(".add-variant").click();
+
 
         $(".add-variant").click();
 
