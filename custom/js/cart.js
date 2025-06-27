@@ -74,37 +74,110 @@ $(document).ready(function () {
   }
 
   function totalAmount() {
-    var totalAmt = 0;
-    var totalGst = 0;
+    let totalAmt = 0;
     let totalGstValue = 0;
+    let subTotal = 0;
+    let finalTotal = 0;
+
     $(".cart-product-subtotal").each(function () {
       let price = $(this).text().replace(",", "").replace("₹", "").trim();
-
       let amount = parseFloat(price);
 
-      // Get GST value from data attribute
+      // Get GST percent from data attribute
       let gstPercent = parseFloat($(this).data("gst")) || 0;
-
-      console.log(gstPercent);
 
       let gstValue = 0;
       if (gstPercent > 0 && !isNaN(amount)) {
         gstValue = (amount * gstPercent) / (100 + gstPercent);
+        gstValue = parseFloat(gstValue.toFixed(2));
       }
-      totalGstValue += gstValue;
 
       if (!isNaN(amount)) totalAmt += amount;
       if (!isNaN(gstValue)) totalGstValue += gstValue;
     });
 
-    $(".order_total_amt").text("₹" + totalAmt.toLocaleString());
-    if (totalGst > 0) {
-      let halfGst = (totalGst / 2).toFixed(2);
-      $("td.gst-td").text("₹" + parseFloat(halfGst).toLocaleString());
-      $("td.sgst-td").text("₹" + parseFloat(halfGst).toLocaleString());
+    totalAmt = parseInt(totalAmt.toFixed(2));
+    totalGstValue = parseInt(totalGstValue.toFixed(2));
+    subTotal = parseInt((totalAmt - totalGstValue).toFixed(2));
+    finalTotal = totalAmt + 100;
+
+    // Display total
+    $(".order_total_amt").text(
+      "₹" +
+        finalTotal.toLocaleString("en-IN", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+    );
+    $(".order-subtotal").text(
+      "₹" +
+        subTotal.toLocaleString("en-IN", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+    );
+
+    // Split GST
+    if (totalGstValue > 0) {
+      let halfGst = parseFloat((totalGstValue / 2).toFixed(2));
+
+      $("td.gst-td").text(
+        "₹" +
+          halfGst.toLocaleString("en-IN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+      );
+      $("td.sgst-td").text(
+        "₹" +
+          halfGst.toLocaleString("en-IN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+      );
     } else {
       $("td.gst-td").text("-");
       $("td.sgst-td").text("-");
     }
   }
+
+  // Delete Modal
+  $(".cart-delete").click(function () {
+    let cartID = $(this).data("cartid");
+
+    $("#delete-modal").modal("show");
+    $(".btn-delete").attr("data-cartid", cartID);
+  });
+
+  $(".delete-cancel").click(function () {
+    $("#delete-modal").modal("hide");
+  });
+
+  $(".btn-delete").click(function () {
+    let delCartID = $(this).attr("data-cartid");
+    $.ajax({
+      type: "POST",
+      url: base_Url + "delete-cart",
+      data: { cart_id: delCartID },
+      dataType: "json",
+
+      success: function (resData) {
+        $("#delete-modal").modal("hide");
+        console.log(resData);
+
+        if (resData.code == 200) {
+          showToast(resData.message, "success");
+          setTimeout(()=>
+          {
+            window.location.reload();
+          },1000)
+        } else {
+          showToast(resData.message, "error");
+        }
+      },
+      error: function (err) {
+        console.log(err);
+      },
+    });
+  });
 });
