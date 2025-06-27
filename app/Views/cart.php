@@ -50,7 +50,8 @@
                                                 ?>
 
                                                 <tr>
-                                                    <td class="cart-product-remove">x</td>
+                                                    <td class="cart-product-remove cart-delete" data-cartid="<?= $cart['cart_id'] ?>"
+                                                       >x</td>
                                                     <td class="cart-product-image">
                                                         <a href="<?php echo base_url() ?>product-details/<?= $cart['url'] ?>"><img
                                                                 src="<?php echo base_url() ?><?= $cart['main_image'] ?>"
@@ -110,7 +111,10 @@
                                 <h4>Cart Totals</h4>
                                 <table class="table">
                                     <tbody>
-
+                                        <tr>
+                                            <td>Subtotal</td>
+                                            <td class="order-subtotal">-</td>
+                                        </tr>
                                         <tr>
                                             <td>GST(Includes)</td>
                                             <td class="gst-td">-</td>
@@ -118,6 +122,10 @@
                                         <tr>
                                             <td>SGST(Includes)</td>
                                             <td class="sgst-td">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Shipping Charge</td>
+                                            <td class="shipping-charge">₹100.00</td>
                                         </tr>
 
                                         <tr>
@@ -136,11 +144,36 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal HTML -->
+        <div id="delete-modal" class="modal fade delete-modall">
+            <div class="modal-dialog modal-confirm">
+                <div class="modal-content">
+                    <div class="modal-header flex-column">
+                        <div class="icon-box">
+                            <i class="material-icons">&#xE5CD;</i>
+                        </div>
+                        <h4 class="modal-title w-100">Are you sure?</h4>
+                       
+                    </div>
+                    <div class="modal-body">
+                        <p>Do you really want to delete the product? This process cannot be undone.</p>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-secondary delete-cancel" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger btn-delete">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!-- SHOPING CART AREA END -->
 
         <!-- FOOTER AREA START -->
         <?php require("components/footer.php") ?>
         <!-- FOOTER AREA END -->
+
 
     </div>
     <!-- Body main wrapper end -->

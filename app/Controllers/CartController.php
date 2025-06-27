@@ -143,6 +143,27 @@ class CartController extends BaseController
     }
 
 
+    public function deleteCart()
+    {
+        $cartID = $this->request->getPost('cart_id');
+        $query = "UPDATE tbl_user_cart SET `flag` = 0 WHERE `cart_id` = ?";
+        $dltData = $this->db->query($query, $cartID);
+
+        $affectedRows = $this->db->affectedRows();
+
+        if ($dltData && $affectedRows) {
+            $result['code'] = 200;
+            $result['message'] = 'Product Deleted Successfully!!';
+            $result['status'] = 'success';
+        } else {
+            $result['code'] = 400;
+            $result['message'] = 'Failed to delete Product';
+            $result['status'] = 'failure';
+        }
+        echo json_encode($result);
+    }
+
+
 
 
 

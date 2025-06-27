@@ -14,7 +14,7 @@ $routes->get('contact', 'Home::contact');
 $routes->get('products/(:segment)/(:segment)', 'Home::productsOLD/$1/$2');
 $routes->get('products', 'Home::productsOLD');
 $routes->get('wishlist', 'Home::wishlist');
-$routes->get('myaccount', 'Home::myaccount', ['filter' => 'SessionAuth']);
+$routes->get('myaccount', 'Home::myaccount');
 $routes->get('signup', 'Home::signup');
 $routes->get('signin', 'Home::signin', ['filter' => 'checkLogin']);
 $routes->get('terms-and-conditions', 'Home::termsAndConditions');
@@ -38,6 +38,7 @@ $routes->post('insert-account', 'MyaccountController::insertAccount');
 $routes->post('quick-view-details', 'QuickViewController::quickViewDetails');
 $routes->post('insert-cart', 'CartController::insertCart');
 $routes->post('update-cart', 'CartController::updateCart');
+$routes->post('delete-cart', 'CartController::deleteCart');
 
 
 
