@@ -2,7 +2,7 @@
 namespace App\Controllers\admin;
 use App\Controllers\BaseController;
 
-use App\Models\admin\BannerModel;
+use App\Models\UserModel;
 
 
 class CustomerController extends BaseController
@@ -21,179 +21,157 @@ class CustomerController extends BaseController
     public function customerDetails()
     {
         $res['meta_title'] = "Customer Details";
+        $res['users'] = $this->db->query("SELECT * FROM `tbl_users` WHERE flag = 1")->getResultArray();
         return view("admin/customer_details", $res);
+    }
+
+    private function decode($encodedId){
+        return base64_decode($encodedId); 
     }
 
     public function insertData()
     {
+        $UserModel = new \App\Models\UserModel();
+        $request = $this->request;
 
-        try {
-            $bannerImg = $this->request->getFile('banner_image');
+        $userID = $this->decode($this->session->get('user_id'));
+        $username = $request->getPost('customer_name');
+        $number   = $request->getPost('customer_mobile');
+        $email    = $request->getPost('customer_email');
 
-            if ($bannerImg && $bannerImg->isValid()) {
-                $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+        $existing = $this->db->query(
+            "SELECT user_id FROM tbl_users WHERE number = ? AND flag = 1 LIMIT 1",
+            [$number]
+        )->getRowArray();
 
-                if (in_array($bannerImg->getMimeType(), $allowedTypes)) {
-                    $randomName = $bannerImg->getRandomName();
-                    $bannerImg->move('./uploads/', $randomName);
+        $userData = [
+            'username'    => $username,
+            'number'      => $number,
+            'email'       => $email,
+            'is_verified' => 1,
+            'flag'        => 1,
+        ];
 
-                    $data = [
-                        'banner_image' => '/uploads/' . $randomName,
-                        'banner_title' => $this->request->getPost('banner_title'),
-                        'banner_desc1' => $this->request->getPost('banner_desc1'),
-                        'banner_desc2' => $this->request->getPost('banner_desc2'),
-                        'banner_link' => $this->request->getPost('banner_link'),
-                    ];
+        if ($existing) {
+            $UserModel->update($existing['user_id'], $userData);
 
-                    $bannerModel = new BannerModel();
-                    $bannerModel->insert($data);
-
-                    if ($this->db->affectedRows() == 1) {
-                        return $this->response->setJSON([
-                            'code' => 200,
-                            'msg' => 'Data Inserted Successfully',
-                            'status' => 'success'
-                        ]);
-                    }
-                } else {
-                    // Return error if file type is not allowed
-                    return $this->response->setJSON([
-                        'code' => 400,
-                        'msg' => 'Invalid file type. Only PNG, JPG, and JPEG are allowed.',
-                        'status' => 'error'
-                    ]);
-                }
+            return $this->response->setJSON([
+                'code'    => 200,
+                'message' => 'User with same number found. Updated successfully.',
+            ]);
+        } else {
+            if ($UserModel->insert($userData)) {
+                return $this->response->setJSON([
+                    'code'    => 201,
+                    'message' => 'New user created successfully.',
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'code'    => 500,
+                    'message' => 'Insert failed.',
+                    'errors'  => $UserModel->errors(),
+                ]);
             }
-
-
-            return $this->response->setJSON([
-                'code' => 400,
-                'status' => 'Failed',
-                'msg' => 'Invalid file or insertion failed'
-            ]);
-
-        } catch (\Exception $e) {
-            return $this->response->setJSON([
-                'code' => 500,
-                'status' => 'error',
-                'msg' => 'Server Error: ' . $e->getMessage()
-            ]);
         }
     }
-
 
     public function getData()
     {
-        $res = $this->db->query("SELECT * FROM tbl_banner WHERE flag = 1")->getResultArray();
+        $res['users'] = $this->db->query("SELECT * FROM `tbl_users` WHERE flag = 1")->getResultArray();
         echo json_encode($res);
     }
 
-    public function deleteData()
-    {
+  public function deleteData()
+{
+    try {
+        $request = $this->request;
 
-        try {
-            $banner_id = $this->request->getPost('banner_id');
+        // Get user_id from POST data
+        $user_id = $request->getPost('user_id');
 
-            if ($banner_id) {
-                $query = "SELECT banner_image FROM tbl_banner WHERE `banner_id`  = ?";
-                $bannerImg = $this->db->query($query, [$banner_id])->getRow();
-
-                $imagePath = FCPATH . $bannerImg->banner_image;
-
-                if (file_exists($imagePath)) {
-                    unlink($imagePath);
-                }
-            }
-
-
-            $query = 'UPDATE `tbl_banner` SET `flag`= 0 WHERE `banner_id` = ?';
-            $updateData = $this->db->query($query, [$banner_id]);
-
-            $affected_rows = $this->db->affectedRows();
-
-            if ($affected_rows && $updateData) {
-                $result['code'] = 200;
-                $result['status'] = 'success';
-                $result['message'] = 'Deleted Successfully';
-                echo json_encode($result);
-            } else {
-                $result['code'] = 400;
-                $result['status'] = 'Failure';
-                $result['message'] = 'Something wrong';
-                echo json_encode($result);
-            }
-        } catch (\Exception $e) {
+        if (empty($user_id)) {
             return $this->response->setJSON([
-                'code' => 500,
-                'status' => 'error',
-                'msg' => 'Server Error: ' . $e->getMessage()
-            ]);
-
-        }
-
-    }
-
-    public function updateData()
-    {
-        try {
-            $bannerModel = new BannerModel();
-            $bannerID = $this->request->getPost('banner_id');
-            $bannerImg = $this->request->getFile('banner_image');
-            $data = $this->request->getPost();
-
-            if ($bannerImg && $bannerImg->isValid() && !$bannerImg->hasMoved()) {
-                $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-
-                if (in_array($bannerImg->getMimeType(), $allowedTypes)) {
-                    $query = "SELECT banner_image FROM tbl_banner WHERE banner_id = ?";
-                    $oldImg = $this->db->query($query, [$bannerID])->getRow();
-
-                    if ($oldImg && !empty($oldImg->banner_image)) {
-                        $imagePath = FCPATH . $oldImg->banner_image;
-
-                        if (file_exists($imagePath)) {
-                            unlink($imagePath);
-                        }
-                    }
-
-                    $randomName = $bannerImg->getRandomName();
-                    $bannerImg->move(FCPATH . 'uploads/', $randomName);
-                    $data['banner_image'] = 'uploads/' . $randomName;
-
-                } else {
-                    return $this->response->setJSON([
-                        'code' => 400,
-                        'msg' => 'Invalid image type. Allowed types: JPEG, PNG.',
-                        'status' => 'failure'
-                    ]);
-                }
-            }
-
-            $bannerModel->update($bannerID, $data);
-            $affectedRows = $this->db->affectedRows();
-
-            if ($affectedRows >= 0) {
-                return $this->response->setJSON([
-                    'code' => 200,
-                    'msg' => 'Data updated successfully',
-                    'status' => 'success'
-                ]);
-            } else {
-                return $this->response->setJSON([
-                    'code' => 400,
-                    'msg' => 'No changes were made.',
-                    'status' => 'failure'
-                ]);
-            }
-
-        } catch (\Exception $e) {
-            return $this->response->setJSON([
-                'code' => 500,
-                'status' => 'error',
-                'msg' => 'Server Error: ' . $e->getMessage()
+                'code' => 400,
+                'status' => 'failure',
+                'message' => 'User ID is required.'
             ]);
         }
+
+        // Update flag only if not already deleted
+        $query = 'UPDATE `tbl_users` SET `flag` = 0 WHERE `user_id` = ? AND `flag` != 0';
+        $updateData = $this->db->query($query, [$user_id]);
+
+        $affected_rows = $this->db->affectedRows();
+
+        if ($affected_rows > 0) {
+            return $this->response->setJSON([
+                'code'    => 200,
+                'status'  => 'success',
+                'message' => 'Deleted successfully.'
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'code'    => 400,
+                'status'  => 'failure',
+                'message' => 'User already deleted or not found.'
+            ]);
+        }
+    } catch (\Exception $e) {
+        return $this->response->setJSON([
+            'code'    => 500,
+            'status'  => 'error',
+            'message' => 'Server Error: ' . $e->getMessage()
+        ]);
     }
+}
+
+
+   public function updateData()
+{
+    $UserModel = new \App\Models\UserModel();
+    $request = $this->request;
+
+    $user_id = $request->getPost('user_id');
+    $username = $request->getPost('customer_name');
+    $number   = $request->getPost('customer_mobile');
+    $email    = $request->getPost('customer_email');
+    $isVerified = $request->getPost('is_verified') == '1' ? 1 : 0;
+
+
+    // Check if user exists and is not soft-deleted
+    $existing = $this->db->query(
+        "SELECT user_id FROM tbl_users WHERE user_id = ? AND flag = 1 LIMIT 1",
+        [$user_id]
+    )->getRowArray();
+
+    if (!$existing) {
+        return $this->response->setJSON([
+            'code'    => 404,
+            'message' => 'User not found or already deleted.',
+        ]);
+    }
+
+    $userData = [
+        'username' => $username,
+        'number'   => $number,
+        'email'    => $email,
+        'is_verified' => $isVerified,
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
+
+    if ($UserModel->update($user_id, $userData)) {
+        return $this->response->setJSON([
+            'code'    => 200,
+            'message' => 'User updated successfully.',
+        ]);
+    } else {
+        return $this->response->setJSON([
+            'code'    => 500,
+            'message' => 'Update failed.',
+            'errors'  => $UserModel->errors(),
+        ]);
+    }
+}
 
 
 }
