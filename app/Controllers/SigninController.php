@@ -169,6 +169,7 @@ class SigninController extends BaseController
 
             if ($callbackURL) {
                 $res['c_url'] = $callbackURL;
+                $this->session->remove('callback_url');
             } else {
                 $res['c_url'] = "";
             }
@@ -177,14 +178,14 @@ class SigninController extends BaseController
             return $this->signinSessionSMS([
                 'code' => 200,
                 'user_id' => $userID,
-                'message' => 'OTP sent. Please verify.',
+                'message' => 'OTP verified successfully.',
                 'c_url' => $res['c_url']
             ]);
 
         } else {
             return $this->signinSessionSMS([
                 'code' => 400,
-                'message' => 'Failed to send OTP'
+                'message' => 'Invalid OTP'
             ]);
         }
     }
@@ -287,8 +288,13 @@ class SigninController extends BaseController
             $response['token'] = $newToken;
 
             return $this->response->setJSON($response);
-        } else {
+        } else if ($response['code'] == 400) {
+            $message = $response['message'];
             $response['code'] = 400;
+            $response['message'] = $message;
+            return $this->response->setJSON($response);
+        } else {
+            $response['code'] = 500;
             $response['message'] = 'Invalid Credentials';
             return $this->response->setJSON($response);
         }
@@ -343,12 +349,6 @@ class SigninController extends BaseController
                 $affectedRow = $this->db->affectedRows();
 
                 if ($update && $affectedRow == 1) {
-
-                    $this->session->set([
-                        'otp_verify' => "YES",
-                        'user_id' => $userID,
-                        'loginStatus' => "YES"
-                    ]);
 
 
                     $res['code'] = 200;
