@@ -45,7 +45,7 @@
 
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="<?= base_url('admin/') ?>" class="menu-link">
+                    <a href="<?= base_url('admin/customer-details') ?>" class="menu-link">
                         <div data-i18n="Customer Details">Customer Details</div>
                     </a>
                 </li>

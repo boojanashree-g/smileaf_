@@ -142,3 +142,13 @@ $routes->group('admin/featured-products', ['namespace' => 'App\Controllers\admin
 
 });
 
+
+
+$routes->group('admin/customer-details', ['namespace' => 'App\Controllers\admin'], function ($routes) {
+    $routes->get('/', 'CustomerController::customerDetails');
+    $routes->post('get-data', 'CustomerController::getData');
+    $routes->post('insert-data', 'CustomerController::insertData');
+    $routes->post('update-data', 'CustomerController::updateData');
+    $routes->post('delete-data', 'CustomerController::deleteData');
+
+});
