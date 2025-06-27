@@ -14,11 +14,12 @@ class AuthMiddleware implements FilterInterface
     {
         $accessToken = null;
 
-        $authHeader = $request->getHeaderLine('Authorization');
+        $authHeader = $request->getHeaderLine('authorization');
+
         if ($authHeader && preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
             $accessToken = $matches[1];
         }
-
+       
         // If no token in header, check the URL parameter (?token=...)
         if (!$accessToken) {
             $accessToken = $request->getGet('token');

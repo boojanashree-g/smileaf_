@@ -14,9 +14,9 @@ $routes->get('contact', 'Home::contact');
 $routes->get('products/(:segment)/(:segment)', 'Home::productsOLD/$1/$2');
 $routes->get('products', 'Home::productsOLD');
 $routes->get('wishlist', 'Home::wishlist');
-$routes->get('myaccount', 'Home::myaccount');
-$routes->get('signup', 'Home::signup');
-$routes->get('signin', 'Home::signin', ['filter' => 'checkLogin']);
+$routes->get('myaccount', 'Home::myaccount', ['filter' => 'checkLogin']);
+$routes->get('signup', 'Home::signup', );
+$routes->get('signin', 'Home::signin');
 $routes->get('terms-and-conditions', 'Home::termsAndConditions');
 $routes->get('privacy-policy', 'Home::privacyPolicy');
 $routes->get('order-tracking', 'Home::orderTracking');
@@ -33,6 +33,8 @@ $routes->get('logout', 'SigninController::logout');
 
 // Myaccount 
 $routes->post('insert-account', 'MyaccountController::insertAccount');
+$routes->post('getdist-data', 'MyaccountController::getDist', ['filter' => 'AuthFilter']);
+
 
 // ProductList
 $routes->post('quick-view-details', 'QuickViewController::quickViewDetails');

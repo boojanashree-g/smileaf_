@@ -207,7 +207,7 @@ $(document).ready(function () {
     verifyOTP(otpInput, $button);
   });
 
-  const verifyOTP = (otp, button) => {
+  function verifyOTP(otp, button) {
     $.ajax({
       type: "POST",
       url: base_Url + "verify-otp",
@@ -215,6 +215,8 @@ $(document).ready(function () {
       cache: false,
       dataType: "json",
       success: function (JSONdata) {
+        console.log(JSONdata);
+
         localStorage.setItem("token", JSONdata.token);
 
         const redirectURL = JSONdata.c_url === "" ? base_Url : JSONdata.c_url;
@@ -240,8 +242,6 @@ $(document).ready(function () {
           otpInputs.val("").prop("disabled", false);
           const timerDisplay = $("#timer");
           const resendButton = $("#resendButton");
-
-          console.log(timeLeft);
 
           function updateTimerDisplay() {
             const minutes = Math.floor(timeLeft / 60);
@@ -294,7 +294,7 @@ $(document).ready(function () {
         showToast("Something went wrong. Please try again.", "error");
       },
     });
-  };
+  }
 
   // *************************** [Resend OTP] *************************************************************************
   $("#resendButton").click(function (e) {
