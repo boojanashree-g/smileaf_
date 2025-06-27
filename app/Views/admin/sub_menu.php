@@ -5,6 +5,18 @@
     data-template="vertical-menu-template" data-style="light">
 
 <?php require "components/head.php"; ?>
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+    -moz-appearance: textfield;
+    }
+</style>
 
 <body>
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5J3LMKC" height="0" width="0"
@@ -57,6 +69,7 @@
                                                         <th>S.No</th>
                                                         <th>Menu</th>
                                                         <th>SubMenu</th>
+                                                        <th>GST</th>
                                                         <th>Status</th>
                                                         <th>Image</th>
                                                         <th>Action</th>
@@ -77,14 +90,14 @@
                         <div class="modal fade" id="submenu-modal" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-simple">
                                 <div class="modal-content">
-                                    <div class="modal-body">
+                                    <div class="modal-body p-0">
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                         <div class="text-center mb-6">
                                             <h4 class="submenu-title mb-2"></h4>
                                         </div>
                                         <form id="submenu-form" class="row g-6" onsubmit="return false">
-                                            <div class="col-12 col-md-12">
+                                            <div class="col-12 col-md-6">
                                                 <label class="form-label" >Menu</label>
                                                 <select class="form-select" for="menu_id" name="menu_id"
                                                     id="menu_id">
@@ -97,15 +110,20 @@
                                                 </select>
                                                 <span class="error text-danger menu_id mt-5"></span>
                                             </div>
-                                            <div class="col-12 col-md-12">
+                                            <div class="col-12 col-md-6">
                                                 <label class="form-label" for="submenu">SubMenu</label>
                                                 <input type="text" id="submenu" name="submenu" class="form-control"
                                                     placeholder="Submenu*" />
                                                 <span class="error text-danger submenu mt-5"></span>
                                             </div>
+                                            <div class="col-12 col-md-6">
+                                                <label class="form-label" for="gst">GST</label>
+                                                <input type="number" id="gst" name="gst" class="form-control"
+                                                    placeholder="GST" />
+                                                <span class="error text-danger gst mt-5"></span>
+                                            </div>
 
-
-                                            <div class="col-12 col-md-12">
+                                            <div class="col-12 col-md-6">
                                                 <label for="image_url" class="form-label">Image</label>
                                                 <input class="form-control" type="file" id="image_url"
                                                     name="image_url" accept="image/png, image/jpeg, image/jpg">

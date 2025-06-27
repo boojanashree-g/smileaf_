@@ -1,9 +1,8 @@
 <div class="modal-header border-0">
-    <h5 class="modal-title fw-bold">Product Details</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
         style="font-size: 1.5rem;"></button>
 </div>
-<div class="modal-body">
+<div class="modal-body p-0">
     <div class="row align-items-start">
         <!-- Product Image -->
         <div class="col-md-6 text-center mb-3">
@@ -27,7 +26,6 @@
                     <ul>
                         <li>
                             <strong>Quantity: (No. of plates)</strong>
-
                             <span class="quantity-options">
                                 <?php
                                 $lowestQty = $variant_data['lowest_quantity'];
@@ -81,22 +79,24 @@
                                 <span>Buy Now</span>
                             </a>
                         </li>
-                        <li>
+                        <hr>
+                        <li class="view_socialmedia_wrappers">
                             <a href="#ltn__utilize-cart-menu" class="view_details">
-                                <span>View details </span>
+                                <span>View details<i class="fas fa-arrow-alt-circle-right"></i></span>
                             </a>
+                            <ul>
+                                <li>Share:</li>
+                                <li><a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                                <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a></li>
+                                <li><a href="#" title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
+                                <li><a href="#" title="Instagram"><i class="fab fa-instagram"></i></a></li>
+                            </ul>
                         </li>
+
                     </ul>
                 </div>
-                <hr>
                 <div class="ltn__social-media">
-                    <ul>
-                        <li>Share:</li>
-                        <li><a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-                        <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a></li>
-                        <li><a href="#" title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
-                        <li><a href="#" title="Instagram"><i class="fab fa-instagram"></i></a></li>
-                    </ul>
+                    
                 </div>
             </div>
         </div>
@@ -155,11 +155,7 @@
                     $input.val(oldValue + 1);
                 }
             } else {
-              
-                 if (oldValue == 1) {
-                   return false;
-                }
-                else if (oldValue >=1) {
+                 if (oldValue > 1) {
                     $input.val(oldValue - 1);
                 }
             }

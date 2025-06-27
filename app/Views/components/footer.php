@@ -105,7 +105,6 @@
                                             <div class="response" id="mce-error-response" style="display:none"></div>
                                             <div class="response" id="mce-success-response" style="display:none"></div>
                                         </div>
-                                        <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
                                         <div style="position: absolute; left: -5000px;" aria-hidden="true"><input
                                                 type="text" name="b_dde0a42ff09e8d43cad40dc82_72d274d15d" tabindex="-1"
                                                 value=""></div>
@@ -120,8 +119,6 @@
                                 </form>
                             </div>
                         </div>
-                        <!-- <h5 class="mt-30">We Accept</h5>
-                         <img src="<?php echo base_url() ?>public/assets/img/icons/payment-4.png" alt="Payment Image"> -->
                     </div>
                 </div>
             </div>
@@ -161,3 +158,15 @@
 <script src="<?php echo base_url() ?>public/assets/js/script.js"></script>
 <script src="<?php echo base_url() ?>custom/js/toast.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+$(document).on('click', '.wishlist-btn', function(e) {
+    e.preventDefault();
+    const icon = $(this).find('i');
+    if (icon.hasClass('far')) {
+        icon.removeClass('far fa-heart').addClass('fas fa-heart text-danger');
+    } else {
+        icon.removeClass('fas fa-heart text-danger').addClass('far fa-heart');
+    }
+});
+</script>

@@ -59,10 +59,19 @@ class Home extends BaseController
             $groupedSubmenus[$submenu['menu_id']][] = $submenu;
         }
 
+        $userID = session()->get('user_id');
+        $query = "SELECT * FROM tbl_user_cart WHERE user_id = ?  AND flag =1";
+        $usercount = $this->db->query($query, [$userID])->getResultArray();
+        if ($usercount > 0) {
+            $cartCount = sizeof($usercount);
 
+        } else {
+            $cartCount = 0;
+        }
         return [
             'mainmenu' => $mainmenus,
-            'submenu' => $groupedSubmenus
+            'submenu' => $groupedSubmenus,
+            'cart_count' => $cartCount
         ];
     }
 
@@ -101,22 +110,43 @@ class Home extends BaseController
         } else {
             $res['cart_count'] = 0;
         }
-        
+
         $productDetails = [];
-        foreach($cartData as $item)
-        {
-            $prodID = $item['prod_id'];
-            $packQty = $item['pack_qty'];
-            $quantity = $item['quantity'];
+        foreach ($cartData as $item) {
+            $cartID = $item['cart_id'];
+
+            $query = "SELECT
+                a.`prod_id`,
+                a.`prod_name`,
+                a.`main_quantity`,
+                a.`main_image`,
+                a.`has_variant`,
+                a.url,
+                b.cart_id,
+                b.quantity AS cart_quantity,
+                b.prod_price AS cart_prod_price,
+                b.total_price AS cart_total_price,
+                b.pack_qty AS cart_pack_qty,
+                b.user_id,
+                c.variant_id,
+                c.pack_qty,
+                c.mrp,
+                c.offer_price,
+                c.quantity AS variant_qty,
+                d.submenu ,d.gst
+            FROM `tbl_products` AS a
+            INNER JOIN tbl_user_cart AS b ON a.prod_id = b.prod_id
+            INNER JOIN tbl_variants AS c ON c.prod_id = b.prod_id AND c.pack_qty = b.pack_qty
+            INNER JOIN tbl_submenu AS d  ON d.sub_id = a.submenu_id 
+            WHERE a.flag = 1 AND b.flag = 1 AND c.flag = 1 AND b.cart_id = ?";
+
+            $result = $this->db->query($query, [$cartID])->getResultArray();
+            if ($result) {
+                $productDetails = array_merge($productDetails ?? [], $result);
+            }
         }
 
-
-        echo "<pre>";
-        print_r($cartData);
-        die;
-
-
-
+        $res['cart_product'] = $productDetails;
 
 
         return view('cart', $res);

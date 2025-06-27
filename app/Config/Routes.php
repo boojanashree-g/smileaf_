@@ -7,7 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 $routes->get('/', 'Home::index');
-$routes->get('productDetails', 'Home::productDetails');
+$routes->get('product-details/(:any)', 'Home::productDetails/$1');
 $routes->get('cart', 'Home::cart');
 $routes->get('checkout', 'Home::checkout');
 $routes->get('contact', 'Home::contact');
@@ -37,6 +37,7 @@ $routes->post('insert-account', 'MyaccountController::insertAccount');
 // ProductList
 $routes->post('quick-view-details', 'QuickViewController::quickViewDetails');
 $routes->post('insert-cart', 'CartController::insertCart');
+$routes->post('update-cart', 'CartController::updateCart');
 
 
 

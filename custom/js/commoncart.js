@@ -16,8 +16,12 @@ function insertCartData() {
     success: function (result) {
       if (result.code == 200) {
         showToast(result.message, "success");
+
         $(".addto_cart_text").html("Goto cart");
         $("#quick_buy_modal").modal("hide");
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } else {
         showToast(result.message, "error");
         $("#quick_buy_modal").modal("hide");

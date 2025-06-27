@@ -68,9 +68,10 @@ font-family: 'Roboto', sans-serif;
     Gutter Code 
 ==================================================== */
 
-.allura-regular {
-  font-family: "Allura", cursive;
-  font-weight: 600;
+.jost {
+  font-family: "Jost", sans-serif;
+  font-optical-sizing: auto;
+  /* font-weight: 500; */
   font-style: normal;
 }
 
@@ -341,30 +342,25 @@ font-family: 'Roboto', sans-serif;
 /* -------------------------------------
     Typography
 ------------------------------------- */
-html {
+/* html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   font-family: var(--ltn__body-font);
-}
+  
+} */
 
 * {
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  outline: none;
-  -moz-osx-font-smoothing: grayscale;
-  /* Firefox */
-  -webkit-font-smoothing: antialiased;
-  /* WebKit  */
+ font-family: "Jost", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }
 
 body {
-  color: var(--ltn__paragraph-color);
-  font-weight: 400;
+ font-family: "Jost", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
   font-style: normal;
-  font-size: 16px;
-  font-family: var(--ltn__body-font);
-  line-height: 1.8;
-  margin: 0 auto;
 }
 
 h1,
@@ -8612,11 +8608,6 @@ ul.wp-block-latest-posts.is-grid.alignwide {
   font-size: 18px;
 }
 
-.product-price del {
-  /* opacity: 0.6; */
-  margin-left: 5px;
-  font-size: 60%;
-}
 
 /* .ltn__product-item .product-price {
   margin-bottom: 12px;
@@ -8715,18 +8706,21 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 .ltn__product-item-3 .product-title {
   font-size: 16px;
   margin-bottom: 3px;
+  text-align: start;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
 .ltn__product-item-3 .product-price {
-  font-size: 20px;
-  color: var(--ltn__secondary-color);
+  font-size: 21px;
   font-weight: 700;
   margin:  0 0 10px 0;
+  color:#000;
 }
 
 .ltn__product-item-3 .product-price del {
-  font-size: 20px;
-  opacity: 0.6;
+    font-size: 15px;
+    opacity: 0.6;
 }
 
 .ltn__product-item-3 .product-info-brief {
@@ -8859,17 +8853,17 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 }
 
 .modal-product-info h3 {
-  font-size: 24px;
+  font-size: 30px;
   margin-bottom: 10px;
 }
 
 .modal-product-info hr {
-  margin-top: 20px;
-  margin-bottom: 20px;
+    margin-top: 25px;
+    margin-bottom: 10px;
 }
 
 .modal-product-info .product-price {
-  font-size: 40px;
+  font-size: 25px;
   margin-bottom: 10px;
   color: #638908;
   line-height: 1.2;
@@ -12884,11 +12878,11 @@ blockquote::before {
     Cart plus minus
 ---------------------------------------------------- */
 .cart-plus-minus {
-  border: 2px solid;
-  height: 63px;
-  line-height: 56px;
-  width: 140px;
-  text-align: center;
+    border: 2px solid;
+    height: 50px;
+    line-height: 45px;
+    width: 140px;
+    text-align: center;
 }
 
 .qtybutton {
@@ -16824,8 +16818,7 @@ input.cart-plus-minus-box {
 }
 
 .view_details{
-  font-size: 19px;
-  text-decoration: underline;
+    font-size: 16px;
 }
 
 @media (min-width: 768px) and (max-width: 991px) {

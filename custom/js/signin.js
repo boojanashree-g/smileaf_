@@ -1,7 +1,8 @@
 $(document).ready(function () {
   var otpInput = "";
-  var timerId;
+  var timerId = null;
   let isOTPModalActive = false;
+  let timeLeft = 60;
 
   $("#login-form").keypress(function (e) {
     if (e.which === 13) {
@@ -97,7 +98,7 @@ $(document).ready(function () {
             const timerDisplay = $("#timer");
             const resendButton = $("#resendButton");
 
-            let timeLeft = 60;
+            timeLeft = 60;
 
             function updateTimerDisplay() {
               const minutes = Math.floor(timeLeft / 60);
@@ -189,11 +190,11 @@ $(document).ready(function () {
   // *************************** [Verify OTP] *************************************************************************
 
   $("#verify-otp").click(function () {
+    let otpInput = "";
     $(".otp-digit").each(function () {
       otpInput += $(this).val();
     });
 
-    console.log(otpInput);
     if (otpInput.length != 4) {
       showToast("Please enter all 4 digits of the OTP", "error");
       return;
@@ -203,10 +204,10 @@ $(document).ready(function () {
     $button.prop("disabled", true).text("Verifying...");
 
     clearInterval(timerId);
-    verifyOTP(otpInput);
+    verifyOTP(otpInput, $button);
   });
 
-  const verifyOTP = (otp) => {
+  const verifyOTP = (otp, button) => {
     $.ajax({
       type: "POST",
       url: base_Url + "verify-otp",
@@ -215,24 +216,77 @@ $(document).ready(function () {
       dataType: "json",
       success: function (JSONdata) {
         localStorage.setItem("token", JSONdata.token);
-        if (JSONdata.c_url == "") {
-          var redirectURL = base_Url;
-        } else {
-          var redirectURL = JSONdata.c_url;
-        }
+
+        const redirectURL = JSONdata.c_url === "" ? base_Url : JSONdata.c_url;
+
         if (JSONdata.code == 400) {
           showToast(JSONdata.message, "error");
-          isOTPModalActive = false;
+
+          setTimeout(() => {
+            $(button)
+              .prop("disabled", false)
+              .removeClass("disabled")
+              .css("pointer-events", "auto")
+              .text("Verify OTP");
+
+            $("#resendButton").prop("disabled", false).removeClass("disabled");
+          }, 100);
+
+          isOTPModalActive = true;
           window.onpopstate = null;
-          $("#signinotp-modal").modal("hide");
-          clearInterval(timerId);
-          $button.prop("disabled", false).text("Verify OTP");
+
+          // reset timer
+          const otpInputs = $(".otp-digit");
+          otpInputs.val("").prop("disabled", false);
+          const timerDisplay = $("#timer");
+          const resendButton = $("#resendButton");
+
+          console.log(timeLeft);
+
+          function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.text(
+              `Time remaining: ${minutes}:${seconds
+                .toString()
+                .padStart(2, "0")}`
+            );
+          }
+
+          function updateTimer() {
+            timeLeft--;
+            updateTimerDisplay();
+            if (timeLeft <= 0) {
+              clearInterval(timerId);
+              timerDisplay.text("Code expired");
+              resendButton.prop("disabled", false);
+              otpInputs.prop("disabled", true);
+            }
+          }
+
+          function startOTPTimer() {
+            clearInterval(timerId);
+            timeLeft = 60;
+            otpInputs.val("").prop("disabled", false);
+            resendButton.prop("disabled", true);
+            otpInputs.first().focus();
+            updateTimerDisplay();
+            timerId = setInterval(updateTimer, 1000);
+          }
+
+          // Start timer
+          startOTPTimer();
         } else if (JSONdata.code == 200) {
           showToast(JSONdata.message, "success");
           $("#signinotp-modal").modal("hide");
+
           setTimeout(() => {
             window.location.href = redirectURL;
           }, 1000);
+        } else if (JSONdata.code == 500) {
+          showToast(JSONdata.message, "error");
+          $("#signinotp-modal").modal("hide");
+          $(button).prop("disabled", false).text("Verify OTP");
         }
       },
       error: function (xhr, status, error) {
@@ -261,7 +315,7 @@ $(document).ready(function () {
 
           // Reset timer
           const timerDisplay = $("#timer");
-          let timeLeft = 60;
+          timeLeft = 60;
 
           clearInterval(timerId);
           $("#resendButton").prop("disabled", true);
@@ -305,4 +359,5 @@ $(document).ready(function () {
   if (urlParams.get("expired") === "1") {
     localStorage.clear();
   }
+  // *************************** [Logout page ] *************************************************************************
 });

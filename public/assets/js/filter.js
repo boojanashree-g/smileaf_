@@ -146,38 +146,33 @@ $(document).ready(function () {
                             <a href="${base_Url}${product.url || "#"}">
                                 <img src="${base_Url}${product.main_image || "default-image.jpg"}" alt="${product.prod_name || "Product"}">
                             </a>
-                            ${product.stock_status == 0 ? `<div class="product-badge"><ul><li class="sale-badge">Out of Stock</li></ul></div>` : product.badge ? `<div class="product-badge">
-                                        <ul><li class="sale-badge">${product.badge}</li></ul>
-                                    </div>`
-          : ""
-        }
+                            ${product.stock_status == 0 ? `<div class="product-badge"><ul><li class="sale-badge">Out of Stock</li></ul></div>` : product.badge ? `<div class="product-badge"> <ul><li class="sale-badge">${product.badge}</li></ul></div>` : ""}
                         </div>
                         <div class="product-info">
                             <h2 class="product-title">
                                 <a href="${base_Url}${product.url || "#"}">
-                                    ${product.prod_name || "Product Name"}
+                                    <span class="prod_name_span">${product.prod_name || "Product Name"}</span>
                                 </a>
                             </h2>
-                            <div class="product-price">
-                            <span>₹${product.lowest_offer_price || "0"}</span>
-                            ${
-                                product.lowest_mrp &&
-                                product.lowest_offer_price != product.lowest_mrp
-                                    ? `<del>₹${product.lowest_mrp}</del>`
-                                    : ""
-                            }
+                            <div class="product_price_wrapper mt-0">
+                              <div class="product-price  mb-0">
+                                <span>
+                                  ₹${product.lowest_offer_price || "0"}
+                                </span>
+                                ${product.lowest_mrp && product.lowest_offer_price != product.lowest_mrp ? `<del>₹${product.lowest_mrp}</del>` : "" }
+                                      
+                              </div>
+                              <a href="#" title="Wishlist" class="wishlist-btn">
+                                  <i class="far fa-heart"></i>
+                              </a>
+                            </div>
+                          </div>
+                        <div class="d-flex justify-content-evenly">                       
+                          <a href="#" class="theme-btn-1 btn quick_btn" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#quick_buy_modal">
+                              <i class="fas fa-shopping-cart me-2"></i>
+                              <span>Quick Buy</span>
+                          </a>
                         </div>
-
-                        </div>
-                        <div class="d-flex justify-content-evenly">
-                        <a href="#" title="Wishlist" class="wishlist-btn">
-                            <i class="far fa-heart"></i>
-                        </a>
-                        <a href="#" class="theme-btn-1 btn quick_btn" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#quick_buy_modal">
-                            <i class="fas fa-shopping-cart me-2"></i>
-                            <span>Quick Buy</span>
-                        </a>
-                    </div>
                     </div>
                 </div>
             `;

@@ -57,7 +57,7 @@
                         <div class="mini-cart-icon dsmnone dmdnone d-block">
                             <a href="<?php echo base_url('cart') ?>" class="header-icons">
                                 <i class="icon-shopping-cart"></i>
-                                <sup>2</sup>
+                                <sup class="cart-count"><?= $cart_count ?></sup>
                             </a>
                         </div>
                         <div class="mini-cart-icon dsmnone dmdnone d-block">

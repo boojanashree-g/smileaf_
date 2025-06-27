@@ -14,6 +14,11 @@
     .color-circle.border {
         border: 2px solid #ccc;
     }
+    .wishlist-active {
+        background-color: red !important;
+        color:#fff;
+    }
+
 </style>
 
 
@@ -70,8 +75,6 @@
                                         <!-- ltn__product-item -->
                                         <?php if (!empty($products)): ?>
                                             <?php foreach ($products as $product): ?>
-
-
                                                 <div class="col-xl-4 col-sm-12   col-12 product-item"
                                                     data-name="<?= strtolower(esc($product['prod_name'])) ?>">
                                                     <div class="ltn__product-item ltn__product-item-3 text-center">
@@ -89,25 +92,26 @@
                                                                     </ul>
                                                                 </div>
                                                             <?php endif; ?>
-
                                                         </div>
                                                         <div class="product-info">
                                                             <h2 class="product-title">
                                                                 <a href="<?= base_url($product['url']) ?>">
-                                                                    <?= esc($product['prod_name']) ?>
+                                                                    <span class="prod_name_span"><?= esc($product['prod_name']) ?></span>
                                                                 </a>
                                                             </h2>
-                                                            <div class="product-price">
-                                                                <span>₹<?= esc($product['lowest_offer_price'] ?? 0) ?></span>
-                                                                <?php if (!empty($product['lowest_offer_price']) && $product['lowest_offer_price'] != $product['lowest_mrp']): ?>
-                                                                    <del>₹<?= esc($product['lowest_mrp']) ?></del>
-                                                                <?php endif; ?>
-                                                            </div>
+                                                            <div class="product_price_wrapper mt-0">
+                                                                <div class="product-price mb-0">         
+                                                                    <span>₹<?= esc($product['lowest_offer_price'] ?? 0) ?></span>
+                                                                    <?php if (!empty($product['lowest_offer_price']) && $product['lowest_offer_price'] != $product['lowest_mrp']): ?>
+                                                                        <del>₹<?= esc($product['lowest_mrp']) ?></del>
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                                <a href="#" title="Wishlist" class="wishlist-btn">  
+                                                                    <i class="far fa-heart"></i>
+                                                                </a>
+                                                            </div>                                                            
                                                         </div>
-                                                        <div class="d-flex justify-content-evenly">
-                                                            <a href="#" title="Wishlist" class="wishlist-btn">
-                                                                <i class="far fa-heart"></i>
-                                                            </a>
+                                                        <div class="d-flex justify-content-evenly">                                                            
                                                             <a class="theme-btn-1 btn quick_btn"
                                                                 data-prodid="<?= esc($product['prod_id']) ?>"
                                                                 data-menuid="<?= $product['menu_id'] ?>"
@@ -303,6 +307,8 @@
 
         <!-- All JS Plugins -->
         <script src="<?php echo base_url() ?>public/assets/js/plugins.js"></script>
+            
+
 </body>
 
 </html>
