@@ -13,15 +13,13 @@ class SessionAuth implements FilterInterface
         $session = session();
         $token = $session->get('jwt') ?? $session->get('user_id');
 
-       
-
+     
         if (!$token) {
             return redirect()->to('/signin?expired=1');
         }
 
         $secretToken = getenv('JWT_SECRET');
        
-        
         if (!$secretToken) {
             return redirect()->to('/signin?expired=1');
         }

@@ -155,11 +155,7 @@
                     $input.val(oldValue + 1);
                 }
             } else {
-              
-                 if (oldValue == 1) {
-                   return false;
-                }
-                else if (oldValue >=1) {
+                 if (oldValue > 1) {
                     $input.val(oldValue - 1);
                 }
             }

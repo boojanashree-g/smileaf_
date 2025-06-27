@@ -57,8 +57,8 @@ class CartController extends BaseController
             "SELECT * FROM tbl_user_cart WHERE prod_id = ? AND user_id = ? AND pack_qty = ? AND flag = 1",
             [$prod_id, $user_id, $pack_qty]
         )->getResultArray();
-
-        if (count($cart_data) > 0) {
+        $oldCount = count($cart_data);
+        if ($oldCount > 0) {
             $cart_id = $cart_data[0]['cart_id'];
 
             $update = $this->db->query(
@@ -67,10 +67,14 @@ class CartController extends BaseController
                 [$quantity, $proPrice, $totalPrice, $pack_qty, $user_id, $prod_id, $pack_qty, $cart_id]
             );
 
+            // Cart count
+            $cartCount = $this->getCartCount($user_id);
+
             $result = [
                 "status" => $update && $this->db->affectedRows() ? "success" : "fail",
                 "code" => $update && $this->db->affectedRows() ? 200 : 400,
                 "message" => $update && $this->db->affectedRows() ? "Product quantity updated in cart" : "Product already in cart!",
+                "cart_count" => $cartCount
             ];
         } else {
             $newCartData = [
@@ -84,19 +88,62 @@ class CartController extends BaseController
 
             $insert = $CartModel->insert($newCartData);
 
+            // Cart count
+            $cartCount = $this->getCartCount($user_id);
+
+
             $result = [
                 "status" => $insert && $this->db->affectedRows() ? "success" : "fail",
                 "code" => $insert && $this->db->affectedRows() ? 200 : 400,
                 "message" => $insert && $this->db->affectedRows() ? "Product added to cart" : "Product add failed!",
-
+                "cart_count" => $cartCount
             ];
         }
 
         return $this->response->setJSON($result);
     }
 
+    private function getCartCount($user_id)
+    {
+        $query = "SELECT * FROM tbl_user_cart WHERE user_id = ?  AND flag =1";
+        $usercount = $this->db->query($query, [$user_id])->getResultArray();
+        if ($usercount > 0) {
+            $cartCount = sizeof($usercount);
 
-    
+        } else {
+            $cartCount = 0;
+        }
+
+        return $cartCount;
+    }
+
+    public function updateCart()
+    {
+        $qty = $this->request->getPost('quantity');
+        $total_price = $this->request->getPost('total_price');
+        $formated = number_format((float) $total_price, 2, '.', '');
+        $cartID = $this->request->getPost('cart_id');
+
+
+        $query = "UPDATE tbl_user_cart SET quantity =?, total_price = ? 
+                  WHERE cart_id = ?  AND flag = 1 ";
+        $updateData = $this->db->query($query, [$qty, $formated, $cartID]);
+
+        $affectedRow = $this->db->affectedRows();
+
+        if ($updateData && $affectedRow == 1) {
+            $res['code'] = 200;
+            $res['status'] = "success";
+            echo json_encode($res);
+        } else {
+            $res['code'] = 400;
+            $res['status'] = "Failure";
+            echo json_encode($res);
+        }
+    }
+
+
+
 
 
 }
