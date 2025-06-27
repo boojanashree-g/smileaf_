@@ -159,14 +159,20 @@
 <script src="<?php echo base_url() ?>custom/js/toast.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<!-- Delete Modal CDN  -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<!-- Delete Modal CDN  -->
+
 <script>
-$(document).on('click', '.wishlist-btn', function(e) {
-    e.preventDefault();
-    const icon = $(this).find('i');
-    if (icon.hasClass('far')) {
-        icon.removeClass('far fa-heart').addClass('fas fa-heart text-danger');
-    } else {
-        icon.removeClass('fas fa-heart text-danger').addClass('far fa-heart');
-    }
-});
+    $(document).on('click', '.wishlist-btn', function (e) {
+        e.preventDefault();
+        const icon = $(this).find('i');
+        if (icon.hasClass('far')) {
+            icon.removeClass('far fa-heart').addClass('fas fa-heart text-danger');
+        } else {
+            icon.removeClass('fas fa-heart text-danger').addClass('far fa-heart');
+        }
+    });
 </script>
