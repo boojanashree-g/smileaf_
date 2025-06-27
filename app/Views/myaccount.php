@@ -97,7 +97,7 @@
                                                     <h3>My Addresses</h3>
                                                     <p>Here are your addresses. Want to add another? <a href="#"
                                                             class="btn btn-sm btn-outline-primary float-end"
-                                                            data-bs-toggle="modal" id="add-address">Add
+                                                            id="add-address">Add
                                                             Address</a></p>
 
                                                     <div class="row m-0">
@@ -215,8 +215,9 @@
                                                                 </div>
                                                             </div>
                                                             <div class="btn-wrapper">
-                                                                <button class="theme-btn-1 btn-effect-1 text-uppercase"
-                                                                    id="btn-account">Save Changes</button>
+                                                                <button
+                                                                    class="theme-btn-1 btn-effect-1 text-uppercase btn-account">Save
+                                                                    Changes</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -233,7 +234,7 @@
                             <div class="modal-dialog modal-md">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="addAddressModalLabel">Add New Address</h5>
+                                        <h5 class="modal-title">Add New Address</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
@@ -252,14 +253,18 @@
 
                                                 <div class="col-md-6 mb-3">
                                                     <label for="addState" class="form-label">State *</label>
-                                                    <select name="" id="">
-                                                        <option value="">r</option>
-                                                        <option value="">r</option>
+                                                    <select name="state_id" id="state_id">
+                                                        <?php for ($i = 0; $i < count($state); $i++) { ?>
+
+                                                            <option value="<?php echo $state[$i]['state_id'] ?>">
+                                                                <?php echo $state[$i]['state_title'] ?>
+                                                            </option>
+                                                        <?php } ?>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <label for="addCity" class="form-label">City *</label>
-                                                     <select name="" id="">
+                                                    <select name="" id="">
                                                         <option value="">r</option>
                                                         <option value="">r</option>
                                                     </select>
@@ -288,8 +293,8 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">Cancel</button>
-                                        <button type="button" class="theme-btn-1 btn-effect-1 text-uppercase"
-                                            onclick="saveAddress()">Save</button>
+                                        <button type="button"
+                                            class="theme-btn-1 btn-effect-1 text-uppercase address-save">Save</button>
                                     </div>
                                 </div>
                             </div>
@@ -452,13 +457,9 @@
     <!-- Main JS -->
     <script src="<?php echo base_url() ?>public/assets/js/main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
-    <script src="<?php echo base_url() ?>custom/js/myaccount.js"></script>
     <script src="<?php echo base_url() ?>custom/js/address.js"></script>
 
-
-
-
+    <script src="<?php echo base_url() ?>custom/js/myaccount.js"></script>
 
     <script>
         $("#btn-logout").click(function (e) {

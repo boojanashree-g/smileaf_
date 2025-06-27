@@ -9356,6 +9356,8 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 
 .nice-select .list {
   min-width: 100%;
+  max-height: 300px;
+  overflow-y: scroll;
 }
 
 .ltn__shop-options {

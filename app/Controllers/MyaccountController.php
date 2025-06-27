@@ -60,5 +60,27 @@ class MyaccountController extends BaseController
         }
     }
 
+    // Address Module  //
+
+    public function getDist()
+    {
+
+        // $csrf = $this->request->getHeader('X-CSRF-TOKEN')->getValue();
+
+        $db = \Config\Database::connect();
+        $stateID = $this->request->getPost('state_id');
+
+        $getData["response"] = $db->query("SELECT a.`state_title`, b.`dist_id`,b.`dist_name` FROM 
+        tbl_state AS a INNER JOIN tbl_district AS b 
+        ON a.state_id = b.state_id WHERE  a.`flag` = 1 AND b.state_id = $stateID;")->getResultArray();
+        $getData['code'] = 200;
+       
+        echo "<pre>";
+        print_r($getData['code'] );
+        die;
+
+        echo json_encode($getData);
+    }
+
 
 }

@@ -1,86 +1,42 @@
-$(document).ready(function () {
-  $("#add-address").click(function (e) {
-    e.preventDefault();
+// *************************** [Address Detail ] *************************************************************************
+$("#add-address").click(function () {
+  mode = "new";
+  $("#addAddressModal").modal("show");
 
-    $("#addAddressModal").modal("show");
+  $("#state_id").change(function () {
+    let state_id = $(this).val();
 
-    let isValid = true;
-    let errorMessage = "";
+    let token = localStorage.getItem("token");
 
-    const form = $("#account-form");
-
-    const username = form.find('input[name="username"]');
-    const number = form.find('input[name="number"]');
-    const email = form.find('input[name="email"]');
-
-    $("input").css("border-color", "#ccc");
-
-    if (!$.trim(username.val())) {
-      isValid = false;
-      username.css("border-color", "red");
-      errorMessage = "Please enter your name.";
-    } else if (!$.trim(number.val())) {
-      isValid = false;
-      number.css("border-color", "red");
-      errorMessage = "Please enter your mobile number.";
-    } else if (!isPhoneNumber($.trim(number.val()))) {
-      isValid = false;
-      number.css("border-color", "red");
-      errorMessage = "Please enter a valid 10-digit mobile number.";
-    } else if (!$.trim(email.val())) {
-      isValid = false;
-      email.css("border-color", "red");
-      errorMessage = "Please enter your email.";
-    } else if (!isValidEmail($.trim(email.val()))) {
-      isValid = false;
-      email.css("border-color", "red");
-      errorMessage = "Please enter a valid email address.";
-    } else {
-      insertAccount();
-    }
-
-    if (!isValid) {
-      showToast(errorMessage, "error");
-      return;
-    }
-  });
-
-  function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
-
-  function isPhoneNumber(phone_no) {
-    return /^\d{10}$/.test(phone_no);
-  }
-
-  // *************************** [Insert Account ] *************************************************************************
-
-  function insertAccount() {
-    var form = $("#account-form")[0];
-    data = new FormData(form);
+    alert(token);
+    
 
     $.ajax({
       type: "POST",
-      url: base_Url + "insert-account",
-      data: data,
+      url: base_Url + "getdist-data",
+      data: { state_id: state_id },
+      headers: { authorization: "Bearer " + "test" },
       dataType: "json",
-      processData: false,
-      contentType: false,
 
-      success: function (data) {
-        var resultData = data;
-
-        console.log(resultData);
-        if (resultData.code == 200) {
-          showToast(resultData.message, "success");
-        } else {
-          showToast(resultData.message, "error");
+      success: function (res) {
+        console.log(res["response"].length);
+       
+        var distDta = "";
+        for ($i = 0; $i < res["response"].length; $i++) {
+          distDta += `<option value="${res["response"][$i]["dist_id"]}">${res["response"][$i]["dist_name"]}</option>`;
         }
+        $("#dist_id").html(
+          `<option value=''> Select District </option>` + distDta
+        );
       },
-      error: function (xhr, status, error) {
-        howToast(error, "error");
+      error: function (error) {
+        let status = error.status;
+        if (status === 401) {
+          localStorage.removeItem("token");
+          window.location.href = base_Url;
+        }
+        console.log(error);
       },
     });
-  }
+  });
 });

@@ -46,24 +46,24 @@
                         <div class="row">
                             <div class="col-xl-12">
                                 <div class="card custom-card">
-
+                                    <div class="card-header d-grid  d-md-flex justify-content-md-end">
+                                        <a type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            id="add-customer">Add Customer</a>
+                                    </div>
                                     <div class="card-body">
                                         <div class="table-responsive">
                                             <table id="datatable" class="table table-bordered text-nowrap w-100">
                                                 <thead>
                                                     <tr>
                                                         <th>S.No</th>
-                                                        <th>Title</th>
-                                                        <th>Description (Small Text)</th>
-                                                        <th>Description</th>
-                                                        <th>Image</th>
-                                                        <th>Link</th>
+                                                        <th>User Name</th>
+                                                        <th>Mobile Number</th>
+                                                        <th>Email</th>
+                                                        <th>Status</th>
                                                         <th>Action</th>
-
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <!-- data -->
                                                 </tbody>
                                             </table>
                                         </div>
@@ -73,55 +73,46 @@
                         </div>
 
                         <!-- Add Modal -->
-                        <div class="modal fade" id="banner-modal" tabindex="-1" aria-hidden="true">
+                        <div class="modal fade" id="customer-modal" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
                                 <div class="modal-content">
                                     <div class="modal-body">
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                         <div class="text-center mb-6">
-                                            <h4 class="banner-title mb-2"></h4>
+                                            <h4 class="customer-title mb-2"></h4>
                                         </div>
-                                        <form id="banner-form" class="row g-6" onsubmit="return false">
-                                            <div class="col-12 col-md-12">
-                                                <label class="form-label" for="banner_title">Title</label>
-                                                <input type="text" id="banner_title" name="banner_title"
-                                                    class="form-control" placeholder="Title*" />
-                                                <span class="error text-danger banner_title mt-5"></span>
+                                        <form id="customer-form" class="row g-6" onsubmit="return false">
+                                            <div class="col-12 col-md-6">
+                                                <label class="form-label" for="customer_name">Name</label>
+                                                <input type="text" id="customer_name" name="customer_name"
+                                                    class="form-control" placeholder="Enter Name*" />
+                                                <span class="error text-danger customer_name mt-5"></span>
                                             </div>
 
                                             <div class="col-12 col-md-6">
-                                                <label class="form-label" for="banner_desc1">Description (Small
-                                                    Text)</label>
-                                                <input type="text" id="banner_desc1" name="banner_desc1"
-                                                    class="form-control" placeholder="Description (Small Text)*" />
-                                                <span class="error text-danger banner_desc1 mt-5"></span>
+                                                <label class="form-label" for="customer_mobile">Mobile Number</label>
+                                                <input type="text" id="customer_mobile" name="customer_mobile"
+                                                    class="form-control" placeholder="Mobile number*" />
+                                                <span class="error text-danger customer_mobile mt-5"></span>
                                             </div>
 
                                             <div class="col-12 col-md-6">
-                                                <label class="form-label" for="banner_desc2">Description</label>
-                                                <input type="text" id="banner_desc2" name="banner_desc2"
-                                                    class="form-control" placeholder="Description*" />
-                                                <span class="error text-danger banner_desc2 mt-5"></span>
+                                                <label for="customer_email" class="form-label">Email</label>
+                                                <input class="form-control" type="email" id="customer_email"
+                                                    name="customer_email" placeholder="Enter Email*">
+                                                <span class="error text-danger customer_email mt-5"></span>
                                             </div>
-
-                                            <div class="col-12 col-md-12">
-                                                <label for="banner_image" class="form-label">Banner Image</label>
-                                                <input class="form-control" type="file" id="banner_image"
-                                                    name="banner_image">
-                                                <img src="" id="banner_image_url" alt="image" width="130px"
-                                                    style="padding-top: 15px; display:none;">
-                                                <span class="error text-danger banner_image mt-5"></span>
-                                            </div>
-                                            <div class="col-12 col-md-12">
-                                                <label class="form-label" for="banner_link">Link</label>
-                                                <input type="text" id="banner_link" name="banner_link"
-                                                    class="form-control" placeholder="Link*" />
-                                                <span class="error text-danger banner_link mt-5"></span>
+                                            <div class="col-md-6 d-flex align-items-end">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="is_verified"
+                                                        name="is_verified" />
+                                                    <label class="form-check-label" for="is_verified">Mark as
+                                                        Verified</label>
+                                                </div>
                                             </div>
                                             <div class="col-12 text-end">
                                                 <a class="btn btn-primary text-white" id="btn-submit"></a>
-
                                             </div>
                                         </form>
                                     </div>
@@ -145,7 +136,7 @@
 
 
     <?php require "components/footer.php"; ?>
-    <script src="<?php echo base_url(); ?>public/admin/custom/js/banner.js"></script>
+    <script src="<?php echo base_url(); ?>public/admin/custom/js/customer.js"></script>
 
 
 </body>
