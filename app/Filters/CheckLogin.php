@@ -8,20 +8,24 @@ use CodeIgniter\Filters\FilterInterface;
 
 class CheckLogin implements FilterInterface
 {
+    protected $session;
+    public function __construct()
+    {
+        $this->db = \Config\Database::connect();
+        $this->session = \Config\Services::session();
+    }
+
     public function before(RequestInterface $request, $arguments = null)
     {
-        $session = session();
-        $otp_verify = $session->get('otp_verify');
-        $login_status = $session->get('loginStatus');
 
-            // echo "<prE>";
-            // print_r($otp_verify);
-            // print_r($login_status);
-            // die;
-
+        $otp_verify = $this->session->get('otp_verify');
+        $login_status = $this->session->get('loginStatus');
 
         if ($otp_verify == 'YES' && $login_status == 'YES') {
-            return redirect()->to('/');
+            return true;
+        }
+        else{
+             return redirect()->to('/');
         }
 
 

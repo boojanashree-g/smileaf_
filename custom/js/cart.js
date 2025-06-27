@@ -89,16 +89,17 @@ $(document).ready(function () {
       let gstValue = 0;
       if (gstPercent > 0 && !isNaN(amount)) {
         gstValue = (amount * gstPercent) / (100 + gstPercent);
-        gstValue = parseFloat(gstValue.toFixed(2));
+        let paise = parseFloat((gstValue % 1).toFixed(2)) * 100;
+        gstValue = paise < 50 ? Math.floor(gstValue) : Math.ceil(gstValue);
       }
 
       if (!isNaN(amount)) totalAmt += amount;
       if (!isNaN(gstValue)) totalGstValue += gstValue;
     });
 
-    totalAmt = parseInt(totalAmt.toFixed(2));
-    totalGstValue = parseInt(totalGstValue.toFixed(2));
-    subTotal = parseInt((totalAmt - totalGstValue).toFixed(2));
+    totalAmt = parseFloat(totalAmt.toFixed(2));
+    totalGstValue = parseFloat(totalGstValue.toFixed(2));
+    subTotal = (totalAmt - totalGstValue).toFixed(2);
     finalTotal = totalAmt + 100;
 
     // Display total
@@ -167,10 +168,9 @@ $(document).ready(function () {
 
         if (resData.code == 200) {
           showToast(resData.message, "success");
-          setTimeout(()=>
-          {
+          setTimeout(() => {
             window.location.reload();
-          },1000)
+          }, 1000);
         } else {
           showToast(resData.message, "error");
         }

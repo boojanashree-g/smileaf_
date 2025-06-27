@@ -11,7 +11,7 @@
         <!-- HEADER AREA END -->
 
         <!-- BREADCRUMB AREA START -->
-        <?php require("components/breadcrumbs.php")?>
+        <?php require("components/breadcrumbs.php") ?>
         <!-- BREADCRUMB AREA END -->
 
         <!-- WISHLIST AREA START -->
@@ -26,12 +26,12 @@
                                     <div class="step-number">1</div>
                                     LOGIN OR SIGNUP
                                 </div>
-                                <div class="step-content">
+                                <div class="step-content ">
                                     <div class="login-section">
                                         <div class="login-form">
                                             <div class="input-group">
                                                 <input type="text" class="input-field mb-2"
-                                                    placeholder="Enter Email/Mobile number" id="loginInput">
+                                                    placeholder="Enter Mobile number" id="loginInput">
                                                 <input type="text" class="input-field mb-0" placeholder="Enter otp"
                                                     id="otpInput">
                                             </div>
@@ -131,7 +131,7 @@
                                             <div class="form-row">
                                                 <div class="form-col">
                                                     <!-- <label for="city" class="form-label"> -->
-                                                        <h6>Town / City</h6>
+                                                    <h6>Town / City</h6>
                                                     <!-- </label> -->
                                                     <select id="city" name="city" class="input-field" required>
                                                         <option value="">Select City</option>
@@ -171,37 +171,46 @@
                             <h4 class="title-2">Cart Totals</h4>
                             <table class="table">
                                 <tbody>
-                                    <tr>
-                                        <td>Rounded Plates <strong>× 2</strong></td>
-                                        <td>₹298.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Rounded PlatesMix <strong>× 2</strong></td>
-                                        <td>₹170.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Rounded Plates <strong>× 2</strong></td>
-                                        <td>₹150.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Rounded Plates</td>
-                                        <td>₹15.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Rounded Plates</td>
-                                        <td>₹00.00</td>
-                                    </tr>
+                                    <?php foreach ($checkout_product as $product) { ?>
+                                        <tr>
+                                            <td class="checkout-product" data-price="<?= $product['offer_price'] ?>"
+                                                data-gst="<?= $product['gst'] ?>"
+                                                data-cartqty="<?= $product['cart_quantity'] ?>"
+                                                data-mainqty="<?= $product['variant_qty'] ?>"
+                                                data-cartid="<?= $product['cart_id'] ?>" data->
+                                                <?= htmlspecialchars(ucfirst($product['prod_name'])) ?><strong> ×
+                                                    <?= (int) $product['cart_quantity'] ?></strong>
+                                            </td>
+                                            <td class="cart_total_<?= $product['cart_id'] ?>">
+                                                ₹<?= number_format($product['final_prod_price'], 2) ?></td>
+                                        </tr>
+
+                                    <?php } ?>
+
+
                                     <tr>
                                         <td><strong>Sub Total</strong></td>
-                                        <td><strong>₹623.00</strong></td>
+                                        <td><strong class="order-subtotal">₹<?= number_format($subtotal, 2) ?></strong>
+                                        </td>
+
                                     </tr>
                                     <tr>
-                                        <td><strong>CGST</strong></td>
-                                        <td><strong>₹10.00</strong></td>
+                                        <td><strong>CGST(Includes)</strong></td>
+                                        <td><strong class="gst-td">₹<?= number_format($cgst, 2) ?></strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>SGST(Includes)</strong></td>
+                                        <td><strong class="sgst-td">₹<?= number_format($sgst, 2) ?></strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Shipping</strong></td>
+                                        <td><strong>₹<?= number_format($delivery_charge, 2) ?></strong></td>
                                     </tr>
                                     <tr>
                                         <td><strong> Total</strong></td>
-                                        <td><strong>₹633.00</strong></td>
+                                        <td><strong
+                                                class="order_total_amt">₹<?= number_format($final_total, 2) ?></strong>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -225,57 +234,54 @@
     <script src="<?php echo base_url() ?>public/assets/js/plugins.js"></script>
     <!-- Main JS -->
     <script src="<?php echo base_url() ?>public/assets/js/main.js"></script>
+    <!-- <script src="<?php echo base_url() ?>custom/js/checkout.js"></script> -->
+
 
     <script>
-    function proceedToNext() {
-        const input = document.getElementById('loginInput');
-        if (input.value.trim() === '') {
-            alert('Please enter your email or mobile number');
-            return;
+        function proceedToNext() {
+            const inputVal = $('#loginInput').val().trim();
+            if (inputVal === '') {
+                alert('Please enter your email or mobile number');
+                return;
+            }
+
+            // Activate delivery section
+            $('#loginSection').addClass('inactive-section');
+            const $deliverySection = $('#deliverySection');
+            $deliverySection.removeClass('inactive-section');
+            $deliverySection.find('.step-header').removeClass('inactive-header').css('color', 'white');
+            $deliverySection.find('.inactive-content').hide();
+
+            // Show address form
+            toggleAddressForm();
         }
-        // Activate delivery section
-        const deliverySection = document.getElementById('deliverySection');
-        const loginSection = document.getElementById('loginSection');
-        loginSection.classList.add('inactive-section');
-        deliverySection.classList.remove('inactive-section');
-        deliverySection.querySelector('.step-header').classList.remove('inactive-header');
-        deliverySection.querySelector('.step-header').style.color = 'white';
-        deliverySection.querySelector('.inactive-content').style.display = 'none';
 
-        // Show address form
-        toggleAddressForm();
-    }
+        function toggleAddressForm() {
+            $('#addressForm').addClass('active');
+        }
 
-    function toggleAddressForm() {
-        const addressForm = document.getElementById('addressForm');
-        addressForm.classList.add('active');
+        function togglePersonalAddress() {
+            $('#personalDetaila').show();
+        }
 
-    }
+        function proceedToOrderSummary() {
+            // Activate order summary section
+            const $orderSection = $('#orderSection');
+            $orderSection.removeClass('inactive-section');
+            $orderSection.find('.step-header')
+                .removeClass('inactive-header')
+                .css({ background: '#4285f4', color: 'white' });
+            $orderSection.find('.inactive-content').hide();
 
-    function togglePersonalAddress() {
-        const personalDetails = document.getElementById("personalDetaila");
-        personalDetails.style.display = "block";
-    }
+            // Activate payment section
+            const $paymentSection = $('#paymentSection');
+            $paymentSection.removeClass('inactive-section');
+            $paymentSection.find('.step-header')
+                .removeClass('inactive-header')
+                .css({ background: '#4285f4', color: 'white' });
+            $paymentSection.find('.inactive-content').hide();
+        }
 
-
-
-    function proceedToOrderSummary() {
-        // Activate order summary section
-        const orderSection = document.getElementById('orderSection');
-        orderSection.classList.remove('inactive-section');
-        orderSection.querySelector('.step-header').classList.remove('inactive-header');
-        orderSection.querySelector('.step-header').style.background = '#4285f4';
-        orderSection.querySelector('.step-header').style.color = 'white';
-        orderSection.querySelector('.inactive-content').style.display = 'none';
-
-        // Activate payment section
-        const paymentSection = document.getElementById('paymentSection');
-        paymentSection.classList.remove('inactive-section');
-        paymentSection.querySelector('.step-header').classList.remove('inactive-header');
-        paymentSection.querySelector('.step-header').style.background = '#4285f4';
-        paymentSection.querySelector('.step-header').style.color = 'white';
-        paymentSection.querySelector('.inactive-content').style.display = 'none';
-    }
     </script>
 
 

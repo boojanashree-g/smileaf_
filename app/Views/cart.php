@@ -65,7 +65,8 @@
                                                     <td>
                                                         <h4>Pack of <?= $cart['cart_pack_qty'] ?></h4>
                                                     </td>
-                                                    <td class="cart-product-price">₹<?= $cart['cart_prod_price'] ?></a></td>
+                                                   <td class="cart-product-price">₹<?= number_format((float)$cart['cart_prod_price'], 2) ?></td>
+
                                                     <td class="cart-product-quantity">
                                                         <div class="cart-plus-minus">
                                                             <!--  -  -->
@@ -112,11 +113,11 @@
                                 <table class="table">
                                     <tbody>
                                         <tr>
-                                            <td>Subtotal</td>
+                                            <td>Sub total</td>
                                             <td class="order-subtotal">-</td>
                                         </tr>
                                         <tr>
-                                            <td>GST(Includes)</td>
+                                            <td>CGST(Includes)</td>
                                             <td class="gst-td">-</td>
                                         </tr>
                                         <tr>
