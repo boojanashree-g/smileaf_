@@ -34,6 +34,10 @@ $routes->get('logout', 'SigninController::logout');
 // Myaccount 
 $routes->post('insert-account', 'MyaccountController::insertAccount');
 $routes->post('getdist-data', 'MyaccountController::getDist', ['filter' => 'AuthFilter']);
+$routes->post('insert-address', 'MyaccountController::insertAddress', ['filter' => 'AuthFilter']);
+$routes->get('get-address', 'MyaccountController::getAddress');
+$routes->post('update-address', 'MyaccountController::updateAddress', ['filter' => 'AuthFilter']);
+$routes->post('delete-address', 'MyaccountController::deleteAddress', ['filter' => 'AuthFilter']);
 
 
 // ProductList

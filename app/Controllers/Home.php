@@ -42,7 +42,7 @@ class Home extends BaseController
             ->get()
             ->getResultArray();
 
-      
+
 
         return view('index', $data);
     }
@@ -540,12 +540,33 @@ class Home extends BaseController
     }
     public function myaccount()
     {
+
+
         $res['menuData'] = $this->getMenuData();
+
+        $res = array_merge($res['menuData'], [
+
+            'page_title' => 'Wishlist',
+            'breadcrumb_items' => [
+                ['label' => 'Home', 'url' => base_url()],
+                ['label' => 'Wishlist']
+            ],
+
+        ]);
+
         $userID = $this->session->get("user_id");
 
 
         $res['userData'] = $this->db->query("SELECT * FROM `tbl_users` WHERE `flag` = 1 AND `user_id` = $userID")->getResultArray();
         $res['state'] = $this->db->query("SELECT `state_id`,`state_title` FROM `tbl_state` WHERE `flag` =1")->getResultArray();
+
+        $query = "SELECT a.*, b.state_title, c.dist_name 
+        FROM tbl_user_address AS a 
+        INNER JOIN tbl_state AS b ON a.state_id = b.state_id
+        INNER JOIN tbl_district AS c ON a.dist_id = c.dist_id
+        WHERE a.user_id = $userID  AND a.flag = 1;";
+        $res['address'] = $this->db->query($query, [$userID])->getResultArray();
+
 
         return view('myaccount', $res);
     }

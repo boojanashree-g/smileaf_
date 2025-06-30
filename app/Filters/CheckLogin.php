@@ -21,7 +21,10 @@ class CheckLogin implements FilterInterface
         $otp_verify = $this->session->get('otp_verify');
         $login_status = $this->session->get('loginStatus');
 
+       
+
         if ($otp_verify == 'YES' && $login_status == 'YES') {
+            
             return true;
         }
         else{

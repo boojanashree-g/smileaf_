@@ -27,6 +27,54 @@
                                     LOGIN OR SIGNUP
                                 </div>
                                 <div class="step-content ">
+                                       <?php
+                                        $otp_verify = session()->get('otp_verify');
+                                        $login_status = session()->get('loginStatus');
+
+                                        if ($otp_verify === 'NO' && $login_status === 'NO') { 
+                                        
+                                        $otpClass = "d-none" ?>
+                                            
+                                            <div class="login-section">
+                                        <div class="login-form">
+                                            <div class="input-group">
+                                                <input type="number" id="number" placeholder="Mobile Number*" name="number">
+                                                <input type="text" class="input-field mb-0 otp-field <?=  $otpClass ?>" placeholder="Enter otp"
+                                                    id="otpInput">
+                                            </div>
+                                            <div class="terms-text">
+                                                By continuing, you agree to Smileaf's <a
+                                                    href="<?php echo base_url('terms-and-conditions') ?>">Terms of
+                                                    Use</a> and
+                                                <a href="<?php echo base_url('privacy-policy') ?>">Privacy Policy</a>.
+                                            </div>
+                                            <button class="continue-btn" id="continue-login" >CONTINUE</button>
+                                        </div>
+                                        <div class="advantages">
+                                            <h4><strong>Perks of Logging In Securely</strong></h4>
+                                            <div class="advantage-item">
+                                                <span>Unlock More with Your Login</span>
+                                            </div>
+                                            <div class="advantage-item">
+                                                <span>Save your address and payment details securely.</span>
+                                            </div>
+                                            <div class="advantage-item">
+                                                <span>Keep track of every purchase in one place.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <?php }
+                                        ?>
+
+                                   
+                                </div>
+                            </div>
+                            <div class="step-section" id="detailSection">
+                                <div class="step-header">
+                                    <div class="step-number">2</div>
+                                    LOGIN OR SIGNUP
+                                </div>
+                                <div class="step-content ">
                                     <div class="login-section">
                                         <div class="login-form">
                                             <div class="input-group">
@@ -41,7 +89,7 @@
                                                     Use</a> and
                                                 <a href="<?php echo base_url('privacy-policy') ?>">Privacy Policy</a>.
                                             </div>
-                                            <button class="continue-btn" onclick="proceedToNext()">CONTINUE</button>
+                                            <button class="continue-btn-" >CONTINUE</button>
                                         </div>
                                         <div class="advantages">
                                             <h4><strong>Perks of Logging In Securely</strong></h4>
@@ -62,7 +110,7 @@
                             <!-- Delivery Address Section -->
                             <div class="step-section inactive-section" id="deliverySection">
                                 <div class="step-header inactive-header">
-                                    <div class="step-number">2</div>
+                                    <div class="step-number">3</div>
                                     DELIVERY ADDRESS
                                 </div>
                                 <div class="inactive-content">
@@ -234,7 +282,7 @@
     <script src="<?php echo base_url() ?>public/assets/js/plugins.js"></script>
     <!-- Main JS -->
     <script src="<?php echo base_url() ?>public/assets/js/main.js"></script>
-    <!-- <script src="<?php echo base_url() ?>custom/js/checkout.js"></script> -->
+    <script src="<?php echo base_url() ?>custom/js/checkout.js"></script>
 
 
     <script>
