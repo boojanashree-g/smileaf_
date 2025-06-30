@@ -39,6 +39,8 @@ $routes->get('get-address', 'MyaccountController::getAddress');
 $routes->post('update-address', 'MyaccountController::updateAddress', ['filter' => 'AuthFilter']);
 $routes->post('delete-address', 'MyaccountController::deleteAddress', ['filter' => 'AuthFilter']);
 
+// Checkout userdetails
+$routes->post('save-userdetails', 'MyaccountController::insertUserDetails', ['filter' => 'AuthFilter']);
 
 // ProductList
 $routes->post('quick-view-details', 'QuickViewController::quickViewDetails');

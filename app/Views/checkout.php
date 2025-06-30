@@ -2,6 +2,15 @@
 <html class="no-js" lang="zxx">
 
 <?php require("components/head.php") ?>
+<style>
+    .otp-resend {
+        color: rgb(12, 91, 28)
+    }
+
+    .checkout-add:checked :disabled {
+        accent-color: red !important;
+}
+</style>
 
 <body class="checkout_page">
     <div class="body-wrapper">
@@ -27,83 +36,95 @@
                                     LOGIN OR SIGNUP
                                 </div>
                                 <div class="step-content ">
-                                       <?php
-                                        $otp_verify = session()->get('otp_verify');
-                                        $login_status = session()->get('loginStatus');
+                                    <?php
+                                    $otp_verify = session()->get('otp_verify');
+                                    $login_status = session()->get('loginStatus');
 
-                                        if ($otp_verify === 'NO' && $login_status === 'NO') { 
-                                        
+                                    if ($otp_verify === 'NO' && $login_status === 'NO') {
+
                                         $otpClass = "d-none" ?>
-                                            
-                                            <div class="login-section">
-                                        <div class="login-form">
-                                            <div class="input-group">
-                                                <input type="number" id="number" placeholder="Mobile Number*" name="number">
-                                                <input type="text" class="input-field mb-0 otp-field <?=  $otpClass ?>" placeholder="Enter otp"
-                                                    id="otpInput">
-                                            </div>
-                                            <div class="terms-text">
-                                                By continuing, you agree to Smileaf's <a
-                                                    href="<?php echo base_url('terms-and-conditions') ?>">Terms of
-                                                    Use</a> and
-                                                <a href="<?php echo base_url('privacy-policy') ?>">Privacy Policy</a>.
-                                            </div>
-                                            <button class="continue-btn" id="continue-login" >CONTINUE</button>
-                                        </div>
-                                        <div class="advantages">
-                                            <h4><strong>Perks of Logging In Securely</strong></h4>
-                                            <div class="advantage-item">
-                                                <span>Unlock More with Your Login</span>
-                                            </div>
-                                            <div class="advantage-item">
-                                                <span>Save your address and payment details securely.</span>
-                                            </div>
-                                            <div class="advantage-item">
-                                                <span>Keep track of every purchase in one place.</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                        <?php }
-                                        ?>
 
-                                   
+                                        <div class="login-section">
+                                            <div class="login-form">
+                                                <div class="input-group">
+                                                    <input type="number" id="number" placeholder="Mobile Number*"
+                                                        name="number">
+                                                    <input type="text" class="input-field mb-0 otp-field <?= $otpClass ?>"
+                                                        placeholder="Enter otp" id="otpInput" name="otp"
+                                                        autocomplete="false">
+                                                    <span class="otp-text <?= $otpClass ?>">The OTP is valid for 1 minute
+                                                        only.</span>
+                                                    <span class="otp-resend <?= $otpClass ?>">
+                                                        <button class="resend-btn" id="resend-otp">Resend Button</button>
+                                                    </span>
+                                                </div>
+                                                <div class="terms-text">
+                                                    By continuing, you agree to Smileaf's <a
+                                                        href="<?php echo base_url('terms-and-conditions') ?>">Terms of
+                                                        Use</a> and
+                                                    <a href="<?php echo base_url('privacy-policy') ?>">Privacy Policy</a>.
+                                                </div>
+                                                <button class="continue-btn" id="continue-login">CONTINUE</button>
+                                            </div>
+                                            <div class="advantages">
+                                                <h4><strong>Perks of Logging In Securely</strong></h4>
+                                                <div class="advantage-item">
+                                                    <span>Unlock More with Your Login</span>
+                                                </div>
+                                                <div class="advantage-item">
+                                                    <span>Save your address and payment details securely.</span>
+                                                </div>
+                                                <div class="advantage-item">
+                                                    <span>Keep track of every purchase in one place.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php }
+                                    ?>
+
+
                                 </div>
                             </div>
                             <div class="step-section" id="detailSection">
                                 <div class="step-header">
                                     <div class="step-number">2</div>
-                                    LOGIN OR SIGNUP
+                                    User Details
                                 </div>
                                 <div class="step-content ">
-                                    <div class="login-section">
-                                        <div class="login-form">
-                                            <div class="input-group">
-                                                <input type="text" class="input-field mb-2"
-                                                    placeholder="Enter Mobile number" id="loginInput">
-                                                <input type="text" class="input-field mb-0" placeholder="Enter otp"
-                                                    id="otpInput">
+                                    <?php
+                                    if (count($user_details) >= 0) {
+                                        ?>
+                                        <div class="login-section">
+                                            <div class="login-form">
+                                                <div class="input-group">
+                                                    <input type="text" class="input-field mb-2" placeholder="Name"
+                                                        id="username" name="username"
+                                                        value="<?= $user_details[0]['username'] ?>">
+                                                    <input type="email" class="input-field mb-0" placeholder="Enter Email"
+                                                        id="email" name="email" value="<?= $user_details[0]['email'] ?>">
+                                                </div>
+                                                <div class="terms-text">
+                                                    By continuing, you agree to Smileaf's <a
+                                                        href="<?php echo base_url('terms-and-conditions') ?>">Terms of
+                                                        Use</a> and
+                                                    <a href="<?php echo base_url('privacy-policy') ?>">Privacy Policy</a>.
+                                                </div>
+                                                <button class="continue-btn" id="continue-userdetail">CONTINUE</button>
                                             </div>
-                                            <div class="terms-text">
-                                                By continuing, you agree to Smileaf's <a
-                                                    href="<?php echo base_url('terms-and-conditions') ?>">Terms of
-                                                    Use</a> and
-                                                <a href="<?php echo base_url('privacy-policy') ?>">Privacy Policy</a>.
+                                            <div class="advantages">
+                                                <h4><strong>Perks of Logging In Securely</strong></h4>
+                                                <div class="advantage-item">
+                                                    <span>Unlock More with Your Login</span>
+                                                </div>
+                                                <div class="advantage-item">
+                                                    <span>Save your address and payment details securely.</span>
+                                                </div>
+                                                <div class="advantage-item">
+                                                    <span>Keep track of every purchase in one place.</span>
+                                                </div>
                                             </div>
-                                            <button class="continue-btn-" >CONTINUE</button>
                                         </div>
-                                        <div class="advantages">
-                                            <h4><strong>Perks of Logging In Securely</strong></h4>
-                                            <div class="advantage-item">
-                                                <span>Unlock More with Your Login</span>
-                                            </div>
-                                            <div class="advantage-item">
-                                                <span>Save your address and payment details securely.</span>
-                                            </div>
-                                            <div class="advantage-item">
-                                                <span>Keep track of every purchase in one place.</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <?php } ?>
                                 </div>
                             </div>
 
@@ -119,23 +140,31 @@
                                 <div class="step-content address-form" id="addressForm">
                                     <div class="address-content mb-5">
                                         <!-- Existing Address -->
-                                        <div class="address-card" id="existing-address">
-                                            <div class="address-card-head">
-                                                <div class="address-header-info">
-                                                    <input type="radio">
-                                                    <div class="address-name-type">
-                                                        <span class="address-name">Boo</span>
-                                                        <span class="address-phone">8754342698</span>
+
+                                        <?php foreach ($address as $i => $add) { ?>
+                                            <div class="address-card" id="">
+                                                <div class="address-card-head">
+                                                    <div class="address-header-info">
+                                                        <input type="radio"class="checkout-add text-red" <?php $default = $add['default_addr'];
+                                                        echo $default == 1 ? "checked" : "" ?> disabled>
+                                                        <div class="address-name-type">
+                                                            <span class="address-name"><?= $add['username'] ?></span>
+                                                            <span class="address-phone"><?= $add['number'] ?></span>
+                                                        </div>
                                                     </div>
+                                                    <div class="address-edit"><button>Change</button></div>
                                                 </div>
-                                                <div class="address-edit"><button>Change</button></div>
+                                                <div class="address-text">
+                                                    <p class="mb-2"><?= $add['email'] ?></p>
+                                                    <?= $add['address'] ?> , <br>
+                                                    <?= $add['landmark'] ?> , <?= $add['city'] ?><br>
+                                                    <?= $add['state_title'] ?> ,<?= $add['dist_name'] ?>,<br>
+                                                    <?= $add['pincode'] ?>
+                                                </div>
                                             </div>
-                                            <div class="address-text">
-                                                <p class="mb-2">boojanashree20@gmail.com</p>
-                                                Rajalakshmi Sai Complex Technology park in Coimbatore, Tamil Nadu,
-                                                Saravanampatti, Coimbatore, Tamil Nadu - 641035
-                                            </div>
-                                        </div>
+                                        <?php } ?>
+
+
 
                                         <!-- Add New Address Section -->
                                         <div class="add-address">
