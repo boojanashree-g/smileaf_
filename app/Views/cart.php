@@ -1,15 +1,43 @@
 <!doctype html>
 <html class="no-js" lang="zxx">
 <?php require("components/head.php") ?>
+<style>
+    
+.card {
+    border: 0;
+    display:flex;
+    align-items:center;
+}
 
+.card .card-header {
+    background-color:  unset;
+    border-bottom:  unset ;
+    padding: 24px;
+    border-bottom: unset ;
+    border-top-left-radius:  unset ;
+    border-top-right-radius:  unset ;
+}
+
+.card-header:first-child {
+    border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
+}
+
+.btn-primary, .btn-primary.disabled, .btn-primary:disabled {
+    background-color: #c62931;
+    border-color: #d3d3d3;
+    font-weight: 500;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 30px;
+    width: auto;
+    max-width: max-content;
+    margin: 0 !important;
+}
+</style>
 <body>
-    <!--[if lte IE 9]>
-        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-    <![endif]-->
 
-    <!-- Add your site or application content here -->
-
-    <!-- Body main wrapper start -->
     <div class="body-wrapper">
 
         <!-- HEADER AREA START (header-5) -->
@@ -21,28 +49,32 @@
         <!-- BREADCRUMB AREA END -->
 
         <!-- SHOPING CART AREA START -->
-        <div class="liton__shoping-cart-area mb-120">
+        <div class="liton__shoping-cart-area ">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="shoping-cart-inner">
                             <div class="shoping-cart-table table-responsive">
                                 <table class="table">
-                                    <!-- <thead>
-                                    <th class="cart-product-remove">Remove</th>
-                                    <th class="cart-product-image">Image</th>
-                                    <th class="cart-product-info">Product</th>
-                                    <th class="cart-product-price">Price</th>
-                                    <th class="cart-product-quantity">Quantity</th>
-                                    <th class="cart-product-subtotal">Subtotal</th>
-                                </thead> -->
                                     <tbody>
-
                                         <?php
                                         if ($cart_count <= 0) {
-
                                             $shoppingTotalClass = "d-none" ?>
-                                            <h3>Your cart is empty !!!</h3>
+                                            <div class="container-fluid ">
+                                                <div class="row">                                                
+                                                    <div class="col-md-12">                                                    
+                                                        <div class="card">
+                                                            <div class="card-body cart">
+                                                                <div class="col-sm-12 empty-cart-cls text-center">
+                                                                    <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3">
+                                                                    <h3><strong>Your Cart is Empty</strong></h3>
+                                                                    <a href="#" class="btn btn-primary cart-btn-transform m-3" data-abc="true"><i class="icon-left-arrow pe-2"></i>continue shopping</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>                                                
+                                                </div>                                                
+                                            </div>
                                         <?php } else {
                                             $shoppingTotalClass = "";
                                             foreach ($cart_product as $cart) {

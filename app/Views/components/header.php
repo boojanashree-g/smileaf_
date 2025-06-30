@@ -103,7 +103,7 @@
                                         ?>
 
                                         <?php if ($hasChildren): ?>
-                                            <li class="menu-icon">
+                                        <li class="menu-icon">
                                                 <a href="<?= $menuSlug ?>"><?= esc($menu['menu_name']) ?> <span
                                                         class="dropdown-arrow">▼</span></a>
                                                 <ul class="sub-menu">
