@@ -36,6 +36,7 @@ class SigninController extends BaseController
         $userQry = "SELECT * FROM tbl_users WHERE number = ? AND flag = 1;";
         $user = $this->db->query($userQry, [$number])->getRow();
 
+
         $old_session_userid = $this->session->get('user_id');
 
         if ($user && $user->is_verfied == 1) {
@@ -55,8 +56,10 @@ class SigninController extends BaseController
                     ];
                     $this->session->set($sessionData);
 
+
+
                     $response['code'] = 200;
-                    $response['message'] = 'OTP successfully';
+                    $response['message'] = 'OTP sent  successfully';
                 } else {
                     $response['code'] = 400;
                     $response['message'] = 'OTP sent failed!';
@@ -79,7 +82,11 @@ class SigninController extends BaseController
                         'old_userid' => $old_session_userid,
                         'type' => 'SMS'
                     ];
+
+
                     $this->session->set($sessionData);
+
+
                     $response['code'] = 200;
                     $response['message'] = 'OTP successfully';
                 } else {
@@ -108,7 +115,7 @@ class SigninController extends BaseController
 
                 if ($lastInsertID) {
                     $sessionData = [
-                        'user_id' => $oldUserID,
+                        'user_id' => $lastInsertID,
                         'old_userid' => $old_session_userid,
                         'type' => 'SMS'
                     ];
@@ -156,6 +163,7 @@ class SigninController extends BaseController
                 'code' => 400,
                 'status' => 'failure',
                 'message' => 'OTP has expired. Please request a new one.',
+                'checkoutcode' => 403,
                 'token' => null
             ]);
         }

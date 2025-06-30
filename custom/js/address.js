@@ -17,7 +17,6 @@ $(document).ready(function () {
     $(".address-title").html("Add Address");
 
     $("#state_id").change(function () {
-      alert(mode);
       let state_id = $(this).val();
       let token = localStorage.getItem("token");
 

@@ -46,10 +46,7 @@ $(document).ready(function () {
     }
   });
 
-  function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
+ 
 
   function isPhoneNumber(phone_no) {
     var pattern = /^\d{10}$/;

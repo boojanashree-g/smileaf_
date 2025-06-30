@@ -156,10 +156,10 @@ class Home extends BaseController
     public function checkout()
     {
         $res = array_merge($this->getMenuData(), [
-            'page_title' => 'checkout',
+            'page_title' => 'Checkout',
             'breadcrumb_items' => [
                 ['label' => 'Home', 'url' => base_url()],
-                ['label' => 'checkout']
+                ['label' => 'Checkout']
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
@@ -264,6 +264,20 @@ class Home extends BaseController
         $res['subtotal'] = $subTotal;
         $res['delivery_charge'] = $deliveryCharge;
         $res['final_total'] = $finalTotal;
+
+        $userID = session()->get("user_id");
+        $userqry = "SELECT * FROM `tbl_users` WHERE `flag` = 1 AND `user_id` = ?  AND `is_verified` = 1";
+        $res['user_details'] = $this->db->query($userqry, [$userID])->getResultArray();
+
+
+        // Addres Details
+        $query = "SELECT a.*, b.state_title, c.dist_name  , d.`user_id`,d.`username`,d.`number`,d.`email`
+        FROM tbl_user_address AS a 
+        INNER JOIN tbl_state AS b ON a.state_id = b.state_id
+        INNER JOIN tbl_district AS c ON a.dist_id = c.dist_id
+        INNER JOIN tbl_users AS d ON d.user_id = a.user_id
+        WHERE a.user_id = $userID  AND a.flag = 1;";
+        $res['address'] = $this->db->query($query, [$userID])->getResultArray();
 
         return view('checkout', $res);
     }
@@ -541,7 +555,6 @@ class Home extends BaseController
     public function myaccount()
     {
 
-
         $res['menuData'] = $this->getMenuData();
 
         $res = array_merge($res['menuData'], [
@@ -592,14 +605,15 @@ class Home extends BaseController
         $data = $this->session->get();
 
 
-        $data = [
+        $menuData = $this->getMenuData();
+        $data = array_merge($menuData, [
             'page_title' => 'Login / Signup',
             'breadcrumb_items' => [
                 ['label' => 'Home', 'url' => base_url()],
                 ['label' => 'Login / Signup']
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
-        ];
+        ]);
         $this->session->set('callback_url', previous_url());
 
         return view('signin', $data);

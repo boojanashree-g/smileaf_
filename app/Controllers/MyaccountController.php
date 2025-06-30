@@ -217,4 +217,32 @@ class MyaccountController extends BaseController
         }
         echo json_encode($result);
     }
+
+    public function insertUserDetails()
+    {
+        $UserModel = new UserModel;
+        $request = $this->request;
+        $userID = $this->session->get('user_id');
+
+        $userData = [
+            'username' => $request->getPost('username'),
+            'email' => $request->getPost('email'),
+        ];
+
+        $UserModel->update($userID, $userData);
+
+        $affectedRows = $UserModel->db->affectedRows();
+
+        if ($affectedRows > 0) {
+            return $this->response->setJSON([
+                'code' => 200,
+                'message' => 'Details Added successfully.'
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'code' => 400,
+                'message' => 'No changes were made.'
+            ]);
+        }
+    }
 }
