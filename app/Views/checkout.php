@@ -7,9 +7,6 @@
         color: rgb(12, 91, 28)
     }
 
-    .checkout-add:checked :disabled {
-        accent-color: red !important;
-}
 </style>
 
 <body class="checkout_page">
@@ -91,40 +88,38 @@
                                     User Details
                                 </div>
                                 <div class="step-content ">
-                                    <?php
-                                    if (count($user_details) >= 0) {
-                                        ?>
-                                        <div class="login-section">
-                                            <div class="login-form">
-                                                <div class="input-group">
-                                                    <input type="text" class="input-field mb-2" placeholder="Name"
-                                                        id="username" name="username"
-                                                        value="<?= $user_details[0]['username'] ?>">
-                                                    <input type="email" class="input-field mb-0" placeholder="Enter Email"
-                                                        id="email" name="email" value="<?= $user_details[0]['email'] ?>">
-                                                </div>
-                                                <div class="terms-text">
-                                                    By continuing, you agree to Smileaf's <a
-                                                        href="<?php echo base_url('terms-and-conditions') ?>">Terms of
-                                                        Use</a> and
-                                                    <a href="<?php echo base_url('privacy-policy') ?>">Privacy Policy</a>.
-                                                </div>
-                                                <button class="continue-btn" id="continue-userdetail">CONTINUE</button>
+
+                                    <div class="login-section">
+                                        <div class="login-form">
+                                            <div class="input-group">
+                                                <input type="text" class="input-field mb-2" placeholder="Name"
+                                                    id="username" name="username"
+                                                    value="<?= $user_details[0]['username'] ?>">
+                                                <input type="email" class="input-field mb-0" placeholder="Enter Email"
+                                                    id="email" name="email" value="<?= $user_details[0]['email'] ?>">
                                             </div>
-                                            <div class="advantages">
-                                                <h4><strong>Perks of Logging In Securely</strong></h4>
-                                                <div class="advantage-item">
-                                                    <span>Unlock More with Your Login</span>
-                                                </div>
-                                                <div class="advantage-item">
-                                                    <span>Save your address and payment details securely.</span>
-                                                </div>
-                                                <div class="advantage-item">
-                                                    <span>Keep track of every purchase in one place.</span>
-                                                </div>
+                                            <div class="terms-text">
+                                                By continuing, you agree to Smileaf's <a
+                                                    href="<?php echo base_url('terms-and-conditions') ?>">Terms of
+                                                    Use</a> and
+                                                <a href="<?php echo base_url('privacy-policy') ?>">Privacy Policy</a>.
+                                            </div>
+                                            <button class="continue-btn" id="continue-userdetail">CONTINUE</button>
+                                        </div>
+                                        <div class="advantages">
+                                            <h4><strong>Perks of Logging In Securely</strong></h4>
+                                            <div class="advantage-item">
+                                                <span>Unlock More with Your Login</span>
+                                            </div>
+                                            <div class="advantage-item">
+                                                <span>Save your address and payment details securely.</span>
+                                            </div>
+                                            <div class="advantage-item">
+                                                <span>Keep track of every purchase in one place.</span>
                                             </div>
                                         </div>
-                                    <?php } ?>
+                                    </div>
+
                                 </div>
                             </div>
 
@@ -140,31 +135,39 @@
                                 <div class="step-content address-form" id="addressForm">
                                     <div class="address-content mb-5">
                                         <!-- Existing Address -->
+                                        <?php
+                                        $otp_verify = session()->get('otp_verify');
+                                        $login_status = session()->get('loginStatus');
 
-                                        <?php foreach ($address as $i => $add) { ?>
-                                            <div class="address-card" id="">
-                                                <div class="address-card-head">
-                                                    <div class="address-header-info">
-                                                        <input type="radio"class="checkout-add text-red" <?php $default = $add['default_addr'];
-                                                        echo $default == 1 ? "checked" : "" ?> disabled>
-                                                        <div class="address-name-type">
-                                                            <span class="address-name"><?= $add['username'] ?></span>
-                                                            <span class="address-phone"><?= $add['number'] ?></span>
+                                        if ($otp_verify === 'YES' && $login_status === 'YES') { ?>
+                                            <?php foreach ($address as $i => $add) { ?>
+                                                <div class="address-card" id="">
+                                                    <div class="address-card-head">
+                                                        <div class="address-header-info">
+                                                            <input type="radio" data-addid="<?= $add['add_id'] ?>" class="checkout-add text-red default_address" <?php $default = $add['default_addr'];
+                                                            echo $default == 1 ? "checked" : "" ?> >
+                                                            <div class="address-name-type">
+                                                                <span class="address-name"><?= $add['username'] ?></span>
+                                                                <span class="address-phone"><?= $add['number'] ?></span>
+                                                            </div>
                                                         </div>
+                                                        <div class="address-edit"><button>Change</button>
+                                                            <button data-addid="<?= $add['add_id'] ?>"
+                                                                class="address-delete">Delete</button>
+                                                        </div>
+
                                                     </div>
-                                                    <div class="address-edit"><button>Change</button></div>
+                                                    <div class="address-text">
+                                                        <p class="mb-2"><?= $add['email'] ?></p>
+                                                        <?= $add['address'] ?> , <br>
+                                                        <?= $add['landmark'] ?> , <?= $add['city'] ?><br>
+                                                        <?= $add['state_title'] ?> ,<?= $add['dist_name'] ?>,<br>
+                                                        <?= $add['pincode'] ?>
+                                                    </div>
                                                 </div>
-                                                <div class="address-text">
-                                                    <p class="mb-2"><?= $add['email'] ?></p>
-                                                    <?= $add['address'] ?> , <br>
-                                                    <?= $add['landmark'] ?> , <?= $add['city'] ?><br>
-                                                    <?= $add['state_title'] ?> ,<?= $add['dist_name'] ?>,<br>
-                                                    <?= $add['pincode'] ?>
-                                                </div>
-                                            </div>
-                                        <?php } ?>
-
-
+                                            <?php } ?>
+                                        <?php }
+                                        ?>
 
                                         <!-- Add New Address Section -->
                                         <div class="add-address">
@@ -176,66 +179,78 @@
                                     </div>
                                     <div id="personalDetaila" style="display: none;">
                                         <div class="form-section">
-                                            <h6>Personal Information</h6>
-                                            <div class="form-row">
-                                                <div class="form-col">
-                                                    <input type="text" class="input-field" placeholder="First name">
-                                                </div>
-                                                <div class="form-col">
-                                                    <input type="email" class="input-field" placeholder="Email address">
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="form-col">
-                                                    <input type="text" class="input-field" placeholder="Phone number">
-                                                </div>
-                                                <div class="form-col"></div>
-                                            </div>
-                                        </div>
 
-                                        <div class="form-section">
-                                            <h6>Address</h6>
-                                            <div class="form-row">
-                                                <div class="form-col">
-                                                    <input type="text" class="input-field"
-                                                        placeholder="House number and street name">
+                                            <form id="checkoutAddressForm">
+                                                <h6>Address</h6>
+                                                <div class="form-row">
+                                                    <textarea class="form-control-" id="address" name="address" rows="4"
+                                                        placeholder="House/Flat No, Street Name, Area"
+                                                        required></textarea>
                                                 </div>
-                                                <div class="form-col">
-                                                    <input type="text" class="input-field"
-                                                        placeholder="Apartment, suite, unit etc. (optional)">
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="form-col">
-                                                    <!-- <label for="city" class="form-label"> -->
-                                                    <h6>Town / City</h6>
-                                                    <!-- </label> -->
-                                                    <select id="city" name="city" class="input-field" required>
-                                                        <option value="">Select City</option>
-                                                        <option value="chennai">Chennai</option>
-                                                        <option value="coimbatore">Coimbatore</option>
-                                                        <option value="madurai">Madurai</option>
-                                                        <option value="trichy">Tiruchirappalli</option>
-                                                    </select>
+                                                <div class="form-row">
+                                                    <div class="form-col">
+                                                        <label for="state_id" class="form-label">State *</label>
+                                                        <select name="state_id" id="state_id">
+                                                            <option value="">Select State</option>
+                                                            <?php for ($i = 0; $i < count($state); $i++) { ?>
+
+                                                                <option value="<?php echo $state[$i]['state_id'] ?>">
+                                                                    <?php echo $state[$i]['state_title'] ?>
+                                                                </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="form-col">
+                                                        <label for="dist_id" class="form-label">District *</label>
+                                                        <select id="dist_id" name="dist_id">
+                                                            <!-- code -->
+                                                        </select>
+                                                    </div>
                                                 </div>
 
-                                                <div class="form-col">
-                                                    <h6>State</h6>
-                                                    <input type="text" class="input-field" placeholder="State">
+                                                <div class="form-row">
+                                                    <div class="form-col">
+                                                        <label for="landmark" class="form-label">Landmark *</label>
+                                                        <input type="text" class="form-control" id="landmark"
+                                                            name="landmark" placeholder="Landmark" required>
+                                                    </div>
+                                                    <div class="form-col"> <label for="city"
+                                                            class="form-label">Town/City
+                                                            *</label>
+                                                        <input type="text" class="form-control" id="city" name="city"
+                                                            placeholder="Town/City" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-col">
+                                                        <label for="city" class="form-label">Pincode
+                                                            *</label>
+                                                        <input type="text" class="form-control" id="pincode"
+                                                            name="pincode" placeholder="Pincode" required>
+                                                    </div>
+                                                    <div class="form-col">
+                                                        <input type="checkbox" class="form-check-input"
+                                                            id="default_addr" name="default_addr">
+                                                        <label class="form-check-label" for="default_addr">Set as
+                                                            default address</label>
+                                                    </div>
                                                 </div>
 
-                                                <div class="form-col">
-                                                    <h6>Zip</h6>
-                                                    <input type="text" class="input-field" placeholder="Zip">
-                                                </div>
-                                            </div>
+                                            </form>
                                         </div>
-                                        <div class="form-section">
-                                            <h6>Order Notes (optional)</h6>
-                                            <textarea class="textarea-field"
-                                                placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
+                                        <div class="d-flex">
+                                              <div class="col-lg-6">
+                                            <button class="continue-btn" id="close-address">CLOSE</button>
                                         </div>
-                                        <button class="continue-btn" onclick="proceedToOrderSummary()">CONTINUE</button>
+                                         <div class="col-lg-6">
+                                             <button class="continue-btn" id="address-checkout">CONTINUE</button> 
+                                        </div>
+                                      
+                                        </div>
+                                        
+                                        
+                                        
 
                                     </div>
                                 </div>
@@ -291,8 +306,9 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <input type="hidden"  class="checkout-type" value="<?= $type?>"/>
                             <div class="place-order-wrapper">
-                                <button class="w-100 mx-0" type="submit">Place order</button>
+                                <button class="w-100 mx-0" type="submit" id="place-order">Place order</button>
                             </div>
                         </div>
                     </div>
@@ -339,6 +355,7 @@
 
         function togglePersonalAddress() {
             $('#personalDetaila').show();
+        
         }
 
         function proceedToOrderSummary() {
