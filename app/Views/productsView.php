@@ -27,7 +27,7 @@
                                             <div class="single-large-img">
                                                 <a href="<?php echo base_url() . $product['main_image']  ?>"
                                                     data-rel="lightcase:myCollection">
-                                                    <img src="<?php echo base_url() ?>public/assets/img/plate_img/square-plate/4square.png"
+                                                    <img src="<?php echo base_url() . $product['main_image']  ?>"
                                                         alt="Image">
                                                 </a>
                                             </div>
