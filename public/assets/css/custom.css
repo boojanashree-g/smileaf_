@@ -1443,7 +1443,7 @@ a.account-card .card:active {
 }
 a.theme-btn-1.btn:focus {
     box-shadow: unset !important;
-    color: #fff !important;
+    color: #fff;
 }
 
 .checkout-login-btn {
@@ -2007,3 +2007,64 @@ a.theme-btn-1.btn:focus {
 	margin: 100px auto;
 }
 /* Delete Alert Modal End */
+
+
+.quick_btn:focus{
+    color: #000 !important;
+}
+
+.slick-arrow:before {
+    content: '' !important;
+}
+
+
+.bestseller-badge {
+    background-image: radial-gradient(circle, #cf1010, #be1011, #ad1011, #9c1011, #8c1010);
+    width: 50px;
+    height: 50px;
+    position: relative;
+    text-align: center;
+    border-radius: 20%;
+    position: absolute;
+    top: 0;
+    list-style-type: none;
+}
+
+.bestseller-badge:before, .bestseller-badge:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 50px;
+    width: 50px;
+    background-image: radial-gradient(circle, #cf1010, #be1011, #ad1011, #9c1011, #8c1010);
+    border-radius: 20%;
+    z-index: 0;
+}
+
+.bestseller-badge:before {
+    -webkit-transform: rotate(30deg);
+       -moz-transform: rotate(30deg);
+        -ms-transform: rotate(30deg);
+         -o-transform: rotate(30deg);
+}
+
+.bestseller-badge:after {
+    -webkit-transform: rotate(60deg);
+       -moz-transform: rotate(60deg);
+        -ms-transform: rotate(60deg);
+         -o-transform: rotate(60deg);
+}
+
+.bestseller-badge span {
+    position: absolute;
+    top: 7px;
+    left: 0;
+    color: white;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 11px;
+    z-index: 1;
+    font-family: sans-serif;
+    font-weight: 700;
+}

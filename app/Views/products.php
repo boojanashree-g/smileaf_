@@ -79,9 +79,8 @@
                                                     data-name="<?= strtolower(esc($product['prod_name'])) ?>">
                                                     <div class="ltn__product-item ltn__product-item-3 text-center">
                                                         <div class="product-img">
-                                                            <a href="<?= base_url("") ?>">
-                                                                <img src="<?= base_url($product['main_image']) ?>"
-                                                                    alt="<?= esc($product['prod_name']) ?>">
+                                                            <a href="<?= base_url("product-details/" . base64_encode($product['prod_id'])) ?>">
+                                                                <img src="<?= base_url($product['main_image']) ?>" alt="<?= esc($product['prod_name']) ?>">
                                                             </a>
                                                             <?php if ($product['lowest_quantity'] == 0): ?>
                                                                 <div class="product-badge">
@@ -112,10 +111,7 @@
                                                             </div>                                                            
                                                         </div>
                                                         <div class="d-flex justify-content-evenly">                                                            
-                                                            <a class="theme-btn-1 btn quick_btn"
-                                                                data-prodid="<?= esc($product['prod_id']) ?>"
-                                                                data-menuid="<?= $product['menu_id'] ?>"
-                                                                data-submenuid=<?= $product['submenu_id'] ?>>
+                                                            <a class="theme-btn-1 btn quick_btn" data-prodid="<?= esc($product['prod_id']) ?>" data-menuid="<?= $product['menu_id'] ?>" data-submenuid=<?= $product['submenu_id'] ?>>
                                                                 <i class="fas fa-shopping-cart"></i>
                                                                 <span>Quick Buy</span>
                                                             </a>
