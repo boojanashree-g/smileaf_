@@ -168,7 +168,7 @@
                                     </tbody>
                                 </table>
                                 <div class="btn-wrapper text-right text-end">
-                                    <a href="<?php echo base_url('checkout') ?>"
+                                    <a href="<?php echo base_url('checkout') ?>?type=cart"
                                         class="theme-btn-1 btn btn-effect-1">Proceed to checkout</a>
                                 </div>
                             </div>

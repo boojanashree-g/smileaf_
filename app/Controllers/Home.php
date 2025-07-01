@@ -77,7 +77,7 @@ class Home extends BaseController
         ];
     }
 
-   public function productDetails($prod_id)
+    public function productDetails($prod_id)
     {
         $db = \Config\Database::connect();
         $decode_prod_id = base64_decode($prod_id);
@@ -140,9 +140,11 @@ class Home extends BaseController
 
         return view('productsView', $data);
     }
-    
+
     public function cart()
     {
+
+
         $res = array_merge($this->getMenuData(), [
             'page_title' => 'Your Shopping Cart',
             'breadcrumb_items' => [
@@ -209,14 +211,17 @@ class Home extends BaseController
         $res = array_merge($this->getMenuData(), [
             'page_title' => 'Checkout',
             'breadcrumb_items' => [
-                ['label' => 'Home', 'url' => base_url()],
-                ['label' => 'Checkout']
-            ],
+                    ['label' => 'Home', 'url' => base_url()],
+                    ['label' => 'Checkout']
+                ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
 
 
         $userID = session()->get('user_id');
+
+        $res['state'] = $this->db->query("SELECT `state_id`,`state_title` FROM `tbl_state` WHERE `flag` =1")->getResultArray();
+
 
         $query = "SELECT * FROM tbl_user_cart WHERE user_id = ? AND flag =1";
         $cartData = $this->db->query($query, [$userID])->getResultArray();
@@ -316,20 +321,27 @@ class Home extends BaseController
         $res['delivery_charge'] = $deliveryCharge;
         $res['final_total'] = $finalTotal;
 
+        $res['type'] = $this->request->getGet("type");
         $userID = session()->get("user_id");
-        $userqry = "SELECT * FROM `tbl_users` WHERE `flag` = 1 AND `user_id` = ?  AND `is_verified` = 1";
-        $res['user_details'] = $this->db->query($userqry, [$userID])->getResultArray();
-
 
         // Addres Details
-        $query = "SELECT a.*, b.state_title, c.dist_name  , d.`user_id`,d.`username`,d.`number`,d.`email`
-        FROM tbl_user_address AS a 
-        INNER JOIN tbl_state AS b ON a.state_id = b.state_id
-        INNER JOIN tbl_district AS c ON a.dist_id = c.dist_id
-        INNER JOIN tbl_users AS d ON d.user_id = a.user_id
-        WHERE a.user_id = $userID  AND a.flag = 1;";
-        $res['address'] = $this->db->query($query, [$userID])->getResultArray();
+        $userVerify = session()->get("otp_verify");
+        $loginStatus = session()->get("loginStatus");
 
+        if ($userVerify == "YES" && $loginStatus == "YES") {
+            $query = "SELECT a.*, b.state_title, c.dist_name  , d.`user_id`,d.`username`,d.`number`,d.`email`
+            FROM tbl_user_address AS a 
+            INNER JOIN tbl_state AS b ON a.state_id = b.state_id
+            INNER JOIN tbl_district AS c ON a.dist_id = c.dist_id
+            INNER JOIN tbl_users AS d ON d.user_id = a.user_id
+            WHERE a.user_id = $userID  AND a.flag = 1;";
+            $res['address'] = $this->db->query($query, [$userID])->getResultArray();
+
+            // User Details
+            $userqry = "SELECT * FROM `tbl_users` WHERE `flag` = 1 AND `user_id` = ?  AND `is_verified` = 1";
+            $res['user_details'] = $this->db->query($userqry, [$userID])->getResultArray();
+
+        }
         return view('checkout', $res);
     }
     public function contact()
@@ -337,9 +349,9 @@ class Home extends BaseController
         $data = array_merge($this->getMenuData(), [
             'page_title' => 'contact',
             'breadcrumb_items' => [
-                ['label' => 'Home', 'url' => base_url()],
-                ['label' => 'contact']
-            ],
+                    ['label' => 'Home', 'url' => base_url()],
+                    ['label' => 'contact']
+                ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
 
@@ -348,111 +360,16 @@ class Home extends BaseController
 
 
 
-    public function products($encodedSubmenu, $encodedSubmenuId = null)
+
+    public function products($encodedSubmenu = null, $encodedSubmenuId = null)
     {
         $db = \Config\Database::connect();
         $menuData = $this->getMenuData();
 
-        // Decode submenu ID from URL
+        // Decode submenu ID from URL 
         $submenuId = null;
         if ($encodedSubmenuId) {
             $submenuId = base64_decode($encodedSubmenuId);
-            if (!is_numeric($submenuId)) {
-                throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Invalid product category");
-            }
-        }
-
-        // Filter parameters from query string
-        $typeIds = $this->request->getGet('type_id');
-        $sizeIds = $this->request->getGet('size_id');
-        $shapeIds = $this->request->getGet('shape_id');
-
-        // Detect AJAX
-        $isAjax = $this->request->isAJAX() ||
-            $this->request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest' ||
-            $this->request->getGet('ajax') == '1';
-
-        // Load filter dropdowns only if not AJAX
-        if (!$isAjax) {
-            $typeQuery = $db->table('tbl_filter_type')->where('flag !=', 0)->get();
-            $sizeQuery = $db->table('tbl_filter_size')->where('flag !=', 0)->get();
-            $shapeQuery = $db->table('tbl_filter_shapes')->where('flag !=', 0)->get();
-
-            $productTypes = $typeQuery->getResult();
-            $productsize = $sizeQuery->getResult();
-            $productShape = $shapeQuery->getResult();
-        }
-
-        // Build products query
-        $productsQuery = $db->table('tbl_products a')
-            ->select('a.*, b.size_name, d.type_name, e.mrp, e.stock_status, e.offer_price')
-            ->join('tbl_filter_size b', 'a.size_id = b.size_id', 'left')
-            ->join('tbl_filter_type d', 'a.type_id = d.type_id', 'left')
-            ->join('tbl_variants e', 'a.prod_id = e.prod_id', 'left')
-            ->where('a.flag !=', 0);
-
-        // Apply submenu ID filter
-        if ($submenuId) {
-            $productsQuery->where('a.submenu_id', $submenuId);
-        }
-
-        // Apply other filters
-        if (!empty($typeIds)) {
-            $productsQuery->whereIn('a.type_id', (array) $typeIds);
-        }
-
-        if (!empty($sizeIds)) {
-            $productsQuery->whereIn('a.size_id', (array) $sizeIds);
-        }
-
-        if (!empty($shapeIds)) {
-            $productsQuery->whereIn('a.shape_id', (array) $shapeIds);
-        }
-
-        // Fetch product data
-        $products = $productsQuery->get()->getResult();
-
-        // Return JSON for AJAX
-        if ($isAjax) {
-            return $this->response->setJSON([
-                'success' => true,
-                'products' => $products,
-                'count' => count($products),
-                'mainmenus' => $menuData,
-                'groupedSubmenus' => $menuData['submenu']
-            ]);
-        }
-
-        // For normal page rendering
-        $data = array_merge($menuData, [
-            'page_title' => 'Products',
-            'breadcrumb_items' => [
-                ['label' => 'Home', 'url' => base_url()],
-                ['label' => 'Products']
-            ],
-            'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
-            'products' => $products,
-            'productTypes' => $productTypes ?? [],
-            'productsize' => $productsize ?? [],
-            'productShape' => $productShape ?? [],
-        ]);
-
-
-
-        return view('products', $data);
-    }
-    public function productsOLD($encodedSubmenu = null, $encodedSubmenuId = null)
-    {
-        $db = \Config\Database::connect();
-        $menuData = $this->getMenuData();
-
-        // Decode submenu ID from URL
-        $submenuId = null;
-        if ($encodedSubmenuId) {
-            $submenuId = base64_decode($encodedSubmenuId);
-            if (!is_numeric($submenuId)) {
-                throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Invalid product category");
-            }
         }
 
         // Filter parameters from query string
@@ -483,12 +400,12 @@ class Home extends BaseController
             ->join('tbl_filter_type c', 'a.type_id = c.type_id', 'left')
             ->join('tbl_filter_shapes d', 'a.shape_id = d.shape_id', 'left')
             ->where([
-                'a.flag' => 1,
-                'b.status' => 1,
-                'b.flag' => 1,
-                'c.type_status' => 1,
-                'c.flag' => 1
-            ])->orderBy('a.prod_id', 'ASC');
+                    'a.flag' => 1,
+                    'b.status' => 1,
+                    'b.flag' => 1,
+                    'c.type_status' => 1,
+                    'c.flag' => 1
+                ])->orderBy('a.prod_id', 'ASC');
 
 
 
@@ -574,9 +491,9 @@ class Home extends BaseController
         $data = array_merge($menuData, [
             'page_title' => 'Products',
             'breadcrumb_items' => [
-                ['label' => 'Home', 'url' => base_url()],
-                ['label' => 'Products']
-            ],
+                    ['label' => 'Home', 'url' => base_url()],
+                    ['label' => 'Products']
+                ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
             'products' => $products,
             'productTypes' => $productTypes ?? [],
@@ -595,9 +512,9 @@ class Home extends BaseController
 
             'page_title' => 'Wishlist',
             'breadcrumb_items' => [
-                ['label' => 'Home', 'url' => base_url()],
-                ['label' => 'Wishlist']
-            ],
+                    ['label' => 'Home', 'url' => base_url()],
+                    ['label' => 'Wishlist']
+                ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
 
@@ -612,9 +529,9 @@ class Home extends BaseController
 
             'page_title' => 'Wishlist',
             'breadcrumb_items' => [
-                ['label' => 'Home', 'url' => base_url()],
-                ['label' => 'Wishlist']
-            ],
+                    ['label' => 'Home', 'url' => base_url()],
+                    ['label' => 'Wishlist']
+                ],
 
         ]);
 
@@ -641,9 +558,9 @@ class Home extends BaseController
         $data = array_merge($menuData, [
             'page_title' => 'Sign-Up',
             'breadcrumb_items' => [
-                ['label' => 'Home', 'url' => base_url()],
-                ['label' => 'Sign-Up']
-            ],
+                    ['label' => 'Home', 'url' => base_url()],
+                    ['label' => 'Sign-Up']
+                ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
 
@@ -660,9 +577,9 @@ class Home extends BaseController
         $data = array_merge($menuData, [
             'page_title' => 'Login / Signup',
             'breadcrumb_items' => [
-                ['label' => 'Home', 'url' => base_url()],
-                ['label' => 'Login / Signup']
-            ],
+                    ['label' => 'Home', 'url' => base_url()],
+                    ['label' => 'Login / Signup']
+                ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
         $this->session->set('callback_url', previous_url());
@@ -675,9 +592,9 @@ class Home extends BaseController
         $data = array_merge($menuData, [
             'page_title' => 'Terms & Conditions',
             'breadcrumb_items' => [
-                ['label' => 'Home', 'url' => base_url()],
-                ['label' => 'Terms & Conditions']
-            ],
+                    ['label' => 'Home', 'url' => base_url()],
+                    ['label' => 'Terms & Conditions']
+                ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
 
@@ -689,9 +606,9 @@ class Home extends BaseController
         $data = array_merge($menuData, [
             'page_title' => 'Privacy Policy',
             'breadcrumb_items' => [
-                ['label' => 'Home', 'url' => base_url()],
-                ['label' => 'Privacy Policy']
-            ],
+                    ['label' => 'Home', 'url' => base_url()],
+                    ['label' => 'Privacy Policy']
+                ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
 
@@ -703,9 +620,9 @@ class Home extends BaseController
         $data = array_merge($menuData, [
             'page_title' => 'Order Tracking',
             'breadcrumb_items' => [
-                ['label' => 'Home', 'url' => base_url()],
-                ['label' => 'Order Tracking']
-            ],
+                    ['label' => 'Home', 'url' => base_url()],
+                    ['label' => 'Order Tracking']
+                ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
 
@@ -732,9 +649,9 @@ class Home extends BaseController
         $data = array_merge($menus, [
             'page_title' => $menuData['menu_name'],
             'breadcrumb_items' => [
-                ['label' => 'Home', 'url' => base_url()],
-                ['label' => $menuData['menu_name']]
-            ],
+                    ['label' => 'Home', 'url' => base_url()],
+                    ['label' => $menuData['menu_name']]
+                ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
             'submenus' => $submenuData
         ]);
