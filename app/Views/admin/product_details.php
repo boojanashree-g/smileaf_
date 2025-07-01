@@ -70,8 +70,7 @@
                         </div>
                      
                         <!-- Add Modal -->
-                        <div class="modal fade" id="product-modal" tabindex="-1" aria-hidden="true">
-                               
+                        <div class="modal fade" id="product-modal" tabindex="-1" aria-hidden="true">                               
                             <div class="modal-dialog modal-xl modal-simple">
                                 <div class="modal-content">
                                     <div class="modal-body">

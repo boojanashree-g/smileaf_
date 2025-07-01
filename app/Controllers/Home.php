@@ -77,19 +77,70 @@ class Home extends BaseController
         ];
     }
 
-    public function productDetails()
+   public function productDetails($prod_id)
     {
+        $db = \Config\Database::connect();
+        $decode_prod_id = base64_decode($prod_id);
+        $query = $db->query("SELECT * FROM tbl_products WHERE prod_id = $decode_prod_id AND flag = 1");
+        $product = $query->getRowArray();
+
+        if (!$product) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Product not found.");
+        }
+
+        $prodId = $product['prod_id'];
+        $productShapeId = $product['shape_id'];
+        $productSizeId = $product['size_id'];
+        $productTypeId = $product['type_id'];
+
+        // Variants
+        $variantQuery = $db->table('tbl_variants')
+            ->select('variant_id, pack_qty, mrp, offer_type, offer_details, offer_price, stock_status, quantity, weight')
+            ->where(['flag' => 1, 'prod_id' => $prodId])
+            ->get()->getResultArray();
+
+        // Images
+        $imageQuery = $db->table('tbl_images')
+            ->select('image_path')
+            ->where(['flag' => 1, 'prod_id' => $prodId])
+            ->get()->getResultArray();
+
+        $product['variants'] = $variantQuery;
+        $product['product_images'] = array_column($imageQuery, 'image_path');
+
+        $relatedProducts = $db->query("SELECT *,((shape_id = '$productShapeId') + (size_id = '$productSizeId') + (type_id = '$productTypeId')) AS relevance_score FROM tbl_products WHERE prod_id != $decode_prod_id AND flag = 1 AND (shape_id = '$productShapeId' OR size_id = '$productSizeId' OR type_id = '$productTypeId') ORDER BY relevance_score DESC ")->getResult();
+        $product['relatedProducts'] = $relatedProducts;
+
+        // Find lowest offer
+        $lowestOffer = null;
+        foreach ($variantQuery as $variant) {
+            if ($lowestOffer === null || $variant['offer_price'] < $lowestOffer['offer_price']) {
+                $lowestOffer = $variant;
+            }
+        }
+
+        if ($lowestOffer) {
+            $product['lowest_mrp'] = $lowestOffer['mrp'];
+            $product['lowest_offer_price'] = $lowestOffer['offer_price'];
+            $product['lowest_quantity'] = $lowestOffer['quantity'];
+        } else {
+            $product['lowest_mrp'] = null;
+            $product['lowest_offer_price'] = null;
+            $product['lowest_quantity'] = null;
+        }
         $data = array_merge($this->getMenuData(), [
             'page_title' => 'Product View',
             'breadcrumb_items' => [
                 ['label' => 'Home', 'url' => base_url()],
                 ['label' => 'Product View']
             ],
-            'banner_image' => base_url('public/assets/img/banner/bg_4.png')
+            'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
+            'product' => $product
         ]);
 
         return view('productsView', $data);
     }
+    
     public function cart()
     {
         $res = array_merge($this->getMenuData(), [
