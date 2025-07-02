@@ -5,6 +5,8 @@ namespace App\Controllers;
 use App\Models\OrderModal;
 use App\Models\OrderItemModal;
 
+
+
 class CheckoutController extends BaseController
 {
 
@@ -16,7 +18,7 @@ class CheckoutController extends BaseController
         $this->db = \Config\Database::connect();
         $this->session = \Config\Services::session();
     }
-
+    
 
     public function placeOrder()
     {

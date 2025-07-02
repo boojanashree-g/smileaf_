@@ -60,8 +60,6 @@ $routes->get('payment-failed', 'RazorpayController::paymentfail');
 $routes->get('success', 'RazorpayController::Success');
 
 
-
-
 // *************************** [Admin Routes] *************************************************************************
 
 $routes->group('admin', ['namespace' => 'App\Controllers\admin'], function ($routes) {
