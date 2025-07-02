@@ -11,8 +11,8 @@ $routes->get('product-details/(:any)', 'Home::productDetails/$1');
 $routes->get('cart', 'Home::cart');
 $routes->get('checkout', 'Home::checkout');
 $routes->get('contact', 'Home::contact');
-$routes->get('products/(:segment)/(:segment)', 'Home::productsOLD/$1/$2');
-$routes->get('products', 'Home::productsOLD');
+$routes->get('products/(:segment)/(:segment)', 'Home::products/$1/$2');
+$routes->get('products', 'Home::products');
 $routes->get('wishlist', 'Home::wishlist');
 $routes->get('myaccount', 'Home::myaccount', ['filter' => 'checkLogin']);
 $routes->get('signup', 'Home::signup', );
@@ -38,6 +38,9 @@ $routes->post('insert-address', 'MyaccountController::insertAddress', ['filter' 
 $routes->get('get-address', 'MyaccountController::getAddress');
 $routes->post('update-address', 'MyaccountController::updateAddress', ['filter' => 'AuthFilter']);
 $routes->post('delete-address', 'MyaccountController::deleteAddress', ['filter' => 'AuthFilter']);
+$routes->post('update-defaultaddress', 'MyaccountController::updateDefaultAddress', ['filter' => 'AuthFilter']);
+
+$routes->post('place-order', 'checkoutController::placeOrder', ['filter' => 'AuthFilter']);
 
 // Checkout userdetails
 $routes->post('save-userdetails', 'MyaccountController::insertUserDetails', ['filter' => 'AuthFilter']);
@@ -47,6 +50,15 @@ $routes->post('quick-view-details', 'QuickViewController::quickViewDetails');
 $routes->post('insert-cart', 'CartController::insertCart');
 $routes->post('update-cart', 'CartController::updateCart');
 $routes->post('delete-cart', 'CartController::deleteCart');
+
+
+// RazorpayController checkout controller
+$routes->get('payment', 'RazorpayController::payment', ['filter' => 'PaymentAuth']);
+$routes->post('payment-status', 'RazorpayController::paymentstatus');
+$routes->get('payment-cancelled', 'RazorpayController::paymentcancel');
+$routes->get('payment-failed', 'RazorpayController::paymentfail');
+$routes->get('success', 'RazorpayController::Success');
+
 
 
 

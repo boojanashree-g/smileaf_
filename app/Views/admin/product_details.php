@@ -17,7 +17,7 @@
             <div class="layout-page">
 
                 <?php require "components/topnavbar.php"; ?>
- 
+
 
                 <div class="content-wrapper">
                     <div class="container-xxl flex-grow-1 container-p-y">
@@ -68,9 +68,9 @@
                                 </div>
                             </div>
                         </div>
-                     
+
                         <!-- Add Modal -->
-                        <div class="modal fade" id="product-modal" tabindex="-1" aria-hidden="true">                               
+                        <div class="modal fade" id="product-modal" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog modal-xl modal-simple">
                                 <div class="modal-content">
                                     <div class="modal-body">
@@ -84,10 +84,9 @@
                                                 <label class="form-label">Menu</label>
                                                 <select class="form-select" for="menu_id" name="menu_id" id="menu_id">
                                                     <option value="">Select Menu</option>
-                                                    <?php foreach($mainmenu as $menu)
-                                                    { ?>
-                                                    <option value="<?= $menu['menu_id'] ?>"><?= $menu['menu_name'] ?>
-                                                    </option>
+                                                    <?php foreach ($mainmenu as $menu) { ?>
+                                                        <option value="<?= $menu['menu_id'] ?>"><?= $menu['menu_name'] ?>
+                                                        </option>
                                                     <?php } ?>
 
                                                 </select>
@@ -109,10 +108,9 @@
                                                 <label class="form-label">Filter Type</label>
                                                 <select class="form-select" for="type_id" name="type_id" id="type_id">
                                                     <option value="">Select Option</option>
-                                                    <?php foreach($filter_type as $type)
-                                                    { ?>
-                                                    <option value="<?= $type['type_id'] ?>"><?= $type['type_name'] ?>
-                                                    </option>
+                                                    <?php foreach ($filter_type as $type) { ?>
+                                                        <option value="<?= $type['type_id'] ?>"><?= $type['type_name'] ?>
+                                                        </option>
                                                     <?php } ?>
 
                                                 </select>
@@ -126,10 +124,10 @@
 
 
                                                     <option value="">Select Option</option>
-                                                    <?php foreach($filter_shape as $shape)
-                                                    { ?>
-                                                    <option value="<?= $shape['shape_id'] ?>">
-                                                        <?= $shape['shape_name'] ?></option>
+                                                    <?php foreach ($filter_shape as $shape) { ?>
+                                                        <option value="<?= $shape['shape_id'] ?>">
+                                                            <?= $shape['shape_name'] ?>
+                                                        </option>
                                                     <?php } ?>
 
                                                 </select>
@@ -140,10 +138,9 @@
                                                 <label class="form-label">Filter Size</label>
                                                 <select class="form-select" for="size_id" name="size_id" id="size_id">
                                                     <option value="">Select Option</option>
-                                                    <?php foreach($filter_size as $size)
-                                                    { ?>
-                                                    <option value="<?= $size['size_id'] ?>"><?= $size['size_name'] ?>
-                                                    </option>
+                                                    <?php foreach ($filter_size as $size) { ?>
+                                                        <option value="<?= $size['size_id'] ?>"><?= $size['size_name'] ?>
+                                                        </option>
                                                     <?php } ?>
 
                                                 </select>
@@ -359,28 +356,28 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/41.3.1/classic/ckeditor.js"></script>
 
     <script>
-    document.addEventListener('DOMContentLoaded', (event) => {
+        document.addEventListener('DOMContentLoaded', (event) => {
 
-        ClassicEditor
-            .create(document.querySelector('#description')).then(e => {
-                description = e;
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    });
+            ClassicEditor
+                .create(document.querySelector('#description')).then(e => {
+                    description = e;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        });
 
 
-    document.addEventListener('DOMContentLoaded', (event) => {
+        document.addEventListener('DOMContentLoaded', (event) => {
 
-        ClassicEditor
-            .create(document.querySelector('#product_usage')).then(e => {
-                produsage = e;
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    });
+            ClassicEditor
+                .create(document.querySelector('#product_usage')).then(e => {
+                    produsage = e;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        });
     </script>
 
     <?php require "components/footer.php"; ?>
@@ -432,52 +429,52 @@
             variantIndex++;
         });
 
-    // Delete variant with confirmation
-    $("#variant-list").on("click", ".remove-variant", function() {
-        const button = $(this);
-        const deleteIndex = button.data("rid");
-        const containerIndex = button.closest(".variant-block").data("index");
+        // Delete variant with confirmation
+        $("#variant-list").on("click", ".remove-variant", function () {
+            const button = $(this);
+            const deleteIndex = button.data("rid");
+            const containerIndex = button.closest(".variant-block").data("index");
 
-        console.log("Deleting index:", deleteIndex);
-        console.log("Container Index:", containerIndex);
+            console.log("Deleting index:", deleteIndex);
+            console.log("Container Index:", containerIndex);
 
-        Swal.fire({
-            title: "Are you sure?",
-            text: "Do you really want to delete this variant?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#d33",
-            cancelButtonColor: "#3085d6",
-            confirmButtonText: "Yes, delete it!",
-            cancelButtonText: "Cancel"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                button.closest(".variant-block").remove();
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Do you really want to delete this variant?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    button.closest(".variant-block").remove();
 
-                Swal.fire({
-                    title: "Deleted!",
-                    text: "The variant has been removed.",
-                    icon: "success",
-                    timer: 1500,
-                    showConfirmButton: false
-                });
-            }
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "The variant has been removed.",
+                        icon: "success",
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                }
+            });
         });
-    });
 
 
         $(".add-variant").click();
 
         function removeAllVariantBlocks() {
-        $("#variant-list").empty();
-         variantIndex = 0;
-        $(".add-variant").click();
-         } 
+            $("#variant-list").empty();
+            variantIndex = 0;
+            $(".add-variant").click();
+        }
 
-        function removeVariantBlocks(){
-             $("#variant-list").empty();
-         variantIndex = 0;
-        } 
+        function removeVariantBlocks() {
+            $("#variant-list").empty();
+            variantIndex = 0;
+        }
 
     </script>
 

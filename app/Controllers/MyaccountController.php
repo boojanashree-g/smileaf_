@@ -108,6 +108,9 @@ class MyaccountController extends BaseController
             }
         }
 
+        $userqry = "SELECT * FROM `tbl_users` WHERE `flag` = 1 AND `user_id` = ?  AND `is_verified` = 1";
+        $userData = $this->db->query($userqry, [$userID])->getResultArray();
+
         $data = [
             "user_id" => $userID,
             "state_id" => $stateID,
@@ -120,16 +123,43 @@ class MyaccountController extends BaseController
         ];
 
         $insertData = $AddressModel->insert($data);
-        $affectedRows = $this->db->affectedRows();
-        if ($affectedRows === 1 && $insertData) {
+        $lastInsertID = $this->db->insertID();
+        $affectedRowss = $this->db->affectedRows();
+
+        $query = "SELECT a.`state_id` , b.state_title , c.dist_name FROM `tbl_user_address`  AS a 
+                    INNER JOIN tbl_state AS b  ON b.state_id = a.state_id
+                    INNER JOIN tbl_district  AS c  ON c.dist_id = a.dist_id
+                    WHERE a.user_id  = ? AND a.flag = 1";
+        $addressDetails = $this->db->query($query, [$userID])->getResultArray();
+
+        if ($affectedRowss === 1 && $insertData) {
             $result['code'] = 200;
             $result['message'] = 'Address added Successfully';
             $result['status'] = 'success';
+            $result['address'] = [
+                'add_id' => $lastInsertID,
+                'address' => $address,
+                "landmark" => $landMark,
+                "city" => $city,
+                "pincode" => $pincode,
+                "default_addr" => $checkDefault,
+                "state_id" => $stateID,
+                "dist_id" => $distID,
+                "username" => $userData[0]['username'],
+                "number" => $userData[0]['number'],
+                "email" => $userData[0]['email'],
+                "state_title" => $addressDetails[0]['state_title'],
+                "dist_name" => $addressDetails[0]['dist_name'],
+
+            ];
+
         } else {
             $result['code'] = 400;
             $result['status'] = 'Failed';
             $result['message'] = 'Something wrong';
         }
+
+
         echo json_encode($result);
     }
 
@@ -245,4 +275,48 @@ class MyaccountController extends BaseController
             ]);
         }
     }
+
+
+   public function updateDefaultAddress()
+{
+    $userID = session()->get("user_id");
+    $addID = $this->request->getPost("add_id");
+
+   
+    $query = "SELECT * FROM `tbl_user_address` WHERE `user_id` = ? AND `default_addr` = 1 AND `flag` = 1";
+    $getAddressData = $this->db->query($query, [$userID])->getResultArray();
+
+   
+    $affectedRows = 0;
+    $affectedRows2 = 0;
+
+   
+    if (count($getAddressData) > 0) {
+        $oldAddrID = $getAddressData[0]['add_id'];
+
+        $updateOldqry = "UPDATE `tbl_user_address` SET `default_addr` = 0 WHERE `add_id` = ? AND `flag` = 1 AND `user_id` = ?";
+        $this->db->query($updateOldqry, [$oldAddrID, $userID]);
+        $affectedRows = $this->db->affectedRows();
+    }
+
+    if ($affectedRows > 0 || count($getAddressData) == 0) {
+        $updateqry = "UPDATE `tbl_user_address` SET `default_addr` = 1 WHERE `add_id` = ? AND `flag` = 1 AND `user_id` = ?";
+        $this->db->query($updateqry, [$addID, $userID]);
+        $affectedRows2 = $this->db->affectedRows();
+    }
+
+  
+    if ($affectedRows2 > 0) {
+        return $this->response->setJSON([
+            'code' => 200,
+            'message' => 'Address Updated successfully.'
+        ]);
+    } else {
+        return $this->response->setJSON([
+            'code' => 400,
+            'message' => 'Address Update failed.'
+        ]);
+    }
+}
+
 }

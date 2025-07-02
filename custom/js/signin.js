@@ -46,8 +46,6 @@ $(document).ready(function () {
     }
   });
 
- 
-
   function isPhoneNumber(phone_no) {
     var pattern = /^\d{10}$/;
     return pattern.test(phone_no);
@@ -215,6 +213,7 @@ $(document).ready(function () {
         console.log(JSONdata);
 
         localStorage.setItem("token", JSONdata.token);
+        localStorage.setItem("loginStatus", "YES");
 
         const redirectURL = JSONdata.c_url === "" ? base_Url : JSONdata.c_url;
 
