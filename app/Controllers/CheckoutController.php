@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\OrderModal;
+use App\Models\OrderItemModal;
 
 class CheckoutController extends BaseController
 {
@@ -20,11 +21,13 @@ class CheckoutController extends BaseController
     public function placeOrder()
     {
         $OrderModal = new OrderModal();
+        $OrderItemModal = new OrderItemModal();
+
         $userID = session()->get("user_id");
         $type = $this->request->getPost("type");
 
 
-        // getCount of total Orders 
+        //Order No
         $orderTotal = "SELECT COUNT(`order_id`) AS total_count  FROM `tbl_orders`";
         $orderTotalData = $this->db->query($orderTotal)->getRow();
 
@@ -46,7 +49,9 @@ class CheckoutController extends BaseController
             $orderNO = "SML" . $currentYear . "0001";
 
         }
-        // end of total Orders 
+        // end Order No
+
+
 
 
         if ($type == "cart") {
@@ -62,44 +67,50 @@ class CheckoutController extends BaseController
         $price_count = 0;
         $OrderPrice = 0;
 
-        foreach ($cartData as $item) {
-            $prodID = $item['prod_id'];
-            $cartQuantity = $item['quantity'];
-            $cartPackqty = $item['pack_qty'];
-            $cartPrice = $item['prod_price'];
-            $cartTotal = $item['total_price'];
+        if ($type == "cart") {
+            foreach ($cartData as $item) {
+                $prodID = $item['prod_id'];
+                $cartQuantity = $item['quantity'];
+                $cartPackqty = $item['pack_qty'];
+                $cartPrice = $item['prod_price'];
+                $cartTotal = $item['total_price'];
 
-            // Main Product
-            $mainProductQuery = "SELECT main_quantity , has_variant  FROM tbl_products WHERE `prod_id` = ?";
-            $mainProductData = $this->db->query($mainProductQuery, [$prodID])->getRow();
+                // Main Product
+                $mainProductQuery = "SELECT main_quantity , has_variant  FROM tbl_products WHERE `prod_id` = ?";
+                $mainProductData = $this->db->query($mainProductQuery, [$prodID])->getRow();
 
-            if (!$mainProductData) {
-                return json_encode(['code' => 400, 'status' => false, 'message' => 'Invalid product in cart.']);
-            }
 
-            $mainVariantQuery = "SELECT * FROM `tbl_variants` WHERE `prod_id` = ? AND  pack_qty = ? AND `flag` = 1";
-            $mainVariantData = $this->db->query($mainVariantQuery, [$prodID, $cartPackqty])->getRow();
+                if (!$mainProductData) {
+                    return json_encode(['code' => 400, 'status' => false, 'message' => 'Invalid product in cart.']);
+                }
 
-            if (!$mainVariantData) {
-                return json_encode(['code' => 400, 'status' => false, 'message' => 'Invalid Product Variants in cart.']);
-            }
+                $mainVariantQuery = "SELECT * FROM `tbl_variants` WHERE `prod_id` = ? AND  pack_qty = ? AND `flag` = 1";
+                $mainVariantData = $this->db->query($mainVariantQuery, [$prodID, $cartPackqty])->getRow();
 
-            $mainQuantity = $mainVariantData->quantity;
-            $mainPackQty = $mainVariantData->pack_qty;
-            $mainPrice = $mainVariantData->offer_price;
 
-            $finalPrice = ($cartPrice == $mainPrice) ? $cartPrice : $mainPrice;
+                if (!$mainVariantData) {
+                    return json_encode(['code' => 400, 'status' => false, 'message' => 'Invalid Product Variants in cart.']);
+                }
 
-            if ($cartQuantity <= $mainQuantity && $cartPrice == $mainPrice && $cartPrice != 0 && $originalPrice != 0) {
-                $OrderPrice += $cartTotal;
+                $mainQuantity = $mainVariantData->quantity;
+                $mainPackQty = $mainVariantData->pack_qty;
+                $mainPrice = $mainVariantData->offer_price;
 
-            } else if ($mainPrice == 0 && $cartPrice == 0 || $mainPrice == 0) {
-                $price_count += 1;
-                $OrderPrice += $mainPrice * $cartQuantity;
-            } else {
-                $OrderPrice += $mainPrice * $cartQuantity;
+                $finalPrice = ($cartPrice == $mainPrice) ? $cartPrice : $mainPrice;
+
+
+                if ($cartQuantity <= $mainQuantity && $cartPrice == $mainPrice && $cartPrice != 0 && $originalPrice != 0) {
+                    $OrderPrice += $cartTotal;
+
+                } else if ($mainPrice == 0 && $cartPrice == 0 || $mainPrice == 0) {
+                    $price_count += 1;
+                    $OrderPrice += $mainPrice * $cartQuantity;
+                } else {
+                    $OrderPrice += $mainPrice * $cartQuantity;
+                }
             }
         }
+
 
         // Shipping 100rs 
         $totalShipping = 100;
@@ -107,6 +118,9 @@ class CheckoutController extends BaseController
 
         $finalOrderPrice = $OrderPrice + $totalShipping;
         $finalSubTotal = $finalOrderPrice - $totalShipping;
+
+
+
         // Fetch default address for the user
         $addressQuery = "SELECT `add_id` 
                  FROM `tbl_user_address` 
@@ -118,6 +132,7 @@ class CheckoutController extends BaseController
         }
 
         $addID = $addressData->add_id;
+
 
         if ($price_count > 0) {
             $res['code'] = 400;
@@ -137,7 +152,11 @@ class CheckoutController extends BaseController
                 'courier_type' => $courierType,
             ];
 
+
+
+
             $insertOrder = $OrderModal->insert($orderData);
+
             $OrderID = $this->db->insertID();
             $sess = [
                 'order_id' => $OrderID,
@@ -146,71 +165,78 @@ class CheckoutController extends BaseController
 
             $affectedRows = $this->db->affectedRows();
 
+            // Data storing in Order items
             if ($affectedRows == 1) {
-                $query = "SELECT a.cart_id, a.`table_name`, a.`prod_id`, a.`quantity`, a.`prod_price`, a.`sub_total`,
-                a.color,a.hex_code,a.size , a.config_image1, b.add_id 
-                FROM `tbl_user_cart` AS a 
-                INNER JOIN tbl_user_address AS b ON a.`user_id` = b.user_id 
-                WHERE a.flag = 1 AND b.flag = 1 AND a.user_id = $userID  AND b.default_addr = 1";
-
-                $cartData = $this->db->query($query)->getResultArray();
-
-
                 $inner_affectedRows = 0;
+                if ($type == "cart") {
+                    foreach ($cartData as $item) {
+                        $prodID = $item['prod_id'];
+                        $cartQuantity = $item['quantity'];
+                        $cartPackqty = $item['pack_qty'];
+                        $cartPrice = $item['prod_price'];
+                        $cartTotal = $item['total_price'];
 
-                foreach ($cartData as $cartItem) {
-                    $prodID = $cartItem['prod_id'];
-                    $tblName = $cartItem['table_name'];
-                    $qty = $cartItem['quantity'];
-                    $prodPrice = $cartItem['prod_price'];
-                    $subTotal = $cartItem['sub_total'];
-                    $cartID = $cartItem['cart_id'];
-                    $color = $cartItem['color'];
-                    $hex_code = $cartItem['hex_code'];
-                    $size = $cartItem['size'];
-                    $config_image1 = $cartItem['config_image1'];
+                        // Main Product
+                        $mainProductQuery = "SELECT main_quantity , has_variant  FROM tbl_products WHERE `prod_id` = ?";
+                        $mainProductData = $this->db->query($mainProductQuery, [$prodID])->getRow();
 
-                    $colorQry = "SELECT `color_name` FROM `tbl_color` WHERE `flag` = 1 AND `color_id` = ?";
+                        $mainVariantQuery = "SELECT * FROM `tbl_variants` WHERE `prod_id` = ? AND  pack_qty = ? AND `flag` = 1";
+                        $mainVariantData = $this->db->query($mainVariantQuery, [$prodID, $cartPackqty])->getRow();
 
-                    $prouductQry = "SELECT
-                     `product_price` AS mrp ,
-                                    `offer_price`,
-                                    `offer_type`,
-                                    `offer_details`
-                                    FROM
-                                       $tblName
-                                    WHERE
-                                    `flag` = 1 AND `prod_id` = ? AND `tbl_name` = ? ";
-                    $productData = $this->db->query($prouductQry, [$prodID, $tblName])->getRow();
-
-                    $colorData = $this->db->query($colorQry, $color)->getRow();
-
-                    $offer_price = $productData->offer_price;
-                    $offer_type = $productData->offer_type;
-                    $offer_details = $productData->offer_details;
-                    $mrp = $productData->mrp;
-
-                    $colorName = $colorData->color_name;
+                        $mainQuantity = $mainVariantData->quantity;
+                        $mainPackQty = $mainVariantData->pack_qty;
+                        $mainPrice = $mainVariantData->offer_price;
+                        $variantID = $mainVariantData->variant_id;
+                        $variantMRP = $mainVariantData->mrp;
+                        $offerType = $mainVariantData->offer_type;
+                        $offerDetails = $mainVariantData->offer_details;
 
 
-                    $query = "INSERT INTO tbl_order_item (order_id, prod_id, table_name, quantity, prod_price, sub_total, color, hex_code,color_name, size, config_image1,mrp,offer_type,offer_details,offer_price) 
-                    VALUES ('$OrderID', '$prodID', '$tblName', '$qty', '$prodPrice', '$subTotal', '$color', '$hex_code','$colorName', '$size', '$config_image1','$mrp','$offer_type','$offer_details','$offer_price')";
-
-                    $orderItem = $this->db->query($query);
-                    $inner_affectedRows = $this->db->affectedRows();
+                        $finalPrice = ($cartPrice == $mainPrice) ? $cartPrice : $mainPrice;
 
 
-                    if ($inner_affectedRows == 1) {
-                        $res['code'] = 200;
-                        $res['message'] = "OrderPlaced";
+                        if ($cartQuantity <= $mainQuantity && $cartPrice == $mainPrice && $cartPrice != 0 && $originalPrice != 0) {
+                            $OrderPrice = $cartTotal;
 
-                    } else {
-                        $res['code'] = 400;
-                        $res['message'] = "Error while place order";
+                        } else if ($mainPrice == 0 && $cartPrice == 0 || $mainPrice == 0) {
+                            $OrderPrice = $mainPrice * $cartQuantity;
+                        } else {
+                            $OrderPrice = $mainPrice * $cartQuantity;
+                        }
 
+
+                        $itemData = [
+                            'order_id' => $OrderID,
+                            'prod_id' => $prodID,
+                            'variant_id' => $variantID,
+                            'quantity' => $cartQuantity,
+                            'prod_price' => $finalPrice,
+                            'sub_total' => $OrderPrice,
+                            'mrp' => $variantMRP,
+                            'offer_price' => $mainPrice,
+                            'offer_type' => $offerType,
+                            'offer_details' => $offerDetails,
+                        ];
+
+                        $insertItem = $OrderItemModal->insert($itemData);
+
+                        $inner_affectedRows = $this->db->affectedRows();
+
+                        if ($inner_affectedRows == 1) {
+                            $res['code'] = 200;
+                            $res['message'] = "Data inserted successfully";
+
+                        } else {
+                            $res['code'] = 400;
+                            $res['message'] = "Failed to insert data";
+
+                        }
                     }
+
+                    echo json_encode($res);
                 }
-                echo json_encode($res);
+
+
             }
 
         }

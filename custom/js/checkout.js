@@ -459,16 +459,9 @@ $(document).ready(function () {
         headers: { Authorization: "Bearer " + token },
         success: function (resultData) {
           if (resultData.code == 200) {
-            showToast(resultData.message, "success");
-            $("#addAddressModal").modal("hide");
-            setTimeout(function () {
-              window.location.href =
-                window.location.pathname + "#liton_tab_1_4";
-              location.reload();
-            }, 1000);
-          } else {
+            window.location.href = base_Url + "payment";
+          } else if (resultData.code == 400) {
             showToast(resultData.message, "error");
-            $("#addAddressModal").modal("hide");
           }
         },
         error: function (error) {
