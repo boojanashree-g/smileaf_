@@ -27,7 +27,8 @@ class Filters extends BaseConfig
         'adminAuth' => \App\Filters\AdminAuth::class,
         'AuthFilter' => \App\Filters\AuthMiddleware::class,
         'SessionAuth' => \App\Filters\SessionAuth::class,
-        'checkLogin' => \App\Filters\CheckLogin::class
+        'checkLogin' => \App\Filters\CheckLogin::class,
+        'PaymentAuth' => \App\Filters\PaymentAuthFilter::class,
     ];
 
     /**
