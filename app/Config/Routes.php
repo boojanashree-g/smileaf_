@@ -52,6 +52,15 @@ $routes->post('update-cart', 'CartController::updateCart');
 $routes->post('delete-cart', 'CartController::deleteCart');
 
 
+// RazorpayController checkout controller
+$routes->get('payment', 'RazorpayController::payment', ['filter' => 'PaymentAuth']);
+$routes->post('payment-status', 'RazorpayController::paymentstatus');
+$routes->get('payment-cancelled', 'RazorpayController::paymentcancel');
+$routes->get('payment-failed', 'RazorpayController::paymentfail');
+$routes->get('success', 'RazorpayController::Success');
+
+
+
 
 // *************************** [Admin Routes] *************************************************************************
 
