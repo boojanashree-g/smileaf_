@@ -37,11 +37,13 @@ class Home extends BaseController
             ->get()
             ->getResultArray();
 
-        $data['featured_products'] = $db->table('tbl_featured_products')
-            ->where('flag !=', 0)
+        $data['featured_products'] = $db->table('tbl_featured_products a')
+            ->select(' a.*,b.slug')
+            ->join('tbl_submenu b', 'a.sub_id = b.sub_id', 'left')
+            ->where('a.flag !=', 0)
+            ->where('b.flag !=', 0)
             ->get()
             ->getResultArray();
-
 
 
         return view('index', $data);
@@ -401,10 +403,10 @@ class Home extends BaseController
             ->join('tbl_filter_shapes d', 'a.shape_id = d.shape_id', 'left')
             ->where([
                     'a.flag' => 1,
-                    'b.status' => 1,
-                    'b.flag' => 1,
-                    'c.type_status' => 1,
-                    'c.flag' => 1
+                    // 'b.status' => 1,
+                    // 'b.flag' => 1,
+                    // 'c.type_status' => 1,
+                    // 'c.flag' => 1
                 ])->orderBy('a.prod_id', 'ASC');
 
 

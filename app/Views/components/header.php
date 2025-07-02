@@ -60,12 +60,12 @@
                                 <sup class="cart-count"><?= $cart_count ?></sup>
                             </a>
                         </div>
-                        <div class="mini-cart-icon dsmnone dmdnone d-block">
+                        <!-- <div class="mini-cart-icon dsmnone dmdnone d-block">
                             <a href="<?php echo base_url('wishlist') ?>" class="header-icons">
                                 <i class="far fa-heart"></i>
                                 <sup>0</sup>
                             </a>
-                        </div>
+                        </div> -->
                         <div class="ltn__header-options ltn__header-options-2 d-lg-none">
                             <div class="mobile-menu-toggle d-xl-none ">
                                 <a href="#ltn__utilize-mobile-menu" class="header-icons">
@@ -240,7 +240,7 @@
                             My Account
                         </a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="<?php echo base_url('wishlist') ?>" title="Wishlist">
                             <span class="utilize-btn-icon">
                                 <i class="far fa-heart"></i>
@@ -248,7 +248,7 @@
                             </span>
                             Wishlist
                         </a>
-                    </li>
+                    </li> -->
                     <li>
                         <a href="<?php echo base_url('cart') ?>" title="Shoping Cart">
                             <span class="utilize-btn-icon">

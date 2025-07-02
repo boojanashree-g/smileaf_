@@ -19,7 +19,7 @@
         <!-- HEADER AREA END -->
 
         <!-- WISHLIST AREA START -->
-        <div class="liton__wishlist-area pb-70">
+        <div class="liton__wishlist-area pb-0">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
