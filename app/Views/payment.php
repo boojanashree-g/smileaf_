@@ -21,7 +21,7 @@
         "notes": {
             "address": "<?= esc($customerdata['address']) ?>",
             'user_id': "<?= esc($customerdata['user_id']) ?>",
-            'order_id': "<?= esc($order['id']) ?>",
+            'order_id': "<?= esc($customerdata['order_id']) ?>",
             'username': "<?= esc($customerdata['name']) ?>"
         },
         "theme": {
@@ -29,9 +29,15 @@
         },
         "modal": {
             "ondismiss": function () {
+
+
+                var cancelOrderID = "<?= esc($order['id']) ?>";
+
                 var error_data = {
                     reason: "User dismissed the payment modal",
-                    order_id: "<?= esc($order['id']) ?>"
+                    order_id: "<?= esc($cancel_orderid) ?>",
+                    razorpay_order_id: cancelOrderID,
+
                 };
                 var error_query = new URLSearchParams(error_data).toString();
                 window.location.href = "<?= base_url('payment-cancelled') ?>?" + error_query;
@@ -86,6 +92,9 @@
 
     var rzp1 = new Razorpay(options);
 
+    var InternalOrderId = "<?= esc($customerdata['order_id']) ?>";
+    var RazorpayOrderId = "<?= esc($order['id']) ?>";
+
     rzp1.on('payment.failed', function (response) {
         var error_data = {
             code: response.error.code,
@@ -93,7 +102,8 @@
             source: response.error.source,
             step: response.error.step,
             reason: response.error.reason,
-            order_id: response.error.metadata.order_id,
+            order_id: InternalOrderId,
+            razorpay_order_id: RazorpayOrderId,
             payment_id: response.error.metadata.payment_id
         };
 
