@@ -162,7 +162,7 @@
                     <div class="col-lg-12">
                         <div class="ltn__product-item ltn__product-item-3 text-center">
                             <div class="product-img">
-                                <a href="<?= base_url('product-details/' . $related->prod_id) ?>">
+                                <a href="<?= base_url('product-details/' . base64_encode($related->prod_id)) ?>">
                                     <img src="<?= base_url($related->main_image ?? 'public/assets/img/default-product.png') ?>"
                                          alt="<?= esc($related->prod_name) ?>">
                                 </a>

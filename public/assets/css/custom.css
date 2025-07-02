@@ -348,7 +348,7 @@ input[name="set_default"] {
 }
 
 .ltn__product-tab-area {
-    padding: 180px 0 0 0;
+    padding: 20px 0 0 0;
 }
 
 .ltn__tab-menu-list .nav a {
@@ -2068,3 +2068,53 @@ a.theme-btn-1.btn:focus {
     font-family: sans-serif;
     font-weight: 700;
 }
+
+._failed{ border-bottom: solid 4px #ff0000 !important; }
+._failed i{  color: #ff0000 !important;  }
+
+._success {
+    box-shadow: 0 15px 25px #00000019;
+    padding: 45px;
+    width: 100%;
+    text-align: center;
+    margin: 40px auto;
+    border-bottom: solid 4px #28a745;
+}
+
+._success i {
+    font-size: 55px;
+    color: #28a745;
+}
+
+._success h2 {
+    margin-bottom: 12px;
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-top: 10px;
+}
+
+._success p {
+    margin-bottom: 0px;
+    font-size: 18px;
+    color: #495057;
+    font-weight: 500;
+}
+
+.continue_shoppingBtn{
+    background: #fff;
+    color: #28a745;
+    border: 1px solid #28a745;
+    height: 45px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0 !important;
+    margin-top: 15px;
+}
+._failed .continue_shoppingBtn{
+    border: 1px solid #ff0000;
+    color: #ff0000;
+}
+    

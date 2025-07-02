@@ -106,6 +106,27 @@ class RazorpayController extends BaseController
         return view('success', $successData);
 
     }
+    
+    public function paymentfail()
+    {
+        // $failedData = [
+        //     'orderid' => session()->get('orderid'),
+        //     'paymentid' => session()->get('paymentid'),
+        //     'status' => session()->get('status'),
+        // ];
+
+        // $successData = [
+        //     'orderid' => 12345,
+        //         //     'paymentid' => "pay_ueiru",
+        //     'status' => "Success",
+        // ];
+
+
+
+        return view('failed');
+
+    }
+
 
 
 

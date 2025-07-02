@@ -89,13 +89,13 @@
                             <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                                 <div class="ltn__product-item ltn__product-item-3 text-left ">
                                     <div class="product-img">
-                                        <a href="<?= base_url('productDetails/' . $product['image_url']) ?>">
+                                        <a href="<?= base_url('/products/' . $product['slug'] . '/' . base64_encode($product['sub_id'])) ?>">
                                             <img src="<?= base_url() . $product['image_url'] ?>" alt="#">
                                         </a>
                                     </div>
                                     <div class="home_products product-info">
                                         <h2 class="product-title">
-                                            <a href="<?= base_url('products/' . $product['featured_prod_id']) ?>" class="featured_prod_name">
+                                            <a href="<?= base_url('/products/' . $product['slug'] . '/' . base64_encode($product['sub_id'])) ?>" class="featured_prod_name">
                                                 <span><?= esc($product['prod_name']) ?></span>
                                                <i class="fas fa-arrow-alt-circle-right"></i>
                                             </a>
@@ -123,7 +123,7 @@
                         <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                             <div class="ltn__product-item ltn__product-item-3 text-left ">
                                 <div class="product-img">
-                                    <a href="<?= base_url('productDetails/' . $product['prod_id']) ?>">
+                                    <a href="<?= base_url('product-details/' . base64_encode($product['prod_id'])) ?>">
                                         <img src="<?= base_url() . $product['main_image'] ?>" alt="#">
                                     </a>
                                 </div>
