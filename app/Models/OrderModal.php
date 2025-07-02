@@ -42,6 +42,7 @@ class OrderModal extends Model
         'cancel_reason',
         'cancel_status',
         'refund_id',
-        'refund_amt'
+        'refund_amt',
+        'payment_cancel_reason'
     ];
 }

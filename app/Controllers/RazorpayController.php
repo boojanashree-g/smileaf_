@@ -84,7 +84,7 @@ class RazorpayController extends BaseController
 
         ];
 
-        return view("payment", ['customerdata' => $customerData, 'order' => $order, 'key_id' => $key_id, 'secret' => $secret, 'previous_url' => $previousURL]);
+        return view("payment", ['customerdata' => $customerData, 'order' => $order, 'key_id' => $key_id, 'secret' => $secret, 'previous_url' => $previousURL, 'cancel_orderid' => $orderID]);
     }
 
     public function Success()
@@ -95,40 +95,59 @@ class RazorpayController extends BaseController
             'status' => session()->get('status'),
         ];
 
-        // $successData = [
-        //     'orderid' => 12345,
-        //         //     'paymentid' => "pay_ueiru",
-        //     'status' => "Success",
-        // ];
-
-
 
         return view('success', $successData);
 
     }
-    
+
     public function paymentfail()
     {
-        // $failedData = [
-        //     'orderid' => session()->get('orderid'),
-        //     'paymentid' => session()->get('paymentid'),
-        //     'status' => session()->get('status'),
-        // ];
+        $request = service('request');
+        $data = $request->getGet();
 
-        // $successData = [
-        //     'orderid' => 12345,
-        //         //     'paymentid' => "pay_ueiru",
-        //     'status' => "Success",
-        // ];
+        $order_id = $request->getGet('order_id');
+        $razerpay_order_id = $request->getGet('razorpay_order_id');
+        $payment_id = $request->getGet('payment_id');
+        $reason = $request->getGet('reason');
+        $code = $request->getGet('code');
+        $description = $request->getGet('description');
+        $payment_status = "FAILED";
 
+        $updateOrderQry = "UPDATE `tbl_orders` SET  razerpay_payment_id = ? , razerpay_order_id =? , `payment_status` = ? , `payment_cancel_reason` =? ";
+        $updateData = $this->db->query($updateOrderQry, [$payment_id, $razerpay_order_id, $payment_status, $reason]);
 
-
-        return view('failed');
+        return view('failed', ['reason' => $reason, 'payment_id' => $payment_id]);
 
     }
 
 
-    
+    public function paymentcancel()
+    {
+        $request = service('request');
+        $data = $request->getGet();
+
+        $orderId = $request->getGet('order_id');
+        $reason = $request->getGet('reason') ?? 'User cancelled payment';
+        $paymentStatus = "CANCELLED";
+
+        $updateOrderQry = "
+        UPDATE `tbl_orders` 
+        SET `payment_status` = ?, 
+            `payment_cancel_reason` = ?, 
+            `updated_at` = NOW()
+        WHERE `order_id` = ?
+    ";
+        $updateOrder = $this->db->query($updateOrderQry, [$paymentStatus, $reason, $orderId]);
+
+        $affectedRows = $this->db->affectedRows();
+
+        if ($affectedRows) {
+            return view('cancel', ['cancel_reason' => $reason]);
+        } else {
+            return view('cancel', ['cancel_reason' => 'Could not update cancellation status.']);
+        }
+    }
+
 
     public function paymentstatus()
     {
@@ -239,7 +258,7 @@ class RazorpayController extends BaseController
                     $successData = [
                         'orderid' => $razorpay_order_id,
                         'paymentid' => $razorpay_payment_id,
-                        'status' => $orderstatus,
+                        'status' => "Completed",
                     ];
                     session()->set($successData);
 
