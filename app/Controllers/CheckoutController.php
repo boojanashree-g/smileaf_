@@ -18,7 +18,7 @@ class CheckoutController extends BaseController
         $this->db = \Config\Database::connect();
         $this->session = \Config\Services::session();
     }
-    
+
 
     public function placeOrder()
     {
@@ -149,9 +149,10 @@ class CheckoutController extends BaseController
                 'sub_total' => $finalSubTotal,
                 'add_id' => $addID,
                 'order_status' => "initiated",
-                'order_date' => date('d-m-Y'),
+                'order_date' => date('Y-m-d H:i:s'),
                 'courier_charge' => $totalShipping,
                 'courier_type' => $courierType,
+
             ];
 
 

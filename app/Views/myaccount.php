@@ -51,40 +51,44 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th>Order Id</th>
-                                                                    <th>Date</th>
-                                                                    <th>Status</th>
+                                                                    <th>Order Date</th>
+                                                                    <th>Order Status</th>
                                                                     <th>Total</th>
                                                                     <th>Action</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr>
-                                                                    <td>#A915AFLE4FO</td>
-                                                                    <td>Jun 22, 2019</td>
-                                                                    <td><span class="badge bg-warning">Pending</span>
-                                                                    </td>
-                                                                    <td>₹3000</td>
-                                                                    <td><a href="#" class=" btn-sm btn-primary"
-                                                                            onclick="openOrderModal(1)">View</a></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>#A915AFLE4FO</td>
-                                                                    <td>Nov 22, 2019</td>
-                                                                    <td><span class="badge bg-success">Approved</span>
-                                                                    </td>
-                                                                    <td>₹200</td>
-                                                                    <td><a href="#" class="btn-sm btn-primary"
-                                                                            onclick="openOrderModal(2)">View</a></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>#A915AFLE4FO</td>
-                                                                    <td>Jan 12, 2020</td>
-                                                                    <td><span class="badge bg-secondary">On Hold</span>
-                                                                    </td>
-                                                                    <td>₹990</td>
-                                                                    <td><a href="#" class="btn-sm btn-primary"
-                                                                            onclick="openOrderModal(3)">View</a></td>
-                                                                </tr>
+                                                                <?php
+                                                                if ($count = count($summary) <= 0) { ?>
+                                                                    <h2> No Orders Placed</h2>
+                                                                    <h2> Back to purchase</h2>
+                                                                <?php } else { ?>
+                                                                    <?php foreach ($summary as $orderID => $orderDetails) {
+                                                                        $orderStatus = $orderDetails['order_status'];
+
+                                                                        if ($orderStatus == 'New') {
+                                                                            $orderClass = "bg-success";
+                                                                        } else if ($orderStatus == 'Failed') {
+                                                                            $orderClass = "bg-danger";
+                                                                        } else if ($orderStatus == 'Cancelled') {
+                                                                            $orderClass = "bg-info";
+                                                                        }
+                                                                        ?>
+                                                                        <tr>
+                                                                            <td><?= $orderDetails['order_no'] ?></td>
+                                                                            <td><?= $orderDetails['order_date'] ?></td>
+                                                                            <td><span
+                                                                                    class="badge <?= $orderClass ?>"><?= $orderDetails['order_status'] ?></span>
+                                                                            </td>
+                                                                            <td>₹<?= $orderDetails['order_total_amt'] ?></td>
+                                                                            <td><a class="btn-sm btn-primary view-order"
+                                                                                    onclick="orderModal()">View</a>
+                                                                            </td>
+
+                                                                        </tr>
+
+                                                                    <?php }
+                                                                } ?>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -190,7 +194,7 @@
                         <!-- PRODUCT TAB AREA END -->
                         <!-- Add Address Modal -->
                         <div class="modal fade slide-from-center" id="addAddressModal" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-md">
+                            <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title address-title">Add New Address</h5>
@@ -291,14 +295,14 @@
                         </div>
 
                         <!-- Order Details Modal -->
-                        <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel"
+                        <div class="modal fade orderModal" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel"
                             aria-hidden="true">
                             <div class="modal-dialog modal-xl">
                                 <!-- Widened for better alignment -->
                                 <div class="modal-content">
                                     <div class="modal-header bg-snow">
                                         <h5 class="modal-title text-charcoal" id="orderModalLabel">Order Details</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        <button type="button" class="btn-close" onclick="ModalClose()" data-bs-dismi ss="modal"
                                             aria-label="Close"></button>
                                     </div>
 
@@ -415,15 +419,24 @@
     <script src="<?php echo base_url() ?>public/assets/js/main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo base_url() ?>custom/js/address.js"></script>
-
     <script src="<?php echo base_url() ?>custom/js/myaccount.js"></script>
 
     <script>
-    $("#btn-logout").click(function(e) {
-        e.preventDefault();
-        localStorage.clear();
-        window.location.href = "<?= base_url('logout') ?>";
-    })
+        $("#btn-logout").click(function (e) {
+            e.preventDefault();
+            localStorage.clear();
+            window.location.href = "<?= base_url('logout') ?>";
+        })
+
+        function orderModal() {
+            $(".orderModal").modal("show");
+        }
+
+        function ModalClose(){
+             $(".orderModal").modal("hide");
+        }
+
+
     </script>
     <script>
     function openOrderModal(orderId) {

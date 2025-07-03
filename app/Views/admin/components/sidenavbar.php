@@ -16,6 +16,14 @@
                 <div data-i18n="Dashboard">Dashboard</div>
             </a>
         </li>
+
+        <li class="menu-item parent-item">
+            <a href="<?= base_url() ?>admin/order-details" class="menu-link menu-toggle-">
+                <i class="menu-icon tf-icons ti ti-shopping-cart"></i>
+
+                <div data-i18n="Order Details">Order Details</div>
+            </a>
+        </li>
         <li class="menu-item parent-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-package"></i>
@@ -111,6 +119,6 @@
                 <div data-i18n="Manage Banner">Manage Banner</div>
             </a>
 
-        </li>    
+        </li>
     </ul>
 </aside>

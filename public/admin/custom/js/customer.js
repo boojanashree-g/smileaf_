@@ -31,12 +31,12 @@ $(document).ready(function () {
           mDataProp: "email",
         },
         {
-        mDataProp: "is_verified",
-        render: function (data, type, row, meta) {
+          mDataProp: "is_verified",
+          render: function (data, type, row, meta) {
             return data == 1
-                ? '<span class="badge bg-success">Verified</span>'
-                : '<span class="badge bg-secondary">Not Verified</span>';
-            },
+              ? '<span class="badge bg-success">Verified</span>'
+              : '<span class="badge bg-secondary">Not Verified</span>';
+          },
         },
         {
           mDataProp: function (data, type, full, meta) {
@@ -174,7 +174,7 @@ $(document).ready(function () {
           data: { user_id: user_id },
           dataType: "json",
           success: function (data) {
-            var resData = data;     
+            var resData = data;
 
             if (resData.code == 200) {
               Swal.fire({
@@ -211,7 +211,7 @@ $(document).ready(function () {
     });
   });
 
-    // *************************** [Edit Data] *************************************************************************
+  // *************************** [Edit Data] *************************************************************************
 
   $(document).on("click", ".btnEdit", function () {
     $("#customer-modal").modal("show");
@@ -224,14 +224,13 @@ $(document).ready(function () {
 
     $("#customer_name").val(res_DATA[index].username);
     $("#customer_mobile").val(res_DATA[index].number);
-    $("#customer_email").val(res_DATA[index].email); 
+    $("#customer_email").val(res_DATA[index].email);
     if (res_DATA[index].is_verified == 1) {
-        $('#is_verified').prop('checked', true);
+      $("#is_verified").prop("checked", true);
     } else {
-        $('#is_verified').prop('checked', false);
+      $("#is_verified").prop("checked", false);
     }
 
     user_id = res_DATA[index].user_id;
   });
-
 });

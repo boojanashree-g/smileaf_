@@ -1,5 +1,10 @@
 <button id="rzp-button1" hidden></button>
 
+<div class="loader"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; display: flex; justify-content: center; align-items: center;">
+    <img width="40px" src="<?= base_url('public/assets/img/favicon.png') ?>" alt="Loading..." />
+</div>
+
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
@@ -44,6 +49,9 @@
             }
         },
         "handler": function (response) {
+
+            document.querySelector(".loader").style.display = "block";
+
             var payment_data = {
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_order_id: response.razorpay_order_id,
@@ -64,14 +72,17 @@
                         if (res.code === 200 && res.status === 'success') {
                             window.location.href = "<?= base_url('success') ?>";
                         } else {
+                            document.querySelector(".loader").style.display = "none";
                             alert("Payment verification failed. Please contact support.");
                             console.error("Error: ", res.message);
                         }
                     } catch (e) {
+                        document.querySelector(".loader").style.display = "none";
                         alert("Invalid response from server.");
                         console.error("Invalid JSON response:", xhr.responseText);
                     }
                 } else {
+                    document.querySelector(".loader").style.display = "none";
                     alert("Server error. Try again.");
                     console.error("HTTP Error: ", xhr.status, xhr.statusText);
                 }
@@ -79,6 +90,7 @@
 
 
             xhr.onerror = function () {
+                document.querySelector(".loader").style.display = "none";
                 alert("Payment request failed. Check your internet connection.");
                 console.error("Request failed. Status: ", xhr.status);
             };

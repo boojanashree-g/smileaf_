@@ -12,6 +12,7 @@ class AdminAuth implements FilterInterface
 
 
         $session = session();
+        $isLogin = $session->get();
 
         $isLogin = $session->get('admin_login');
 

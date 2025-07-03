@@ -36,7 +36,7 @@ class CartController extends BaseController
             return $this->response->setJSON([
                 "status" => "fail",
                 "code" => 404,
-                "message" => "Product variant not found!",
+                "message" => "Please select a pack size.",
             ]);
         }
 

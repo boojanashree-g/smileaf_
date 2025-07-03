@@ -70,7 +70,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\admin'], function ($rou
 
 });
 
-$routes->group('admin/banner', ['namespace' => 'App\Controllers\admin'], function ($routes) {
+$routes->group('admin/banner', ['namespace' => 'App\Controllers\admin', 'filter' => 'adminAuth'], function ($routes) {
     $routes->get('/', 'BannerController::banner');
     $routes->post('insert-data', 'BannerController::insertData');
     $routes->post('get-data', 'BannerController::getData');
@@ -80,7 +80,7 @@ $routes->group('admin/banner', ['namespace' => 'App\Controllers\admin'], functio
 
 });
 
-$routes->group('admin/main-menu', ['namespace' => 'App\Controllers\admin'], function ($routes) {
+$routes->group('admin/main-menu', ['namespace' => 'App\Controllers\admin', 'filter' => 'adminAuth'], function ($routes) {
     $routes->get('/', 'MainmenuController::mainMenu');
     $routes->post('insert-data', 'MainmenuController::insertData');
     $routes->post('update-status', 'MainmenuController::updateStatus');
@@ -90,7 +90,7 @@ $routes->group('admin/main-menu', ['namespace' => 'App\Controllers\admin'], func
 
 });
 
-$routes->group('admin/sub-menu', ['namespace' => 'App\Controllers\admin'], function ($routes) {
+$routes->group('admin/sub-menu', ['namespace' => 'App\Controllers\admin', 'filter' => 'adminAuth'], function ($routes) {
     $routes->get('/', 'SubmenuController::subMenu');
     $routes->post('insert-data', 'SubmenuController::insertData');
     $routes->post('get-data', 'SubmenuController::getData');
@@ -99,7 +99,7 @@ $routes->group('admin/sub-menu', ['namespace' => 'App\Controllers\admin'], funct
     $routes->post('update-status', 'SubmenuController::updateStatus');
 });
 
-$routes->group('admin/sub-category', ['namespace' => 'App\Controllers\admin'], function ($routes) {
+$routes->group('admin/sub-category', ['namespace' => 'App\Controllers\admin', 'filter' => 'adminAuth'], function ($routes) {
     $routes->get('/', 'SubCatController::subCategory');
     $routes->post('insert-data', 'SubCatController::insertData');
     $routes->post('get-data', 'SubCatController::getData');
@@ -111,7 +111,7 @@ $routes->group('admin/sub-category', ['namespace' => 'App\Controllers\admin'], f
 
 
 // Filter Types
-$routes->group('admin/filter-types', ['namespace' => 'App\Controllers\admin'], function ($routes) {
+$routes->group('admin/filter-types', ['namespace' => 'App\Controllers\admin', 'filter' => 'adminAuth'], function ($routes) {
     $routes->get('/', 'FilterTypeController::filterType');
     $routes->post('insert-data', 'FilterTypeController::insertData');
     $routes->post('get-data', 'FilterTypeController::getData');
@@ -122,7 +122,7 @@ $routes->group('admin/filter-types', ['namespace' => 'App\Controllers\admin'], f
 
 
 //Filter Shapes
-$routes->group('admin/filter-shapes', ['namespace' => 'App\Controllers\admin'], function ($routes) {
+$routes->group('admin/filter-shapes', ['namespace' => 'App\Controllers\admin', 'filter' => 'adminAuth'], function ($routes) {
     $routes->get('/', 'FilterShapeController::filterShape');
     $routes->post('insert-data', 'FilterShapeController::insertData');
     $routes->post('get-data', 'FilterShapeController::getData');
@@ -132,7 +132,7 @@ $routes->group('admin/filter-shapes', ['namespace' => 'App\Controllers\admin'], 
 });
 
 //Filter Sizes
-$routes->group('admin/filter-size', ['namespace' => 'App\Controllers\admin'], function ($routes) {
+$routes->group('admin/filter-size', ['namespace' => 'App\Controllers\admin', 'filter' => 'adminAuth'], function ($routes) {
     $routes->get('/', 'FilterSizeController::filterSize');
     $routes->post('insert-data', 'FilterSizeController::insertData');
     $routes->post('get-data', 'FilterSizeController::getData');
@@ -141,7 +141,7 @@ $routes->group('admin/filter-size', ['namespace' => 'App\Controllers\admin'], fu
     $routes->post('update-status', 'FilterSizeController::updateStatus');
 });
 
-$routes->group('admin/product-details', ['namespace' => 'App\Controllers\admin'], function ($routes) {
+$routes->group('admin/product-details', ['namespace' => 'App\Controllers\admin', 'filter' => 'adminAuth'], function ($routes) {
     $routes->get('/', 'ProductController::ProductDetails');
     $routes->post('submenu', 'ProductController::getSubmenu');
     $routes->post('insert-data', 'ProductController::insertData');
@@ -151,7 +151,7 @@ $routes->group('admin/product-details', ['namespace' => 'App\Controllers\admin']
 
 });
 
-$routes->group('admin/featured-products', ['namespace' => 'App\Controllers\admin'], function ($routes) {
+$routes->group('admin/featured-products', ['namespace' => 'App\Controllers\admin', 'filter' => 'adminAuth'], function ($routes) {
     $routes->get('/', 'ProductController::featuredProductDetails');
     $routes->post('getFeaturedProductDetails', 'ProductController::getFeaturedProductDetails');
     $routes->post('insert-data', 'ProductController::insertFeaturedData');
@@ -162,11 +162,20 @@ $routes->group('admin/featured-products', ['namespace' => 'App\Controllers\admin
 
 
 
-$routes->group('admin/customer-details', ['namespace' => 'App\Controllers\admin'], function ($routes) {
+$routes->group('admin/customer-details', ['namespace' => 'App\Controllers\admin', 'filter' => 'adminAuth'], function ($routes) {
     $routes->get('/', 'CustomerController::customerDetails');
     $routes->post('get-data', 'CustomerController::getData');
     $routes->post('insert-data', 'CustomerController::insertData');
     $routes->post('update-data', 'CustomerController::updateData');
     $routes->post('delete-data', 'CustomerController::deleteData');
+});
 
+
+$routes->group('admin/order-details', ['namespace' => 'App\Controllers\admin', 'filter' => 'adminAuth'], function ($routes) {
+    $routes->get('/', 'OrderController::orderDetails');
+    $routes->post('get-data', 'OrderController::getData');
+
+    $routes->post('insert-data', 'CustomerController::insertData');
+    $routes->post('update-data', 'CustomerController::updateData');
+    $routes->post('delete-data', 'CustomerController::deleteData');
 });

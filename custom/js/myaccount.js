@@ -80,4 +80,10 @@ function insertAccount() {
       showToast(error, "error");
     },
   });
+
+  // *************************** [View Order Details ] *************************************************************************
+
+  $(".view-order").click(function () {
+    alert("hii");
+  });
 }

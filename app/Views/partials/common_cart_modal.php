@@ -1,3 +1,12 @@
+<style>
+    .blurred-label {
+        opacity: 0.5;
+        pointer-events: none;
+        cursor: not-allowed;
+        background-color: rgba(136, 131, 131, 0.72);
+    }
+</style>
+
 <div class="modal-header border-0">
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
         style="font-size: 1.5rem;"></button>
@@ -25,30 +34,44 @@
                 <div class="modal-product-meta ltn__product-details-menu-1">
                     <ul>
                         <li>
-                            <strong>Quantity: (No. of plates)</strong>
+                            <strong>Quantity: (Pack Size)</strong>
                             <span class="quantity-options">
                                 <?php
+
                                 $lowestQty = $variant_data['lowest_quantity'];
-                                foreach ($variant_data as $key => $variant):
+                                $lowestSet = false; // to avoid multiple "checked" attributes
+                                
+                                foreach ($variant_data['list'] as $variant):
                                     if (!is_array($variant))
                                         continue;
 
+
                                     $packQty = $variant['pack_qty'];
+                                    $quantity = (int) $variant['quantity'];
                                     $inputId = "mqty-" . $packQty;
-                                    $isChecked = ($variant['quantity'] == $lowestQty) ? 'checked' : '';
 
 
                                     $mrp = $variant['mrp'];
                                     $offerPrice = $variant['offer_price'];
                                     $quantity = $variant['quantity'];
 
+                                    $isDisabled = ($quantity == 0) ? 'disabled' : '';
+                                    $labelClass = ($quantity == 0) ? 'blurred-label' : '';
+
+                                    // Only check the first non-zero quantity variant
+                                    $isChecked = (!$lowestSet && $quantity > 0 && $quantity == $lowestQty) ? 'checked' : '';
+                                    if ($isChecked)
+                                        $lowestSet = true;
                                     ?>
-                                    <input class="pack_qty" type="radio" id="<?= $inputId ?>" name="pack_qty" value="<?= $packQty ?>"
+                                      <input class="pack_qty" type="radio" id="<?= $inputId ?>" name="pack_qty" value="<?= $packQty ?>"
                                         data-mrp="<?= $mrp ?>" data-offer="<?= $offerPrice ?>"
                                         data-quantity="<?= $quantity ?>" 
-                                        data-prodid="<?=$products[0]['prod_id'] ?>" <?= $isChecked ?>>
-                                    <label for="<?= $inputId ?>"><?= $packQty ?></label>
+                                        data-prodid="<?=$products[0]['prod_id'] ?>" <?= $isChecked ?>  <?= $isChecked ?>     <?= $isDisabled ?>>
+                                        
+                                    <label for="<?= $inputId ?>" class="<?= $labelClass ?>"><?= $packQty ?></label>
                                 <?php endforeach; ?>
+
+
                             </span>
 
                         </li>
@@ -60,8 +83,9 @@
                     <ul>
                         <li>
                             <div class="cart-plus-minus">
-                                <input type="text" value="1" name="quantity" 
-                                    data-maxqty="<?= $variant_data['lowest_quantity'] ?>" class="cart-plus-minus-box selected-qty">
+                                <input type="text" value="1" name="quantity"
+                                    data-maxqty="<?= $variant_data['lowest_quantity'] ?>"
+                                    class="cart-plus-minus-box selected-qty">
                             </div>
                         </li>
                         <li>
@@ -96,7 +120,7 @@
                     </ul>
                 </div>
                 <div class="ltn__social-media">
-                    
+
                 </div>
             </div>
         </div>
@@ -108,11 +132,12 @@
         $('input[name="pack_qty"]').on('change', function () {
             var $initialInput = $('.cart-plus-minus input[name="quantity"]');
             $initialInput.val(1).data("maxqty", $initialInput.val());
-
+        
 
 
             var offer = parseFloat($(this).data('offer')).toFixed(2);
             var mrp = parseFloat($(this).data('mrp')).toFixed(2);
+          
             var qty = parseInt($(this).data('quantity')) || 1;
             if (qty <= 0) {
                 qty = 1
@@ -143,6 +168,13 @@
         $(".cart-plus-minus").append('<div class="inc qtybutton">+</div>');
 
         $(".qtybutton").on("click", function () {
+
+             const selectedVariant = $("input[name='pack_qty']:checked");
+
+            if (selectedVariant.length === 0) {
+             showToast("Please select a pack size.", "error");
+                return; 
+            }
             var $button = $(this);
             var $input = $button.parent().find("input");
 
@@ -155,7 +187,7 @@
                     $input.val(oldValue + 1);
                 }
             } else {
-                 if (oldValue > 1) {
+                if (oldValue > 1) {
                     $input.val(oldValue - 1);
                 }
             }
