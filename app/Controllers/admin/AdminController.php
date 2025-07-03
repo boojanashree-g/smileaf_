@@ -16,6 +16,11 @@ class AdminController extends BaseController
     }
     public function login()
     {
+
+        if (session()->get('admin_login')) {
+            return redirect()->to('admin/dashboard');
+        }
+
         $res['meta_title'] = "Admin Login";
 
         if (session()->get('islogin')) {

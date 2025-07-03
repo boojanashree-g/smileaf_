@@ -33,7 +33,7 @@ class QuickViewController extends BaseController
         $prodData = $this->db->query($prodQry, [$prod_id, $menu_id, $submenu_id])->getResultArray();
 
 
-        $variantQry = "SELECT * FROM `tbl_variants` WHERE `prod_id` = ? AND flag = 1 AND quantity != 0";
+        $variantQry = "SELECT * FROM `tbl_variants` WHERE `prod_id` = ? AND flag = 1";
         $variantData = $this->db->query($variantQry, [$prod_id])->getResultArray();
 
 
@@ -44,17 +44,17 @@ class QuickViewController extends BaseController
                 $lowestOffer = $variant;
             }
         }
-        if ($lowestOffer) {
-            $variantData['lowest_mrp'] = $lowestOffer['mrp'];
-            $variantData['lowest_offer_price'] = $lowestOffer['offer_price'];
-            $lowestQty = (!empty($lowestOffer['quantity']) && $lowestOffer['quantity'] > 0) ? (int) $lowestOffer['quantity'] : 0;
-            $variantData['lowest_quantity'] = $lowestQty;
+        // if ($lowestOffer) {
+        //     $variantData['lowest_mrp'] = $lowestOffer['mrp'];
+        //     $variantData['lowest_offer_price'] = $lowestOffer['offer_price'];
+        //     $lowestQty = (!empty($lowestOffer['quantity']) && $lowestOffer['quantity'] > 0) ? (int) $lowestOffer['quantity'] : 0;
+        //     $variantData['lowest_quantity'] = $lowestQty;
 
-        } else {
-            $variantData['lowest_mrp'] = null;
-            $variantData['lowest_offer_price'] = null;
-            $variantData['lowest_quantity'] = null;
-        }
+        // } else {
+        //     $variantData['lowest_mrp'] = null;
+        //     $variantData['lowest_offer_price'] = null;
+        //     $variantData['lowest_quantity'] = null;
+        // }
 
 
 
@@ -66,12 +66,14 @@ class QuickViewController extends BaseController
             'code' => 200,
             'status' => 'success',
             'products' => $prodData,
-            'variant_data' => $variantData,
+            'variant_data' => [ // group properly
+                'list' => $variantData, // the pure DB result
+                'lowest_mrp' => $lowestOffer['mrp'] ?? null,
+                'lowest_offer_price' => $lowestOffer['offer_price'] ?? null,
+                'lowest_quantity' => $lowestQty ?? 0,
+            ],
             'image_data' => $imageData,
         ];
-
-
-
 
         return view("partials/common_cart_modal", $res);
 

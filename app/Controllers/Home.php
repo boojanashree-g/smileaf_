@@ -213,9 +213,9 @@ class Home extends BaseController
         $res = array_merge($this->getMenuData(), [
             'page_title' => 'Checkout',
             'breadcrumb_items' => [
-                    ['label' => 'Home', 'url' => base_url()],
-                    ['label' => 'Checkout']
-                ],
+                ['label' => 'Home', 'url' => base_url()],
+                ['label' => 'Checkout']
+            ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
 
@@ -351,9 +351,9 @@ class Home extends BaseController
         $data = array_merge($this->getMenuData(), [
             'page_title' => 'contact',
             'breadcrumb_items' => [
-                    ['label' => 'Home', 'url' => base_url()],
-                    ['label' => 'contact']
-                ],
+                ['label' => 'Home', 'url' => base_url()],
+                ['label' => 'contact']
+            ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
 
@@ -402,12 +402,12 @@ class Home extends BaseController
             ->join('tbl_filter_type c', 'a.type_id = c.type_id', 'left')
             ->join('tbl_filter_shapes d', 'a.shape_id = d.shape_id', 'left')
             ->where([
-                    'a.flag' => 1,
-                    // 'b.status' => 1,
-                    // 'b.flag' => 1,
-                    // 'c.type_status' => 1,
-                    // 'c.flag' => 1
-                ])->orderBy('a.prod_id', 'ASC');
+                'a.flag' => 1,
+                // 'b.status' => 1,
+                // 'b.flag' => 1,
+                // 'c.type_status' => 1,
+                // 'c.flag' => 1
+            ])->orderBy('a.prod_id', 'ASC');
 
 
 
@@ -463,6 +463,7 @@ class Home extends BaseController
                 }
             }
 
+
             if ($lowestOffer) {
                 $product['lowest_mrp'] = $lowestOffer['mrp'];
                 $product['lowest_offer_price'] = $lowestOffer['offer_price'];
@@ -472,6 +473,7 @@ class Home extends BaseController
                 $product['lowest_offer_price'] = null;
                 $product['lowest_quantity'] = null;
             }
+
 
 
             $products[] = $product;
@@ -493,9 +495,9 @@ class Home extends BaseController
         $data = array_merge($menuData, [
             'page_title' => 'Products',
             'breadcrumb_items' => [
-                    ['label' => 'Home', 'url' => base_url()],
-                    ['label' => 'Products']
-                ],
+                ['label' => 'Home', 'url' => base_url()],
+                ['label' => 'Products']
+            ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
             'products' => $products,
             'productTypes' => $productTypes ?? [],
@@ -514,9 +516,9 @@ class Home extends BaseController
 
             'page_title' => 'Wishlist',
             'breadcrumb_items' => [
-                    ['label' => 'Home', 'url' => base_url()],
-                    ['label' => 'Wishlist']
-                ],
+                ['label' => 'Home', 'url' => base_url()],
+                ['label' => 'Wishlist']
+            ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
 
@@ -531,9 +533,9 @@ class Home extends BaseController
 
             'page_title' => 'Wishlist',
             'breadcrumb_items' => [
-                    ['label' => 'Home', 'url' => base_url()],
-                    ['label' => 'Wishlist']
-                ],
+                ['label' => 'Home', 'url' => base_url()],
+                ['label' => 'Wishlist']
+            ],
 
         ]);
 
@@ -551,6 +553,79 @@ class Home extends BaseController
         $res['address'] = $this->db->query($query, [$userID])->getResultArray();
 
 
+        // Get Order Summary
+        $Orderquery = "SELECT * FROM `tbl_orders` WHERE `user_id` = ? AND `flag` = 1 AND  order_status <> 'initiated'";
+        $orderDetails = $this->db->query($Orderquery, [$userID])->getResultArray();
+
+
+        $orderSummaries = [];
+
+        foreach ($orderDetails as $orders) {
+            $orderID = $orders['order_id'];
+            $courierCharge = $orders['courier_charge'];
+            $orderSubTotal = $orders['sub_total'];
+            $OrderTotalAmt = $orders['total_amt'];
+            $orderDate = date('d-m-Y', strtotime($orders['order_date'])); 
+
+            $query = "SELECT * FROM `tbl_order_item` WHERE `flag` = 1 AND `order_id` = ?";
+            $itemDetails = $this->db->query($query, [$orderID])->getResultArray();
+
+           
+            $orderSummaries[$orderID] = [
+                'order_id' => $orderID,
+                'order_no' =>  $orders['order_no'],
+                'bill_no' =>  $orders['bill_no'],
+                'bill_date' =>  $orders['bill_date'],
+                'order_status' => $orders['order_status'],
+                'order_date' =>$orderDate ,
+                'payment_status' => $orders['payment_status'],
+                'payment_cancel_reason' => $orders['payment_cancel_reason'],
+                'delivery_status' => $orders['delivery_status'],
+                'delivery_message' => $orders['delivery_message'],
+                'courier_charge' => $courierCharge,
+                'order_sub_total' => $orderSubTotal,
+                'order_total_amt' => $OrderTotalAmt,
+                
+                'items' => []
+            ];
+
+            foreach ($itemDetails as $item) {
+                $prodID = $item['prod_id'];
+                $variantID = $item['variant_id'];
+                $quantity = $item['quantity'];
+                $prod_price = $item['prod_price'];
+                $sub_total = $item['sub_total'];
+
+                $packQtyQuery = "SELECT
+                            a.`pack_qty`,
+                            b.prod_name,
+                            b.main_image
+                        FROM
+                            `tbl_variants` AS a
+                        INNER JOIN tbl_products AS b
+                            ON a.prod_id = b.prod_id
+                        WHERE
+                            b.`flag` = 1 AND a.flag = 1 AND a.variant_id = ? AND a.prod_id = ?";
+                $packData = $this->db->query($packQtyQuery, [$variantID, $prodID])->getRow();
+
+                if ($packData) {
+                    $productDetails = [
+                        'prod_name' => $packData->prod_name,
+                        'main_image' => $packData->main_image,
+                        'pack_qty' => $packData->pack_qty,
+                        'quantity' => $quantity,
+                        'prod_price' => $prod_price,
+                        'sub_total' => $sub_total,
+                    ];
+                    $orderSummaries[$orderID]['items'][] = $productDetails;
+                }
+            }
+        }
+
+        krsort($orderSummaries);
+        $res['summary'] = $orderSummaries;
+      
+
         return view('myaccount', $res);
     }
     public function signup()
@@ -560,9 +635,9 @@ class Home extends BaseController
         $data = array_merge($menuData, [
             'page_title' => 'Sign-Up',
             'breadcrumb_items' => [
-                    ['label' => 'Home', 'url' => base_url()],
-                    ['label' => 'Sign-Up']
-                ],
+                ['label' => 'Home', 'url' => base_url()],
+                ['label' => 'Sign-Up']
+            ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
 
@@ -579,9 +654,9 @@ class Home extends BaseController
         $data = array_merge($menuData, [
             'page_title' => 'Login / Signup',
             'breadcrumb_items' => [
-                    ['label' => 'Home', 'url' => base_url()],
-                    ['label' => 'Login / Signup']
-                ],
+                ['label' => 'Home', 'url' => base_url()],
+                ['label' => 'Login / Signup']
+            ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
         $this->session->set('callback_url', previous_url());
@@ -594,9 +669,9 @@ class Home extends BaseController
         $data = array_merge($menuData, [
             'page_title' => 'Terms & Conditions',
             'breadcrumb_items' => [
-                    ['label' => 'Home', 'url' => base_url()],
-                    ['label' => 'Terms & Conditions']
-                ],
+                ['label' => 'Home', 'url' => base_url()],
+                ['label' => 'Terms & Conditions']
+            ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
 
@@ -608,9 +683,9 @@ class Home extends BaseController
         $data = array_merge($menuData, [
             'page_title' => 'Privacy Policy',
             'breadcrumb_items' => [
-                    ['label' => 'Home', 'url' => base_url()],
-                    ['label' => 'Privacy Policy']
-                ],
+                ['label' => 'Home', 'url' => base_url()],
+                ['label' => 'Privacy Policy']
+            ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
 
@@ -622,9 +697,9 @@ class Home extends BaseController
         $data = array_merge($menuData, [
             'page_title' => 'Order Tracking',
             'breadcrumb_items' => [
-                    ['label' => 'Home', 'url' => base_url()],
-                    ['label' => 'Order Tracking']
-                ],
+                ['label' => 'Home', 'url' => base_url()],
+                ['label' => 'Order Tracking']
+            ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
 
@@ -651,9 +726,9 @@ class Home extends BaseController
         $data = array_merge($menus, [
             'page_title' => $menuData['menu_name'],
             'breadcrumb_items' => [
-                    ['label' => 'Home', 'url' => base_url()],
-                    ['label' => $menuData['menu_name']]
-                ],
+                ['label' => 'Home', 'url' => base_url()],
+                ['label' => $menuData['menu_name']]
+            ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
             'submenus' => $submenuData
         ]);

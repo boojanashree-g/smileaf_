@@ -112,9 +112,10 @@ class RazorpayController extends BaseController
         $code = $request->getGet('code');
         $description = $request->getGet('description');
         $payment_status = "FAILED";
+        $order_status = "Failed";
 
-        $updateOrderQry = "UPDATE `tbl_orders` SET  razerpay_payment_id = ? , razerpay_order_id =? , `payment_status` = ? , `payment_cancel_reason` =? ";
-        $updateData = $this->db->query($updateOrderQry, [$payment_id, $razerpay_order_id, $payment_status, $reason]);
+        $updateOrderQry = "UPDATE `tbl_orders` SET  razerpay_payment_id = ? , razerpay_order_id =? , `payment_status` = ? , `payment_cancel_reason` =? ,`order_status` = ? WHERE order_id = ?";
+        $updateData = $this->db->query($updateOrderQry, [$payment_id, $razerpay_order_id, $payment_status, $reason, $order_status, $order_id]);
 
         return view('failed', ['reason' => $reason, 'payment_id' => $payment_id]);
 
@@ -128,16 +129,18 @@ class RazorpayController extends BaseController
 
         $orderId = $request->getGet('order_id');
         $reason = $request->getGet('reason') ?? 'User cancelled payment';
+        $orderStatus = "Cancelled ";
         $paymentStatus = "CANCELLED";
 
         $updateOrderQry = "
         UPDATE `tbl_orders` 
         SET `payment_status` = ?, 
             `payment_cancel_reason` = ?, 
-            `updated_at` = NOW()
+            `updated_at` = NOW(),
+            `order_status` = ?
         WHERE `order_id` = ?
     ";
-        $updateOrder = $this->db->query($updateOrderQry, [$paymentStatus, $reason, $orderId]);
+        $updateOrder = $this->db->query($updateOrderQry, [$paymentStatus, $reason, $orderStatus, $orderId]);
 
         $affectedRows = $this->db->affectedRows();
 
