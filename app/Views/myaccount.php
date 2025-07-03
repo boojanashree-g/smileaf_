@@ -19,7 +19,7 @@
         <!-- HEADER AREA END -->
 
         <!-- WISHLIST AREA START -->
-        <div class="liton__wishlist-area pb-0">
+        <div class="liton__wishlist-area pb-70">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
@@ -106,38 +106,38 @@
                                                         <div class="row m-0">
                                                             <?php
                                                             foreach ($address as $i => $data) { ?>
-                                                                <div class="col-md-12 col-12">
-                                                                    <div class="address_card">
-                                                                        <h4>
-                                                                            <small class="btn-small"><a
-                                                                                    class="btn btn-sm btn-outline-secondary edit-address"
-                                                                                    index="<?php echo $i ?>">Edit</a></small>
-                                                                            <small class="btn-small delete"><a
-                                                                                    class="btn btn-sm btn-outline-danger address-delete"
-                                                                                    index="<?php echo $i ?>">Delete</a></small>
-                                                                        </h4>
-                                                                        <address>
-                                                                            <!-- <p><strong>Alex Tuntuni</strong></p> -->
-                                                                            <p><?= $data['address'] ?><br>
-                                                                                <?= $data['landmark'] ?>,
-                                                                                <?= $data['city'] ?><br>
-                                                                                <?= $data['dist_name'] ?>,
-                                                                                <?= $data['state_title'] ?><br>
-                                                                                <?= $data['pincode'] ?><br>
-                                                                            </p>
+                                                            <div class="col-md-12 col-12">
+                                                                <div class="address_card">
+                                                                    <h4>
+                                                                        <small class="btn-small"><a
+                                                                                class="btn btn-sm btn-outline-secondary edit-address"
+                                                                                index="<?php echo $i ?>">Edit</a></small>
+                                                                        <small class="btn-small delete"><a
+                                                                                class="btn btn-sm btn-outline-danger address-delete"
+                                                                                index="<?php echo $i ?>">Delete</a></small>
+                                                                    </h4>
+                                                                    <address>
+                                                                        <!-- <p><strong>Alex Tuntuni</strong></p> -->
+                                                                        <p><?= $data['address'] ?><br>
+                                                                            <?= $data['landmark'] ?>,
+                                                                            <?= $data['city'] ?><br>
+                                                                            <?= $data['dist_name'] ?>,
+                                                                            <?= $data['state_title'] ?><br>
+                                                                            <?= $data['pincode'] ?><br>
+                                                                        </p>
 
-                                                                            <div class="form-check mt-2">
-                                                                                <input type="radio" name="set_default_home"
-                                                                                    class="form-check-input"
-                                                                                    id="default_home"
-                                                                                    <?= ($data['default_addr'] == 1) ? "checked" : ""; ?>>
-                                                                                <label class="form-check-label"
-                                                                                    for="default_home">Default
-                                                                                    address</label>
-                                                                            </div>
-                                                                        </address>
-                                                                    </div>
+                                                                        <div class="form-check mt-2">
+                                                                            <input type="radio" name="set_default_home"
+                                                                                class="form-check-input"
+                                                                                id="default_home"
+                                                                                <?= ($data['default_addr'] == 1) ? "checked" : ""; ?>>
+                                                                            <label class="form-check-label"
+                                                                                for="default_home">Default
+                                                                                address</label>
+                                                                        </div>
+                                                                    </address>
                                                                 </div>
+                                                            </div>
                                                             <?php } ?>
 
                                                         </div>
@@ -216,9 +216,9 @@
                                                         <option value="">Select State</option>
                                                         <?php for ($i = 0; $i < count($state); $i++) { ?>
 
-                                                            <option value="<?php echo $state[$i]['state_id'] ?>">
-                                                                <?php echo $state[$i]['state_title'] ?>
-                                                            </option>
+                                                        <option value="<?php echo $state[$i]['state_id'] ?>">
+                                                            <?php echo $state[$i]['state_title'] ?>
+                                                        </option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
@@ -293,13 +293,15 @@
                         <!-- Order Details Modal -->
                         <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel"
                             aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-xl">
+                                <!-- Widened for better alignment -->
                                 <div class="modal-content">
                                     <div class="modal-header bg-snow">
                                         <h5 class="modal-title text-charcoal" id="orderModalLabel">Order Details</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
+
                                     <div class="modal-body p-0">
                                         <div class="container-fluid">
                                             <!-- Order Header -->
@@ -314,7 +316,7 @@
                                                 </div>
                                                 <div class="col-6 col-md-3">
                                                     <h6 class="text-charcoal mb-0">Total</h6>
-                                                    <span class="text-pebble" id="orderTotal">$19.54</span>
+                                                    <span class="text-pebble" id="orderTotal">₹19.54</span>
                                                 </div>
                                                 <div class="col-6 col-md-3">
                                                     <h6 class="text-charcoal mb-0">Shipped To</h6>
@@ -324,21 +326,70 @@
 
                                             <!-- Order Status -->
                                             <div class="row p-3 bg-white">
-                                                <div class="col-12 col-md-9">
+                                                <div class="col-md-9">
                                                     <div class="alert alert-success p-2 mb-0" id="statusAlert">
                                                         <h6 class="text-green mb-0"><b id="orderStatus">Shipped</b></h6>
                                                         <p class="text-green mb-0 d-none d-md-block" id="deliveryInfo">
-                                                            Est. delivery between Aug 5 – Aug 9th, 2017</p>
+                                                            Est. delivery between Aug 5 – Aug 9th, 2017
+                                                        </p>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-md-3 mt-2 mt-md-0">
-                                                    <button class="" id="trackButton">Track Shipment</button>
+                                                <div class="col-md-3 text-end mt-2 mt-md-0">
+                                                    <button class="btn btn-outline-primary" id="trackButton">Track
+                                                        Shipment</button>
                                                 </div>
                                             </div>
 
                                             <!-- Order Items -->
                                             <div class="p-3 bg-white" id="orderItems">
-                                                <!-- Items will be populated here -->
+                                                <!-- Example Item -->
+                                                <div class="row align-items-center mb-3">
+                                                    <div class="col-3 col-md-4">
+                                                        <img class="img-fluid"
+                                                            src="<?php echo base_url() ?>public/assets/img/plate_img/bowl-plate/5bowl.jpg"
+                                                            alt="">
+                                                    </div>
+                                                    <div class="col-9 col-md-8">
+                                                        <h6 class="text-charcoal mb-1">
+                                                            <a href="#" class="text-charcoal">1 x URGE Basics iPhone 6/6
+                                                                Plus Wallet Case</a>
+                                                        </h6>
+                                                        <div class="order-details-div">
+                                                            <ul class="list-unstyled text-pebble small mb-0">
+                                                                <li class="mt-0"><b>Packs:</b> Red</li>
+                                                                <li class="mt-0"><b>Size:</b> L</li>
+                                                            </ul>
+                                                            <h5 class="text-charcoal mb-0"><b>₹19.54</b></h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="shoping-cart-total mt-2<?= $shoppingTotalClass ?>">
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Sub total</td>
+                                                            <td class="order-subtotal amt">-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>CGST(Includes)</td>
+                                                            <td class="gst-td amt">-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>SGST(Includes)</td>
+                                                            <td class="sgst-td amt">-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Shipping Charge</td>
+                                                            <td class="shipping-charge amt">₹100.00</td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td><strong>Order Total</strong></td>
+                                                            <td><strong class="order_total_amt amt"></strong></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
@@ -349,11 +400,12 @@
                 </div>
             </div>
         </div>
-        <!-- WISHLIST AREA START -->
+    </div>
+    <!-- WISHLIST AREA START -->
 
-        <!-- FOOTER AREA START -->
-        <?php require("components/footer.php") ?>
-        <!-- FOOTER AREA END -->
+    <!-- FOOTER AREA START -->
+    <?php require("components/footer.php") ?>
+    <!-- FOOTER AREA END -->
     </div>
     <!-- Body main wrapper end -->
 
@@ -367,12 +419,24 @@
     <script src="<?php echo base_url() ?>custom/js/myaccount.js"></script>
 
     <script>
-        $("#btn-logout").click(function (e) {
-            e.preventDefault();
-            localStorage.clear();
-            window.location.href = "<?= base_url('logout') ?>";
-        })
+    $("#btn-logout").click(function(e) {
+        e.preventDefault();
+        localStorage.clear();
+        window.location.href = "<?= base_url('logout') ?>";
+    })
     </script>
+    <script>
+    function openOrderModal(orderId) {
+        // Optionally, update modal content here based on orderId
+        document.getElementById('orderNumber').textContent = "#ORDER" + orderId;
+
+        // Then show the modal
+        const modalElement = document.getElementById('orderModal');
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+    }
+    </script>
+
 </body>
 
 </html>
