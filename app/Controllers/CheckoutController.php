@@ -27,6 +27,7 @@ class CheckoutController extends BaseController
 
         $userID = session()->get("user_id");
         $type = $this->request->getPost("type");
+        $subid = $this->request->getPost("subid");
 
 
         //Order No
@@ -54,8 +55,6 @@ class CheckoutController extends BaseController
         // end Order No
 
 
-
-
         if ($type == "cart") {
             $cartQuery = "SELECT * FROM `tbl_user_cart` WHERE `user_id` = ? AND `flag` =1 ";
             $cartData = $this->db->query($cartQuery, [$userID])->getResultArray();
@@ -68,52 +67,88 @@ class CheckoutController extends BaseController
         //if 0
         $price_count = 0;
         $OrderPrice = 0;
+        $prodPrice = 0;
+        $totalGSTvalue = 0;
 
         if ($type == "cart") {
-            foreach ($cartData as $item) {
+            foreach ($cartData as $i => $item) {
                 $prodID = $item['prod_id'];
                 $cartQuantity = $item['quantity'];
                 $cartPackqty = $item['pack_qty'];
                 $cartPrice = $item['prod_price'];
                 $cartTotal = $item['total_price'];
+                $originalPrice = $cartPrice;
+
+                $subIDs = isset($subid[$i]) ? $subid[$i] : [];
 
                 // Main Product
-                $mainProductQuery = "SELECT main_quantity , has_variant  FROM tbl_products WHERE `prod_id` = ?";
+                $mainProductQuery = "SELECT main_quantity, has_variant, submenu_id FROM tbl_products WHERE `prod_id` = ?";
                 $mainProductData = $this->db->query($mainProductQuery, [$prodID])->getRow();
-
 
                 if (!$mainProductData) {
                     return json_encode(['code' => 400, 'status' => false, 'message' => 'Invalid product in cart.']);
                 }
 
-                $mainVariantQuery = "SELECT * FROM `tbl_variants` WHERE `prod_id` = ? AND  pack_qty = ? AND `flag` = 1";
+                $mainVariantQuery = "SELECT * FROM `tbl_variants` WHERE `prod_id` = ? AND pack_qty = ? AND `flag` = 1";
                 $mainVariantData = $this->db->query($mainVariantQuery, [$prodID, $cartPackqty])->getRow();
-
 
                 if (!$mainVariantData) {
                     return json_encode(['code' => 400, 'status' => false, 'message' => 'Invalid Product Variants in cart.']);
                 }
 
                 $mainQuantity = $mainVariantData->quantity;
-                $mainPackQty = $mainVariantData->pack_qty;
                 $mainPrice = $mainVariantData->offer_price;
+                $productSubID = $mainVariantData->submenu_id;
 
                 $finalPrice = ($cartPrice == $mainPrice) ? $cartPrice : $mainPrice;
 
-
                 if ($cartQuantity <= $mainQuantity && $cartPrice == $mainPrice && $cartPrice != 0 && $originalPrice != 0) {
                     $OrderPrice += $cartTotal;
-
-                } else if ($mainPrice == 0 && $cartPrice == 0 || $mainPrice == 0) {
+                    $prodPrice = $cartTotal;
+                } elseif (($mainPrice == 0 && $cartPrice == 0) || $mainPrice == 0) {
                     $price_count += 1;
                     $OrderPrice += $mainPrice * $cartQuantity;
+                    $prodPrice = $mainPrice * $cartQuantity;
                 } else {
                     $OrderPrice += $mainPrice * $cartQuantity;
+                    $prodPrice = $mainPrice * $cartQuantity;
+                }
+
+                // Handle array of subIDs
+                if (is_array($subIDs)) {
+                    foreach ($subIDs as $subID) {
+                        if ($subID != $productSubID) {
+                            $query = "SELECT `gst` FROM `tbl_submenu` WHERE `flag` = 1 AND `sub_id` = ?";
+                            $GSTData = $this->db->query($query, [$subID])->getRow();
+
+                            if ($GSTData && $GSTData->gst > 0) {
+                                $gstPercent = $GSTData->gst;
+                                $gstValue = $this->calculateGstInclusive($prodPrice, $gstPercent);
+                                $totalGSTvalue += $gstValue;
+                            }
+                        }
+                    }
+                } else {
+                    // Single subID fallback
+                    if ($subIDs != $productSubID) {
+
+                        $query = "SELECT `gst` FROM `tbl_submenu` WHERE `flag` = 1 AND `sub_id` = ?";
+                        $GSTData = $this->db->query($query, [$subIDs])->getRow();
+
+                        if ($GSTData && $GSTData->gst > 0) {
+                            $gstPercent = $GSTData->gst;
+                            $gstValue = $this->calculateGstInclusive($prodPrice, $gstPercent);
+                            $totalGSTvalue += $gstValue;
+                        }
+                    }
                 }
             }
         }
 
-
+        $totalGstValue = round($totalGSTvalue, 2);
+        $halfGst = floor(($totalGstValue / 2) * 100) / 100;
+      
+ 
         // Shipping 100rs 
         $totalShipping = 100;
         $courierType = "Default";
@@ -152,11 +187,11 @@ class CheckoutController extends BaseController
                 'order_date' => date('Y-m-d H:i:s'),
                 'courier_charge' => $totalShipping,
                 'courier_type' => $courierType,
+                'gst'  => $totalGstValue ,
+                'cgst' => $halfGst , 
+                'sgst' => $halfGst , 
 
             ];
-
-
-
 
             $insertOrder = $OrderModal->insert($orderData);
 
@@ -245,6 +280,14 @@ class CheckoutController extends BaseController
         }
 
 
+    }
+
+
+    private function calculateGstInclusive($price, $gstPercent)
+    {
+        $gstValue = ($price * $gstPercent) / (100 + $gstPercent);
+        $paise = round(fmod($gstValue, 1) * 100, 2);
+        return $paise < 50 ? floor($gstValue) : ceil($gstValue);
     }
 
 }

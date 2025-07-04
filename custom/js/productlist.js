@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  $(".quick_btn").click(function () {
+  $(".quick_btn_view").click(function () {
     var prodId = $(this).data("prodid");
     var menuId = $(this).data("menuid");
     var submenuId = $(this).data("submenuid");

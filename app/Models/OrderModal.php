@@ -43,6 +43,9 @@ class OrderModal extends Model
         'cancel_status',
         'refund_id',
         'refund_amt',
-        'payment_cancel_reason'
+        'payment_cancel_reason',
+        'gst',
+        'sgst',
+        'cgst'
     ];
 }
