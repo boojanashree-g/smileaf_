@@ -178,8 +178,9 @@ header .ltn__header-middle-area {
 }
 
 .quantity-options input[type="radio"]:checked+label {
-    background-color: #000;
-    color: white;
+    border: 2px solid green;
+    background: 0;
+    color: green;
 }
 
 #ltn__utilize-cart-menu .theme-btn-1 {
@@ -210,7 +211,7 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
- input[type=number] {
+input[type=number] {
     -moz-appearance: textfield;
 }
 
@@ -984,7 +985,7 @@ a.account-card .card:active {
     max-width: 100%;
     position: relative;
     padding: 20px 40px;
-    background-color: var(--white);
+    background-color: #f7f5eb;
     -webkit-box-shadow: var(--ltn__box-shadow-2);
     box-shadow: var(--ltn__box-shadow-2);
     z-index: 2;
@@ -1626,9 +1627,12 @@ a.theme-btn-1.btn:focus {
     text-decoration: underline;
     color: #2563eb;
 }
+#addressForm.active {
+    /* Your styles here */
+    display: block; /* or whatever you want */
+}
 
-.otp-text
- {
+.otp-text {
     font-size: 14px;
     color: var(--text-secondary);
     margin-top: 8px;
@@ -1639,8 +1643,8 @@ a.theme-btn-1.btn:focus {
     width: 100%;
 }
 
-.login-form{
-        width: 70%;
+.login-form {
+    width: 70%;
 }
 
 .login-form .resend-btn {
@@ -1655,9 +1659,11 @@ a.theme-btn-1.btn:focus {
     margin-left: 0;
     font-size: 14px;
 }
-.login-form .resend-btn:hover{
+
+.login-form .resend-btn:hover {
     color: #788b5c;
-}  
+}
+
 .inactive-section {
     background: #f8f9fa;
 }
@@ -1673,7 +1679,8 @@ a.theme-btn-1.btn:focus {
     font-size: 14px;
 }
 
-.address-form, .deliver-content {
+.address-form,
+.deliver-content {
     display: none;
 }
 
@@ -2243,23 +2250,37 @@ a.theme-btn-1.btn:focus {
     color: #ff0000;
 }
 
-#trackButton{
+#trackButton {
     padding: 7px 5px;
     border-radius: 5px;
 }
 
-.order-details-div{
+.order-details-div {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-#orderModal .shoping-cart-total{
+#orderModal .shoping-cart-total {
     float: inherit;
-    width: 100%; 
+    width: 100%;
     max-width: 100%;
 }
 
-#orderModal .amt{
+#orderModal .amt {
     float: right;
+}
+
+.logged_status::before {
+    content: '✓';
+    color: var(--success-color);
+    font-weight: bold;
+    font-size: 16px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
