@@ -307,6 +307,11 @@
                                 </tbody>
                             </table>
                             <input type="hidden"  class="checkout-type" value="<?= $type?>"/>
+                          <?php foreach ($gst_subid_list as $item): ?>
+                                <input type="hidden" class="sub-id" value="<?= $item ?>" />
+                            <?php endforeach; ?>
+
+
                             <div class="place-order-wrapper">
                                 <button class="w-100 mx-0" type="submit" id="place-order">Place order</button>
                             </div>

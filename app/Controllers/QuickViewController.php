@@ -19,7 +19,6 @@ class QuickViewController extends BaseController
 
     public function quickViewDetails()
     {
-
         $prod_id = $this->request->getPost('prod_id');
         $menu_id = $this->request->getPost('menu_id');
         $submenu_id = $this->request->getPost('submenu_id');

@@ -1,5 +1,5 @@
 $(".btn-account").click(function (e) {
-  console.log("clickedddd");
+  
   e.preventDefault();
 
   let isValid = true;
@@ -82,8 +82,4 @@ function insertAccount() {
   });
 
   // *************************** [View Order Details ] *************************************************************************
-
-  $(".view-order").click(function () {
-    alert("hii");
-  });
 }
