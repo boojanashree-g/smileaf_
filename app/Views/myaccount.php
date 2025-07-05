@@ -72,7 +72,7 @@
                                                                         } else if ($orderStatus == 'Failed') {
                                                                             $orderClass = "bg-danger";
                                                                         } else if ($orderStatus == 'Cancelled') {
-                                                                            $orderClass = "bg-info";
+                                                                            $orderClass = "bg-warning";
                                                                         }
                                                                         ?>
                                                                         <tr>
@@ -84,6 +84,10 @@
                                                                             <td>₹<?= $orderDetails['order_total_amt'] ?></td>
                                                                             <td><a class="btn-sm btn-primary view-order"
                                                                                     data-orderid="<?= $orderDetails['order_id'] ?>">View</a>
+                                                                                &nbsp; &nbsp;<a
+                                                                                    class="btn-sm btn-warning view-order"
+                                                                                    data-orderid="<?= $orderDetails['order_id'] ?>">Return
+                                                                                </a>
                                                                             </td>
 
                                                                         </tr>
@@ -104,9 +108,6 @@
                                                             class="btn btn-sm btn-outline-primary float-end"
                                                             id="add-address">Add
                                                             Address</a></p>
-
-
-
                                                     <div class="other_address">
                                                         <div class="row m-0">
                                                             <?php
@@ -133,9 +134,11 @@
 
                                                                             <div class="form-check mt-2">
                                                                                 <input type="radio" name="set_default_home"
-                                                                                    class="form-check-input"
+                                                                                    class="form-check-input default_address"
                                                                                     id="default_home"
-                                                                                    <?= ($data['default_addr'] == 1) ? "checked" : ""; ?>>
+                                                                                    data-addid="<?= $data['add_id'] ?>"
+                                                                                    <?php $default = $data['default_addr'];
+                                                                                    echo $default == 1 ? "checked" : "" ?>>
                                                                                 <label class="form-check-label"
                                                                                     for="default_home">Default
                                                                                     address</label>

@@ -16,6 +16,8 @@ $(document).ready(function () {
       var newQty = currentQty + 1;
       $(inputField).val(newQty);
       subTotal(newQty, cartID, sellingPrice);
+    } else {
+      showToast("Maximum Stock Reached", "info");
     }
   });
 
