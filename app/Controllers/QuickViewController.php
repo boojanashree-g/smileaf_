@@ -74,6 +74,8 @@ class QuickViewController extends BaseController
             'image_data' => $imageData,
         ];
 
+
+
         return view("partials/common_cart_modal", $res);
 
 

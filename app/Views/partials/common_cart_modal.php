@@ -39,7 +39,7 @@
                                 <?php
 
                                 $lowestQty = $variant_data['lowest_quantity'];
-                                $lowestSet = false; // to avoid multiple "checked" attributes
+                                $lowestSet = false; 
                                 
                                 foreach ($variant_data['list'] as $variant):
                                     if (!is_array($variant))
@@ -66,7 +66,7 @@
                                       <input class="pack_qty" type="radio" id="<?= $inputId ?>" name="pack_qty" value="<?= $packQty ?>"
                                         data-mrp="<?= $mrp ?>" data-offer="<?= $offerPrice ?>"
                                         data-quantity="<?= $quantity ?>" 
-                                        data-prodid="<?=$products[0]['prod_id'] ?>" <?= $isChecked ?>  <?= $isChecked ?>     <?= $isDisabled ?>>
+                                        data-prodid="<?=$products[0]['prod_id'] ?>" <?= $isChecked ?>  <?= $isDisabled ?>>
                                         
                                     <label for="<?= $inputId ?>" class="<?= $labelClass ?>"><?= $packQty ?></label>
                                 <?php endforeach; ?>

@@ -40,17 +40,24 @@
 
                                         if ($otp_verify === 'NO' && $login_status === 'NO') { ?>
                                             <li><a href="<?php echo base_url('signin') ?>">Sign in</a></li>
-                                        <?php }
+                                        <?php } else { ?>
+                                            <!-- <li><a href="<?php echo base_url('signup') ?>">Register</a></li> -->
+                                            <li><a href="<?php echo base_url('myaccount') ?>">My Account</a></li>
+                                            <li>
+                                                <a class="btn-logout" href="<?= base_url('logout') ?>">Logout</a>
+                                            </li>
+                                    </li>
+                                    <!-- <li><a href="<?php echo base_url('wishlist') ?>">Wishlist</a></li> -->
+                                    <!-- <li><a href="<?php echo base_url('contact') ?>">Contact</a></li> -->
+                                    <!-- <li><a href="<?php echo base_url() ?>">Bulk Enquiry</a></li> -->
+                                <?php }
                                         ?>
 
-                                        <!-- <li><a href="<?php echo base_url('signup') ?>">Register</a></li> -->
-                                        <li><a href="<?php echo base_url('myaccount') ?>">My Account</a></li>
-                                        <!-- <li><a href="<?php echo base_url('wishlist') ?>">Wishlist</a></li> -->
-                                        <!-- <li><a href="<?php echo base_url('contact') ?>">Contact</a></li> -->
-                                        <!-- <li><a href="<?php echo base_url() ?>">Bulk Enquiry</a></li> -->
 
-                                    </ul>
-                                </li>
+
+
+                            </ul>
+                            </li>
                             </ul>
                         </div>
                         <!-- mini-cart -->
@@ -240,6 +247,7 @@
                             My Account
                         </a>
                     </li>
+
                     <!-- <li>
                         <a href="<?php echo base_url('wishlist') ?>" title="Wishlist">
                             <span class="utilize-btn-icon">
@@ -272,6 +280,8 @@
     </div>
     <!-- Utilize Mobile Menu End -->
 
-    
+
     <div class="ltn__utilize-overlay"></div>
+
+
 </header>

@@ -15,7 +15,8 @@ require("components/head.php");
                     <p><strong>Reason :</strong> <?php echo $reason ?></p>
 
                     <div class="payment_failed">
-                        <a href="<?= base_url() ?>" type="button" class="continue_shoppingBtn pay_btn prev-step me-4">
+                        <a href="<?= base_url() ?>myaccount" type="button"
+                            class="continue_shoppingBtn pay_btn prev-step me-4">
                             Try Again Later
                         </a>
                     </div>

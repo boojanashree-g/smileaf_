@@ -176,3 +176,12 @@
         }
     });
 </script>
+<script>
+    $(document).ready(function () {
+        $(".btn-logout").click(function (e) {
+            e.preventDefault();
+            localStorage.clear();
+            window.location.href = "<?= base_url('logout') ?>";
+        });
+    });
+</script>

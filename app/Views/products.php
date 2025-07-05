@@ -108,9 +108,9 @@
                                                                         <del>₹<?= esc($product['lowest_mrp']) ?></del>
                                                                     <?php endif; ?>
                                                                 </div>
-                                                                <a href="#" title="Wishlist" class="wishlist-btn">
+                                                                <!-- <a href="#" title="Wishlist" class="wishlist-btn">
                                                                     <i class="far fa-heart"></i>
-                                                                </a>
+                                                                </a> -->
                                                             </div>
                                                         </div>
                                                         <!-- <div class="d-flex justify-content-evenly">
@@ -171,7 +171,8 @@
 
                                                     <div class="ltn__product-item ltn__product-item-3" style="min-height:auto;">
                                                         <div class="product-img">
-                                                            <a href="<?= base_url("product-details/" . base64_encode($product['prod_id'])) ?>">
+                                                            <a
+                                                                href="<?= base_url("product-details/" . base64_encode($product['prod_id'])) ?>">
                                                                 <img src="<?= base_url($product['main_image']) ?>"
                                                                     alt="<?= esc($product['prod_name']) ?>">
                                                             </a>
@@ -187,7 +188,8 @@
                                                         </div>
                                                         <div class="product-info h-100">
                                                             <h2 class="product-title">
-                                                                <a href="<?= base_url("product-details/" . base64_encode($product['prod_id'])) ?>">
+                                                                <a
+                                                                    href="<?= base_url("product-details/" . base64_encode($product['prod_id'])) ?>">
                                                                     <?= esc($product['prod_name']) ?>
                                                                 </a>
                                                             </h2>

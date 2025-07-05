@@ -11,7 +11,7 @@
 
     var options = {
         "key": "<?= esc($key_id) ?>",
-        "amount": <?= esc($order['amount']) ?>,
+        "amount": "<?= esc($order['amount']) ?>",
         "currency": "INR",
         "name": "Smileaf",
         "description": "Transaction",
@@ -23,12 +23,13 @@
             "email": "<?= esc($customerdata['email']) ?>",
             "contact": "<?= esc($customerdata['number']) ?>"
         },
-        "notes": {
-            "address": "<?= esc($customerdata['address']) ?>",
-            'user_id': "<?= esc($customerdata['user_id']) ?>",
-            'order_id': "<?= esc($customerdata['order_id']) ?>",
-            'username': "<?= esc($customerdata['name']) ?>"
-        },
+        "notes": <?= json_encode([
+            "address" => $customerdata['address'],
+            "user_id" => $customerdata['user_id'],
+            "order_id" => $customerdata['order_id'],
+            "username" => $customerdata['name']
+        ]) ?>,
+
         "theme": {
             "color": "#2d7438"
         },
