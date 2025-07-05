@@ -286,6 +286,11 @@ $(document).ready(function () {
           CommonBgClass = "alert-success";
           TrackOrderDisp = "";
           dispClass = "col-md-9";
+        } else if (orderSummary == "Delivered") {
+          CommonClass = "text-green";
+          CommonBgClass = "alert-success";
+          TrackOrderDisp = "";
+          dispClass = "col-md-9";
         } else if (orderSummary == "Failed") {
           CommonClass = "text-danger";
           CommonBgClass = "alert-danger";
@@ -365,8 +370,8 @@ $(document).ready(function () {
                                                 <div class="${dispClass}">
                                                     <div class="alert ${CommonBgClass} p-2 mb-0" id="statusAlert">
                                                         <h6 class="${CommonClass} mb-0"><b class="orderStatus">${
-                                                          resultData.summary["order_status"]
-                                                        }</b></h6>
+          resultData.summary["order_status"]
+        }</b></h6>
                                                         <p class="${CommonClass} mb-0 d-none d-md-block" id="deliveryInfo">
                                                             ${
                                                               resultData

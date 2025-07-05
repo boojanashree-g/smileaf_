@@ -84,11 +84,15 @@
                                                                             <td>₹<?= $orderDetails['order_total_amt'] ?></td>
                                                                             <td><a class="btn-sm btn-primary view-order"
                                                                                     data-orderid="<?= $orderDetails['order_id'] ?>">View</a>
-                                                                                &nbsp; &nbsp;<a
-                                                                                    class="btn-sm btn-warning view-order"
-                                                                                    data-orderid="<?= $orderDetails['order_id'] ?>">Return
+                                                                                &nbsp; &nbsp;
+                                                                                <a class="btn-sm btn-warning returnpolicy"
+                                                                                    data-status="<?= $orderDetails['order_status']; ?>"
+                                                                                    data-deltime="<?= $orderDetails['delivery_date']; ?>"
+                                                                                    data-orderid="<?= $orderDetails['order_id'] ?>"
+                                                                                   >Return
                                                                                 </a>
                                                                             </td>
+
 
                                                                         </tr>
 
