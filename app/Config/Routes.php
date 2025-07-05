@@ -19,7 +19,9 @@ $routes->get('signup', 'Home::signup', );
 $routes->get('signin', 'Home::signin');
 $routes->get('terms-and-conditions', 'Home::termsAndConditions');
 $routes->get('privacy-policy', 'Home::privacyPolicy');
-$routes->get('order-tracking', 'Home::orderTracking');
+$routes->get('order-tracking', 'Home::orderTracking', ['filter' => 'checkLogin']);
+$routes->post('getorder-status', 'Home::getOrderStatus', ['filter' => 'checkLogin']);
+
 $routes->get('product-categories/(:segment)', 'Home::productCategories/$1');
 // $routes->post('signup-otp', 'SignupController::signupOTP');
 // $routes->post('check-signotp', 'SignupController::checkSignOTP');

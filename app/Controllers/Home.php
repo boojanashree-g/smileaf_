@@ -590,6 +590,7 @@ class Home extends BaseController
         // Get Order Summary
         $Orderquery = "SELECT * FROM `tbl_orders` WHERE `user_id` = ? AND `flag` = 1 AND  order_status <> 'initiated'";
         $orderDetails = $this->db->query($Orderquery, [$userID])->getResultArray();
+      
 
 
         $orderSummaries = [];
@@ -737,9 +738,34 @@ class Home extends BaseController
                 ['label' => 'Order Tracking']
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
+            'order_id' => $orderID
         ]);
 
         return view('orderTracking', $data);
+    }
+
+    public function getOrderStatus()
+    {
+        $userID = session()->get('user_id');
+        $orderNo = $this->request->getPost('order_no');
+        $orderID = $this->request->getPost('main_orderid');
+
+        $orderQuery = "SELECT 
+                        DATE_FORMAT(`order_date`, '%d-%m-%Y %r') AS `order_date`,
+                        DATE_FORMAT(`shipped_date`, '%d-%m-%Y %r') AS `shipped_date`,
+                        DATE_FORMAT(`delivery_date`, '%d-%m-%Y %r') AS `delivery_date`,
+                        `order_status`
+                        FROM `tbl_orders`
+                        WHERE `flag` = 1 AND `order_id` = ? AND `order_no` = ? AND `user_id` = ?
+                        ";
+        $orderDetails = $this->db->query($orderQuery, [$orderID, $orderNo, $userID])->getRowArray();
+
+
+        $res = [
+            'code' => 200,
+            'orderdetails' => $orderDetails
+        ];
+        echo json_encode($res);
     }
     public function productCategories($slug)
     {
