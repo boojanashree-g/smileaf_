@@ -44,6 +44,7 @@ $routes->post('place-order', 'checkoutController::placeOrder', ['filter' => 'Aut
 
 // Checkout userdetails
 $routes->post('save-userdetails', 'MyaccountController::insertUserDetails', ['filter' => 'AuthFilter']);
+$routes->post('view-orderdetail', 'MyaccountController::viewOrderDetails', ['filter' => 'AuthFilter']);
 
 // ProductList
 $routes->post('quick-view-details', 'QuickViewController::quickViewDetails');

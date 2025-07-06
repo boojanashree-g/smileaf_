@@ -266,7 +266,7 @@ $(document).ready(function () {
 
     $("#submenu").val(res_DATA[index].submenu);
     $("#menu_id").val(res_DATA[index].menu_id);
-    $("#gst").val(res_DATA[index].gst); 
+    $("#gst").val(res_DATA[index].gst);
 
     sub_id = res_DATA[index].sub_id;
   });

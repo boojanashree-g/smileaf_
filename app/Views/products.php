@@ -14,11 +14,11 @@
     .color-circle.border {
         border: 2px solid #ccc;
     }
+
     .wishlist-active {
         background-color: red !important;
-        color:#fff;
+        color: #fff;
     }
-
 </style>
 
 
@@ -79,14 +79,16 @@
                                                     data-name="<?= strtolower(esc($product['prod_name'])) ?>">
                                                     <div class="ltn__product-item ltn__product-item-3 text-center">
                                                         <div class="product-img">
-                                                            <a href="<?= base_url("product-details/" . base64_encode($product['prod_id'])) ?>">
-                                                                <img src="<?= base_url($product['main_image']) ?>" alt="<?= esc($product['prod_name']) ?>">
+                                                            <a
+                                                                href="<?= base_url("product-details/" . base64_encode($product['prod_id'])) ?>">
+                                                                <img src="<?= base_url($product['main_image']) ?>"
+                                                                    alt="<?= esc($product['prod_name']) ?>">
                                                             </a>
-                                                            <?php if ($product['lowest_quantity'] == 0): ?>
+                                                            <?php if ($product['available_status'] == 0): ?>
                                                                 <div class="product-badge">
                                                                     <ul>
                                                                         <li class="sale-badge">
-                                                                            Out of Stock
+                                                                            Out of stock
                                                                         </li>
                                                                     </ul>
                                                                 </div>
@@ -95,27 +97,56 @@
                                                         <div class="product-info">
                                                             <h2 class="product-title">
                                                                 <a href="<?= base_url($product['url']) ?>">
-                                                                    <span class="prod_name_span"><?= esc($product['prod_name']) ?></span>
+                                                                    <span
+                                                                        class="prod_name_span"><?= esc($product['prod_name']) ?></span>
                                                                 </a>
                                                             </h2>
                                                             <div class="product_price_wrapper mt-0">
-                                                                <div class="product-price mb-0">         
+                                                                <div class="product-price mb-0">
                                                                     <span>₹<?= esc($product['lowest_offer_price'] ?? 0) ?></span>
                                                                     <?php if (!empty($product['lowest_offer_price']) && $product['lowest_offer_price'] != $product['lowest_mrp']): ?>
                                                                         <del>₹<?= esc($product['lowest_mrp']) ?></del>
                                                                     <?php endif; ?>
                                                                 </div>
-                                                                <a href="#" title="Wishlist" class="wishlist-btn">  
+                                                                <a href="#" title="Wishlist" class="wishlist-btn">
                                                                     <i class="far fa-heart"></i>
                                                                 </a>
-                                                            </div>                                                            
+                                                            </div>
                                                         </div>
-                                                        <div class="d-flex justify-content-evenly">                                                            
-                                                            <a class="theme-btn-1 btn quick_btn" data-prodid="<?= esc($product['prod_id']) ?>" data-menuid="<?= $product['menu_id'] ?>" data-submenuid=<?= $product['submenu_id'] ?>>
+                                                        <!-- <div class="d-flex justify-content-evenly">
+                                                            <a class="theme-btn-1 btn quick_btn  quick_btn_view"
+                                                                data-prodid="<?= esc($product['prod_id']) ?>"
+                                                                data-menuid="<?= $product['menu_id'] ?>"
+                                                                data-submenuid=<?= $product['submenu_id'] ?>>
                                                                 <i class="fas fa-shopping-cart"></i>
                                                                 <span>Quick Buy</span>
                                                             </a>
-                                                        </div>
+                                                        </div> -->
+
+
+                                                        <?php if ($product['available_status'] == 0) { ?>
+                                                            <div class="d-flex justify-content-evenly">
+                                                                <a href="<?= base_url("product-details/" . base64_encode($product['prod_id'])) ?>"
+                                                                    class="theme-btn-1 btn quick_btn"
+                                                                    data-prodid="<?= esc($product['prod_id']) ?>"
+                                                                    data-menuid="<?= $product['menu_id'] ?>"
+                                                                    data-submenuid=<?= $product['submenu_id'] ?>>
+                                                                    <i class="fas fa-shopping-cart text-danger"></i>
+                                                                    <span class="text-danger">Contact us to order</span>
+                                                                </a>
+                                                            </div>
+                                                        <?php } else if ($product['available_status'] > 0) { ?>
+                                                                <div class="d-flex justify-content-evenly">
+                                                                    <a href="<?= base_url("product-details/" . base64_encode($product['prod_id'])) ?>"
+                                                                        class="theme-btn-1 btn quick_btn"
+                                                                        data-prodid="<?= esc($product['prod_id']) ?>"
+                                                                        data-menuid="<?= $product['menu_id'] ?>"
+                                                                        data-submenuid=<?= $product['submenu_id'] ?>>
+                                                                        <i class="fas fa-shopping-cart"></i>
+                                                                        <span>Buy Now</span>
+                                                                    </a>
+                                                                </div><?php } ?>
+
                                                     </div>
                                                 </div>
                                             <?php endforeach; ?>
@@ -140,15 +171,15 @@
 
                                                     <div class="ltn__product-item ltn__product-item-3" style="min-height:auto;">
                                                         <div class="product-img">
-                                                            <a href="<?= base_url($product['url']) ?>">
+                                                            <a href="<?= base_url("product-details/" . base64_encode($product['prod_id'])) ?>">
                                                                 <img src="<?= base_url($product['main_image']) ?>"
                                                                     alt="<?= esc($product['prod_name']) ?>">
                                                             </a>
-                                                            <?php if ($product['lowest_quantity'] == 0): ?>
+                                                            <?php if ($product['available_status'] == 0): ?>
                                                                 <div class="product-badge">
                                                                     <ul>
                                                                         <li class="sale-badge">
-                                                                            Out of Stock
+                                                                            Out of stock
                                                                         </li>
                                                                     </ul>
                                                                 </div>
@@ -156,7 +187,7 @@
                                                         </div>
                                                         <div class="product-info h-100">
                                                             <h2 class="product-title">
-                                                                <a href="<?= base_url($product['url']) ?>">
+                                                                <a href="<?= base_url("product-details/" . base64_encode($product['prod_id'])) ?>">
                                                                     <?= esc($product['prod_name']) ?>
                                                                 </a>
                                                             </h2>
@@ -171,20 +202,20 @@
                                                             </div>
                                                             <div class="product-hover-action">
                                                                 <ul>
-                                                                    <li>
+                                                                    <!-- <li>
                                                                         <a class="quick_btn_list"
                                                                             data-prodid="<?= esc($product['prod_id']) ?>"
                                                                             data-menuid="<?= $product['menu_id'] ?>"
                                                                             data-submenuid=<?= $product['submenu_id'] ?>>
                                                                             <i class="far fa-eye"></i>
                                                                         </a>
-                                                                    </li>
-                                                                    <li>
+                                                                    </li> -->
+                                                                    <!-- <li>
                                                                         <a href="#" title="Wishlist" data-bs-toggle="modal"
                                                                             data-bs-target="#liton_wishlist_modal">
                                                                             <i class="far fa-heart"></i>
                                                                         </a>
-                                                                    </li>
+                                                                    </li> -->
 
                                                                 </ul>
                                                             </div>
@@ -303,7 +334,7 @@
 
         <!-- All JS Plugins -->
         <script src="<?php echo base_url() ?>public/assets/js/plugins.js"></script>
-            
+
 
 </body>
 

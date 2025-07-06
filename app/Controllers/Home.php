@@ -79,69 +79,74 @@ class Home extends BaseController
         ];
     }
 
-    public function productDetails($prod_id)
+    public function productDetails()
     {
-        $db = \Config\Database::connect();
-        $decode_prod_id = base64_decode($prod_id);
-        $query = $db->query("SELECT * FROM tbl_products WHERE prod_id = $decode_prod_id AND flag = 1");
-        $product = $query->getRowArray();
+        $encodedID = $this->request->uri->getSegment(2);
+        $prod_id = base64_decode($encodedID);
 
-        if (!$product) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Product not found.");
+        if (empty($prod_id)) {
+            throw new \InvalidArgumentException('Product ID is required');
         }
 
-        $prodId = $product['prod_id'];
-        $productShapeId = $product['shape_id'];
-        $productSizeId = $product['size_id'];
-        $productTypeId = $product['type_id'];
+        // Get main product details
+        $productQuery = "SELECT * FROM `tbl_products` WHERE `flag` = 1 AND `prod_id` = ?";
+        $productData = $this->db->query($productQuery, [$prod_id])->getRowArray();
 
-        // Variants
-        $variantQuery = $db->table('tbl_variants')
-            ->select('variant_id, pack_qty, mrp, offer_type, offer_details, offer_price, stock_status, quantity, weight')
-            ->where(['flag' => 1, 'prod_id' => $prodId])
-            ->get()->getResultArray();
 
-        // Images
-        $imageQuery = $db->table('tbl_images')
-            ->select('image_path')
-            ->where(['flag' => 1, 'prod_id' => $prodId])
-            ->get()->getResultArray();
+        if (!$productData) {
+            throw new \RuntimeException('Product not found');
+        }
 
-        $product['variants'] = $variantQuery;
-        $product['product_images'] = array_column($imageQuery, 'image_path');
+        // Get variants
+        $variantQuery = "SELECT * FROM `tbl_variants` WHERE `prod_id` = ? AND `flag` = 1";
+        $variantData = $this->db->query($variantQuery, [$prod_id])->getResultArray();
 
-        $relatedProducts = $db->query("SELECT *,((shape_id = '$productShapeId') + (size_id = '$productSizeId') + (type_id = '$productTypeId')) AS relevance_score FROM tbl_products WHERE prod_id != $decode_prod_id AND flag = 1 AND (shape_id = '$productShapeId' OR size_id = '$productSizeId' OR type_id = '$productTypeId') ORDER BY relevance_score DESC ")->getResult();
-        $product['relatedProducts'] = $relatedProducts;
 
-        // Find lowest offer
         $lowestOffer = null;
-        foreach ($variantQuery as $variant) {
+        $outOfStockCount = 0;
+
+        foreach ($variantData as $variant) {
             if ($lowestOffer === null || $variant['offer_price'] < $lowestOffer['offer_price']) {
                 $lowestOffer = $variant;
             }
+
+
+            if ((int) $variant['stock_status'] <= 0 && (int) $variant['quantity'] <= 0) {
+                $outOfStockCount++;
+            }
         }
 
-        if ($lowestOffer) {
-            $product['lowest_mrp'] = $lowestOffer['mrp'];
-            $product['lowest_offer_price'] = $lowestOffer['offer_price'];
-            $product['lowest_quantity'] = $lowestOffer['quantity'];
-        } else {
-            $product['lowest_mrp'] = null;
-            $product['lowest_offer_price'] = null;
-            $product['lowest_quantity'] = null;
-        }
-        $data = array_merge($this->getMenuData(), [
+
+        $stockStatus = ($outOfStockCount < count($variantData)) ? 1 : 0;
+
+
+        // Get product images
+        $imageQuery = "SELECT image_path FROM `tbl_images` WHERE `prod_id` = ? AND `flag` = 1";
+        $imageData = $this->db->query($imageQuery, [$prod_id])->getResultArray();
+
+
+        $res = [
+            'products' => $productData,
+            'variant_data' => $variantData,
+            'image_data' => $imageData,
+            'lowest_offer' => $lowestOffer,
+            'available_status' => $stockStatus
+        ];
+
+
+
+        $res = array_merge($res, $this->getMenuData(), [
             'page_title' => 'Product View',
             'breadcrumb_items' => [
                 ['label' => 'Home', 'url' => base_url()],
                 ['label' => 'Product View']
             ],
-            'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
-            'product' => $product
+            'banner_image' => base_url('public/assets/img/banner/bg_4.png')
         ]);
 
-        return view('productsView', $data);
+        return view('productsView', $res);
     }
+
 
     public function cart()
     {
@@ -256,7 +261,7 @@ class Home extends BaseController
                 c.mrp,
                 c.offer_price,
                 c.quantity AS variant_qty,
-                d.submenu ,d.gst
+                d.sub_id ,d.gst
             FROM `tbl_products` AS a
             INNER JOIN tbl_user_cart AS b ON a.prod_id = b.prod_id
             INNER JOIN tbl_variants AS c ON c.prod_id = b.prod_id AND c.pack_qty = b.pack_qty
@@ -275,12 +280,15 @@ class Home extends BaseController
         $totalGstValue = 0;
         $deliveryCharge = 100;
 
+
+        $gst_subid_list = [];
         // Loop through each product
         foreach ($res['checkout_product'] as $i => $item) {
             $productPrice = (float) str_replace(',', '', $item['offer_price']);
             $cartQuantity = (int) $item['cart_quantity'];
             $mainQuantity = (int) $item['variant_qty'];
             $gstPercent = (float) $item['gst'];
+            $subID = $item['sub_id'];
 
             $priceCalculation = 0;
             $gstValue = 0;
@@ -290,21 +298,16 @@ class Home extends BaseController
                 $res['checkout_product'][$i]['final_prod_price'] = round($priceCalculation, 2);
 
                 // GST per item (inclusive)
-
                 if ($gstPercent > 0) {
-                    $gstValue = ($priceCalculation * $gstPercent) / (100 + $gstPercent);
-
-                    $paise = round(fmod($gstValue, 1) * 100, 2);
-
-                    $gstValue = $paise < 50 ? floor($gstValue) : ceil($gstValue);
+                    $gst_subid[] = $gst_subid;
+                    $gstValue = $this->calculateGstInclusive($priceCalculation, $gstPercent);
+                    $gst_subid_list[] = $subID;
                 }
                 // Accumulate totals per item
                 $totalAmt += $priceCalculation;
                 $totalGstValue += $gstValue;
             }
         }
-
-
 
 
         // Final calculations
@@ -314,6 +317,8 @@ class Home extends BaseController
         $finalTotal = $totalAmt + $deliveryCharge;
         $halfGst = floor(($totalGstValue / 2) * 100) / 100;
 
+
+
         // Send to view
         $res['total_amt'] = $totalAmt;
         $res['total_gst'] = $totalGstValue;
@@ -322,8 +327,10 @@ class Home extends BaseController
         $res['subtotal'] = $subTotal;
         $res['delivery_charge'] = $deliveryCharge;
         $res['final_total'] = $finalTotal;
-
+        $res['gst_subid_list'] = $gst_subid_list;
         $res['type'] = $this->request->getGet("type");
+
+
         $userID = session()->get("user_id");
 
         // Addres Details
@@ -346,6 +353,14 @@ class Home extends BaseController
         }
         return view('checkout', $res);
     }
+
+    private function calculateGstInclusive($price, $gstPercent)
+    {
+        $gstValue = ($price * $gstPercent) / (100 + $gstPercent);
+        $paise = round(fmod($gstValue, 1) * 100, 2);
+        return $paise < 50 ? floor($gstValue) : ceil($gstValue);
+    }
+
     public function contact()
     {
         $data = array_merge($this->getMenuData(), [
@@ -435,16 +450,23 @@ class Home extends BaseController
         // Fetch product data
         $rawProducts = $productsQuery->get()->getResultArray();
 
+
+
         $products = [];
 
         foreach ($rawProducts as $product) {
             $prodId = $product['prod_id'];
+
+
 
             // Fetch variants
             $variantQuery = $db->table('tbl_variants')
                 ->select('variant_id, pack_qty, mrp, offer_type, offer_details, offer_price, stock_status, quantity, weight')
                 ->where(['flag' => 1, 'prod_id' => $prodId])
                 ->get()->getResultArray();
+
+
+
 
             // Fetch product images
             $imageQuery = $db->table('tbl_images')
@@ -456,25 +478,37 @@ class Home extends BaseController
             $product['product_images'] = array_column($imageQuery, 'image_path');
 
 
+            $totalVariant = count($variantQuery);
+
             $lowestOffer = null;
+            $stockCount = 0;
             foreach ($variantQuery as $variant) {
                 if ($lowestOffer === null || $variant['offer_price'] < $lowestOffer['offer_price']) {
                     $lowestOffer = $variant;
                 }
+                if ($variant['stock_status'] <= 0 && $variant['quantity'] <= 0) {
+                    $stockCount += 1;
+                }
             }
+
+
+
+            $stockStatus = $stockCount < $totalVariant ? 1 : 0;
 
 
             if ($lowestOffer) {
                 $product['lowest_mrp'] = $lowestOffer['mrp'];
                 $product['lowest_offer_price'] = $lowestOffer['offer_price'];
                 $product['lowest_quantity'] = $lowestOffer['quantity'];
+                $product['available_status'] = $stockStatus;
+
             } else {
                 $product['lowest_mrp'] = null;
                 $product['lowest_offer_price'] = null;
                 $product['lowest_quantity'] = null;
+                $product['available_status'] = $stockStatus;
+
             }
-
-
 
             $products[] = $product;
         }
@@ -552,7 +586,6 @@ class Home extends BaseController
         WHERE a.user_id = $userID  AND a.flag = 1;";
         $res['address'] = $this->db->query($query, [$userID])->getResultArray();
 
-
         // Get Order Summary
         $Orderquery = "SELECT * FROM `tbl_orders` WHERE `user_id` = ? AND `flag` = 1 AND  order_status <> 'initiated'";
         $orderDetails = $this->db->query($Orderquery, [$userID])->getResultArray();
@@ -565,19 +598,19 @@ class Home extends BaseController
             $courierCharge = $orders['courier_charge'];
             $orderSubTotal = $orders['sub_total'];
             $OrderTotalAmt = $orders['total_amt'];
-            $orderDate = date('d-m-Y', strtotime($orders['order_date'])); 
+            $orderDate = date('d-m-Y', strtotime($orders['order_date']));
 
             $query = "SELECT * FROM `tbl_order_item` WHERE `flag` = 1 AND `order_id` = ?";
             $itemDetails = $this->db->query($query, [$orderID])->getResultArray();
 
-           
+
             $orderSummaries[$orderID] = [
                 'order_id' => $orderID,
-                'order_no' =>  $orders['order_no'],
-                'bill_no' =>  $orders['bill_no'],
-                'bill_date' =>  $orders['bill_date'],
+                'order_no' => $orders['order_no'],
+                'bill_no' => $orders['bill_no'],
+                'bill_date' => $orders['bill_date'],
                 'order_status' => $orders['order_status'],
-                'order_date' =>$orderDate ,
+                'order_date' => $orderDate,
                 'payment_status' => $orders['payment_status'],
                 'payment_cancel_reason' => $orders['payment_cancel_reason'],
                 'delivery_status' => $orders['delivery_status'],
@@ -585,7 +618,7 @@ class Home extends BaseController
                 'courier_charge' => $courierCharge,
                 'order_sub_total' => $orderSubTotal,
                 'order_total_amt' => $OrderTotalAmt,
-                
+
                 'items' => []
             ];
 
@@ -624,7 +657,6 @@ class Home extends BaseController
 
         krsort($orderSummaries);
         $res['summary'] = $orderSummaries;
-      
 
         return view('myaccount', $res);
     }

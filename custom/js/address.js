@@ -2,8 +2,6 @@
 $(document).ready(function () {
   var mode, add_id, res_DATA;
 
-  mode = "new";
-
   const hash = window.location.hash;
   if (hash) {
     // Activate the tab based on hash
@@ -13,14 +11,18 @@ $(document).ready(function () {
   getAddressDetails();
 
   $("#add-address").click(function () {
+    mode = "new";
     $("#addAddressModal").modal("show");
+    $("#state_id").val("");
+    $("#dist_id").val("");
     $(".address-title").html("Add Address");
+  });
 
-    $("#state_id").change(function () {
-      let state_id = $(this).val();
-      let token = localStorage.getItem("token");
+  $("#state_id").change(function () {
+    let state_id = $(this).val();
+    let token = localStorage.getItem("token");
 
-      // Load fresh districts
+    if (mode == "new") {
       $.ajax({
         type: "POST",
         url: base_Url + "getdist-data",
@@ -28,15 +30,31 @@ $(document).ready(function () {
         headers: { Authorization: "Bearer " + token },
         dataType: "json",
         success: function (res) {
-          let distDta = "<option value=''>Select District</option>";
+          let distDta = "";
+          distDta = "<option value=''>Select District</option>";
           for (let i = 0; i < res["response"].length; i++) {
             distDta += `<option value="${res["response"][i]["dist_id"]}">${res["response"][i]["dist_name"]}</option>`;
           }
           $("#dist_id").html(distDta);
-          $("#dist_id").niceSelect("update");
         },
       });
-    });
+    } else if (mode == "edit") {
+      $.ajax({
+        type: "POST",
+        url: base_Url + "getdist-data",
+        data: { state_id: state_id },
+        headers: { Authorization: "Bearer " + token },
+        dataType: "json",
+        success: function (res) {
+          let distDta = "";
+          distDta = `<option value='${distID}'>${distName}</option>`;
+          for (let i = 0; i < res["response"].length; i++) {
+            distDta += `<option value="${res["response"][i]["dist_id"]}">${res["response"][i]["dist_name"]}</option>`;
+          }
+          $("#dist_id").html(distDta);
+        },
+      });
+    }
   });
 
   // *************************** [Save Address ] *************************************************************************
@@ -67,7 +85,7 @@ $(document).ready(function () {
     var form = $("#addAddressForm")[0];
     var data = new FormData(form);
     let token = localStorage.getItem("token");
-
+    mode == "new";
     var url;
     if (mode == "new") {
       url = base_Url + "insert-address";
@@ -138,58 +156,16 @@ $(document).ready(function () {
   var distName;
   function editFunction(res_DATA) {
     $(".edit-address").click(function () {
+      mode = "edit";
       $(".address-title").html("Edit Address");
       var index = $(this).attr("index");
 
       $("#addAddressModal").modal("show");
-      mode = "edit";
 
       stateID = res_DATA[index]["state_id"];
       distID = res_DATA[index]["dist_id"];
       distName = res_DATA[index]["dist_name"];
-
-      // Load states and trigger district fetch manually
-      let token = localStorage.getItem("token");
-
-      $.ajax({
-        type: "POST",
-        url: base_Url + "getdist-data",
-        data: { state_id: stateID },
-        headers: { Authorization: "Bearer " + token },
-        dataType: "json",
-        success: function (res) {
-          let stateDta = "";
-          let distDta = "";
-
-          // States
-          for (let i = 0; i < res["state"].length; i++) {
-            let state = res["state"][i];
-            stateDta += `<option value="${state["state_id"]}" ${
-              state["state_id"] == stateID ? "selected" : ""
-            }>${state["state_title"]}</option>`;
-          }
-          $("#state_id").html(stateDta);
-          $("#state_id").niceSelect("update");
-
-          // Districts
-          for (let i = 0; i < res["response"].length; i++) {
-            let dist = res["response"][i];
-            distDta += `<option value="${dist["dist_id"]}" ${
-              dist["dist_id"] == distID ? "selected" : ""
-            }>${dist["dist_name"]}</option>`;
-          }
-          $("#dist_id").html(distDta);
-          $("#dist_id").niceSelect("update");
-        },
-        error: function (error) {
-          let status = error.status;
-          if (status === 401) {
-            localStorage.removeItem("token");
-            window.location.href = base_Url;
-          }
-          console.log(error);
-        },
-      });
+      $("#state_id").val(stateID).trigger("change");
 
       // Fill other fields
       $("#landmark").val(res_DATA[index]["landmark"]);
@@ -240,6 +216,175 @@ $(document).ready(function () {
           }
         },
       });
+    });
+  });
+
+  // *************************** [View Order] *************************************************************************
+  $(".view-order").click(function () {
+    let orderID = $(this).attr("data-orderid");
+    let token = localStorage.getItem("token");
+    var detailHtml = "";
+
+    $.ajax({
+      type: "POST",
+      url: "view-orderdetail",
+      data: { orderid: orderID },
+      dataType: "JSON",
+      headers: { Authorization: "Bearer " + token },
+      success: function (resultData) {
+        let orderItemsHTML = "";
+        let ShippingCharge = 100.0;
+
+        resultData.summary.items.forEach((item) => {
+          orderItemsHTML += `
+                <div class="row align-items-center mb-3">
+                    <div class="col-3 col-md-4">
+                        <img class="img-fluid" src="${
+                          base_Url + item.main_image
+                        }" alt="${item.prod_name}" width="90">
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <h6 class="text-charcoal mb-1">
+                            <a href="#" class="text-charcoal">${
+                              item.quantity
+                            } x ${item.prod_name}</a>
+                        </h6>
+                        <div class="order-details-div">
+                            <ul class="list-unstyled text-pebble small mb-0">
+                                <li class="mt-0"><b>Packs:</b> ${
+                                  item.pack_qty
+                                }</li>
+                                <li class="mt-0"><b>Price:</b> ${
+                                  item.prod_price
+                                }</li>
+                            </ul>
+                            <h5 class="text-charcoal mb-0"><b>₹${
+                              item.sub_total
+                            }</b></h5>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        detailHtml += `<div class="container-fluid">
+                                            <!-- Order Header -->
+                                            <div class="row bg-snow p-3">
+                                                <div class="col-6 col-md-4">
+                                                    <h6 class="text-charcoal mb-0">Order Number</h6>
+                                                    <span class="text-pebble" id="orderNumber">${
+                                                      resultData.summary[
+                                                        "order_no"
+                                                      ]
+                                                    }</span>
+                                                </div>
+                                                <div class="col-6 col-md-4">
+                                                    <h6 class="text-charcoal mb-0">Order Date</h6>
+                                                    <span class="text-pebble" id="orderDate">${
+                                                      resultData.summary[
+                                                        "order_date"
+                                                      ]
+                                                    }</span>
+                                                </div>
+                                                <div class="col-6 col-md-4">
+                                                    <h6 class="text-charcoal mb-0">Order Total</h6>
+                                                    <span class="text-pebble" id="orderTotal">₹${
+                                                      resultData.summary[
+                                                        "order_total_amt"
+                                                      ]
+                                                    }</span>
+                                                </div>
+                                              
+                                            </div>
+
+                                            <!-- Order Status -->
+                                            <div class="row p-3 bg-white">
+                                                <div class="col-md-9">
+                                                    <div class="alert alert-success p-2 mb-0" id="statusAlert">
+                                                        <h6 class="text-green mb-0"><b id="orderStatus">${
+                                                          resultData.summary[
+                                                            "order_status"
+                                                          ]
+                                                        }</b></h6>
+                                                        <p class="text-green mb-0 d-none d-md-block" id="deliveryInfo">
+                                                            ${
+                                                              resultData
+                                                                .summary[
+                                                                "delivery_message"
+                                                              ]
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 text-end mt-2 mt-md-0">
+                                                    <button class="btn btn-outline-primary" id="trackButton">Track
+                                                        Shipment</button>
+                                                </div>
+                                            </div>
+
+                                            <!-- Order Items -->
+                                            ${orderItemsHTML}
+                                            <div class="shoping-cart-total mt-2<?= $shoppingTotalClass ?>">
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Sub total</td>
+                                                            <td class="order-subtotal amt">₹${
+                                                              resultData
+                                                                .summary[
+                                                                "order_sub_total"
+                                                              ]
+                                                            }</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>CGST(Includes)</td>
+                                                            <td class="gst-td amt">₹${
+                                                              resultData
+                                                                .summary[
+                                                                "cgst"
+                                                              ] ?? "-"
+                                                            }</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>SGST(Includes)</td>
+                                                            <td class="sgst-td amt">₹${
+                                                              resultData
+                                                                .summary[
+                                                                "sgst"
+                                                              ] ?? "-"
+                                                            }</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Shipping Charge</td>
+                                                            <td class="shipping-charge amt">₹${ShippingCharge}.00</td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td><strong>Order Total</strong></td>
+                                                            <td><strong class="order_total_amt amt">₹${
+                                                              resultData
+                                                                .summary[
+                                                                "order_total_amt"
+                                                              ]
+                                                            }</strong></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>`;
+
+        $("#dynamic-order").html(detailHtml);
+        $(".orderModal").modal("show");
+      },
+      error: function (error) {
+        let status = error.status;
+        if (status === 401) {
+          localStorage.removeItem("token");
+          window.location.href = base_Url;
+        } else {
+          showToast(error, "error");
+        }
+      },
     });
   });
 });

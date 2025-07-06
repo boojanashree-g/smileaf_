@@ -88,6 +88,12 @@ $(document).ready(function () {
         .val("")
         .prop("checked", false)
         .prop("selected", false);
+
+      $("#variant-container")
+        .find("input, select")
+        .val("")
+        .prop("checked", false)
+        .prop("selected", false);
     } else {
       $("#variant-container").hide();
       $("#defaultSection").show();

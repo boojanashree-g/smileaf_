@@ -447,6 +447,10 @@ $(document).ready(function () {
     const token = localStorage.getItem("token");
 
     const type = $(".checkout-type").val();
+    var subIDs = [];
+    $(".sub-id").each(function () {
+      subIDs.push($(this).val());
+    });
 
     if (!validateCheckout()) {
       return;
@@ -454,7 +458,7 @@ $(document).ready(function () {
       $.ajax({
         type: "POST",
         url: "place-order",
-        data: { type: type },
+        data: { type: type, subid: subIDs },
         dataType: "JSON",
         headers: { Authorization: "Bearer " + token },
         success: function (resultData) {

@@ -277,46 +277,139 @@ class MyaccountController extends BaseController
     }
 
 
-   public function updateDefaultAddress()
-{
-    $userID = session()->get("user_id");
-    $addID = $this->request->getPost("add_id");
+    public function updateDefaultAddress()
+    {
+        $userID = session()->get("user_id");
+        $addID = $this->request->getPost("add_id");
 
-   
-    $query = "SELECT * FROM `tbl_user_address` WHERE `user_id` = ? AND `default_addr` = 1 AND `flag` = 1";
-    $getAddressData = $this->db->query($query, [$userID])->getResultArray();
 
-   
-    $affectedRows = 0;
-    $affectedRows2 = 0;
+        $query = "SELECT * FROM `tbl_user_address` WHERE `user_id` = ? AND `default_addr` = 1 AND `flag` = 1";
+        $getAddressData = $this->db->query($query, [$userID])->getResultArray();
 
-   
-    if (count($getAddressData) > 0) {
-        $oldAddrID = $getAddressData[0]['add_id'];
 
-        $updateOldqry = "UPDATE `tbl_user_address` SET `default_addr` = 0 WHERE `add_id` = ? AND `flag` = 1 AND `user_id` = ?";
-        $this->db->query($updateOldqry, [$oldAddrID, $userID]);
-        $affectedRows = $this->db->affectedRows();
+        $affectedRows = 0;
+        $affectedRows2 = 0;
+
+
+        if (count($getAddressData) > 0) {
+            $oldAddrID = $getAddressData[0]['add_id'];
+
+            $updateOldqry = "UPDATE `tbl_user_address` SET `default_addr` = 0 WHERE `add_id` = ? AND `flag` = 1 AND `user_id` = ?";
+            $this->db->query($updateOldqry, [$oldAddrID, $userID]);
+            $affectedRows = $this->db->affectedRows();
+        }
+
+        if ($affectedRows > 0 || count($getAddressData) == 0) {
+            $updateqry = "UPDATE `tbl_user_address` SET `default_addr` = 1 WHERE `add_id` = ? AND `flag` = 1 AND `user_id` = ?";
+            $this->db->query($updateqry, [$addID, $userID]);
+            $affectedRows2 = $this->db->affectedRows();
+        }
+
+
+        if ($affectedRows2 > 0) {
+            return $this->response->setJSON([
+                'code' => 200,
+                'message' => 'Address Updated successfully.'
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'code' => 400,
+                'message' => 'Address Update failed.'
+            ]);
+        }
     }
 
-    if ($affectedRows > 0 || count($getAddressData) == 0) {
-        $updateqry = "UPDATE `tbl_user_address` SET `default_addr` = 1 WHERE `add_id` = ? AND `flag` = 1 AND `user_id` = ?";
-        $this->db->query($updateqry, [$addID, $userID]);
-        $affectedRows2 = $this->db->affectedRows();
-    }
 
-  
-    if ($affectedRows2 > 0) {
-        return $this->response->setJSON([
-            'code' => 200,
-            'message' => 'Address Updated successfully.'
-        ]);
-    } else {
-        return $this->response->setJSON([
-            'code' => 400,
-            'message' => 'Address Update failed.'
-        ]);
+    public function viewOrderDetails()
+    {
+        $orderID = $this->request->getPost('orderid');
+
+        $userID = $this->session->get('user_id');
+        // Get Order Summary
+        $Orderquery = "SELECT * FROM `tbl_orders` WHERE `user_id` = ? AND order_id = ? AND`flag` = 1  AND  order_status <> 'initiated'";
+        $orders = $this->db->query($Orderquery, [$userID, $orderID])->getResultArray();
+
+
+        $orderSummaries = [];
+
+        $orderID = $orders[0]['order_id'];
+        $courierCharge = $orders[0]['courier_charge'];
+        $orderSubTotal = $orders[0]['sub_total'];
+        $OrderTotalAmt = $orders[0]['total_amt'];
+        $orderDate = date('d-m-Y', strtotime($orders[0]['order_date']));
+
+        $query = "SELECT * FROM `tbl_order_item` WHERE `flag` = 1 AND `order_id` = ?";
+        $itemDetails = $this->db->query($query, [$orderID])->getResultArray();
+
+
+        $orderSummaries = [
+            'order_id' => $orderID,
+            'order_no' => $orders[0]['order_no'],
+            'bill_no' => $orders[0]['bill_no'],
+            'bill_date' => $orders[0]['bill_date'],
+            'order_status' => $orders[0]['order_status'],
+            'order_date' => $orderDate,
+            'payment_status' => $orders[0]['payment_status'],
+            'payment_cancel_reason' => $orders[0]['payment_cancel_reason'],
+            'delivery_status' => $orders[0]['delivery_status'],
+            'delivery_message' => $orders[0]['delivery_message'],
+            'courier_charge' => $courierCharge,
+            'order_sub_total' => $orderSubTotal,
+            'order_total_amt' => $OrderTotalAmt,
+            'cgst' => $orders[0]['cgst'],
+            'sgst' => $orders[0]['sgst'],
+            'gst' => $orders[0]['gst'],
+
+            'items' => []
+        ];
+
+        foreach ($itemDetails as $item) {
+            $prodID = $item['prod_id'];
+            $variantID = $item['variant_id'];
+            $quantity = $item['quantity'];
+            $prod_price = $item['prod_price'];
+            $sub_total = $item['sub_total'];
+
+            $packQtyQuery = "SELECT
+                            a.`pack_qty`,
+                            b.prod_name,
+                            b.main_image
+                        FROM
+                            `tbl_variants` AS a
+                        INNER JOIN tbl_products AS b
+                            ON a.prod_id = b.prod_id
+                        WHERE
+                            b.`flag` = 1 AND a.flag = 1 AND a.variant_id = ? AND a.prod_id = ?";
+            $packData = $this->db->query($packQtyQuery, [$variantID, $prodID])->getRow();
+
+            if ($packData) {
+                $productDetails = [
+                    'prod_name' => $packData->prod_name,
+                    'main_image' => $packData->main_image,
+                    'pack_qty' => $packData->pack_qty,
+                    'quantity' => $quantity,
+                    'prod_price' => $prod_price,
+                    'sub_total' => $sub_total,
+                ];
+                $orderSummaries['items'][] = $productDetails;
+            }
+        }
+
+
+        krsort($orderSummaries);
+
+        if ($orderSummaries) {
+            $res['summary'] = $orderSummaries;
+            $res['code'] = 200;
+            $res['status'] = 'success';
+
+        } else {
+            $res['code'] = 400;
+            $res['status'] = 'failure';
+        }
+
+        return $this->response->setJSON($res);
+
     }
-}
 
 }
