@@ -88,49 +88,50 @@ class Home extends BaseController
             throw new \InvalidArgumentException('Product ID is required');
         }
 
-        // Get main product details
-        $productQuery = "SELECT * FROM `tbl_products` WHERE `flag` = 1 AND `prod_id` = ?";
-        $productData = $this->db->query($productQuery, [$prod_id])->getRowArray();
+        $prodQry = "SELECT * FROM `tbl_products` WHERE flag = 1 AND `prod_id` = ?";
+        $prodData = $this->db->query($prodQry, [$prod_id])->getResultArray();
 
 
-        if (!$productData) {
-            throw new \RuntimeException('Product not found');
-        }
+        $variantQry = "SELECT * FROM `tbl_variants` WHERE `prod_id` = ? AND flag = 1";
+        $variantData = $this->db->query($variantQry, [$prod_id])->getResultArray();
 
-        // Get variants
-        $variantQuery = "SELECT * FROM `tbl_variants` WHERE `prod_id` = ? AND `flag` = 1";
-        $variantData = $this->db->query($variantQuery, [$prod_id])->getResultArray();
 
 
         $lowestOffer = null;
-        $outOfStockCount = 0;
-
         foreach ($variantData as $variant) {
             if ($lowestOffer === null || $variant['offer_price'] < $lowestOffer['offer_price']) {
                 $lowestOffer = $variant;
             }
-
-
-            if ((int) $variant['stock_status'] <= 0 && (int) $variant['quantity'] <= 0) {
-                $outOfStockCount++;
-            }
         }
+        // if ($lowestOffer) {
+        //     $variantData['lowest_mrp'] = $lowestOffer['mrp'];
+        //     $variantData['lowest_offer_price'] = $lowestOffer['offer_price'];
+        //     $lowestQty = (!empty($lowestOffer['quantity']) && $lowestOffer['quantity'] > 0) ? (int) $lowestOffer['quantity'] : 0;
+        //     $variantData['lowest_quantity'] = $lowestQty;
+
+        // } else {
+        //     $variantData['lowest_mrp'] = null;
+        //     $variantData['lowest_offer_price'] = null;
+        //     $variantData['lowest_quantity'] = null;
+        // }
 
 
-        $stockStatus = ($outOfStockCount < count($variantData)) ? 1 : 0;
 
-
-        // Get product images
-        $imageQuery = "SELECT image_path FROM `tbl_images` WHERE `prod_id` = ? AND `flag` = 1";
+        $imageQuery = "SELECT * FROM `tbl_images` WHERE `prod_id` = ? AND `flag` = 1";
         $imageData = $this->db->query($imageQuery, [$prod_id])->getResultArray();
 
 
         $res = [
-            'products' => $productData,
-            'variant_data' => $variantData,
+            'code' => 200,
+            'status' => 'success',
+            'products' => $prodData,
+            'variant_data' => [ // group properly
+                'list' => $variantData, // the pure DB result
+                'lowest_mrp' => $lowestOffer['mrp'] ?? null,
+                'lowest_offer_price' => $lowestOffer['offer_price'] ?? null,
+                'lowest_quantity' => $lowestQty ?? 0,
+            ],
             'image_data' => $imageData,
-            'lowest_offer' => $lowestOffer,
-            'available_status' => $stockStatus
         ];
 
 
@@ -589,6 +590,7 @@ class Home extends BaseController
         // Get Order Summary
         $Orderquery = "SELECT * FROM `tbl_orders` WHERE `user_id` = ? AND `flag` = 1 AND  order_status <> 'initiated'";
         $orderDetails = $this->db->query($Orderquery, [$userID])->getResultArray();
+      
 
 
         $orderSummaries = [];
@@ -725,6 +727,9 @@ class Home extends BaseController
     }
     public function orderTracking()
     {
+        $orderID = base64_decode($this->request->getGet('order_id'));
+
+
         $menuData = $this->getMenuData();
         $data = array_merge($menuData, [
             'page_title' => 'Order Tracking',
@@ -732,10 +737,35 @@ class Home extends BaseController
                 ['label' => 'Home', 'url' => base_url()],
                 ['label' => 'Order Tracking']
             ],
-            'banner_image' => base_url('public/assets/img/banner/bg_4.png')
+            'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
+            'order_id' => $orderID
         ]);
 
         return view('orderTracking', $data);
+    }
+
+    public function getOrderStatus()
+    {
+        $userID = session()->get('user_id');
+        $orderNo = $this->request->getPost('order_no');
+        $orderID = $this->request->getPost('main_orderid');
+
+        $orderQuery = "SELECT 
+                        DATE_FORMAT(`order_date`, '%d-%m-%Y %r') AS `order_date`,
+                        DATE_FORMAT(`shipped_date`, '%d-%m-%Y %r') AS `shipped_date`,
+                        DATE_FORMAT(`delivery_date`, '%d-%m-%Y %r') AS `delivery_date`,
+                        `order_status`
+                        FROM `tbl_orders`
+                        WHERE `flag` = 1 AND `order_id` = ? AND `order_no` = ? AND `user_id` = ?
+                        ";
+        $orderDetails = $this->db->query($orderQuery, [$orderID, $orderNo, $userID])->getRowArray();
+
+
+        $res = [
+            'code' => 200,
+            'orderdetails' => $orderDetails
+        ];
+        echo json_encode($res);
     }
     public function productCategories($slug)
     {

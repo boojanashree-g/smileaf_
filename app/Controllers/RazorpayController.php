@@ -46,6 +46,8 @@ class RazorpayController extends BaseController
 
         $userData = $this->db->query($sql, [$userID, $orderID])->getRow();
 
+
+
         if (!$userData) {
 
             return view('payment', ['error' => 'Order not found.']);
@@ -54,7 +56,10 @@ class RazorpayController extends BaseController
         $key_id = $_ENV['RAZORPAY_KEY_ID'];
         $secret = $_ENV['RAZORPAY_KEY_SECRET'];
 
+
         $api = new Api($key_id, $secret);
+    
+
 
         $amount = $userData->total_amt;
         $totalAmt = $amount * 100;
@@ -72,7 +77,7 @@ class RazorpayController extends BaseController
                 'number' => $userData->number
             ]
         ]);
-
+         
 
         $customerData = [
             'name' => $userData->username,

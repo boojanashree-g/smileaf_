@@ -1,5 +1,4 @@
 $(".btn-account").click(function (e) {
-  
   e.preventDefault();
 
   let isValid = true;

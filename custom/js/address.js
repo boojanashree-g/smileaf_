@@ -219,6 +219,46 @@ $(document).ready(function () {
     });
   });
 
+  // *************************** [5.Default Address Change] *************************************************************************
+
+  $(".default_address").click(function () {
+    let addressID = $(this).data("addid");
+    alert(addressID);
+
+    const currentChecked = $("input.checkout-add:checked");
+    let newdefaultCheck = false;
+    let addresshtml = "";
+
+    token = localStorage.getItem("token");
+    $.ajax({
+      type: "POST",
+      url: base_Url + "update-defaultaddress",
+      data: { add_id: addressID },
+      dataType: "JSON",
+      headers: { Authorization: "Bearer " + token },
+      success: function (JSONdata) {
+        if (JSONdata.code == 400) {
+          showToast(JSONdata.message, "error");
+        } else if (JSONdata.code == 200) {
+          showToast(JSONdata.message, "success");
+          localStorage.setItem("goToSection", "deliverySection");
+          setTimeout(() => {
+            window.location.reload();
+          });
+        }
+      },
+      error: function (error) {
+        let status = error.status;
+        if (status === 401) {
+          localStorage.removeItem("token");
+          window.location.href = base_Url;
+        } else {
+          showToast(error, "error");
+        }
+      },
+    });
+  });
+
   // *************************** [View Order] *************************************************************************
   $(".view-order").click(function () {
     let orderID = $(this).attr("data-orderid");
@@ -234,6 +274,34 @@ $(document).ready(function () {
       success: function (resultData) {
         let orderItemsHTML = "";
         let ShippingCharge = 100.0;
+
+        let orderSummary = resultData.summary["order_status"];
+        let CommonClass = "";
+        let CommonBgClass = "";
+        let TrackOrderDisp = "",
+          dispClass = "";
+
+        if (orderSummary == "New") {
+          CommonClass = "text-green";
+          CommonBgClass = "alert-success";
+          TrackOrderDisp = "";
+          dispClass = "col-md-9";
+        } else if (orderSummary == "Delivered") {
+          CommonClass = "text-green";
+          CommonBgClass = "alert-success";
+          TrackOrderDisp = "";
+          dispClass = "col-md-9";
+        } else if (orderSummary == "Failed") {
+          CommonClass = "text-danger";
+          CommonBgClass = "alert-danger";
+          TrackOrderDisp = "d-none";
+          dispClass = "col-md-12";
+        } else {
+          CommonBgClass = "alert-warning";
+          CommonClass = "text-warning";
+          TrackOrderDisp = "d-none";
+          dispClass = "col-md-12";
+        }
 
         resultData.summary.items.forEach((item) => {
           orderItemsHTML += `
@@ -299,14 +367,12 @@ $(document).ready(function () {
 
                                             <!-- Order Status -->
                                             <div class="row p-3 bg-white">
-                                                <div class="col-md-9">
-                                                    <div class="alert alert-success p-2 mb-0" id="statusAlert">
-                                                        <h6 class="text-green mb-0"><b id="orderStatus">${
-                                                          resultData.summary[
-                                                            "order_status"
-                                                          ]
-                                                        }</b></h6>
-                                                        <p class="text-green mb-0 d-none d-md-block" id="deliveryInfo">
+                                                <div class="${dispClass}">
+                                                    <div class="alert ${CommonBgClass} p-2 mb-0" id="statusAlert">
+                                                        <h6 class="${CommonClass} mb-0"><b class="orderStatus">${
+          resultData.summary["order_status"]
+        }</b></h6>
+                                                        <p class="${CommonClass} mb-0 d-none d-md-block" id="deliveryInfo">
                                                             ${
                                                               resultData
                                                                 .summary[
@@ -316,9 +382,13 @@ $(document).ready(function () {
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3 text-end mt-2 mt-md-0">
-                                                    <button class="btn btn-outline-primary" id="trackButton">Track
-                                                        Shipment</button>
+                                                <div class="col-md-3 text-end mt-2 mt-md-0 ${TrackOrderDisp}">
+                                                    <button class="btn btn-outline-primary trackButton" data-orderid=${
+                                                      resultData.summary[
+                                                        "order_id"
+                                                      ]
+                                                    }
+                                                     id="trackButton">Track Shipping</button>       
                                                 </div>
                                             </div>
 
@@ -387,4 +457,15 @@ $(document).ready(function () {
       },
     });
   });
+  $(document).on("click", ".trackButton", function () {
+    let orderID = $(this).data("orderid");
+
+    let encodedOrderID = baseEncode(orderID);
+    window.location.href =
+      base_Url + "order-tracking/?order_id=" + encodedOrderID;
+  });
+
+  function baseEncode(input) {
+    return btoa(input);
+  }
 });
