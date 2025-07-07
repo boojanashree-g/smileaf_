@@ -1402,7 +1402,7 @@
     -------------------------------------------------------- */
     $(window).on('scroll',function() {    
         var scroll = $(window).scrollTop();
-        if (scroll < 445) {
+        if (scroll < 100) {
             $(".ltn__header-sticky").removeClass("sticky-active");
         } else {
             $(".ltn__header-sticky").addClass("sticky-active");
