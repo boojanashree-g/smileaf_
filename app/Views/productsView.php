@@ -9,6 +9,12 @@
         cursor: not-allowed;
         background-color: rgba(136, 131, 131, 0.72);
     }
+    .slick-track #main-image{
+        height: 450px;
+    }
+    .sub-image img{
+        max-height: 100px;
+    }
 </style>
 
 <body>
