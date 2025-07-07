@@ -20,17 +20,12 @@
         color: #fff;
     }
 </style>
-
-
 <body class="products_page">
     <!-- Body main wrapper start -->
     <div class="wrapper">
-
         <!-- HEADER AREA START (header-5) -->
         <?php require("components/header.php") ?>
         <!-- HEADER AREA END -->
-
-
         <!-- PRODUCT DETAILS AREA START -->
         <div class="ltn__product-area ltn__product-gutter my-4">
             <div class="container">
@@ -324,19 +319,11 @@
                 </div>
             </div>
         </div>
-
-
-
         <!-- Main JS -->
-
         <script src="<?php echo base_url() ?>public/assets/js/filter.js"></script>
         <script src="<?php echo base_url() ?>custom/js/productlist.js"></script>
         <script src="<?php echo base_url() ?>public/assets/js/main.js"></script>
-
         <!-- All JS Plugins -->
         <script src="<?php echo base_url() ?>public/assets/js/plugins.js"></script>
-
-
-</body>
-
+    </body>
 </html>

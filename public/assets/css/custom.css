@@ -1628,9 +1628,11 @@ a.theme-btn-1.btn:focus {
     text-decoration: underline;
     color: #2563eb;
 }
+
 #addressForm.active {
     /* Your styles here */
-    display: block; /* or whatever you want */
+    display: block;
+    /* or whatever you want */
 }
 
 .otp-text {
@@ -2285,11 +2287,13 @@ a.theme-btn-1.btn:focus {
     justify-content: center;
     flex-shrink: 0;
 }
-.select-dropdown{
-        display: flex;
-   
+
+.select-dropdown {
+    display: flex;
+
     background-color: var(--white);
-    border: 2px solid rgba(0, 0, 0, 0.1);;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    ;
     border-color: rgba(0, 0, 0, 0.1);
     -webkit-box-shadow: none;
     box-shadow: none;
@@ -2303,7 +2307,8 @@ a.theme-btn-1.btn:focus {
     border-radius: 5px;
     height: 50%;
 }
-.single-large-img{
+
+.single-large-img {
     width: 500px;
     position: relative;
     left: 0px;
@@ -2315,19 +2320,27 @@ a.theme-btn-1.btn:focus {
     min-height: 300px;
     height: 402px;
 }
- .payment-success
-{
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(255, 255, 255, 0.8);
-        z-index: 9999;
 
-        /* Center the loader image */
-        display: flex;
-        justify-content: center;
-        align-items: center;
+.payment-success {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+
+    /* Center the loader image */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.back_to_purchase,.back_to_purchase:hover{
+    background: #fb9327e3;
+    color: #fff;
+    border: 1px solid;
+    padding: 12px 40px;
+}
+

@@ -15,7 +15,7 @@
         <!-- HEADER AREA END -->
 
         <!-- WISHLIST AREA START -->
-        <div class="liton__wishlist-area pb-70">
+        <div class="liton__wishlist-area pb-0">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
@@ -41,15 +41,14 @@
                                             <!-- Orders Tab - Now properly active -->
                                             <div class="tab-pane fade active show" id="liton_tab_1_2">
                                                 <div class="ltn__myaccount-tab-content-inner">
-                                                    <h3>My Orders</h3>
-                                                    <div class="table-responsive">
-
+                                                    <!-- <h3>My Orders</h3> -->
+                                                    <div class="table-responsive text-center d-flex flex-column align-items-center">
                                                         <?php
                                                         if (count($summary) <= 0) { ?>
-                                                            <p> No Orders Placed</p>
-                                                            <a href="<?= base_url() ?>"
-                                                                class="btn btn-sm btn-outline-primary">Back to
-                                                                Purchase</a>
+                                                            <img src="<?php echo base_url() ?>public/assets/img/empty-box-concept.png" width="200" />
+                                                            <h3>No Orders Found</h3>
+                                                            <a href="<?= base_url()?>"
+                                                                class="btn btn-sm btn-outline-primary back_to_purchase"> Back to Purchase</a>
 
                                                         <?php } else { ?>
                                                             <table class="table table-striped">
