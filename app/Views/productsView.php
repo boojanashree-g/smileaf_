@@ -22,7 +22,7 @@
         <!-- BREADCRUMB AREA END -->
 
         <!-- SHOP DETAILS AREA START -->
-        <div class="ltn__shop-details-area pb-10">
+        <div class="ltn__shop-details-area my-4">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12 col-md-12">
