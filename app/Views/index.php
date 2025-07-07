@@ -129,7 +129,7 @@
                                 </div>
                                 <div class="home_products product-info">
                                     <h2 class="product-title">
-                                        <a href="<?= base_url('products/' . $product['prod_id']) ?>" class="featured_prod_name">
+                                        <a href="<?= base_url('product-details/' . base64_encode($product['prod_id'])) ?>" class="featured_prod_name">
                                             <span><?= esc($product['prod_name']) ?></span>
                                             
                                         </a>
@@ -368,146 +368,6 @@
         <!-- MODAL AREA END -->
 
     </div>
-    <!-- Body main wrapper end -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"></script>
-
-    <script>
-        const BASE_DURATION = 3;
-
-        function $(selector) {
-            return document.querySelector(selector);
-        }
-
-        function $$(selector) {
-            return Array.from(document.querySelectorAll(selector));
-        }
-
-        const animations = [{
-            origin: '100% 62%',
-            rotation: -10,
-            delay: 0,
-        }, // Base
-        {
-            origin: '100% 0%',
-            rotation: 15,
-            delay: -BASE_DURATION * 0.8
-        }, // Stem Leave
-        {
-            origin: '80% 100%',
-            rotation: -10,
-            delay: -BASE_DURATION * 0.8
-        }, // North 1
-        {
-            origin: '96% 100%',
-            rotation: -8,
-            delay: -BASE_DURATION * 0.8
-        }, // North 2
-        {
-            origin: '98% 100%',
-            rotation: -9,
-            delay: -BASE_DURATION * 0.8
-        }, // North 3
-        {
-            origin: '98% 100%',
-            rotation: -9,
-            delay: -BASE_DURATION * 0.8
-        }, // North 4
-        {
-            origin: '100% 100%',
-            rotation: -9,
-            delay: -BASE_DURATION * 0.8
-        }, // North 5
-        {
-            origin: '100% 100%',
-            rotation: -9,
-            delay: -BASE_DURATION * 0.8
-        }, // North 6
-        {
-            origin: '100% 96%',
-            rotation: -9,
-            delay: -BASE_DURATION * 0.8
-        }, // North 7
-        {
-            origin: '100% 95%',
-            rotation: -9,
-            delay: -BASE_DURATION * 0.8
-        }, // North 8
-        {
-            origin: '100% 50%',
-            rotation: -5,
-            delay: -BASE_DURATION * 0.8
-        }, // North 9
-
-        {
-            origin: '80% 0%',
-            rotation: -5,
-            delay: -BASE_DURATION * 0.8
-        }, // South 1
-        {
-            origin: '96% 0%',
-            rotation: 8,
-            delay: -BASE_DURATION * 0.8
-        }, // South 2
-        {
-            origin: '98% 0%',
-            rotation: 9,
-            delay: -BASE_DURATION * 0.8
-        }, // South 3
-        {
-            origin: '98% 0%',
-            rotation: 9,
-            delay: -BASE_DURATION * 0.8
-        }, // South 4
-        {
-            origin: '100% 0%',
-            rotation: 9,
-            delay: -BASE_DURATION * 0.8
-        }, // South 5
-        {
-            origin: '100% 0%',
-            rotation: 9,
-            delay: -BASE_DURATION * 0.8
-        }, // South 6
-        {
-            origin: '100% 0%',
-            rotation: 9,
-            delay: -BASE_DURATION * 0.8
-        }, // South 7
-        {
-            origin: '100% 0%',
-            rotation: 9,
-            delay: -BASE_DURATION * 0.8
-        }, // South 8
-        {
-            origin: '100% 0%',
-            rotation: 10,
-            delay: -BASE_DURATION * 0.8
-        }, // South 9
-        ]
-
-        // Elements
-        const base = $('.base');
-        const stemLeave = $('.stem-leave');
-        const northPaths = $$('.north-leaves path');
-        const southPaths = $$('.south-leaves path');
-
-        [base, stemLeave, ...northPaths, ...southPaths].forEach((element, index) => {
-            const animation = animations[index];
-            TweenMax.set(element, {
-                transformOrigin: animation.origin
-            });
-
-            TweenMax.to(element, BASE_DURATION, {
-                rotation: animation.rotation,
-                yoyo: true,
-                repeat: -1,
-                delay: animation.delay,
-                ease: Power1.easeInOut,
-            });
-        });
-    </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script>
         $(document).ready(function(){
             if ($('.slick-banner-slider').children().length > 1) {
@@ -521,8 +381,6 @@
             }
         });
         
-    </script>
-    <script>
         $(document).ready(function () {
             $('.ltn__testimonial-slider-3-active').slick({
                 infinite: true,
@@ -550,8 +408,6 @@
                 ]
             });
         });
-</script>
-<script>
     $(document).ready(function(){
         $('.slider').slick({
             slidesToShow: 4,
