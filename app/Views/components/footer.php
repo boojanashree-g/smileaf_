@@ -22,9 +22,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-md-6 col-sm-6 col-12">
+                <div class="col-xl-4 col-md-6 col-sm-6 col-12">
                     <div class="footer-widget footer-menu-widget clearfix">
-                        <h4 class="footer-title">Company</h4>
+                        <h4 class="footer-title">Contact Us</h4>
                         <div class="footer-address">
                             <ul>
                                 <li>
@@ -74,12 +74,11 @@
                  </div> -->
                 <div class="col-xl-2 col-md-6 col-sm-6 col-12">
                     <div class="footer-widget footer-menu-widget clearfix">
-                        <h4 class="footer-title">Customer Care</h4>
+                        <h4 class="footer-title">Quick Links</h4>
                         <div class="footer-menu">
                             <ul>
                                 <li><a href="<?php echo base_url('signin') ?>">Login</a></li>
                                 <li><a href="<?php echo base_url('myaccount') ?>">My account</a></li>
-                                <li><a href="<?php echo base_url('wishlist') ?>">Wish List</a></li>
                                 <li><a href="<?php echo base_url('order-tracking') ?>">Order tracking</a></li>
                                 <li><a href="<?php echo base_url('contact') ?>">Contact us</a></li>
                             </ul>
