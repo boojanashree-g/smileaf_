@@ -76,7 +76,6 @@
         <!-- HEADER AREA END -->
 
         <!-- BREADCRUMB AREA START -->
-        <?php require("components/breadcrumbs.php") ?>
         <!-- BREADCRUMB AREA END -->
 
         <!-- LOGIN AREA START -->

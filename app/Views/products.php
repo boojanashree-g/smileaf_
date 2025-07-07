@@ -30,10 +30,9 @@
         <?php require("components/header.php") ?>
         <!-- HEADER AREA END -->
 
-        <?php require("components/breadcrumbs.php") ?>
 
         <!-- PRODUCT DETAILS AREA START -->
-        <div class="ltn__product-area ltn__product-gutter">
+        <div class="ltn__product-area ltn__product-gutter my-4">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-9 order-lg-2">

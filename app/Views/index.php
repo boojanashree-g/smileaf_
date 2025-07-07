@@ -169,12 +169,11 @@
         <!-- VIDEO AREA END -->
 
         <!-- TESTIMONIAL AREA START (testimonial-4) -->
-        <div class="ltn__testimonial-area section-bg-1 pt-200 pb-20">
+        <div class="ltn__testimonial-area pt-200 pb-20">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="section-title-area ltn__section-title-2 text-center">
-                            <h6 class="section-subtitle ltn__secondary-color">// Testimonials</h6>
                             <h1 class="section-title">Clients Feedbacks<span>.</span></h1>
                         </div>
                     </div>
@@ -333,13 +332,6 @@
                                                 <div class="ltn__product-details-menu-3">
                                                     <ul>
                                                         <li>
-                                                            <a href="#" class="" title="Wishlist" data-bs-toggle="modal"
-                                                                data-bs-target="#liton_wishlist_modal">
-                                                                <i class="far fa-heart"></i>
-                                                                <span>Add to Wishlist</span>
-                                                            </a>
-                                                        </li>
-                                                        <li>
                                                             <a href="#" class="" title="Compare" data-bs-toggle="modal"
                                                                 data-bs-target="#quick_view_modal">
                                                                 <i class="fas fa-exchange-alt"></i>
@@ -362,56 +354,6 @@
                                                                     class="fab fa-instagram"></i></a></li>
 
                                                     </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- MODAL AREA END -->
-
-
-        <!-- MODAL AREA START (Wishlist Modal) -->
-        <div class="ltn__modal-area ltn__add-to-cart-modal-area">
-            <div class="modal fade" id="liton_wishlist_modal" tabindex="-1">
-                <div class="modal-dialog modal-md" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="ltn__quick-view-modal-inner">
-                                <div class="modal-product-item">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="modal-product-img">
-                                                <img src="<?php echo base_url() ?>public/assets/img/product/7.png"
-                                                    alt="#">
-                                            </div>
-                                            <div class="modal-product-info">
-                                                <h5><a href="<?php echo base_url('productDetails') ?>">Vegetables
-                                                        Juices</a></h5>
-                                                <p class="added-cart"><i class="fa fa-check-circle"></i> Successfully
-                                                    added to your Wishlist</p>
-                                                <div class="btn-wrapper">
-                                                    <a href="<?php echo base_url('wishlist') ?>"
-                                                        class="theme-btn-1 btn btn-effect-1">View Wishlist</a>
-                                                </div>
-                                            </div>
-                                            <!-- additional-info -->
-                                            <div class="additional-info d-none">
-                                                <p>We want to give you <b>10% discount</b> for your first order, <br>
-                                                    Use discount code at checkout</p>
-                                                <div class="payment-method">
-                                                    <img src="<?php echo base_url() ?>public/assets/img/icons/payment.png"
-                                                        alt="#">
                                                 </div>
                                             </div>
                                         </div>

@@ -18,11 +18,10 @@
         <!-- HEADER AREA END -->
 
         <!-- BREADCRUMB AREA START -->
-        <?php require("components/breadcrumbs.php") ?>
         <!-- BREADCRUMB AREA END -->
 
         <!-- PRODUCT DETAILS AREA START -->
-        <div class="ltn__product-area ltn__product-gutter">
+        <div class="ltn__product-area ltn__product-gutter my-4">
             <div class="container">
                 <div class="row">
                     <div class="tab-content">
@@ -36,17 +35,15 @@
                                                 <div class="col-xl-3 col-sm-6 col-6">
                                                     <div class="ltn__product-item ltn__product-item-3 text-center">
                                                         <div class="product-img">
-                                                            <a
-                                                                href="<?= base_url('products/' . $submenu['slug'] . '/' . base64_encode($submenu['sub_id'])) ?>">
-
+                                                            <a href="<?= base_url('products/' . $submenu['slug'] . '/' . base64_encode($submenu['sub_id'])) ?>">
                                                                 <img src="<?= base_url($submenu['image_url']) ?>" alt="#">
                                                             </a>
                                                         </div>
-                                                        <div class="product-info mt-3">
+                                                        <div class="home_products product-info">
                                                             <h2 class="product-title">
-                                                                <a
-                                                                    href="<?= base_url('products/' . $submenu['slug'] . '/' . base64_encode($submenu['sub_id'])) ?>">
-                                                                    <?= esc($submenu['submenu']) ?>
+                                                                <a href="<?= base_url('products/' . $submenu['slug'] . '/' . base64_encode($submenu['sub_id'])) ?>" class="featured_prod_name">
+                                                                    <span><?= esc($submenu['submenu']) ?></span>
+                                                                    <i class="fas fa-arrow-alt-circle-right"></i>
                                                                 </a>
                                                             </h2>
                                                         </div>
@@ -136,13 +133,6 @@
                                             <div class="ltn__product-details-menu-3">
                                                 <ul>
                                                     <li>
-                                                        <a href="#" class="" title="Wishlist" data-bs-toggle="modal"
-                                                            data-bs-target="#liton_wishlist_modal">
-                                                            <i class="far fa-heart"></i>
-                                                            <span>Add to Wishlist</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
                                                         <a href="#" class="" title="Compare" data-bs-toggle="modal"
                                                             data-bs-target="#quick_view_modal">
                                                             <i class="fas fa-exchange-alt"></i>
@@ -196,55 +186,6 @@
                                         <div class="modal-product-img">
                                             <img src="<?php echo base_url() ?>public/assets/img/plate_img/square-plate/4square.png"
                                                 alt="#">
-                                        </div>
-                                        <!-- additional-info -->
-                                        <div class="additional-info d-none">
-                                            <p>We want to give you <b>10% discount</b> for your first order, <br>
-                                                Use discount code at checkout</p>
-                                            <div class="payment-method">
-                                                <img src="<?php echo base_url() ?>public/assets/img/icons/payment.png"
-                                                    alt="#">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- MODAL AREA END -->
-
-    <!-- MODAL AREA START (Wishlist Modal) -->
-    <div class="ltn__modal-area ltn__add-to-cart-modal-area">
-        <div class="modal fade" id="liton_wishlist_modal" tabindex="-1">
-            <div class="modal-dialog modal-md" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="ltn__quick-view-modal-inner">
-                            <div class="modal-product-item">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="modal-product-img">
-                                            <img src="<?php echo base_url() ?>public/assets/img/plate_img/square-plate/4square.png"
-                                                alt="#">
-                                        </div>
-                                        <div class="modal-product-info">
-                                            <h5><a href="<?php echo base_url('productDetails') ?>">Vegetables Juices</a>
-                                            </h5>
-                                            <p class="added-cart"><i class="fa fa-check-circle"></i> Successfully
-                                                added to your Wishlist</p>
-                                            <div class="btn-wrapper">
-                                                <a href="<?php echo base_url('wishlist') ?>"
-                                                    class="theme-btn-1 btn btn-effect-1">View Wishlist</a>
-                                            </div>
                                         </div>
                                         <!-- additional-info -->
                                         <div class="additional-info d-none">
