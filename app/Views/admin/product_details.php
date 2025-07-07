@@ -104,7 +104,7 @@
 
 
                                             <!--  Filter Start -->
-                                            <div class="col-4 col-md-4">
+                                            <div class="col-3 col-md-3">
                                                 <label class="form-label">Filter Type</label>
                                                 <select class="form-select" for="type_id" name="type_id" id="type_id">
                                                     <option value="">Select Option</option>
@@ -117,7 +117,7 @@
                                                 <span class="error text-danger type_id mt-5"></span>
                                             </div>
 
-                                            <div class="col-4 col-md-4">
+                                            <div class="col-3 col-md-3">
                                                 <label class="form-label">Filter Shapes</label>
                                                 <select class="form-select" for="shape_id" name="shape_id"
                                                     id="shape_id">
@@ -134,7 +134,7 @@
                                                 <span class="error text-danger shape_id mt-5"></span>
                                             </div>
 
-                                            <div class="col-4 col-md-4">
+                                            <div class="col-3 col-md-3">
                                                 <label class="form-label">Filter Size</label>
                                                 <select class="form-select" for="size_id" name="size_id" id="size_id">
                                                     <option value="">Select Option</option>
@@ -145,6 +145,14 @@
 
                                                 </select>
                                                 <span class="error text-danger size_id mt-5"></span>
+                                            </div>
+
+                                            <div class="col-3 col-md-3">
+                                                <label class="form-label">Best Sellers</label>
+                                                <div class="form-check mt-2"> <input class="form-check-input"
+                                                        type="checkbox" name="best_seller" id="best_seller" value="">
+                                                    <label class="form-check-label">Include Best Sellers?</label>
+                                                </div>
                                             </div>
                                             <!--  Filter End -->
 
@@ -199,6 +207,7 @@
                                                 </div>
                                                 <span class="error text-danger images mt-5"></span>
                                             </div>
+
                                             <div class="col-lg-12 mt-3">
                                                 <div class="form-check form-switch mb-2">
                                                     <input class="form-check-input" type="checkbox" id="hasVariant"

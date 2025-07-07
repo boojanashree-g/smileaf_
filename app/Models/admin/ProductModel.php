@@ -26,6 +26,7 @@ class ProductModel extends Model
         'type_id',
         'shape_id',
         'size_id',
+        'best_seller'
 
     ];
 }

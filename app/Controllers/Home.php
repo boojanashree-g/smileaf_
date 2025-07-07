@@ -84,18 +84,19 @@ class Home extends BaseController
         $encodedID = $this->request->uri->getSegment(2);
         $prod_id = base64_decode($encodedID);
 
-        if (empty($prod_id)) {
-            throw new \InvalidArgumentException('Product ID is required');
-        }
-
         $prodQry = "SELECT * FROM `tbl_products` WHERE flag = 1 AND `prod_id` = ?";
         $prodData = $this->db->query($prodQry, [$prod_id])->getResultArray();
-
 
         $variantQry = "SELECT * FROM `tbl_variants` WHERE `prod_id` = ? AND flag = 1";
         $variantData = $this->db->query($variantQry, [$prod_id])->getResultArray();
 
 
+        // Related Products
+        $shapeID = $prodData[0]['shape_id'];
+        $typeID = $prodData[0]['type_id'];
+        $sizeID = $prodData[0]['size_id'];
+
+        $relatedProd = $this->relatedProducts($shapeID, $typeID, $sizeID, $prod_id);
 
         $lowestOffer = null;
         foreach ($variantData as $variant) {
@@ -103,19 +104,6 @@ class Home extends BaseController
                 $lowestOffer = $variant;
             }
         }
-        // if ($lowestOffer) {
-        //     $variantData['lowest_mrp'] = $lowestOffer['mrp'];
-        //     $variantData['lowest_offer_price'] = $lowestOffer['offer_price'];
-        //     $lowestQty = (!empty($lowestOffer['quantity']) && $lowestOffer['quantity'] > 0) ? (int) $lowestOffer['quantity'] : 0;
-        //     $variantData['lowest_quantity'] = $lowestQty;
-
-        // } else {
-        //     $variantData['lowest_mrp'] = null;
-        //     $variantData['lowest_offer_price'] = null;
-        //     $variantData['lowest_quantity'] = null;
-        // }
-
-
 
         $imageQuery = "SELECT * FROM `tbl_images` WHERE `prod_id` = ? AND `flag` = 1";
         $imageData = $this->db->query($imageQuery, [$prod_id])->getResultArray();
@@ -132,8 +120,8 @@ class Home extends BaseController
                 'lowest_quantity' => $lowestQty ?? 0,
             ],
             'image_data' => $imageData,
+            'related_products' => $relatedProd
         ];
-
 
 
         $res = array_merge($res, $this->getMenuData(), [
@@ -146,6 +134,62 @@ class Home extends BaseController
         ]);
 
         return view('productsView', $res);
+    }
+
+    private function relatedProducts($shapeID, $typeID, $sizeID, $prod_id)
+    {
+        $query = "SELECT * FROM `tbl_products` WHERE `type_id` = ? AND `shape_id` = ? AND `size_id`  = ? AND `prod_id` != ?  AND `flag` = 1";
+        $rawProducts = $this->db->query($query, [$typeID, $shapeID, $sizeID, $prod_id])->getResultArray();
+
+
+        $products = [];
+        foreach ($rawProducts as $product) {
+            $prodId = $product['prod_id'];
+
+            // Fetch variants
+            $variantQuery = $this->db->query("SELECT variant_id, pack_qty, mrp, offer_type, offer_details, offer_price, stock_status, quantity,weight
+              FROM `tbl_variants` WHERE `flag` = 1 AND `prod_id` = ?", [$prodId])->getResultArray();
+            // Fetch product images
+            $imageQuery = $this->db->query("SELECT `image_path` FROM `tbl_images` WHERE `flag` = 1 AND `prod_id` = ?", [$prodId])->getResultArray();
+
+            $product['variants'] = $variantQuery;
+            $product['product_images'] = array_column($imageQuery, 'image_path');
+
+
+            $totalVariant = count($variantQuery);
+
+            $lowestOffer = null;
+            $stockCount = 0;
+            foreach ($variantQuery as $variant) {
+                if ($lowestOffer === null || $variant['offer_price'] < $lowestOffer['offer_price']) {
+                    $lowestOffer = $variant;
+                }
+                if ($variant['stock_status'] <= 0 && $variant['quantity'] <= 0) {
+                    $stockCount += 1;
+                }
+            }
+
+            $stockStatus = $stockCount < $totalVariant ? 1 : 0;
+
+            if ($lowestOffer) {
+                $product['lowest_mrp'] = $lowestOffer['mrp'];
+                $product['lowest_offer_price'] = $lowestOffer['offer_price'];
+                $product['lowest_quantity'] = $lowestOffer['quantity'];
+                $product['available_status'] = $stockStatus;
+
+            } else {
+                $product['lowest_mrp'] = null;
+                $product['lowest_offer_price'] = null;
+                $product['lowest_quantity'] = null;
+                $product['available_status'] = $stockStatus;
+
+            }
+
+            $products[] = $product;
+        }
+
+        return $products;
+
     }
 
 
@@ -454,19 +498,14 @@ class Home extends BaseController
 
 
         $products = [];
-
         foreach ($rawProducts as $product) {
             $prodId = $product['prod_id'];
-
-
 
             // Fetch variants
             $variantQuery = $db->table('tbl_variants')
                 ->select('variant_id, pack_qty, mrp, offer_type, offer_details, offer_price, stock_status, quantity, weight')
                 ->where(['flag' => 1, 'prod_id' => $prodId])
                 ->get()->getResultArray();
-
-
 
 
             // Fetch product images
@@ -492,10 +531,7 @@ class Home extends BaseController
                 }
             }
 
-
-
             $stockStatus = $stockCount < $totalVariant ? 1 : 0;
-
 
             if ($lowestOffer) {
                 $product['lowest_mrp'] = $lowestOffer['mrp'];

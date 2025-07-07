@@ -53,6 +53,7 @@ class ProductController extends BaseController
         $ImageModel = new ImageModel();
         $data = $request->getPost();
 
+
         try {
             $productName = $request->getPost('prod_name');
             $hasVariant = $request->getPost('has_variant');
@@ -103,6 +104,7 @@ class ProductController extends BaseController
                     'type_id' => $request->getPost('type_id'),
                     'shape_id' => $request->getPost('shape_id'),
                     'size_id' => $request->getPost('size_id'),
+                    'best_seller' => $request->getPost('best_seller'),
                 ];
                 $ProductModel->insert($data);
                 $lastInsertedID = $ProductModel->insertID();
@@ -280,6 +282,7 @@ class ProductController extends BaseController
         try {
             $getData = $this->request->getPost();
 
+
             $productName = $request->getPost('prod_name');
             $productID = $request->getPost('prod_id');
 
@@ -347,6 +350,7 @@ class ProductController extends BaseController
                     'type_id' => $request->getPost('type_id'),
                     'shape_id' => $request->getPost('shape_id'),
                     'size_id' => $request->getPost('size_id'),
+                    'best_seller' => $request->getPost('best_seller'),
                 ];
 
 
@@ -621,11 +625,11 @@ class ProductController extends BaseController
         return view("admin/featured_products", $res);
     }
 
-  public function insertFeaturedData()
+    public function insertFeaturedData()
     {
-        $sub_id     = $this->request->getPost('sub_id');
-        $prod_name  = $this->request->getPost('prod_name');
-        $file       = $this->request->getFile('main_image');
+        $sub_id = $this->request->getPost('sub_id');
+        $prod_name = $this->request->getPost('prod_name');
+        $file = $this->request->getFile('main_image');
 
         if ($file && $file->isValid() && !$file->hasMoved()) {
             $newName = $file->getRandomName();
@@ -634,15 +638,15 @@ class ProductController extends BaseController
         } else {
             return $this->response->setJSON([
                 'code' => 500,
-                'msg'  => 'Image upload failed.',
+                'msg' => 'Image upload failed.',
             ]);
         }
 
         $data = [
-            'sub_id'     => $sub_id,
-            'prod_name'  => $prod_name,
-            'image_url'  => $imagePath,
-            'flag'       => 1,
+            'sub_id' => $sub_id,
+            'prod_name' => $prod_name,
+            'image_url' => $imagePath,
+            'flag' => 1,
             'created_at' => date('Y-m-d H:i:s'),
         ];
 
@@ -651,12 +655,12 @@ class ProductController extends BaseController
         if ($inserted) {
             return $this->response->setJSON([
                 'code' => 200,
-                'msg'  => 'Product added successfully.',
+                'msg' => 'Product added successfully.',
             ]);
         } else {
             return $this->response->setJSON([
                 'code' => 500,
-                'msg'  => 'Database insertion failed.',
+                'msg' => 'Database insertion failed.',
             ]);
         }
     }
@@ -670,8 +674,9 @@ class ProductController extends BaseController
     }
 
 
-    public function getFeaturedProductDetails(){
-         $featuredProdData = $this->db->query("SELECT  a.* , b.submenu
+    public function getFeaturedProductDetails()
+    {
+        $featuredProdData = $this->db->query("SELECT  a.* , b.submenu
         FROM
             `tbl_featured_products` AS a
         INNER JOIN tbl_submenu AS b
@@ -682,7 +687,7 @@ class ProductController extends BaseController
 
         $featuredProductDetails = [];
 
-       foreach ($featuredProdData as $prod) {
+        foreach ($featuredProdData as $prod) {
             $featuredProductDetails[] = [
                 'prod_id' => $prod['featured_prod_id'],
                 'prod_name' => $prod['prod_name'],
@@ -695,12 +700,12 @@ class ProductController extends BaseController
         echo json_encode($featuredProductDetails);
     }
 
-    
+
     public function deleteFeaturedData()
     {
         try {
             $prod_id = $this->request->getPost('prod_id');
-            
+
             if ($prod_id) {
                 $query = "UPDATE tbl_featured_products SET flag = '0' WHERE featured_prod_id = ?";
                 $update = $this->db->query($query, [$prod_id]);
@@ -730,88 +735,88 @@ class ProductController extends BaseController
     }
 
     public function updateFeaturedData()
-{
-    try {
-        $request = $this->request;
+    {
+        try {
+            $request = $this->request;
 
-        $productID = $request->getPost('prod_id');
-        $productName = $request->getPost('prod_name');
-        $subID = $request->getPost('sub_id');
-        $MainImg = $request->getFile('main_image');
+            $productID = $request->getPost('prod_id');
+            $productName = $request->getPost('prod_name');
+            $subID = $request->getPost('sub_id');
+            $MainImg = $request->getFile('main_image');
 
-        if (!$productID || !$productName || !$subID) {
+            if (!$productID || !$productName || !$subID) {
+                return $this->response->setJSON([
+                    'code' => 400,
+                    'status' => 'error',
+                    'msg' => 'Required fields are missing.'
+                ]);
+            }
+
+            // Prepare image
+            $image_url = null;
+
+            if ($MainImg && $MainImg->isValid()) {
+                // Get old image
+                $query = "SELECT image_url FROM tbl_featured_products WHERE featured_prod_id = ?";
+                $result = $this->db->query($query, [$productID])->getRow();
+
+                if ($result && $result->image_url) {
+                    $oldPath = FCPATH . ltrim($result->image_url, '/');
+                    if (file_exists($oldPath)) {
+                        unlink($oldPath);
+                    }
+                }
+
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+                if (!in_array($MainImg->getMimeType(), $allowedTypes)) {
+                    return $this->response->setJSON([
+                        'code' => 400,
+                        'status' => 'error',
+                        'msg' => 'Only JPG, JPEG, PNG allowed.'
+                    ]);
+                }
+
+                if ($MainImg->getSize() > 512000) {
+                    return $this->response->setJSON([
+                        'code' => 400,
+                        'status' => 'error',
+                        'msg' => 'Image must be less than 500KB.'
+                    ]);
+                }
+
+                $randomName = $MainImg->getRandomName();
+                $MainImg->move('uploads/', $randomName);
+                $image_url = '/uploads/' . $randomName;
+            }
+
+            // Prepare update data
+            $updateData = [
+                'prod_name' => $productName,
+                'sub_id' => $subID
+            ];
+
+            if ($image_url) {
+                $updateData['image_url'] = $image_url;
+            }
+
+            // Perform update
+            $this->db->table('tbl_featured_products')
+                ->where('featured_prod_id', $productID)
+                ->update($updateData);
+
             return $this->response->setJSON([
-                'code' => 400,
+                'code' => 200,
+                'status' => 'success',
+                'msg' => 'Featured product updated successfully.'
+            ]);
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'code' => 500,
                 'status' => 'error',
-                'msg' => 'Required fields are missing.'
+                'msg' => 'Server Error: ' . $e->getMessage()
             ]);
         }
-
-        // Prepare image
-        $image_url = null;
-
-        if ($MainImg && $MainImg->isValid()) {
-            // Get old image
-            $query = "SELECT image_url FROM tbl_featured_products WHERE featured_prod_id = ?";
-            $result = $this->db->query($query, [$productID])->getRow();
-
-            if ($result && $result->image_url) {
-                $oldPath = FCPATH . ltrim($result->image_url, '/');
-                if (file_exists($oldPath)) {
-                    unlink($oldPath);
-                }
-            }
-
-            $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-            if (!in_array($MainImg->getMimeType(), $allowedTypes)) {
-                return $this->response->setJSON([
-                    'code' => 400,
-                    'status' => 'error',
-                    'msg' => 'Only JPG, JPEG, PNG allowed.'
-                ]);
-            }
-
-            if ($MainImg->getSize() > 512000) {
-                return $this->response->setJSON([
-                    'code' => 400,
-                    'status' => 'error',
-                    'msg' => 'Image must be less than 500KB.'
-                ]);
-            }
-
-            $randomName = $MainImg->getRandomName();
-            $MainImg->move('uploads/', $randomName);
-            $image_url = '/uploads/' . $randomName;
-        }
-
-        // Prepare update data
-        $updateData = [
-            'prod_name' => $productName,
-            'sub_id' => $subID
-        ];
-
-        if ($image_url) {
-            $updateData['image_url'] = $image_url;
-        }
-
-        // Perform update
-        $this->db->table('tbl_featured_products')
-            ->where('featured_prod_id', $productID)
-            ->update($updateData);
-
-        return $this->response->setJSON([
-            'code' => 200,
-            'status' => 'success',
-            'msg' => 'Featured product updated successfully.'
-        ]);
-    } catch (\Exception $e) {
-        return $this->response->setJSON([
-            'code' => 500,
-            'status' => 'error',
-            'msg' => 'Server Error: ' . $e->getMessage()
-        ]);
     }
-}
 
 }
 
