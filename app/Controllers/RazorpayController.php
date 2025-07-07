@@ -58,7 +58,7 @@ class RazorpayController extends BaseController
 
 
         $api = new Api($key_id, $secret);
-    
+
 
 
         $amount = $userData->total_amt;
@@ -77,7 +77,7 @@ class RazorpayController extends BaseController
                 'number' => $userData->number
             ]
         ]);
-         
+
 
         $customerData = [
             'name' => $userData->username,
@@ -230,14 +230,18 @@ class RazorpayController extends BaseController
                     $oldVariantQty = $variant ? $variant->quantity : 0;
                     $newVariantQty = $oldVariantQty - $checkoutQty;
 
+
                     $newMainQty = $oldMainQty - $checkoutQty;
 
                     // Prevent negative values
-                    $newVariantQty = ($newVariantQty < 0) ? 0 : $newVariantQty;
+                    $newVariantQty = ($newVariantQty <= 0) ? 0 : $newVariantQty;
                     $newMainQty = ($newMainQty < 0) ? 0 : $newMainQty;
+                    $newVariantStatus = ($newVariantQty <= 0) ? '0' : '1';
 
-                    $this->db->query("UPDATE `tbl_variants` SET `quantity` = ? WHERE `variant_id` = ? AND `prod_id` = ?", [
+
+                    $this->db->query("UPDATE `tbl_variants` SET `quantity` = ?, `stock_status` =?  WHERE `variant_id` = ? AND `prod_id` = ?", [
                         $newVariantQty,
+                        $newVariantStatus,
                         $variantID,
                         $prodID
                     ]);

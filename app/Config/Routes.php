@@ -41,6 +41,7 @@ $routes->get('get-address', 'MyaccountController::getAddress');
 $routes->post('update-address', 'MyaccountController::updateAddress', ['filter' => 'AuthFilter']);
 $routes->post('delete-address', 'MyaccountController::deleteAddress', ['filter' => 'AuthFilter']);
 $routes->post('update-defaultaddress', 'MyaccountController::updateDefaultAddress', ['filter' => 'AuthFilter']);
+$routes->post('update-cancel-reason', 'MyaccountController::updateCancelReason', ['filter' => 'AuthFilter']);
 
 $routes->post('place-order', 'checkoutController::placeOrder', ['filter' => 'AuthFilter']);
 

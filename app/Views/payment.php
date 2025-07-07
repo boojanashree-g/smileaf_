@@ -1,8 +1,19 @@
 <button id="rzp-button1" hidden></button>
 
-<div class="loader"
-    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; display: flex; justify-content: center; align-items: center;">
-    <img width="40px" src="<?= base_url('public/assets/img/favicon.png') ?>" alt="Loading..." />
+<div class="loader" style="display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.8);
+        z-index: 9999;
+
+        /* Center the loader image */
+        display: flex;
+        justify-content: center;
+        align-items: center;">
+    <img width="200px" src="<?= base_url('public/assets/img/loader.gif') ?>" alt="Loading..." />
 </div>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -51,7 +62,12 @@
         },
         "handler": function (response) {
 
-            document.querySelector(".loader").style.display = "block";
+            var loader = document.querySelector(".loader");
+                loader.style.display = "flex";
+                loader.style.position = "fixed";
+                loader.style.top = "0";
+                loader.style.left = "0";
+
 
             var payment_data = {
                 razorpay_payment_id: response.razorpay_payment_id,

@@ -412,4 +412,39 @@ class MyaccountController extends BaseController
 
     }
 
+    public function updateCancelReason()
+    {
+        $data = $this->request->getPost();
+
+        $orderId = $this->request->getPost('order_id');
+        $orderStatus = $this->request->getPost('order_status');
+        $CancelReason = $this->request->getPost('cancel_reason');
+        $userID = session()->get('user_id');
+
+        $newOrderStatus = "Cancelled";
+        $newDeliveryStatus = "Cancelled";
+        $cancelStatus = 1;
+
+        $deliveryConfig = new \Config\DeliveryMessages();
+        $deliveryMsg = $deliveryConfig->messages[$newDeliveryStatus] ?? 'No message available';
+
+        $updateQry = "UPDATE `tbl_orders` SET `order_status` = ? , `delivery_status` =? ,`delivery_message` =? , `cancel_reason` =? , `cancel_status` = ? 
+                      WHERE order_status = ? AND `order_id` = ? AND user_id = ?";
+        $updateData = $this->db->query($updateQry, [$newOrderStatus, $newDeliveryStatus, $deliveryMsg, $CancelReason, $cancelStatus, $orderStatus, $orderId, $userID]);
+
+        $affectedRows = $this->db->affectedRows();
+        if ($affectedRows == 1) {
+
+            $res['code'] = 200;
+            $res['status'] = 'success';
+            $res['message'] = 'Order Cancelled Successfully';
+
+        } else {
+            $res['code'] = 400;
+            $res['status'] = 'failure';
+            $res['message'] = 'Order Cancelled failed';
+        }
+        echo json_encode($res);
+    }
+
 }

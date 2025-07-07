@@ -5,11 +5,6 @@
 
 
 <body>
-    <!--[if lte IE 9]>
-        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-    <![endif]-->
-
-    <!-- Add your site or application content here -->
 
     <!-- Body main wrapper start -->
     <div class="body-wrapper">
@@ -48,31 +43,62 @@
                                                 <div class="ltn__myaccount-tab-content-inner">
                                                     <h3>My Orders</h3>
                                                     <div class="table-responsive">
-                                                        <table class="table table-striped">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Order Id</th>
-                                                                    <th>Order Date</th>
-                                                                    <th>Order Status</th>
-                                                                    <th>Total</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php
-                                                                if ($count = count($summary) <= 0) { ?>
-                                                                    <h2> No Orders Placed</h2>
-                                                                    <h2> Back to purchase</h2>
-                                                                <?php } else { ?>
+
+                                                        <?php
+                                                        if (count($summary) <= 0) { ?>
+                                                            <p> No Orders Placed</p>
+                                                            <a href="<?= base_url() ?>"
+                                                                class="btn btn-sm btn-outline-primary">Back to
+                                                                Purchase</a>
+
+                                                        <?php } else { ?>
+                                                            <table class="table table-striped">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Order Id</th>
+                                                                        <th>Order Date</th>
+                                                                        <th>Order Status</th>
+                                                                        <th>Total</th>
+                                                                        <th>Action</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+
+
                                                                     <?php foreach ($summary as $orderID => $orderDetails) {
                                                                         $orderStatus = $orderDetails['order_status'];
 
-                                                                        if ($orderStatus == 'New') {
-                                                                            $orderClass = "bg-success";
-                                                                        } else if ($orderStatus == 'Failed') {
-                                                                            $orderClass = "bg-danger";
-                                                                        } else if ($orderStatus == 'Cancelled') {
-                                                                            $orderClass = "bg-warning";
+                                                                        $statusBgClasses = [
+                                                                            'Initiated' => 'bg-secondary',
+                                                                            'New' => 'bg-primary',
+                                                                            'Pending' => 'bg-warning',
+                                                                            'Shipped' => 'bg-info',
+                                                                            'Delivered' => 'bg-success',
+                                                                            'Cancelled' => 'bg-danger',
+                                                                            'Refund' => 'bg-muted',
+                                                                            'Failed' => 'bg-dark',
+                                                                        ];
+
+                                                                        $orderClass = $statusBgClasses[$orderStatus] ?? 'bg-light';
+
+
+                                                                        // Check if return is valid
+                                                                        $canReturn = false;
+                                                                        if ($orderStatus === 'Delivered') {
+
+                                                                            $deliveredTime = strtotime($orderDetails['delivered_time']);
+                                                                            $now = time();
+                                                                            $diffDays = floor(($now - $deliveredTime) / (60 * 60 * 24));
+
+                                                                            if ($diffDays <= 7) {
+                                                                                $canReturn = true;
+                                                                            }
+
+                                                                        }
+
+                                                                        $dispCancel = false;
+                                                                        if ($orderStatus === 'New' || $orderStatus === 'Shipped') {
+                                                                            $dispCancel = true;
                                                                         }
                                                                         ?>
                                                                         <tr>
@@ -82,22 +108,31 @@
                                                                                     class="badge <?= $orderClass ?>"><?= $orderDetails['order_status'] ?></span>
                                                                             </td>
                                                                             <td>₹<?= $orderDetails['order_total_amt'] ?></td>
-                                                                            <td><a class="btn-sm btn-primary view-order"
-                                                                                    data-orderid="<?= $orderDetails['order_id'] ?>">View</a>
-                                                                                &nbsp; &nbsp;
-                                                                                <a class="btn-sm btn-warning returnpolicy"
-                                                                                    data-status="<?= $orderDetails['order_status']; ?>"
-                                                                                    data-deltime="<?= $orderDetails['delivery_date']; ?>"
-                                                                                    data-orderid="<?= $orderDetails['order_id'] ?>"
-                                                                                   >Return
-                                                                                </a>
-                                                                            </td>
+                                                                            <td>
+                                                                                <a class="btn-sm btn-success view-order"
+                                                                                    data-orderid="<?= esc($orderDetails['order_id']) ?>">View</a>
+                                                                                <?php if ($canReturn): ?>
+                                                                                    &nbsp; &nbsp;
+                                                                                    <a class="btn-sm btn-warning returnpolicy"
+                                                                                        data-status="<?= esc($orderStatus) ?>"
+                                                                                        data-deliverytime="<?= esc($orderDetails['delivered_time']) ?>"
+                                                                                        data-orderid="<?= esc($orderDetails['order_id']) ?>">Return</a>
 
+
+                                                                                <?php endif; ?>
+
+                                                                                <?php if ($dispCancel): ?>
+                                                                                    &nbsp; &nbsp;
+                                                                                    <a class="btn-sm btn-primary cancel-order"
+                                                                                        data-status="<?= esc($orderStatus) ?>"
+                                                                                        data-orderid="<?= esc($orderDetails['order_id']) ?>">Cancel</a>
+                                                                                <?php endif; ?>
+                                                                            </td>
 
                                                                         </tr>
 
                                                                     <?php }
-                                                                } ?>
+                                                        } ?>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -320,6 +355,56 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Cancel order Modal -->
+                        <!-- First Modal: Confirm Cancel -->
+                        <div class="modal fade" id="cancel-modal" tabindex="-1"
+                            aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Confirm Cancel Order</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to cancel? <strong id="deleteAddressName"></strong></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <!-- Trigger inner modal -->
+                                        <button type="button" class="btn btn-danger btndelete"
+                                            id="confirmCancelBtn">Yes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Second Modal: Reason for Cancel -->
+                        <div class="modal fade" id="reason-modal" tabindex="-1" aria-labelledby="reasonModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Cancel Reason</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <textarea class="form-control" id="cancelReason" rows="4"
+                                            placeholder="Enter reason for cancellation..."></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-danger"
+                                            id="submitCancelReason">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -342,30 +427,42 @@
 
     <script>
         $(document).ready(function () {
-            $('#state_id').show();
-            $('#dist_id').show();
-
+            $('#state_id, #dist_id').show();
             $('.nice-select').remove();
-        })
-    </script>
-    <script>
 
-        $("#btn-logout").click(function (e) {
-            e.preventDefault();
-            localStorage.clear();
-            window.location.href = "<?= base_url('logout') ?>";
-        })
+            // Logout button functionality
+            $('#btn-logout').on('click', function (e) {
+                e.preventDefault();
+                localStorage.clear();
+                window.location.href = "<?= base_url('logout') ?>";
+            });
+        });
 
         function ModalClose() {
-            $(".orderModal").modal("hide");
+            $('.orderModal').modal('hide');
         }
 
 
-    </script>
-    <script>
+        // Return Product
+        $(".returnpolicy").click(function () {
+            let status = $(this).data("status");
 
+            let deliveredTime = new Date($(this).data("deliverytime"));
+
+            const now = new Date();
+
+            const diffDays = (now - deliveredTime) / (1000 * 60 * 60 * 24);
+
+            if (status === "Delivered" && diffDays <= 7) {
+                alert("Return process initiated for Order ID: " + $(this).data("orderid"));
+            } else {
+                alert("Return not allowed for this order.");
+            }
+
+        })
 
     </script>
+
 
     <script src="<?php echo base_url() ?>custom/js/myaccount.js"></script>
 
