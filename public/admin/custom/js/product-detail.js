@@ -109,6 +109,14 @@ $(document).ready(function () {
     keyboard: false,
   });
 
+  $("#best_seller").change(function () {
+    if (this.checked) {
+      $("#best_seller").val(1);
+    } else {
+      $("#best_seller").val(0);
+    }
+  });
+
   // *************************** [Validation] ********************************************************************
 
   $("#btn-submit").click(function () {
@@ -161,7 +169,8 @@ $(document).ready(function () {
     let proddesc = description.getData();
     let usage = produsage.getData();
     let hasVariant = $("#hasVariant").val();
-
+    let bestsellers = $("#best_seller").val();
+    alert(bestsellers);
     selectedFiles.forEach((file, i) => {
       data.append("images[]", file);
     });
@@ -172,11 +181,13 @@ $(document).ready(function () {
       data.append("description", proddesc);
       data.append("product_usage", usage);
       data.append("has_variant", hasVariant);
+      data.append("best_seller", bestsellers);
     } else if (mode == "edit") {
       url = base_Url + "admin/product-details/update-data";
       data.append("description", proddesc);
       data.append("product_usage", usage);
       data.append("has_variant", hasVariant);
+      data.append("best_seller", bestsellers);
 
       $("input[name='existing_images[]']").each(function () {
         data.append("existing_images[]", $(this).val());
@@ -367,6 +378,9 @@ $(document).ready(function () {
     let has_variant = res_DATA[index].has_variant;
     let isVariantChecked = Number(has_variant) === 1;
     $("#hasVariant").prop("checked", isVariantChecked).trigger("change");
+
+    let bestsellers = res_DATA[index].best_seller;
+    $("#best_seller").prop("checked", bestsellers);
 
     if (isVariantChecked) {
       let variants = res_DATA[index].variants;

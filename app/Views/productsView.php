@@ -138,9 +138,11 @@
                                     $lowestInStockQty = null;
                                     $hasStock = false;
                                     foreach ($variant_data['list'] as $variant) {
+                                     
                                         if (!is_array($variant))
                                             continue;
                                         $qty = (int) $variant['quantity'];
+                                        $packQty =$variant['pack_qty']; 
 
                                         if ($qty > 0) {
                                             $hasStock = true;
@@ -170,15 +172,17 @@
                                                     style="width:auto;   background-color: #37724f !important;">
                                                     <span class="addto_cart_text"><i class="icon-shopping-cart pe-2"></i>ADD TO CART</span>
                                                 </a>
-                                                <?php else: ?>
-                                                    <a href="tel:+919999999999" 
-                                                        class="ltn__utilize-toggle theme-btn-1 btn"
-                                                        style="width:auto; background-color: #cc0000 !important;">
-                                                        <span class="addto_cart_text">
-                                                            <i class="icon-phone pe-2"></i>CONTACT US TO ORDER
-                                                        </span>
-                                                    </a>
-                                                <?php endif; ?>
+                                              <?php else:
+                                            $productName=esc($products[0]['prod_name']);
+                                            $packquantity=$packQty;
+                                            $whatsapp_message=urlencode("Welcome to Smileaf!\nProduct Name: $productName\nPackingQuantity: $packquantity");
+                                            ?>
+                                         <a href="https://wa.me/9360842118?text=<?=$whatsapp_message?>" class="ltn__utilize-toggle theme-btn-1 btn whatsapp-order-btn" target="_blank" style="width:auto;background-color:#cc0000!important;">
+                                            <span class="addto_cart_text"><i class="icon-phone pe-2"></i>CONTACT US TO ORDER</span>
+                                        </a>
+
+                                            <?php endif; ?>
+
                                             </li>
                                         </ul>
                                     </div>
@@ -243,47 +247,68 @@
             </div>
             <div class="row ltn__related-product-slider-one-active slick-arrow-1">
 
-                <?php if (!empty($product['relatedProducts']) && is_array($product['relatedProducts'])): ?>
-                    <?php foreach ($product['relatedProducts'] as $related): ?>
+                <?php if (!empty($related_products) && is_array($related_products)): ?>
+                    <?php foreach ($related_products as $related): ?>
                         <div class="col-lg-12">
                             <div class="ltn__product-item ltn__product-item-3 text-center">
                                 <div class="product-img">
-                                    <a href="<?= base_url('product-details/' . base64_encode($related->prod_id)) ?>">
-                                        <img src="<?= base_url($related->main_image ?? 'public/assets/img/default-product.png') ?>"
-                                            alt="<?= esc($related->prod_name) ?>">
-                                    </a>
-                                    <div class="">
+                                <a
+                                    href="<?= base_url("product-details/" . base64_encode($related['prod_id'])) ?>">
+                                    <img src="<?= base_url($related['main_image']) ?>"
+                                        alt="<?= esc($related['prod_name']) ?>">
+                                </a>
+                                <?php if ($related['available_status'] == 0): ?>
+                                    <div class="product-badge">
                                         <ul>
-                                            <?php if (!empty($related->best_seller)): ?>
-                                                <li class="bestseller-badge"><span>Best Seller</span></li>
-                                            <?php endif; ?>
+                                            <li class="sale-badge">
+                                                Out of stock
+                                            </li>
                                         </ul>
                                     </div>
-                                </div>
-                                <div class="product-info">
+                                <?php endif; ?>
+                            </div>
+                            <div class="product-info">
                                     <h2 class="product-title">
-                                        <a href="<?= base_url('product-details/' . $related->prod_id) ?>">
-                                            <span class="prod_name_span"><?= esc($related->prod_name) ?></span>
+                                        <a href="<?= base_url($related['url']) ?>">
+                                            <span
+                                                class="prod_name_span"><?= esc($related['prod_name']) ?></span>
                                         </a>
                                     </h2>
                                     <div class="product_price_wrapper mt-0">
                                         <div class="product-price mb-0">
-                                            <span>₹<?= number_format(3625) ?></span>
-                                            <del>₹<?= number_format(1152) ?></del>
+                                            <span>₹<?= esc($related['lowest_offer_price'] ?? 0) ?></span>
+                                            <?php if (!empty($related['lowest_offer_price']) && $related['lowest_offer_price'] != $related['lowest_mrp']): ?>
+                                                <del>₹<?= esc($related['lowest_mrp']) ?></del>
+                                            <?php endif; ?>
                                         </div>
-                                        <a href="#" title="Wishlist" class="wishlist-btn">
+                                        <!-- <a href="#" title="Wishlist" class="wishlist-btn">
                                             <i class="far fa-heart"></i>
-                                        </a>
+                                        </a> -->
                                     </div>
-                                </div>
-                                <div class="d-flex justify-content-evenly">
-                                    <a class="theme-btn-1 btn quick_btn" data-prodid="<?= esc($related->prod_id) ?>"
-                                        data-menuid="<?= esc($related->menu_id) ?>"
-                                        data-submenuid="<?= esc($related->submenu_id) ?>">
-                                        <i class="fas fa-shopping-cart"></i>
-                                        <span>Quick Buy</span>
-                                    </a>
-                                </div>
+                            </div>
+                                <?php if ($related['available_status'] == 0) { ?>
+                            <div class="d-flex justify-content-evenly">
+                                <a href="<?= base_url("product-details/" . base64_encode($related['prod_id'])) ?>"
+                                    class="theme-btn-1 btn quick_btn"
+                                    data-prodid="<?= esc($related['prod_id']) ?>"
+                                    data-menuid="<?= $related['menu_id'] ?>"
+                                    data-submenuid=<?= $related['submenu_id'] ?>>
+                                    <i class="fas fa-shopping-cart text-danger"></i>
+                                    <span class="text-danger">Contact us to order</span>
+                                </a>
+                            </div>
+                            <?php } else if ($related['available_status'] > 0) { ?>
+                            <div class="d-flex justify-content-evenly">
+                                <a href="<?= base_url("product-details/" . base64_encode($related['prod_id'])) ?>"
+                                    class="theme-btn-1 btn quick_btn"
+                                    data-prodid="<?= esc($related['prod_id']) ?>"
+                                    data-menuid="<?= $related['menu_id'] ?>"
+                                    data-submenuid=<?= $related['submenu_id'] ?>>
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span>Buy Now</span>
+                                </a>
+                            </div>
+                            <?php } ?>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -396,6 +421,27 @@
         });
 
     </script>
+
+    
+  
+   <script>
+    $(document).ready(function () {
+      function escapeSelector(href) {
+    return href.replace(/([!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~])/g, "\\$1");
+}
+
+    var rawHref = 'https://wa.me/9360842118?text=Welcome to Smileaf!';
+    var safeHref = escapeSelector(rawHref);
+
+    $('a[href="' + safeHref + '"]').on("click", function () {
+        console.log("Safe selector used");
+    });
+
+    });
+</script>
+
+</script>
+
 
 
     <script src="<?php echo base_url() ?>custom/js/commoncart.js"></script>
