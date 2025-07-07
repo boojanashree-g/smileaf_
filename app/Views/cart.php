@@ -35,6 +35,39 @@
     max-width: max-content;
     margin: 0 !important;
 }
+.prod_details_h4{
+    width: 200px;
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-transform: capitalize;
+}
+.proceed_checkout{
+    border-radius: 0;
+    background-color: #ec7b00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.proceed_checkout i{
+    margin-left:10px !important;
+}
+
+.cart-product-info h4{
+    margin: 5px 0;
+}
+
+.cart_details{
+    margin: 30px 0 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700 !important;
+}
 </style>
 <body>
 
@@ -44,18 +77,15 @@
         <?php require("components/header.php") ?>
         <!-- HEADER AREA END -->
 
-        <!-- BREADCRUMB AREA START -->
-        <?php require("components/breadcrumbs.php") ?>
-        <!-- BREADCRUMB AREA END -->
-
         <!-- SHOPING CART AREA START -->
         <div class="liton__shoping-cart-area ">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-12">
+                    <div class="col-lg-8">
                         <div class="shoping-cart-inner">
                             <div class="shoping-cart-table table-responsive">
-                                <table class="table">
+                                <h4 class="cart_details">Cart Details</h4>
+                                <table class="table">                                    
                                     <tbody>
                                         <?php
                                         if ($cart_count <= 0) {
@@ -75,7 +105,9 @@
                                                     </div>                                                
                                                 </div>                                                
                                             </div>
+                                            
                                         <?php } else {
+                                            
                                             $shoppingTotalClass = "";
                                             foreach ($cart_product as $cart) {
 
@@ -90,14 +122,15 @@
                                                                 alt="#"></a>
                                                     </td>
                                                     <td class="cart-product-info">
-                                                        <h4><a
-                                                                href="<?php echo base_url() ?>product-details/<?= $cart['url'] ?>"><?= $cart['prod_name'] ?></a>
+                                                        <h4>
+                                                            <a class="prod_details_h4" href="<?php echo base_url() ?>product-details/<?= $cart['url'] ?>"><?= $cart['prod_name'] ?></a>
                                                         </h4>
+                                                        <span>Pack of <?= $cart['cart_pack_qty'] ?></span>
                                                     </td>
-                                                    <td>
+                                                    <!-- <td>
                                                         <h4>Pack of <?= $cart['cart_pack_qty'] ?></h4>
-                                                    </td>
-                                                   <td class="cart-product-price">₹<?= number_format((float)$cart['cart_prod_price'], 2) ?></td>
+                                                    </td> -->
+                                                   <!-- <td class="cart-product-price">₹<?= number_format((float)$cart['cart_prod_price'], 2) ?></td> -->
 
                                                     <td class="cart-product-quantity">
                                                         <div class="cart-plus-minus">
@@ -140,8 +173,12 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="shoping-cart-total mt-50 <?= $shoppingTotalClass ?>">
-                                <h4>Cart Totals</h4>
+                            
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="shoping-cart-total <?= $shoppingTotalClass ?>">
+                                <h4 class="cart_details mb-4">Cart Totals</h4>
                                 <table class="table">
                                     <tbody>
                                         <tr>
@@ -169,10 +206,9 @@
                                 </table>
                                 <div class="btn-wrapper text-right text-end">
                                     <a href="<?php echo base_url('checkout') ?>?type=cart"
-                                        class="theme-btn-1 btn btn-effect-1">Proceed to checkout</a>
+                                        class="theme-btn-1 btn btn-effect-1 proceed_checkout">Proceed to checkout <i class="fas fa-arrow-right"></i></a>
                                 </div>
                             </div>
-                        </div>
                     </div>
                 </div>
             </div>
