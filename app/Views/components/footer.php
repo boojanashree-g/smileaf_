@@ -1,7 +1,7 @@
 <footer class="ltn__footer-area  mt-5">
     <div class="footer-top-area  section-bg-1">
         <div class="container-fluid">
-            <div class="row justify-content-center">
+            <div class="row justify-content-around">
                 <div class="col-xl-3 col-md-6 col-sm-6 col-12">
                     <div class="footer-widget footer-about-widget">
                         <div class="footer-logo">
@@ -86,7 +86,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-md-6 col-sm-12 col-12">
+                <!-- <div class="col-xl-3 col-md-6 col-sm-12 col-12">
                     <div class="footer-widget footer-newsletter-widget">
                         <h4 class="footer-title">Newsletter</h4>
                         <p>Subscribe to our weekly Newsletter and receive updates via email.</p>
@@ -120,7 +120,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

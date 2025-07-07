@@ -273,7 +273,7 @@ button:disabled {
     /* border: 1px solid #37724f; */
     border-radius: 5px;
     margin-left: 0;
-    width: 299px;
+    width: 100%;
     background: #37724f1f;
     font-weight: 600;
 }
@@ -303,6 +303,7 @@ button:disabled {
 
 .signin_wrapper ul li {
     margin-top: 0;
+    width: 100%;
 }
 
 .nav-tabs {

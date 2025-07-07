@@ -16,7 +16,6 @@
         <?php require("components/header.php") ?>
 
         <!-- BREADCRUMB AREA START -->
-            <?php require("components/breadcrumbs.php")?>
         <!-- BREADCRUMB AREA END -->
 
         <div class=" container max-w-4xl mx-auto px-4 py-8">

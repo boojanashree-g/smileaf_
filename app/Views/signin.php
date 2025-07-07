@@ -15,14 +15,13 @@
         <!-- HEADER AREA END -->
 
         <!-- BREADCRUMB AREA START -->
-        <?php require("components/breadcrumbs.php") ?>
         <!-- BREADCRUMB AREA END -->
 
         <!-- LOGIN AREA START -->
-        <div class="ltn__login-area pb-65">
+        <div class="ltn__login-area">
             <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-6 signin_wrapper">
+                <div class="row justify-content-center my-4">
+                    <div class="col-lg-6 signin_wrapper mb-0">
                         <div class="account-login-inner">
                             <!-- Tabs to choose login type -->
                             <ul class="nav nav-tabs" id="loginTabs" role="tablist">
@@ -31,12 +30,12 @@
                                         data-bs-target="#otp-login" type="button" role="tab">Login (or) Signup with
                                         OTP</button>
                                 </li>
-                                <li class="nav-item" role="presentation">
+                                <!-- <li class="nav-item" role="presentation">
                                     <button class="nav-link " id="password-tab" data-bs-toggle="tab"
                                         data-bs-target="#password-login" type="button" role="tab">Login with
                                         Password</button>
 
-                                </li>
+                                </li> -->
                             </ul>
 
                             <div class="tab-content" id="loginTabContent">
@@ -53,7 +52,7 @@
                                 </div>
 
                                 <!-- Username/Password Login -->
-                                <div class="tab-pane fade " id="password-login" role="tabpanel">
+                                <!-- <div class="tab-pane fade " id="password-login" role="tabpanel">
                                     <form action="#" class="ltn__form-box contact-form-box">
                                         <input type="text" name="username" placeholder="Username or Email*" required>
                                         <input type="password" name="password" placeholder="Password*" required>
@@ -62,7 +61,7 @@
                                                 class="theme-btn-1 btn reverse-color btn-block">Login</button>
                                         </div>
                                     </form>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>

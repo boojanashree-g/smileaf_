@@ -9361,7 +9361,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 }
 
 .ltn__shop-options {
-  margin-bottom: 40px;
+  margin-bottom: 15px;
 }
 
 .ltn__shop-options ul {
@@ -12028,7 +12028,7 @@ blockquote::before {
   margin-left: auto;
   margin-right: auto;
   padding-bottom: 30px;
-  margin-bottom: 50px;
+  margin-bottom: 0px;
 }
 
 .ltn__testimonial-item .ltn__testimoni-img img {
