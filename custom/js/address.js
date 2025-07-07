@@ -223,7 +223,6 @@ $(document).ready(function () {
 
   $(".default_address").click(function () {
     let addressID = $(this).data("addid");
-    alert(addressID);
 
     const currentChecked = $("input.checkout-add:checked");
     let newdefaultCheck = false;
@@ -242,9 +241,10 @@ $(document).ready(function () {
         } else if (JSONdata.code == 200) {
           showToast(JSONdata.message, "success");
           localStorage.setItem("goToSection", "deliverySection");
-          setTimeout(() => {
-            window.location.reload();
-          });
+          setTimeout(function () {
+            window.location.href = window.location.pathname + "#liton_tab_1_4";
+            location.reload();
+          }, 1000);
         }
       },
       error: function (error) {
@@ -282,16 +282,31 @@ $(document).ready(function () {
           dispClass = "";
 
         if (orderSummary == "New") {
-          CommonClass = "text-green";
-          CommonBgClass = "alert-success";
+          CommonClass = "text-primary";
+          CommonBgClass = "alert-primary";
+          TrackOrderDisp = "";
+          dispClass = "col-md-9";
+        } else if (orderSummary == "Pending") {
+          CommonClass = "text-warning";
+          CommonBgClass = "alert-warning";
+          TrackOrderDisp = "d-none";
+          dispClass = "col-md-12";
+        } else if (orderSummary == "Shipped") {
+          CommonClass = "text-info";
+          CommonBgClass = "alert-info";
           TrackOrderDisp = "";
           dispClass = "col-md-9";
         } else if (orderSummary == "Delivered") {
-          CommonClass = "text-green";
+          CommonClass = "text-success";
           CommonBgClass = "alert-success";
           TrackOrderDisp = "";
           dispClass = "col-md-9";
         } else if (orderSummary == "Failed") {
+          CommonClass = "text-dark";
+          CommonBgClass = "alert-dark";
+          TrackOrderDisp = "d-none";
+          dispClass = "col-md-12";
+        } else if (orderSummary == "Cancelled") {
           CommonClass = "text-danger";
           CommonBgClass = "alert-danger";
           TrackOrderDisp = "d-none";
@@ -467,5 +482,69 @@ $(document).ready(function () {
 
   function baseEncode(input) {
     return btoa(input);
+  }
+
+  // *************************** [Cancel Order] *************************************************************************
+  var canclOrderID = "",
+    canclOrderStatus = "";
+  $(".cancel-order").click(function () {
+    canclOrderID = $(this).data("orderid");
+    canclOrderStatus = $(this).data("status");
+
+    $("#cancel-modal").modal("show");
+  });
+
+  $("#confirmCancelBtn").on("click", function () {
+    $("#cancel-modal").modal("hide");
+    setTimeout(function () {
+      $("#reason-modal").modal("show");
+    }, 200);
+  });
+
+  $("#submitCancelReason").on("click", function () {
+    var reason = $("#cancelReason").val().trim();
+    if (reason === "") {
+      showToast("Please enter a cancellation reason.", "warning");
+      return;
+    } else {
+      submitCancel(canclOrderID, canclOrderStatus, reason);
+    }
+  });
+
+  token = localStorage.getItem("token");
+
+  function submitCancel(orderID, orderStatus, reason) {
+    $.ajax({
+      type: "POST",
+      url: base_Url + "update-cancel-reason",
+      data: {
+        order_id: orderID,
+        order_status: orderStatus,
+        cancel_reason: reason,
+      },
+      dataType: "JSON",
+      headers: { Authorization: "Bearer " + token },
+      success: function (JSONdata) {
+        if (JSONdata.code == 400) {
+          showToast(JSONdata.message, "error");
+        } else if (JSONdata.code == 200) {
+          showToast(JSONdata.message, "success");
+    
+          $("#reason-modal").modal("hide");
+          setTimeout(()=>{
+            window.location.reload();
+          },1000)
+        }
+      },
+      error: function (error) {
+        let status = error.status;
+        if (status === 401) {
+          localStorage.removeItem("token");
+          window.location.href = base_Url;
+        } else {
+          showToast(error, "error");
+        }
+      },
+    });
   }
 });

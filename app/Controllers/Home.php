@@ -590,21 +590,19 @@ class Home extends BaseController
         // Get Order Summary
         $Orderquery = "SELECT * FROM `tbl_orders` WHERE `user_id` = ? AND `flag` = 1 AND  order_status <> 'initiated'";
         $orderDetails = $this->db->query($Orderquery, [$userID])->getResultArray();
-      
 
 
         $orderSummaries = [];
-
         foreach ($orderDetails as $orders) {
             $orderID = $orders['order_id'];
             $courierCharge = $orders['courier_charge'];
             $orderSubTotal = $orders['sub_total'];
             $OrderTotalAmt = $orders['total_amt'];
             $orderDate = date('d-m-Y', strtotime($orders['order_date']));
+            $deliveryTime = $orders['updated_at'];
 
             $query = "SELECT * FROM `tbl_order_item` WHERE `flag` = 1 AND `order_id` = ?";
             $itemDetails = $this->db->query($query, [$orderID])->getResultArray();
-
 
             $orderSummaries[$orderID] = [
                 'order_id' => $orderID,
@@ -620,6 +618,7 @@ class Home extends BaseController
                 'courier_charge' => $courierCharge,
                 'order_sub_total' => $orderSubTotal,
                 'order_total_amt' => $OrderTotalAmt,
+                'delivered_time' => $deliveryTime,
 
                 'items' => []
             ];

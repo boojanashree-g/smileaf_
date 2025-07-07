@@ -283,5 +283,7 @@
 
     <div class="ltn__utilize-overlay"></div>
 
-
+    <div class="loader payment-success" style="display:none">
+        <img width="100px" src="<?= base_url('public/assets/img/loader.gif') ?>" alt="Loading..." />
+    </div>
 </header>
