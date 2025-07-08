@@ -79,7 +79,7 @@
         <!-- BREADCRUMB AREA END -->
 
         <!-- LOGIN AREA START -->
-        <div class="ltn__login-area mb-120">
+        <div class="ltn__login-area mt-35">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 offset-lg-2 ">
@@ -87,7 +87,6 @@
                             <form class="ltn__form-box contact-form-box">
                                 <p class="text-center"> To track your order enter your Order ID in the box below
                                     and press the "Track Order" button. </p>
-                                <label>Order ID</label>
                                 <input type="text" name="text" placeholder="Enter Order ID." name="order_id"
                                     id="order_id">
                                 <input type="hidden" name="text" id="main-id" value="<?= $order_id ?>">
