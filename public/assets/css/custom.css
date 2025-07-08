@@ -1874,7 +1874,7 @@ a.theme-btn-1.btn:focus {
 .address-form {
     display: none;
     padding: 25px;
-    background: #f8f9ff;
+    /* background: #f8f9ff; */
     border-top: 2px solid #e8f0fe;
 }
 
@@ -2345,4 +2345,13 @@ a.theme-btn-1.btn:focus {
     border: 1px solid;
     padding: 12px 40px;
 }
+.logged_in{
+    font-size: 17px;
+    color: #788b5c;
+    font-weight: 500;
+}
 
+#continue-userdetail{
+    width: 48%;
+    text-align: center;
+}
