@@ -150,8 +150,8 @@
                                                         <div class="row m-0">
                                                             <?php
                                                             foreach ($address as $i => $data) { ?>
-                                                                <div class="col-md-12 col-12">
-                                                                    <div class="address_card">
+                                                                <div class="col-md-12 col-12 p-0">
+                                                                    <div class="address_card mb-0">
                                                                         <h4>
                                                                             <small class="btn-small"><a
                                                                                     class="btn btn-sm btn-outline-secondary edit-address"
@@ -161,15 +161,6 @@
                                                                                     index="<?php echo $i ?>">Delete</a></small>
                                                                         </h4>
                                                                         <address>
-                                                                            <!-- <p><strong>Alex Tuntuni</strong></p> -->
-                                                                            <p><?= $data['address'] ?><br>
-                                                                                <?= $data['landmark'] ?>,
-                                                                                <?= $data['city'] ?><br>
-                                                                                <?= $data['dist_name'] ?>,
-                                                                                <?= $data['state_title'] ?><br>
-                                                                                <?= $data['pincode'] ?><br>
-                                                                            </p>
-
                                                                             <div class="form-check mt-2">
                                                                                 <input type="radio" name="set_default_home"
                                                                                     class="form-check-input default_address"
@@ -181,6 +172,16 @@
                                                                                     for="default_home">Default
                                                                                     address</label>
                                                                             </div>
+                                                                            <!-- <p><strong>Alex Tuntuni</strong></p> -->
+                                                                            <p style="padding: 8px 25px; margin-botton:0"><?= $data['address'] ?><br>
+                                                                                <?= $data['landmark'] ?>,
+                                                                                <?= $data['city'] ?><br>
+                                                                                <?= $data['dist_name'] ?>,
+                                                                                <?= $data['state_title'] ?><br>
+                                                                                <?= $data['pincode'] ?><br>
+                                                                            </p>
+
+                                                                            
                                                                         </address>
                                                                     </div>
                                                                 </div>
