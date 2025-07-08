@@ -20,7 +20,7 @@ class RazorpayController extends BaseController
         $previousURL = previous_url();
         $orderID = session()->get('order_id');
         $userID = session()->get('user_id');
-
+        $type = $this->request->getGet('type');
 
         if (!$orderID || !$userID) {
             return redirect()->to('/')->with('error', 'Invalid session. Please try again.');
@@ -74,7 +74,8 @@ class RazorpayController extends BaseController
                 'order_id' => $orderID,
                 'username' => $userData->username,
                 'email' => $userData->email,
-                'number' => $userData->number
+                'number' => $userData->number,
+                'type' => $type
             ]
         ]);
 
@@ -188,6 +189,7 @@ class RazorpayController extends BaseController
                 $userID = $orderDetails['notes']['user_id'];
                 $orderID = $orderDetails['notes']['order_id'];
                 $username = $orderDetails['notes']['username'];
+                $type = $orderDetails['notes']['type'];
 
                 $sess = [
                     'user_id' => $userID,
@@ -199,8 +201,10 @@ class RazorpayController extends BaseController
 
 
                 // Delete Products from cart 
-                $getCartqry = "SELECT * FROM `tbl_user_cart` WHERE `user_id` =  ? AND flag = 1";
-                $cartData = $this->db->query($getCartqry, [$userID])->getResultArray();
+                $getCartqry = "SELECT * FROM `tbl_user_cart` WHERE `user_id` =  ? AND flag = 1 AND  source_type = ?";
+                $cartData = $this->db->query($getCartqry, [$userID, $type])->getResultArray();
+
+
 
                 foreach ($cartData as $cartItem) {
                     $prodID = $cartItem['prod_id'];

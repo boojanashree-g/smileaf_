@@ -64,8 +64,9 @@ class Home extends BaseController
         }
 
         $userID = session()->get('user_id');
-        $query = "SELECT * FROM tbl_user_cart WHERE user_id = ?  AND flag =1";
-        $usercount = $this->db->query($query, [$userID])->getResultArray();
+        $sourceType = 'cart';
+        $query = "SELECT * FROM tbl_user_cart WHERE user_id = ?  AND flag =1 AND source_type = ?";
+        $usercount = $this->db->query($query, [$userID, $sourceType])->getResultArray();
         if ($usercount > 0) {
             $cartCount = sizeof($usercount);
 
@@ -208,9 +209,9 @@ class Home extends BaseController
 
 
         $userID = session()->get('user_id');
-
-        $query = "SELECT * FROM tbl_user_cart WHERE user_id = ? AND flag =1";
-        $cartData = $this->db->query($query, [$userID])->getResultArray();
+        $sourceType = 'cart';
+        $query = "SELECT * FROM tbl_user_cart WHERE user_id = ? AND flag =1 AND source_type = ?";
+        $cartData = $this->db->query($query, [$userID, $sourceType])->getResultArray();
         if ($cartData > 0) {
             $res['cart_count'] = sizeof($cartData);
 
@@ -219,6 +220,7 @@ class Home extends BaseController
         }
 
         $productDetails = [];
+        $sourceType = 'cart';
         foreach ($cartData as $item) {
             $cartID = $item['cart_id'];
 
@@ -245,9 +247,9 @@ class Home extends BaseController
             INNER JOIN tbl_user_cart AS b ON a.prod_id = b.prod_id
             INNER JOIN tbl_variants AS c ON c.prod_id = b.prod_id AND c.pack_qty = b.pack_qty
             INNER JOIN tbl_submenu AS d  ON d.sub_id = a.submenu_id 
-            WHERE a.flag = 1 AND b.flag = 1 AND c.flag = 1 AND b.cart_id = ?";
+            WHERE a.flag = 1 AND b.flag = 1 AND c.flag = 1 AND b.cart_id = ? AND b.source_type = ?";
 
-            $result = $this->db->query($query, [$cartID])->getResultArray();
+            $result = $this->db->query($query, [$cartID, $sourceType])->getResultArray();
             if ($result) {
                 $productDetails = array_merge($productDetails ?? [], $result);
             }
@@ -258,146 +260,7 @@ class Home extends BaseController
 
         return view('cart', $res);
     }
-    public function checkout()
-    {
-        $res = array_merge($this->getMenuData(), [
-            'page_title' => 'Checkout',
-            'breadcrumb_items' => [
-                ['label' => 'Home', 'url' => base_url()],
-                ['label' => 'Checkout']
-            ],
-            'banner_image' => base_url('public/assets/img/banner/bg_4.png')
-        ]);
 
-
-        $userID = session()->get('user_id');
-
-        $res['state'] = $this->db->query("SELECT `state_id`,`state_title` FROM `tbl_state` WHERE `flag` =1")->getResultArray();
-
-
-        $query = "SELECT * FROM tbl_user_cart WHERE user_id = ? AND flag =1";
-        $cartData = $this->db->query($query, [$userID])->getResultArray();
-        if ($cartData > 0) {
-            $res['cart_count'] = sizeof($cartData);
-
-        } else {
-            $res['cart_count'] = 0;
-        }
-
-        $productDetails = [];
-        foreach ($cartData as $item) {
-            $cartID = $item['cart_id'];
-
-            $query = "SELECT
-                a.`prod_id`,
-                a.`prod_name`,
-                a.`main_quantity`,
-                a.`main_image`,
-                a.`has_variant`,
-                a.url,
-                b.cart_id,
-                b.quantity AS cart_quantity,
-                b.prod_price AS cart_prod_price,
-                b.total_price AS cart_total_price,
-                b.pack_qty AS cart_pack_qty,
-                b.user_id,
-                c.variant_id,
-                c.pack_qty,
-                c.mrp,
-                c.offer_price,
-                c.quantity AS variant_qty,
-                d.sub_id ,d.gst
-            FROM `tbl_products` AS a
-            INNER JOIN tbl_user_cart AS b ON a.prod_id = b.prod_id
-            INNER JOIN tbl_variants AS c ON c.prod_id = b.prod_id AND c.pack_qty = b.pack_qty
-            INNER JOIN tbl_submenu AS d  ON d.sub_id = a.submenu_id 
-            WHERE a.flag = 1 AND b.flag = 1 AND c.flag = 1 AND b.cart_id = ?";
-
-            $result = $this->db->query($query, [$cartID])->getResultArray();
-            if ($result) {
-                $productDetails = array_merge($productDetails ?? [], $result);
-            }
-        }
-
-        $res['checkout_product'] = $productDetails;
-
-        $totalAmt = 0;
-        $totalGstValue = 0;
-        $deliveryCharge = 100;
-
-
-        $gst_subid_list = [];
-        // Loop through each product
-        foreach ($res['checkout_product'] as $i => $item) {
-            $productPrice = (float) str_replace(',', '', $item['offer_price']);
-            $cartQuantity = (int) $item['cart_quantity'];
-            $mainQuantity = (int) $item['variant_qty'];
-            $gstPercent = (float) $item['gst'];
-            $subID = $item['sub_id'];
-
-            $priceCalculation = 0;
-            $gstValue = 0;
-
-            if ($cartQuantity <= $mainQuantity) {
-                $priceCalculation = $productPrice * $cartQuantity;
-                $res['checkout_product'][$i]['final_prod_price'] = round($priceCalculation, 2);
-
-                // GST per item (inclusive)
-                if ($gstPercent > 0) {
-                    $gst_subid[] = $gst_subid;
-                    $gstValue = $this->calculateGstInclusive($priceCalculation, $gstPercent);
-                    $gst_subid_list[] = $subID;
-                }
-                // Accumulate totals per item
-                $totalAmt += $priceCalculation;
-                $totalGstValue += $gstValue;
-            }
-        }
-
-
-        // Final calculations
-        $totalAmt = round($totalAmt, 2);
-        $totalGstValue = round($totalGstValue, 2);
-        $subTotal = $totalAmt - $totalGstValue;
-        $finalTotal = $totalAmt + $deliveryCharge;
-        $halfGst = floor(($totalGstValue / 2) * 100) / 100;
-
-
-
-        // Send to view
-        $res['total_amt'] = $totalAmt;
-        $res['total_gst'] = $totalGstValue;
-        $res['cgst'] = $halfGst;
-        $res['sgst'] = $halfGst;
-        $res['subtotal'] = $subTotal;
-        $res['delivery_charge'] = $deliveryCharge;
-        $res['final_total'] = $finalTotal;
-        $res['gst_subid_list'] = $gst_subid_list;
-        $res['type'] = $this->request->getGet("type");
-
-
-        $userID = session()->get("user_id");
-
-        // Addres Details
-        $userVerify = session()->get("otp_verify");
-        $loginStatus = session()->get("loginStatus");
-
-        if ($userVerify == "YES" && $loginStatus == "YES") {
-            $query = "SELECT a.*, b.state_title, c.dist_name  , d.`user_id`,d.`username`,d.`number`,d.`email`
-            FROM tbl_user_address AS a 
-            INNER JOIN tbl_state AS b ON a.state_id = b.state_id
-            INNER JOIN tbl_district AS c ON a.dist_id = c.dist_id
-            INNER JOIN tbl_users AS d ON d.user_id = a.user_id
-            WHERE a.user_id = $userID  AND a.flag = 1;";
-            $res['address'] = $this->db->query($query, [$userID])->getResultArray();
-
-            // User Details
-            $userqry = "SELECT * FROM `tbl_users` WHERE `flag` = 1 AND `user_id` = ?  AND `is_verified` = 1";
-            $res['user_details'] = $this->db->query($userqry, [$userID])->getResultArray();
-
-        }
-        return view('checkout', $res);
-    }
 
     private function calculateGstInclusive($price, $gstPercent)
     {

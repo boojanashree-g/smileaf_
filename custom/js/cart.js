@@ -166,7 +166,6 @@ $(document).ready(function () {
 
       success: function (resData) {
         $("#delete-modal").modal("hide");
-        console.log(resData);
 
         if (resData.code == 200) {
           showToast(resData.message, "success");

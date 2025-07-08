@@ -32,9 +32,9 @@ class Database extends Config
         'database' => 'smileaf',
 
         // 'hostname' => 'localhost',
-        // 'username' => 'appteqin_smileaf',
-        // 'password' => 'appteqin_smileaf',
-        // 'database' => 'appteqin_smileaf',
+        // 'username' => 'appteqco_smileaf_user',
+        // 'password' => 'wVxk*jJ9&NlP',
+        // 'database' => 'appteqco_smileaf_',
         'DBDriver' => 'MySQLi',
         'DBPrefix' => '',
         'pConnect' => false,

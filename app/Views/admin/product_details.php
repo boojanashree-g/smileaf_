@@ -196,7 +196,7 @@
 
                                             <div class="col-12">
                                                 <label for="images" class="form-label">Product's Secondary Images
-                                                    (Allowed size below 20KB*)</label>
+                                                    (Allowed size below 500KB*)</label>
                                                 <div class="upload-box">
                                                     <label class="upload-label" for="images"><i
                                                             class="fa-solid fa-arrow-up-from-bracket"></i> &nbsp; &nbsp;

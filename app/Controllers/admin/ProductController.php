@@ -173,7 +173,7 @@ class ProductController extends BaseController
                                     return $this->response->setJSON([
                                         'code' => 400,
                                         'status' => 'error',
-                                        'msg' => 'Images  must be less than 20KB.'
+                                        'msg' => 'Images  must be less than 500KB.'
                                     ]);
                                 }
                             } else {
@@ -263,10 +263,13 @@ class ProductController extends BaseController
                 'shape_id' => $prod['shape_id'],
                 'size_id' => $prod['size_id'],
                 'variants' => $variantData,
-                'product_images' => $imagePaths
+                'product_images' => $imagePaths,
+                'best_seller' => $prod['best_seller'],
+
             ];
 
         }
+
 
         echo json_encode($productDetails);
     }
@@ -461,7 +464,7 @@ class ProductController extends BaseController
                                     return $this->response->setJSON([
                                         'code' => 400,
                                         'status' => 'error',
-                                        'msg' => 'Images must be less than 20KB.'
+                                        'msg' => 'Images must be less than 500KB.'
                                     ]);
                                 }
 

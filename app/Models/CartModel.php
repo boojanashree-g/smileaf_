@@ -20,5 +20,6 @@ class CartModel extends Model
         'prod_price',
         'total_price',
         'pack_qty',
+        'source_type'
     ];
 }

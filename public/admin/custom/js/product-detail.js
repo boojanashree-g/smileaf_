@@ -170,7 +170,7 @@ $(document).ready(function () {
     let usage = produsage.getData();
     let hasVariant = $("#hasVariant").val();
     let bestsellers = $("#best_seller").val();
-    alert(bestsellers);
+
     selectedFiles.forEach((file, i) => {
       data.append("images[]", file);
     });
@@ -380,7 +380,9 @@ $(document).ready(function () {
     $("#hasVariant").prop("checked", isVariantChecked).trigger("change");
 
     let bestsellers = res_DATA[index].best_seller;
-    $("#best_seller").prop("checked", bestsellers);
+    $("#best_seller")
+      .prop("checked", bestsellers == 1 || bestsellers == "1")
+      .trigger("change");
 
     if (isVariantChecked) {
       let variants = res_DATA[index].variants;

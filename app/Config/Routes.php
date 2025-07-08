@@ -9,7 +9,6 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 $routes->get('product-details/(:any)', 'Home::productDetails/$1');
 $routes->get('cart', 'Home::cart');
-$routes->get('checkout', 'Home::checkout');
 $routes->get('contact', 'Home::contact');
 $routes->get('products/(:segment)/(:segment)', 'Home::products/$1/$2');
 $routes->get('products', 'Home::products');
@@ -44,6 +43,8 @@ $routes->post('update-defaultaddress', 'MyaccountController::updateDefaultAddres
 $routes->post('update-cancel-reason', 'MyaccountController::updateCancelReason', ['filter' => 'AuthFilter']);
 
 $routes->post('place-order', 'checkoutController::placeOrder', ['filter' => 'AuthFilter']);
+$routes->get('checkout', 'checkoutController::checkout');
+
 
 // Checkout userdetails
 $routes->post('save-userdetails', 'MyaccountController::insertUserDetails', ['filter' => 'AuthFilter']);
@@ -54,6 +55,8 @@ $routes->post('quick-view-details', 'QuickViewController::quickViewDetails');
 $routes->post('insert-cart', 'CartController::insertCart');
 $routes->post('update-cart', 'CartController::updateCart');
 $routes->post('delete-cart', 'CartController::deleteCart');
+
+$routes->post('insert-buynow', 'CartController::insertBuynow');
 
 
 // RazorpayController checkout controller

@@ -168,9 +168,14 @@
                                             </li>
                                             <li>
                                                 <?php if ($hasStock): ?>
-                                                <a href="#ltn__utilize-cart-menu" class="ltn__utilize-toggle- theme-btn-1 btn addto_cartbtn"
+                                                <a href="#ltn__utilize-cart-menu" class="ltn__utilize-toggle- theme-btn-1 btn addto_cartbtn" data-source="cart"
                                                     style="width:auto;   background-color: #37724f !important;">
                                                     <span class="addto_cart_text"><i class="icon-shopping-cart pe-2"></i>ADD TO CART</span>
+                                                </a>
+
+                                                 <a href="#ltn__utilize-cart-menu" class="ltn__utilize-toggle- theme-btn-1 btn buynow_btn" data-source="buy_now"
+                                                    style="width:auto;   background-color: #37724f !important;">
+                                                    <span class="addto_buynow"><i class="fas fa-credit-card pe-2"></i>BUY NOW</span>
                                                 </a>
                                               <?php else:
                                             $productName=esc($products[0]['prod_name']);

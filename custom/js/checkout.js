@@ -463,7 +463,7 @@ $(document).ready(function () {
         headers: { Authorization: "Bearer " + token },
         success: function (resultData) {
           if (resultData.code == 200) {
-            window.location.href = base_Url + "payment";
+            window.location.href = base_Url + "payment?type=" + type;
           } else if (resultData.code == 400) {
             showToast(resultData.message, "error");
           }
