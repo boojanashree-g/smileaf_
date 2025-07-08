@@ -227,7 +227,7 @@ class SigninController extends BaseController
             $newUserID = $response['user_id'];
             $oldUserID = $this->session->get('old_userid');
 
-
+            $getUserNumber = $this->db->query("SELECT `number` FROM `tbl_users` WHERE `flag` = 1 AND `user_id` =  ?", [$newUserID])->getRow();
             // Cart Updates
             $query = "SELECT * FROM tbl_user_cart WHERE user_id = ? AND flag = 1";
             $resultData = $this->db->query($query, [$oldUserID])->getResultArray();
@@ -285,7 +285,8 @@ class SigninController extends BaseController
                 'otp_verify' => "YES",
                 'type' => 'SMS',
                 'jwt' => $newToken,
-                'c_url' => $response['c_url']
+                'c_url' => $response['c_url'],
+                'number' => $getUserNumber->number,
             ];
 
 
