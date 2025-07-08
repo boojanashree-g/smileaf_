@@ -16,12 +16,13 @@
 
         <!-- HEADER AREA END -->
 
-        <!-- BREADCRUMB AREA START -->
-        <?php require("components/breadcrumbs.php") ?>
-        <!-- BREADCRUMB AREA END -->
-
         <!-- WISHLIST AREA START -->
-        <div class="ltn__checkout-area mb-105">
+
+        <?php 
+            $otp_verify = session()->get('otp_verify');
+            $login_status = session()->get('loginStatus');
+        ?>
+        <div class="ltn__checkout-area mt-50">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-7 mb-4">
@@ -34,11 +35,7 @@
                                 </div>
                                 <div class="step-content ">
                                     <?php
-                                    $otp_verify = session()->get('otp_verify');
-                                    $login_status = session()->get('loginStatus');
-
-                                    if ($otp_verify === 'NO' && $login_status === 'NO') {
-
+                                        if ($otp_verify === 'NO' && $login_status === 'NO') {
                                         $otpClass = "d-none" ?>
 
                                         <div class="login-section">
@@ -76,51 +73,47 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    <?php }
+                                    <?php } else {
                                     ?>
-
-
+                                    <span class="logged_in"><i class="fas fa-check-circle me-2"></i>Logged In - <?= session()->get('number')?> </span>
+                                    <?php  }?>
                                 </div>
                             </div>
-                            <div class="step-section" id="detailSection">
-                                <div class="step-header">
+                            <?php 
+                                $inactive = ($otp_verify === 'NO' && $login_status === 'NO');
+                                $userDetailsSection = $inactive ? "inactive-section" : "";
+                                $userDetailsHeader = $inactive ? "inactive-header" : "";
+                            ?>
+                            <div class="step-section <?= $userDetailsSection ?>" id="detailSection">
+                                <div class="step-header <?= $userDetailsHeader ?>">
                                     <div class="step-number">2</div>
                                     User Details
                                 </div>
-                                <div class="step-content ">
-
-                                    <div class="login-section">
-                                        <div class="login-form">
-                                            <div class="input-group">
-                                                <input type="text" class="input-field mb-2" placeholder="Name"
-                                                    id="username" name="username"
-                                                    value="<?= $user_details[0]['username'] ?>">
-                                                <input type="email" class="input-field mb-0" placeholder="Enter Email"
-                                                    id="email" name="email" value="<?= $user_details[0]['email'] ?>">
-                                            </div>
-                                            <div class="terms-text">
-                                                By continuing, you agree to Smileaf's <a
-                                                    href="<?php echo base_url('terms-and-conditions') ?>">Terms of
-                                                    Use</a> and
-                                                <a href="<?php echo base_url('privacy-policy') ?>">Privacy Policy</a>.
-                                            </div>
-                                            <button class="continue-btn" id="continue-userdetail">CONTINUE</button>
-                                        </div>
-                                        <div class="advantages">
-                                            <h4><strong>Perks of Logging In Securely</strong></h4>
-                                            <div class="advantage-item">
-                                                <span>Unlock More with Your Login</span>
-                                            </div>
-                                            <div class="advantage-item">
-                                                <span>Save your address and payment details securely.</span>
-                                            </div>
-                                            <div class="advantage-item">
-                                                <span>Keep track of every purchase in one place.</span>
+                                <?php if ($inactive) { ?>
+                                    <div class="inactive-content">
+                                        Please complete the previous step to continue
+                                    </div>
+                                <?php } else { ?>
+                                    <div class="step-content">
+                                        <div class="">
+                                            <div class="">
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-2">
+                                                        <input type="text" class="form-control" placeholder="Name"
+                                                            id="username" name="username"
+                                                            value="<?= $user_details[0]['username'] ?>">
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <input type="email" class="form-control" placeholder="Enter Email"
+                                                            id="email" name="email"
+                                                            value="<?= $user_details[0]['email'] ?>">
+                                                    </div>
+                                                </div>
+                                                <button class="continue-btn" id="continue-userdetail">CONTINUE</button>
                                             </div>
                                         </div>
                                     </div>
-
-                                </div>
+                                <?php } ?>
                             </div>
 
                             <!-- Delivery Address Section -->
@@ -133,7 +126,7 @@
                                     Please complete the previous step to continue
                                 </div>
                                 <div class="step-content address-form" id="addressForm">
-                                    <div class="address-content mb-5">
+                                    <div class="address-content mb-0">
                                         <!-- Existing Address -->
                                         <?php
                                         $otp_verify = session()->get('otp_verify');
@@ -178,12 +171,11 @@
                                         </div>
                                     </div>
                                     <div id="personalDetaila" style="display: none;">
-                                        <div class="form-section">
-
+                                        <div class="form-section mb-0 mt-3">
                                             <form id="checkoutAddressForm">
                                                 <h6>Address</h6>
                                                 <div class="form-row">
-                                                    <textarea class="form-control-" id="address" name="address" rows="4"
+                                                    <textarea class="form-control-  mb-0" id="address" name="address" rows="4"
                                                         placeholder="House/Flat No, Street Name, Area"
                                                         required></textarea>
                                                 </div>
@@ -208,30 +200,32 @@
                                                         </select>
                                                     </div>
                                                 </div>
-
                                                 <div class="form-row">
                                                     <div class="form-col">
                                                         <label for="landmark" class="form-label">Landmark *</label>
                                                         <input type="text" class="form-control" id="landmark"
                                                             name="landmark" placeholder="Landmark" required>
                                                     </div>
+                                                </div>                 
+                                                <div class="form-row">
+                                                    
                                                     <div class="form-col"> <label for="city"
                                                             class="form-label">Town/City
                                                             *</label>
                                                         <input type="text" class="form-control" id="city" name="city"
                                                             placeholder="Town/City" required>
                                                     </div>
-                                                </div>
-                                                <div class="form-row">
                                                     <div class="form-col">
                                                         <label for="city" class="form-label">Pincode
                                                             *</label>
                                                         <input type="text" class="form-control" id="pincode"
                                                             name="pincode" placeholder="Pincode" required>
                                                     </div>
+                                                </div>
+                                                <div class="form-row mb-0">                                                    
                                                     <div class="form-col">
                                                         <input type="checkbox" class="form-check-input"
-                                                            id="default_addr" name="default_addr">
+                                                            id="default_addr" name="default_addr" style="height: 17px !important;">
                                                         <label class="form-check-label" for="default_addr">Set as
                                                             default address</label>
                                                     </div>
@@ -335,55 +329,10 @@
     <script src="<?php echo base_url() ?>custom/js/checkout.js"></script>
 
 
-    <script>
-        function proceedToNext() {
-            const inputVal = $('#loginInput').val().trim();
-            if (inputVal === '') {
-                alert('Please enter your email or mobile number');
-                return;
-            }
-
-            // Activate delivery section
-            $('#loginSection').addClass('inactive-section');
-            const $deliverySection = $('#deliverySection');
-            $deliverySection.removeClass('inactive-section');
-            $deliverySection.find('.step-header').removeClass('inactive-header').css('color', 'white');
-            $deliverySection.find('.inactive-content').hide();
-
-            // Show address form
-            toggleAddressForm();
-        }
-
-        function toggleAddressForm() {
-            $('#addressForm').addClass('active');
-        }
-
+    <script>        
         function togglePersonalAddress() {
-            $('#personalDetaila').show();
-        
+            $('#personalDetaila').show();        
         }
-
-        function proceedToOrderSummary() {
-            // Activate order summary section
-            const $orderSection = $('#orderSection');
-            $orderSection.removeClass('inactive-section');
-            $orderSection.find('.step-header')
-                .removeClass('inactive-header')
-                .css({ background: '#4285f4', color: 'white' });
-            $orderSection.find('.inactive-content').hide();
-
-            // Activate payment section
-            const $paymentSection = $('#paymentSection');
-            $paymentSection.removeClass('inactive-section');
-            $paymentSection.find('.step-header')
-                .removeClass('inactive-header')
-                .css({ background: '#4285f4', color: 'white' });
-            $paymentSection.find('.inactive-content').hide();
-        }
-
     </script>
-
-
 </body>
-
 </html>
