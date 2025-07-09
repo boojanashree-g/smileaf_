@@ -529,11 +529,11 @@ $(document).ready(function () {
           showToast(JSONdata.message, "error");
         } else if (JSONdata.code == 200) {
           showToast(JSONdata.message, "success");
-    
+
           $("#reason-modal").modal("hide");
-          setTimeout(()=>{
+          setTimeout(() => {
             window.location.reload();
-          },1000)
+          }, 1000);
         }
       },
       error: function (error) {

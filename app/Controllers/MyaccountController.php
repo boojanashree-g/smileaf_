@@ -77,6 +77,8 @@ class MyaccountController extends BaseController
 
     public function insertAddress()
     {
+        $data = $this->request->getPost();
+
         $userID = $this->session->get('user_id');
         $AddressModel = new AddressModel;
 
@@ -133,25 +135,21 @@ class MyaccountController extends BaseController
         $addressDetails = $this->db->query($query, [$userID])->getResultArray();
 
         if ($affectedRowss === 1 && $insertData) {
+
+
+            $query = "SELECT a.*, b.state_title, c.dist_name 
+                    FROM tbl_user_address AS a 
+                    INNER JOIN tbl_state AS b ON a.state_id = b.state_id
+                    INNER JOIN tbl_district AS c ON a.dist_id = c.dist_id
+                    WHERE a.user_id = ?  AND a.flag = 1;";
+            $addDetails = $this->db->query($query, [$userID])->getResultArray();
+
+
+
             $result['code'] = 200;
             $result['message'] = 'Address added Successfully';
             $result['status'] = 'success';
-            $result['address'] = [
-                'add_id' => $lastInsertID,
-                'address' => $address,
-                "landmark" => $landMark,
-                "city" => $city,
-                "pincode" => $pincode,
-                "default_addr" => $checkDefault,
-                "state_id" => $stateID,
-                "dist_id" => $distID,
-                "username" => $userData[0]['username'],
-                "number" => $userData[0]['number'],
-                "email" => $userData[0]['email'],
-                "state_title" => $addressDetails[0]['state_title'],
-                "dist_name" => $addressDetails[0]['dist_name'],
-
-            ];
+            $result['address'] = $addDetails;
 
         } else {
             $result['code'] = 400;
@@ -170,7 +168,7 @@ class MyaccountController extends BaseController
         FROM tbl_user_address AS a 
         INNER JOIN tbl_state AS b ON a.state_id = b.state_id
         INNER JOIN tbl_district AS c ON a.dist_id = c.dist_id
-        WHERE a.user_id = $userID AND a.flag = 1;";
+        WHERE a.user_id = ?  AND a.flag = 1;";
         $result = $this->db->query($query, [$userID])->getResultArray();
         echo json_encode($result);
     }
@@ -179,6 +177,7 @@ class MyaccountController extends BaseController
     {
 
         $AddressModel = new AddressModel;
+        $data = $this->request->getPost();
 
         $addID = $this->request->getPost("add_id");
         $userID = session()->get('user_id');
@@ -191,6 +190,11 @@ class MyaccountController extends BaseController
         $pincode = $this->request->getPost('pincode');
         $defaultAddr = $this->request->getPost('default_addr');
         $checkDefault = $defaultAddr == "true" ? 1 : 0;
+        $checkout = $this->request->getPost('checkout');
+
+        if ($checkout === 'checkout') {
+            $defaultAddr = $this->request->getPost('default_addr');
+        }
 
 
         if ($checkDefault == 1) {
@@ -210,9 +214,19 @@ class MyaccountController extends BaseController
 
         $affectedRows = $this->db->affectedRows();
         if ($affectedRows > 0) {
+
+            $query = "SELECT a.*, b.state_title, c.dist_name 
+                    FROM tbl_user_address AS a 
+                    INNER JOIN tbl_state AS b ON a.state_id = b.state_id
+                    INNER JOIN tbl_district AS c ON a.dist_id = c.dist_id
+                    WHERE a.user_id = ?  AND a.flag = 1;";
+            $addDetails = $this->db->query($query, [$userID])->getResultArray();
+
+
             $result['code'] = 200;
             $result['message'] = 'Data updated successfully';
             $result['status'] = 'success';
+            $result['address'] = $addDetails;
 
         } else {
             $result['code'] = 400;

@@ -110,10 +110,10 @@
 
                     <?php } else {
                                             
-                                            $shoppingTotalClass = "";
-                                            foreach ($cart_product as $cart) {
+                    $shoppingTotalClass = "";
+                    foreach ($cart_product as $cart) {
 
-                                                ?>
+                        ?>
 
                     <div class="col-lg-8">
                         <div class="shoping-cart-inner">
@@ -126,9 +126,9 @@
                                             <td class="cart-product-remove cart-delete"
                                                 data-cartid="<?= $cart['cart_id'] ?>">x</td>
                                             <td class="cart-product-image">
-                                                <a href="<?php echo base_url() ?>product-details/<?= $cart['url'] ?>"><img
+                                                <a ><img
                                                         src="<?php echo base_url() ?><?= $cart['main_image'] ?>"
-                                                        alt="#"></a>
+                                                        alt="<?= $cart['prod_name'] ?>"></a>
                                             </td>
                                             <td class="cart-product-info">
                                                 <h4>

@@ -417,7 +417,6 @@ class CheckoutController extends BaseController
                     } else {
                         $res['code'] = 400;
                         $res['message'] = "Failed to insert data";
-
                     }
 
                     echo json_encode($res);
@@ -619,4 +618,29 @@ class CheckoutController extends BaseController
         return view('checkout', $res);
     }
 
+    public function getSingleAddress()
+    {
+        $addID = $this->request->getPost('add_id');
+        $userID = session()->get('user_id');
+
+        $query = "SELECT a.*, b.state_title, c.dist_name 
+        FROM tbl_user_address AS a 
+        INNER JOIN tbl_state AS b ON a.state_id = b.state_id
+        INNER JOIN tbl_district AS c ON a.dist_id = c.dist_id
+        WHERE a.user_id = ? AND a.add_id = ?  AND a.flag = 1;";
+        $result = $this->db->query($query, [$userID, $addID])->getRowArray();
+
+
+        if ($result) {
+            $res['code'] = 200;
+            $res['message'] = "Address details fetched successfuly";
+            $res['address'] = $result;
+        } else {
+            $res['code'] = 400;
+            $res['message'] = "Failed to get address";
+        }
+
+        echo json_encode($res);
+
+    }
 }

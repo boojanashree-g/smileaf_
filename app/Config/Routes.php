@@ -44,6 +44,7 @@ $routes->post('update-cancel-reason', 'MyaccountController::updateCancelReason',
 
 $routes->post('place-order', 'checkoutController::placeOrder', ['filter' => 'AuthFilter']);
 $routes->get('checkout', 'checkoutController::checkout');
+$routes->post('get-single-address', 'checkoutController::getSingleAddress');
 
 
 // Checkout userdetails
