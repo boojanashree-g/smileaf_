@@ -137,16 +137,16 @@
                                                 <div class="address-card" id="">
                                                     <div class="address-card-head">
                                                         <div class="address-header-info">
-                                                            <input type="radio" data-addid="<?= $add['add_id'] ?>" class="checkout-add text-red default_address" <?php $default = $add['default_addr'];
+                                                            <input type="radio" data-addid="<?= $add['add_id'] ?>" name="default_addr" class="checkout-add text-red default_address" <?php $default = $add['default_addr'];
                                                             echo $default == 1 ? "checked" : "" ?> >
                                                             <div class="address-name-type">
                                                                 <span class="address-name"><?= $add['username'] ?></span>
                                                                 <span class="address-phone"><?= $add['number'] ?></span>
                                                             </div>
                                                         </div>
-                                                        <div class="address-edit"><button>Change</button>
-                                                            <button data-addid="<?= $add['add_id'] ?>"
-                                                                class="address-delete">Delete</button>
+                                                        <div class="address-change">
+                                                            <button data-addid="<?= $add['add_id'] ?>" class="address-edit">Change</button>
+                                                            <button data-addid="<?= $add['add_id'] ?>" class="address-delete">Delete</button>      
                                                         </div>
 
                                                     </div>
@@ -164,9 +164,9 @@
 
                                         <!-- Add New Address Section -->
                                         <div class="add-address">
-                                            <div class="add-address-btn" onclick="togglePersonalAddress()">
+                                            <div class="add-address-btn">
                                                 <div class="add-icon">+</div>
-                                                <span>Add a new address</span>
+                                                <span class="address-title">Add a new address</span>
                                             </div>
                                         </div>
                                     </div>
@@ -182,7 +182,7 @@
                                                 <div class="form-row">
                                                     <div class="form-col">
                                                         <label for="state_id" class="form-label">State *</label>
-                                                        <select name="state_id" id="state_id">
+                                                        <select  class="select-dropdown" name="state_id" id="state_id">
                                                             <option value="">Select State</option>
                                                             <?php for ($i = 0; $i < count($state); $i++) { ?>
 
@@ -195,7 +195,7 @@
 
                                                     <div class="form-col">
                                                         <label for="dist_id" class="form-label">District *</label>
-                                                        <select id="dist_id" name="dist_id">
+                                                        <select class="select-dropdown" id="dist_id" name="dist_id">
                                                             <!-- code -->
                                                         </select>
                                                     </div>
@@ -224,7 +224,7 @@
                                                 </div>
                                                 <div class="form-row mb-0">                                                    
                                                     <div class="form-col">
-                                                        <input type="checkbox" class="form-check-input"
+                                                        <input type="checkbox" class="form-check-input form_defaultaddr"
                                                             id="default_addr" name="default_addr" style="height: 17px !important;">
                                                         <label class="form-check-label" for="default_addr">Set as
                                                             default address</label>
@@ -244,8 +244,7 @@
                                         </div>
                                         
                                         
-                                        
-
+                        
                                     </div>
                                 </div>
                             </div>
@@ -311,6 +310,28 @@
                             </div>
                         </div>
                     </div>
+
+                    <div id="address-delete" class="modal fade delete-modall">
+                        <div class="modal-dialog modal-confirm">
+                            <div class="modal-content">
+                                <div class="modal-header flex-column">
+                                    <div class="icon-box">
+                                        <i class="material-icons">&#xE5CD;</i>
+                                    </div>
+                                    <h4 class="modal-title w-100">Are you sure?</h4>
+
+                                </div>
+                                <div class="modal-body">
+                                    <p>Do you really want to delete the address? This process cannot be undone.</p>
+                                </div>
+                                <div class="modal-footer justify-content-center">
+                                    <button type="button" class="btn btn-secondary delete-cancel"
+                                        data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-danger btn-delete">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -329,10 +350,13 @@
     <script src="<?php echo base_url() ?>custom/js/checkout.js"></script>
 
 
-    <script>        
-        function togglePersonalAddress() {
-            $('#personalDetaila').show();        
-        }
+  
+    
+    <script>
+         $(document).ready(function () {
+            $('#state_id, #dist_id').show();
+            $('.nice-select').remove();
+         });
     </script>
 </body>
 </html>

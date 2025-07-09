@@ -4,6 +4,11 @@ $(document).ready(function () {
   let resendEnabled = false;
   let mode = "new";
   var token = null;
+  var add_id = "";
+  var stateID;
+  var distID;
+  var distName;
+  var deleteAddr = "";
 
   const targetSection = localStorage.getItem("goToSection");
 
@@ -21,6 +26,23 @@ $(document).ready(function () {
     toggleAddressForm();
 
     localStorage.removeItem("goToSection");
+  }
+
+  if (localStorage.getItem("goToStep3") === "yes") {
+    localStorage.removeItem("goToStep3");
+
+    // Trigger your Step 3 transition
+    $("#loginSection").addClass("inactive-section");
+
+    const $deliverySection = $("#deliverySection");
+    $deliverySection.removeClass("inactive-section");
+    $deliverySection
+      .find(".step-header")
+      .removeClass("inactive-header")
+      .css("color", "white");
+    $deliverySection.find(".inactive-content").hide();
+
+    toggleAddressForm();
   }
 
   // *************************** [1. Check Login ] *************************************************************************
@@ -233,38 +255,54 @@ $(document).ready(function () {
   $("#state_id").change(function () {
     let state_id = $(this).val();
     var token = localStorage.getItem("token");
-
-    // Load fresh districts
-    $.ajax({
-      type: "POST",
-      url: base_Url + "getdist-data",
-      data: { state_id: state_id },
-      headers: { Authorization: "Bearer " + token },
-      dataType: "json",
-      success: function (res) {
-        let distDta = "<option value=''>Select District</option>";
-        for (let i = 0; i < res["response"].length; i++) {
-          distDta += `<option value="${res["response"][i]["dist_id"]}">${res["response"][i]["dist_name"]}</option>`;
-        }
-        $("#dist_id").html(distDta);
-        $("#dist_id").niceSelect("update");
-      },
-    });
+    if (mode == "new") {
+      $.ajax({
+        type: "POST",
+        url: base_Url + "getdist-data",
+        data: { state_id: state_id },
+        headers: { Authorization: "Bearer " + token },
+        dataType: "json",
+        success: function (res) {
+          let distDta = "<option value=''>Select District</option>";
+          for (let i = 0; i < res["response"].length; i++) {
+            distDta += `<option value="${res["response"][i]["dist_id"]}">${res["response"][i]["dist_name"]}</option>`;
+          }
+          $("#dist_id").html(distDta);
+        },
+      });
+    } else if (mode == "edit") {
+      $.ajax({
+        type: "POST",
+        url: base_Url + "getdist-data",
+        data: { state_id: state_id },
+        headers: { Authorization: "Bearer " + token },
+        dataType: "json",
+        success: function (res) {
+          let distDta = "";
+          distDta = `<option value='${distID}'>${distName}</option>`;
+          for (let i = 0; i < res["response"].length; i++) {
+            distDta += `<option value="${res["response"][i]["dist_id"]}">${res["response"][i]["dist_name"]}</option>`;
+          }
+          $("#dist_id").html(distDta);
+        },
+      });
+    }
   });
 
   function checkoutAddAddress() {
     var form = $("#checkoutAddressForm")[0];
     var data = new FormData(form);
     var token = localStorage.getItem("token");
+    var isChecked = "";
 
     var url;
     if (mode == "new") {
       url = base_Url + "insert-address";
-      var isChecked = $("#default_addr").prop("checked");
+      isChecked = $(".form_defaultaddr").prop("checked");
       data.append("default_addr", isChecked);
     } else if (mode == "edit") {
       url = base_Url + "update-address";
-      var isChecked = $("#default_addr").prop("checked");
+      isChecked = $(".form_defaultaddr").prop("checked");
       data.append("default_addr", isChecked);
       data.append("add_id", add_id);
     }
@@ -279,77 +317,11 @@ $(document).ready(function () {
       dataType: "JSON",
       headers: { Authorization: "Bearer " + token },
       success: function (resultData) {
-        console.log(resultData.address);
         if (resultData.code == 200) {
-          showToast(resultData.message, "success");
-          $("#personalDetaila").hide();
-          $("#loginSection").addClass("inactive-section");
-
-          const $deliverySection = $("#deliverySection");
-          $deliverySection.removeClass("inactive-section");
-          $deliverySection
-            .find(".step-header")
-            .removeClass("inactive-header")
-            .css("color", "white");
-          $deliverySection.find(".inactive-content").hide();
-          $("#checkoutAddressForm").find("input, textarea, select").val("");
-
-          // Scroll to Delivery Address section
-          $("html, body").animate(
-            {
-              scrollTop: $deliverySection.offset().top - 100,
-            },
-            500
-          );
-
-          // Create new address card
-          const a = resultData.address;
-
-          const currentChecked = $("input.checkout-add:checked");
-          let newdefaultCheck = false;
-          if (a.default_addr == 1) {
-            if (currentChecked.length > 0) {
-              currentChecked.prop("checked", false);
-            }
-            newdefaultCheck = true;
-          }
-
-          // Build HTML string
-          let newAddressHTML = `
-            <div class="address-card" id="address-${a.id}">
-                <div class="address-card-head">
-                    <div class="address-header-info">
-                    
-                       <input type="radio" class="checkout-add text-red" 
-                       ${newdefaultCheck ? "checked" : ""} >
-                        <div class="address-name-type">
-                            <span class="address-name">${a.username}</span>
-                            <span class="address-phone">${a.number}</span>
-                        </div>
-                    </div>
-                    <div class="address-edit">
-                        <button>Change</button>
-                    </div>
-                </div>
-                <div class="address-text">
-                    <p class="mb-2">${a.email}</p>
-                    ${a.address} , <br>
-                    ${a.landmark} , ${a.city}<br>
-                    ${a.state_title} , ${a.dist_name},<br>
-                    ${a.pincode}
-                </div>
-            </div>
-          `;
-
-          console.log($("#addressForm .address-card").length);
-          if ($("#addressForm .address-card").length > 0) {
-            $("#addressForm .address-card").last().after(newAddressHTML);
-          } else {
-            $("#addressForm").append(newAddressHTML);
-          }
-        } else {
+          localStorage.setItem("goToStep3", "yes");
+          location.reload();
+        } else if (resultData.code == 400) {
           showToast(resultData.message, "error");
-          $("#addAddressModal").modal("hide");
         }
       },
       error: function (error) {
@@ -363,37 +335,31 @@ $(document).ready(function () {
       },
     });
   }
-  // *************************** [4. Address Delete] *************************************************************************
 
+  $(".add-address-btn").click(function () {
+    $("#personalDetaila").show();
+  });
+  // *************************** [4. Address Delete] *************************************************************************
+  token = localStorage.getItem("token");
   $(".address-delete").click(function () {
-    let addid = $(this).attr("data-addid");
+    deleteAddr = $(this).attr("data-addid");
+    $("#address-delete").modal("show");
   });
 
-  // *************************** [5.Default Address Change] *************************************************************************
-
-  $(".default_address").click(function () {
-    let addressID = $(this).data("addid");
-
-    const currentChecked = $("input.checkout-add:checked");
-    let newdefaultCheck = false;
-    let addresshtml = "";
-
-    token = localStorage.getItem("token");
+  $(".btn-delete").click(function () {
     $.ajax({
       type: "POST",
-      url: base_Url + "update-defaultaddress",
-      data: { add_id: addressID },
-      dataType: "JSON",
+      url: base_Url + "delete-address",
+      data: { add_id: deleteAddr },
       headers: { Authorization: "Bearer " + token },
-      success: function (JSONdata) {
-        if (JSONdata.code == 400) {
-          showToast(JSONdata.message, "error");
-        } else if (JSONdata.code == 200) {
-          showToast(JSONdata.message, "success");
-          localStorage.setItem("goToSection", "deliverySection");
-          setTimeout(() => {
-            window.location.reload();
-          });
+      dataType: "JSON",
+      success: function (resultData) {
+        if (resultData.code == 200) {
+          localStorage.setItem("goToStep3", "yes");
+          location.reload();
+        } else {
+          showToast(resultData.message, "error");
+          $("#deleteConfirmModal").modal("hide");
         }
       },
       error: function (error) {
@@ -407,77 +373,183 @@ $(document).ready(function () {
       },
     });
   });
+});
 
-  $("#close-address").click(function () {
-    $("#personalDetaila").hide();
+// *************************** [5.Default Address Change & Edit Address] *************************************************************************
+
+$(".default_address").click(function () {
+  let addressID = $(this).data("addid");
+
+  const currentChecked = $("input.checkout-add:checked");
+  let newdefaultCheck = false;
+  let addresshtml = "";
+
+  token = localStorage.getItem("token");
+  $.ajax({
+    type: "POST",
+    url: base_Url + "update-defaultaddress",
+    data: { add_id: addressID },
+    dataType: "JSON",
+    headers: { Authorization: "Bearer " + token },
+    success: function (JSONdata) {
+      if (JSONdata.code == 400) {
+        showToast(JSONdata.message, "error");
+      } else if (JSONdata.code == 200) {
+        showToast(JSONdata.message, "success");
+        localStorage.setItem("goToSection", "deliverySection");
+
+        $(".checkout-add").prop("checked", false);
+        $(".checkout-add[data-addid='" + addressID + "']").prop(
+          "checked",
+          true
+        );
+      }
+    },
+    error: function (error) {
+      let status = error.status;
+      if (status === 401) {
+        localStorage.removeItem("token");
+        window.location.href = base_Url;
+      } else {
+        showToast(error, "error");
+      }
+    },
+  });
+});
+
+$("#close-address").click(function () {
+  $("#personalDetaila").hide();
+});
+
+// Edit Address
+$("#addressForm").on("click", ".address-edit", function () {
+  let addID = $(this).data("addid");
+  $("#personalDetaila").show();
+  mode = "edit";
+  $(".address-title").html("Edit Address");
+
+  token = localStorage.getItem("token");
+
+  $.ajax({
+    type: "POST",
+    url: base_Url + "get-single-address",
+    data: { add_id: addID },
+    dataType: "JSON",
+    headers: { Authorization: "Bearer " + token },
+    success: function (JSONdata) {
+      if (JSONdata.code == 400) {
+        showToast(JSONdata.message, "error");
+      } else if (JSONdata.code == 200) {
+        editViewAddress(JSONdata.address);
+        console.log(JSONdata.address);
+      }
+    },
+    error: function (error) {
+      let status = error.status;
+      if (status === 401) {
+        localStorage.removeItem("token");
+        window.location.href = base_Url;
+      } else {
+        showToast(error, "error");
+      }
+    },
   });
 
-  // *************************** [6.Place Order] *************************************************************************
+  setTimeout(() => {
+    $("html, body").animate(
+      {
+        scrollTop:
+          $("#personalDetaila").offset().top +
+          $("#personalDetaila").outerHeight() -
+          $(window).height() +
+          50,
+      },
+      500
+    );
+  }, 100);
+});
 
-  function validateCheckout() {
-    const token = localStorage.getItem("token");
-    const loginStatus = sessionStorage.getItem("loginStatus");
+function editViewAddress(address) {
+  mode = "edit";
 
-    //1 - Login
-    if (!token && loginStatus != "YES") {
-      showToast("Please log in to continue.", "error");
-      return false;
-    }
+  stateID = address.state_id;
+  distID = address.dist_id;
+  distName = address.dist_name;
 
-    //2 - User Details
-    const username = $("#username").val().trim();
-    const email = $("#email").val().trim();
+  $("#state_id").val(stateID).trigger("change");
+  $("#address").val(address.address);
+  $("#landmark").val(address.landmark);
+  $("#city").val(address.city);
+  $("#pincode").val(address.pincode);
+  $("#default_addr").prop("checked", address.default_addr == 1);
+  add_id = address.add_id;
+}
 
-    if (username == "" || email == "") {
-      showToast("Please Fill UserDetails", "error");
-      return false;
-    }
+// *************************** [6.Place Order] *************************************************************************
 
-    // 3 - Address Details
-    const addressElem = $(".default_address:checked");
-    const default_address = addressElem.attr("data-addid") ?? "";
-    if (!default_address) {
-      showToast("Please select a delivery address.", "error");
-      return false;
-    }
-    return true;
+function validateCheckout() {
+  const token = localStorage.getItem("token");
+  const loginStatus = sessionStorage.getItem("loginStatus");
+
+  //1 - Login
+  if (!token && loginStatus != "YES") {
+    showToast("Please log in to continue.", "error");
+    return false;
   }
 
-  $("#place-order").click(function () {
-    const token = localStorage.getItem("token");
+  //2 - User Details
+  const username = $("#username").val().trim();
+  const email = $("#email").val().trim();
 
-    const type = $(".checkout-type").val();
-    var subIDs = [];
-    $(".sub-id").each(function () {
-      subIDs.push($(this).val());
-    });
+  if (username == "" || email == "") {
+    showToast("Please Fill UserDetails", "error");
+    return false;
+  }
 
-    if (!validateCheckout()) {
-      return;
-    } else {
-      $.ajax({
-        type: "POST",
-        url: "place-order",
-        data: { type: type, subid: subIDs },
-        dataType: "JSON",
-        headers: { Authorization: "Bearer " + token },
-        success: function (resultData) {
-          if (resultData.code == 200) {
-            window.location.href = base_Url + "payment?type=" + type;
-          } else if (resultData.code == 400) {
-            showToast(resultData.message, "error");
-          }
-        },
-        error: function (error) {
-          let status = error.status;
-          if (status === 401) {
-            localStorage.removeItem("token");
-            window.location.href = base_Url;
-          } else {
-            showToast(error, "error");
-          }
-        },
-      });
-    }
+  // 3 - Address Details
+  const addressElem = $(".default_address:checked");
+  const default_address = addressElem.attr("data-addid") ?? "";
+  if (!default_address) {
+    showToast("Please select a delivery address.", "error");
+    return false;
+  }
+  return true;
+}
+
+$("#place-order").click(function () {
+  const token = localStorage.getItem("token");
+
+  const type = $(".checkout-type").val();
+  var subIDs = [];
+  $(".sub-id").each(function () {
+    subIDs.push($(this).val());
   });
+
+  if (!validateCheckout()) {
+    return;
+  } else {
+    $.ajax({
+      type: "POST",
+      url: "place-order",
+      data: { type: type, subid: subIDs },
+      dataType: "JSON",
+      headers: { Authorization: "Bearer " + token },
+      success: function (resultData) {
+        if (resultData.code == 200) {
+          window.location.href = base_Url + "payment?type=" + type;
+        } else if (resultData.code == 400) {
+          showToast(resultData.message, "error");
+        }
+      },
+      error: function (error) {
+        let status = error.status;
+        if (status === 401) {
+          localStorage.removeItem("token");
+          window.location.href = base_Url;
+        } else {
+          showToast(error, "error");
+        }
+      },
+    });
+  }
 });
