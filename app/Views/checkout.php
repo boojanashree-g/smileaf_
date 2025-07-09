@@ -49,7 +49,7 @@
                                                     <span class="otp-text <?= $otpClass ?>">The OTP is valid for 1 minute
                                                         only.</span>
                                                     <span class="otp-resend <?= $otpClass ?>">
-                                                        <button class="resend-btn" id="resend-otp">Resend Button</button>
+                                                        <button class="resend-btn" id="resend-otp"><i class="fa fa-repeat me-2" aria-hidden="true"></i>Resend</button>
                                                     </span>
                                                 </div>
                                                 <div class="terms-text">

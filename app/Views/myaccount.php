@@ -54,6 +54,13 @@
     justify-content: center;
 }
 
+.btn-small{
+    position: inherit;
+    float:right;
+    padding:0;
+    
+}
+
 </style>
 <body>
 
@@ -205,12 +212,19 @@
                                                                 <div class="col-md-12 col-12 p-0">
                                                                     <div class="address_card mb-0">
                                                                         <h4>
-                                                                            <small class="btn-small"><a
-                                                                                    class="btn btn-sm btn-outline-secondary edit-address"
-                                                                                    index="<?php echo $i ?>">Edit</a></small>
-                                                                            <small class="btn-small delete"><a
-                                                                                    class="btn btn-sm btn-outline-danger address-delete"
-                                                                                    index="<?php echo $i ?>">Delete</a></small>
+                                                                            <small class="btn-small ">
+                                                                                <a class="btn btn-sm btn-outline-secondary edit-address" index="<?= $i ?>">
+                                                                                    <i class="fas fa-edit d-inline d-sm-none"></i> <!-- Icon for mobile -->
+                                                                                    <span class="d-none d-sm-inline">Edit</span>   <!-- Text for tablet & up -->
+                                                                                </a>
+                                                                            </small>
+                                                                            <small class="btn-small delete me-2">
+                                                                                <a class="btn btn-sm btn-outline-danger address-delete" index="<?= $i ?>">
+                                                                                    <i class="fas fa-trash-alt d-inline d-sm-none"></i> <!-- Icon for mobile -->
+                                                                                    <span class="d-none d-sm-inline">Delete</span>       <!-- Text for tablet & up -->
+                                                                                </a>
+                                                                            </small>
+
                                                                         </h4>
                                                                         <address>
                                                                             <div class="form-check mt-2">

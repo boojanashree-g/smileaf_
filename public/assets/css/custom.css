@@ -1195,7 +1195,7 @@ a.account-card .card:active {
 }
 
 .d-block {
-    display: block;
+    display: block !important;
 }
 
 .banner-block {
@@ -1651,9 +1651,9 @@ a.theme-btn-1.btn:focus {
 }
 
 .login-form .resend-btn {
-    background: #fff;
+    background: #788b5c;
     border: 2px solid #788b5c;
-    color: #788b5c;
+    color: #fff !important;
     height: 35px;
     display: flex;
     align-items: center;
