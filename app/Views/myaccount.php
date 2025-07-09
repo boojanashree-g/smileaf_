@@ -3,7 +3,58 @@
 
 <?php require("components/head.php") ?>
 
+<style>
+.status_btn{
+    font-size:14px;
+    font-weight:500;
+    min-width:75px;
+}
+.bg-warm-coral {
+    background-color: #FF7F50 !important;
+}
+.bg-mustard-yellow {
+    background-color: #F1C40F !important;
+}
+.bg-warm-orange {
+    background-color: #F39C12 !important;
+}
+.bg-warm-olive {
+    background-color: #A3CB38 !important;
+}
+.bg-warm-red {
+    background-color: #E74C3C !important;
+}
+.bg-sandy-beige {
+    background-color: #EDBB99 !important;
+}
+.bg-burnt-umber {
+    background-color: #6E2C00 !important;
+}
+.btn-view-order {
+    background-color: #1ABC9C !important;  /* Warm Teal */
+    color: white !important;
+    border: none;
+    cursor: pointer;
+}
 
+.btn-return-policy {
+    background-color: #D68910 !important;  /* Golden Amber */
+    color: white !important;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-cancel-order {
+    background-color: #C0392B !important;  /* Rustic Red */
+    color: white !important;
+    border: none;
+    cursor: pointer;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+</style>
 <body>
 
     <!-- Body main wrapper start -->
@@ -68,15 +119,16 @@
                                                                         $orderStatus = $orderDetails['order_status'];
 
                                                                         $statusBgClasses = [
-                                                                            'Initiated' => 'bg-secondary',
-                                                                            'New' => 'bg-primary',
-                                                                            'Pending' => 'bg-warning',
-                                                                            'Shipped' => 'bg-info',
-                                                                            'Delivered' => 'bg-success',
-                                                                            'Cancelled' => 'bg-danger',
-                                                                            'Refund' => 'bg-muted',
-                                                                            'Failed' => 'bg-dark',
-                                                                        ];
+                                                                            'Initiated' => 'bg-secondary', 
+                                                                            'New'       => 'bg-warm-coral',   
+                                                                            'Pending'   => 'bg-mustard-yellow', 
+                                                                            'Shipped'   => 'bg-warm-orange',    
+                                                                            'Delivered' => 'bg-warm-olive', 
+                                                                            'Cancelled' => 'bg-warm-red',        
+                                                                            'Refund'    => 'bg-sandy-beige',
+                                                                            'Failed'    => 'bg-burnt-umber',
+                                                                        ];                                                          
+
 
                                                                         $orderClass = $statusBgClasses[$orderStatus] ?? 'bg-light';
 
@@ -104,34 +156,34 @@
                                                                             <td><?= $orderDetails['order_no'] ?></td>
                                                                             <td><?= $orderDetails['order_date'] ?></td>
                                                                             <td><span
-                                                                                    class="badge <?= $orderClass ?>"><?= $orderDetails['order_status'] ?></span>
+                                                                                    class="badge <?= $orderClass ?> status_btn"><?= $orderDetails['order_status'] ?></span>
                                                                             </td>
                                                                             <td>₹<?= $orderDetails['order_total_amt'] ?></td>
-                                                                            <td>
-                                                                                <a class="btn-sm btn-success view-order"
-                                                                                    data-orderid="<?= esc($orderDetails['order_id']) ?>">View</a>
+                                                                            <td class="d-flex">
+                                                                                <a class="btn-sm btn-view-order view-order"
+                                                                                data-orderid="<?= esc($orderDetails['order_id']) ?>" title="View Order"><i class='far fa-eye' style='font-size:14px;'></i></a>
+
                                                                                 <?php if ($canReturn): ?>
-                                                                                    &nbsp; &nbsp;
-                                                                                    <a class="btn-sm btn-warning returnpolicy"
-                                                                                        data-status="<?= esc($orderStatus) ?>"
-                                                                                        data-deliverytime="<?= esc($orderDetails['delivered_time']) ?>"
-                                                                                        data-orderid="<?= esc($orderDetails['order_id']) ?>">Return</a>
-
-
+                                                                                    &nbsp;&nbsp;
+                                                                                    <a class="btn-sm btn-return-policy returnpolicy"
+                                                                                    data-status="<?= esc($orderStatus) ?>"
+                                                                                    data-deliverytime="<?= esc($orderDetails['delivered_time']) ?>"
+                                                                                    data-orderid="<?= esc($orderDetails['order_id']) ?>">Return</a>
                                                                                 <?php endif; ?>
 
                                                                                 <?php if ($dispCancel): ?>
-                                                                                    &nbsp; &nbsp;
-                                                                                    <a class="btn-sm btn-primary cancel-order"
-                                                                                        data-status="<?= esc($orderStatus) ?>"
-                                                                                        data-orderid="<?= esc($orderDetails['order_id']) ?>">Cancel</a>
+                                                                                    &nbsp;&nbsp;
+                                                                                    <a class="btn-sm btn-cancel-order cancel-order" title="Cancel Order"
+                                                                                    data-status="<?= esc($orderStatus) ?>"
+                                                                                    data-orderid="<?= esc($orderDetails['order_id']) ?>"><i class='far fa-times-circle'  style='font-size:16px !important;'></i></a>
                                                                                 <?php endif; ?>
                                                                             </td>
-
                                                                         </tr>
 
-                                                                    <?php }
-                                                        } ?>
+                                                                    <?php 
+                                                                            }
+                                                                        } 
+                                                                    ?>
                                                             </tbody>
                                                         </table>
                                                     </div>
