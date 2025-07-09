@@ -10,7 +10,7 @@
         background-color: rgba(136, 131, 131, 0.72);
     }
     .slick-track #main-image{
-        height: 450px;
+        height: 350px;
     }
     .sub-image img{
         max-height: 100px;
@@ -157,39 +157,40 @@
                                     ?>
 
                                     <div class="ltn__product-details-menu-2">
-                                        <ul>
-                                            <li>
+                                        <!-- <ul>
+                                            <li> -->
                                                 <div class="cart-plus-minus">
                                                     <input type="text" value="1" name="quantity"
                                                         data-maxqty="<?= $lowestInStockQty ?>"
                                                         class="cart-plus-minus-box selected-qty"
                                                         <?= !$hasStock ? 'disabled' : '' ?>>
                                                 </div>
-                                            </li>
-                                            <li>
-                                                <?php if ($hasStock): ?>
-                                                <a href="#ltn__utilize-cart-menu" class="ltn__utilize-toggle- theme-btn-1 btn addto_cartbtn" data-source="cart"
-                                                    style="width:auto;   background-color: #37724f !important;">
-                                                    <span class="addto_cart_text"><i class="icon-shopping-cart pe-2"></i>ADD TO CART</span>
-                                                </a>
+                                            <!-- </li>
+                                            <li> -->
+                                                <div class="cart_buynow_wrapper mt-3">
+                                                    <?php if ($hasStock): ?>
+                                                    <a href="#ltn__utilize-cart-menu" class="ltn__utilize-toggle- theme-btn-1 btn addto_cartbtn" data-source="cart"
+                                                        style="width:auto;   background-color: #ff8e00 !important; border-radius: 5px; padding: 10px 25px;">
+                                                        <span class="addto_cart_text" style="font-size: 18px; font-weight: 500;"><i class="icon-shopping-cart pe-2"></i>Add To Cart</span>
+                                                    </a>
 
-                                                 <a href="#ltn__utilize-cart-menu" class="ltn__utilize-toggle- theme-btn-1 btn buynow_btn" data-source="buy_now"
-                                                    style="width:auto;   background-color: #37724f !important;">
-                                                    <span class="addto_buynow"><i class="fas fa-credit-card pe-2"></i>BUY NOW</span>
-                                                </a>
-                                              <?php else:
-                                            $productName=esc($products[0]['prod_name']);
-                                            $packquantity=$packQty;
-                                            $whatsapp_message=urlencode("Welcome to Smileaf!\nProduct Name: $productName\nPackingQuantity: $packquantity");
-                                            ?>
-                                         <a href="https://wa.me/9360842118?text=<?=$whatsapp_message?>" class="ltn__utilize-toggle theme-btn-1 btn whatsapp-order-btn" target="_blank" style="width:auto;background-color:#cc0000!important;">
-                                            <span class="addto_cart_text"><i class="icon-phone pe-2"></i>CONTACT US TO ORDER</span>
-                                        </a>
+                                                    <a href="#ltn__utilize-cart-menu" class="ltn__utilize-toggle- theme-btn-1 btn buynow_btn" data-source="buy_now"
+                                                        style="width:auto;   background-color: #37724f !important; border-radius: 5px; padding: 10px 25px;">
+                                                        <span class="addto_buynow" style="font-size: 18px; font-weight: 500;"><i class="icon-shopping-bags pe-2"></i>Buy Now</span>
+                                                    </a>
+                                                    <?php else:
+                                                        $productName=esc($products[0]['prod_name']);
+                                                        $packquantity=$packQty;
+                                                        $whatsapp_message=urlencode("Welcome to Smileaf!\nProduct Name: $productName\nPackingQuantity: $packquantity");
+                                                        ?>
+                                                    <a href="https://wa.me/9360842118?text=<?=$whatsapp_message?>" class="ltn__utilize-toggle theme-btn-1 btn whatsapp-order-btn" target="_blank" style="width:auto;background-color:#cc0000!important;">
+                                                        <span class="addto_cart_text"><i class="icon-phone pe-2"></i>CONTACT US TO ORDER</span>
+                                                    </a>
 
-                                            <?php endif; ?>
-
-                                            </li>
-                                        </ul>
+                                                    <?php endif; ?>
+                                                </div>
+                                            <!-- </li>
+                                        </ul> -->
                                     </div>
 
 
