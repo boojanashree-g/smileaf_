@@ -1,5 +1,6 @@
 <!doctype html>
 <html class="no-js" lang="zxx">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
 <?php require("components/head.php") ?>
 <style>
@@ -183,8 +184,12 @@
                                                         $packquantity=$packQty;
                                                         $whatsapp_message=urlencode("Welcome to Smileaf!\nProduct Name: $productName\nPackingQuantity: $packquantity");
                                                         ?>
-                                                    <a href="https://wa.me/9360842118?text=<?=$whatsapp_message?>" class="ltn__utilize-toggle theme-btn-1 btn whatsapp-order-btn" target="_blank" style="width:auto;background-color:#cc0000!important;">
-                                                        <span class="addto_cart_text"><i class="icon-phone pe-2"></i>CONTACT US TO ORDER</span>
+                                                    <a href="https://wa.me/9842578248?text=<?= $whatsapp_message ?>" 
+                                                        class="theme-btn-1 btn whatsapp-order-btn"
+                                                        target="_blank"
+                                                        style="width: fit-content; background-color: #cc0000 !important; border-radius: 10px;">
+                                                       
+                                                        <span class="addto_cart_text">CONTACT US TO ORDER</span>
                                                     </a>
 
                                                     <?php endif; ?>
@@ -427,33 +432,7 @@
         });
 
     </script>
-
-    
-  
-   <script>
-    $(document).ready(function () {
-      function escapeSelector(href) {
-    return href.replace(/([!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~])/g, "\\$1");
-}
-
-    var rawHref = 'https://wa.me/9360842118?text=Welcome to Smileaf!';
-    var safeHref = escapeSelector(rawHref);
-
-    $('a[href="' + safeHref + '"]').on("click", function () {
-        console.log("Safe selector used");
-    });
-
-    });
-</script>
-
-</script>
-
-
-
     <script src="<?php echo base_url() ?>custom/js/commoncart.js"></script>
-     
-
-
 </body>
 
 </html>

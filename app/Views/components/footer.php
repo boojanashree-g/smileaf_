@@ -32,7 +32,7 @@
                                         <i class="icon-placeholder"></i>
                                     </div>
                                     <div class="footer-address-info">
-                                        <p>Cactus International, 3/142,Near Varadaraja Mills(Unit 2),
+                                        <p>3/142,Near Varadaraja Mills(Unit 2),
                                             SundakkamPalayam,Nambiyam Palayam Post, Avinashi,Tirupur,Tamilnadu, India -
                                             641670.</p>
                                     </div>
