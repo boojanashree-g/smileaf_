@@ -138,45 +138,60 @@ $(document).ready(function () {
   function generateGridHtml(products) {
     let html = "";
 
-    products.forEach(function (product) {
-      html += `
-                <div class="col-xl-4 col-sm-6 col-6 product-item" data-name="${(product.prod_name || "").toLowerCase()}" data-price="${product.current_price || product.price || product.mrp || "0"}" data-category="${(product.category || "").toLowerCase()}"data-stock="${product.stock_status || "1"}">
-                    <div class="ltn__product-item ltn__product-item-3 text-center">
-                        <div class="product-img">
-                            <a href="${base_Url}${product.url || "#"}">
-                                <img src="${base_Url}${product.main_image || "default-image.jpg"}" alt="${product.prod_name || "Product"}">
-                            </a>
-                            ${product.stock_status == 0 ? `<div class="product-badge"><ul><li class="sale-badge">Out of Stock</li></ul></div>` : product.badge ? `<div class="product-badge"> <ul><li class="sale-badge">${product.badge}</li></ul></div>` : ""}
+products.forEach(function (product) {
+    const prodIdEncoded = btoa(product.prod_id); // encoding product ID like PHP
+    const productUrl = `${base_Url}product-details/${prodIdEncoded}`;
+    const stockStatus = product.stock_status || 1;
+    const offerPrice = parseFloat(product.lowest_offer_price || 0);
+    const mrp = parseFloat(product.lowest_mrp || 0);
+
+    html += `
+        <div class="col-xl-4 col-sm-12 col-12 product-item"
+            data-name="${(product.prod_name || '').toLowerCase()}">
+            <div class="ltn__product-item ltn__product-item-3 text-center">
+                <div class="product-img">
+                    <a href="${productUrl}">
+                        <img src="${base_Url}${product.main_image || 'default.jpg'}"
+                             alt="${product.prod_name || 'Product'}">
+                    </a>
+                    ${stockStatus == 0 ? `
+                        <div class="product-badge">
+                            <ul>
+                                <li class="sale-badge">Out of stock</li>
+                            </ul>
+                        </div>` : ''
+                    }
+                </div>
+                <div class="product-info">
+                    <h2 class="product-title">
+                        <a href="${productUrl}">
+                            <span class="prod_name_span">${product.prod_name || 'Product Name'}</span>
+                        </a>
+                    </h2>
+                    <div class="product_price_wrapper mt-0">
+                        <div class="product-price mb-0">
+                            <span>₹${offerPrice.toFixed(2)}</span>
+                            ${(offerPrice !== mrp && mrp !== 0) ? `<del>₹${mrp.toFixed(2)}</del>` : ''}
                         </div>
-                        <div class="product-info">
-                            <h2 class="product-title">
-                                <a href="${base_Url}${product.url || "#"}">
-                                    <span class="prod_name_span">${product.prod_name || "Product Name"}</span>
-                                </a>
-                            </h2>
-                            <div class="product_price_wrapper mt-0">
-                              <div class="product-price  mb-0">
-                                <span>
-                                  ₹${product.lowest_offer_price || "0"}
-                                </span>
-                                ${product.lowest_mrp && product.lowest_offer_price != product.lowest_mrp ? `<del>₹${product.lowest_mrp}</del>` : "" }
-                                      
-                              </div>
-                              <a href="#" title="Wishlist" class="wishlist-btn">
-                                  <i class="far fa-heart"></i>
-                              </a>
-                            </div>
-                          </div>
-                        <div class="d-flex justify-content-evenly">                       
-                          <a href="#" class="theme-btn-1 btn quick_btn" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#quick_buy_modal">
-                              <i class="fas fa-shopping-cart me-2"></i>
-                              <span>Quick Buy</span>
-                          </a>
-                        </div>
+                        <!-- Wishlist can be added here -->
                     </div>
                 </div>
-            `;
-    });
+                <div class="d-flex justify-content-evenly">
+                    ${stockStatus == 0 ? `
+                        <a href="${productUrl}" class="theme-btn-1 btn quick_btn">
+                            <i class="fas fa-shopping-cart text-danger"></i>
+                            <span class="text-danger">Contact us to order</span>
+                        </a>` : `
+                        <a href="${productUrl}" class="theme-btn-1 btn quick_btn">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Buy Now</span>
+                        </a>`}
+                </div>
+            </div>
+        </div>
+    `;
+});
+
 
     return html;
   }
