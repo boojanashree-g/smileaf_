@@ -106,12 +106,15 @@ $(document).ready(function () {
       $(".otp-text").text("OTP expired. Please resend.");
       resendEnabled = true;
       $(".otp-resend").removeClass("d-none");
+      $("#otpInput").val("");
     }, 60000); // 1 minute
   }
 
   $(".resend-btn").click(function () {
     if (!resendEnabled) {
       showToast("Please wait before resending OTP", "error");
+      $("#otpInput").val("");
+
       return;
     }
 
