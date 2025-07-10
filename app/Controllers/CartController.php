@@ -63,6 +63,14 @@ class CartController extends BaseController
             [$prod_id, $user_id, $pack_qty, $source_type]
         )->getResultArray();
 
+        $oldCartCount = count($cart_data);
+        if ($oldCartCount >= 1) {
+            return $this->response->setJSON([
+                "status" => "fail",
+                "code" => 400,
+                "message" => "Product Already in cart!",
+            ]);
+        }
 
         if (!empty($cart_data)) {
             $cart_id = $cart_data[0]['cart_id'];

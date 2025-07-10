@@ -25,7 +25,6 @@ function insertCartData(sourceType) {
       if (result.code == 200) {
         showToast(result.message, "success");
 
-        $(".addto_cart_text").html("Goto cart");
         $("#quick_buy_modal").modal("hide");
         setTimeout(() => {
           window.location.reload();
