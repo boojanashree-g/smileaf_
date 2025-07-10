@@ -68,7 +68,7 @@ class CartController extends BaseController
             return $this->response->setJSON([
                 "status" => "fail",
                 "code" => 400,
-                "message" => "Product Already in cart!",
+                "message" => "Product with pack $pack_qty already in cart!",
             ]);
         }
 

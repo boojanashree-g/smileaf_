@@ -1,11 +1,11 @@
 var mode;
+var add_id = null;
 $(document).ready(function () {
   let currentStage = "send";
   let otpSentAt = null;
   let resendEnabled = false;
   var token = null;
 
-  var add_id = null;
   var deleteAddr = "";
 
   const targetSection = localStorage.getItem("goToSection");
@@ -251,6 +251,7 @@ $(document).ready(function () {
   });
 
   function checkoutAddAddress() {
+    alert(mode);
     var form = $("#checkoutAddressForm")[0];
     var data = new FormData(form);
     var token = localStorage.getItem("token");
@@ -478,11 +479,11 @@ var distName = null;
 
 function editViewAddress(address) {
   mode = "edit";
+  add_id = address.add_id;
   stateID = address.state_id;
   distID = address.dist_id;
   distName = address.dist_name;
-  console.log(stateID);
-  console.log(mode);
+
   $("#state_id").val(stateID).trigger("change");
 
   $("#address").val(address.address);
@@ -490,7 +491,6 @@ function editViewAddress(address) {
   $("#city").val(address.city);
   $("#pincode").val(address.pincode);
   $("#default_addr").prop("checked", address.default_addr == 1);
-  add_id = address.add_id;
 }
 
 // *************************** [6.Place Order] *************************************************************************
