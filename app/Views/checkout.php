@@ -44,8 +44,11 @@
                                                     <input type="number" id="number" placeholder="Mobile Number*"
                                                         name="number">
                                                     <input type="text" class="input-field mb-0 otp-field <?= $otpClass ?>"
-                                                        placeholder="Enter otp" id="otpInput" name="otp"
-                                                        autocomplete="false">
+                                                        placeholder="Enter OTP" id="otpInput" name="otp"
+                                                        maxlength="4" pattern="\d{4}" inputmode="numeric"
+                                                        oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);"
+                                                        autocomplete="off">
+
                                                     <span class="otp-text <?= $otpClass ?>">The OTP is valid for 1 minute
                                                         only.</span>
                                                     <span class="otp-resend <?= $otpClass ?>">
