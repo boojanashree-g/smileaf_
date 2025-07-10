@@ -138,79 +138,95 @@ $(document).ready(function () {
   function generateGridHtml(products) {
     let html = "";
 
-products.forEach(function (product) {
-    const prodIdEncoded = btoa(product.prod_id); // encoding product ID like PHP
-    const productUrl = `${base_Url}product-details/${prodIdEncoded}`;
-    const stockStatus = product.stock_status || 1;
-    const offerPrice = parseFloat(product.lowest_offer_price || 0);
-    const mrp = parseFloat(product.lowest_mrp || 0);
+    products.forEach(function (product) {
+      const prodIdEncoded = btoa(product.prod_id); // encoding product ID like PHP
+      const productUrl = `${base_Url}product-details/${prodIdEncoded}`;
+      const stockStatus = product.stock_status || 1;
+      const offerPrice = parseFloat(product.lowest_offer_price || 0);
+      const mrp = parseFloat(product.lowest_mrp || 0);
 
-    html += `
+      html += `
         <div class="col-xl-4 col-sm-12 col-12 product-item"
-            data-name="${(product.prod_name || '').toLowerCase()}">
+            data-name="${(product.prod_name || "").toLowerCase()}">
             <div class="ltn__product-item ltn__product-item-3 text-center">
                 <div class="product-img">
                     <a href="${productUrl}">
-                        <img src="${base_Url}${product.main_image || 'default.jpg'}"
-                             alt="${product.prod_name || 'Product'}">
+                        <img src="${base_Url}${
+        product.main_image || "default.jpg"
+      }"
+                             alt="${product.prod_name || "Product"}">
                     </a>
-                    ${stockStatus == 0 ? `
+                    ${
+                      stockStatus == 0
+                        ? `
                         <div class="product-badge">
                             <ul>
                                 <li class="sale-badge">Out of stock</li>
                             </ul>
-                        </div>` : ''
+                        </div>`
+                        : ""
                     }
                 </div>
                 <div class="product-info">
                     <h2 class="product-title">
                         <a href="${productUrl}">
-                            <span class="prod_name_span">${product.prod_name || 'Product Name'}</span>
+                            <span class="prod_name_span">${
+                              product.prod_name || "Product Name"
+                            }</span>
                         </a>
                     </h2>
                     <div class="product_price_wrapper mt-0">
                         <div class="product-price mb-0">
                             <span>₹${offerPrice.toFixed(2)}</span>
-                            ${(offerPrice !== mrp && mrp !== 0) ? `<del>₹${mrp.toFixed(2)}</del>` : ''}
+                            ${
+                              offerPrice !== mrp && mrp !== 0
+                                ? `<del>₹${mrp.toFixed(2)}</del>`
+                                : ""
+                            }
                         </div>
                         <!-- Wishlist can be added here -->
                     </div>
                 </div>
                 <div class="d-flex justify-content-evenly">
-                    ${stockStatus == 0 ? `
+                    ${
+                      stockStatus == 0
+                        ? `
                         <a href="${productUrl}" class="theme-btn-1 btn quick_btn">
                             <i class="fas fa-shopping-cart text-danger"></i>
                             <span class="text-danger">Contact us to order</span>
-                        </a>` : `
+                        </a>`
+                        : `
                         <a href="${productUrl}" class="theme-btn-1 btn quick_btn">
                             <i class="fas fa-shopping-cart"></i>
                             <span>Buy Now</span>
-                        </a>`}
+                        </a>`
+                    }
                 </div>
             </div>
         </div>
     `;
-});
-
+    });
 
     return html;
   }
 
   function generateListHtml(products) {
-  let html = "";
+    let html = "";
 
-  products.forEach(function (product) {
-    const baseUrl = base_Url || "/";
-    const name = (product.prod_name || "Product Name").toLowerCase();
-    const url = product.url || "#";
-    const img = product.main_image || "default-image.jpg";
-    const price = product.lowest_mrp || "0";
-    const offer = product.lowest_offer_price || null;
-    const outOfStock = parseInt(product.lowest_quantity) === 0;
-    const showOffer = offer && offer !== price;
-    const description = product.description || "Premium quality product available at best prices.";
+    products.forEach(function (product) {
+      const baseUrl = base_Url || "/";
+      const name = (product.prod_name || "Product Name").toLowerCase();
+      const url = product.url || "#";
+      const img = product.main_image || "default-image.jpg";
+      const price = product.lowest_mrp || "0";
+      const offer = product.lowest_offer_price || null;
+      const outOfStock = parseInt(product.lowest_quantity) === 0;
+      const showOffer = offer && offer !== price;
+      const description =
+        product.description ||
+        "Premium quality product available at best prices.";
 
-    html += `
+      html += `
       <div class="col-lg-12 product-item" 
            data-name="${name}"
            data-price="${price}"
@@ -218,7 +234,9 @@ products.forEach(function (product) {
         <div class="ltn__product-item ltn__product-item-3" style="min-height:auto;">
           <div class="product-img">
             <a href="${baseUrl}${url}">
-              <img src="${baseUrl}${img}" alt="${product.prod_name || "Product"}">
+              <img src="${baseUrl}${img}" alt="${
+        product.prod_name || "Product"
+      }">
             </a>
             ${
               outOfStock
@@ -228,15 +246,13 @@ products.forEach(function (product) {
           </div>
           <div class="product-info h-100">
             <h2 class="product-title">
-              <a href="${baseUrl}${url}">${product.prod_name || "Product Name"}</a>
+              <a href="${baseUrl}${url}">${
+        product.prod_name || "Product Name"
+      }</a>
             </h2>
             <div class="product-price">
               <span>₹${price}</span>
-              ${
-                showOffer
-                  ? `<del>₹${offer}</del>`
-                  : ""
-              }
+              ${showOffer ? `<del>₹${offer}</del>` : ""}
             </div>
             <div class="product-brief">
               ${description}
@@ -245,11 +261,10 @@ products.forEach(function (product) {
         </div>
       </div>
     `;
-  });
+    });
 
-  return html;
-}
-
+    return html;
+  }
 
   // Function to show no products message
   function showNoProductsMessage(gridElement, listElement) {

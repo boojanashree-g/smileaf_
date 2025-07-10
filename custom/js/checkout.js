@@ -254,7 +254,6 @@ $(document).ready(function () {
   });
 
   function checkoutAddAddress() {
-    alert(mode);
     var form = $("#checkoutAddressForm")[0];
     var data = new FormData(form);
     var token = localStorage.getItem("token");
@@ -305,12 +304,8 @@ $(document).ready(function () {
     $("#personalDetaila").show();
     mode = "new";
   });
-  console.log(mode);
   $("#state_id").change(function () {
     let state_id = $(this).val();
-    console.log(mode);
-    alert(mode);
-    console.log(state_id);
 
     var token = localStorage.getItem("token");
     if (mode == "new") {

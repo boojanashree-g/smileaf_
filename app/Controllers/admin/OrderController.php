@@ -39,9 +39,6 @@ class OrderController extends BaseController
 
         $orderDetails = $this->db->query($orderqry)->getResultArray();
 
-        echo "<prE>";
-        print_r($orderDetails);
-        die;
         echo json_encode($orderDetails);
     }
 

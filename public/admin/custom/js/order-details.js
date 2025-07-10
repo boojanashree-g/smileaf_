@@ -93,7 +93,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (data) {
         res_DATA = data;
-        console.log(res_DATA);     
+        console.log(res_DATA);
         dispOrderDetails(res_DATA);
       },
       error: function () {
@@ -124,48 +124,91 @@ $(document).ready(function () {
           mDataProp: "username",
         },
         {
-          mDataProp: "order_date",
+          mDataProp: "orderdate",
         },
 
         {
-          mDataProp: function (data, type, full, meta) {
+          data: "order_id",
+          render: function (data, type, full, meta) {
             return (
-              '<a  order-id = "' +
-              data.order_id +
+              '<a order-id="' +
+              data +
               '" id="' +
               meta.row +
-              '" class="btn orderDetails text-info fs-14 lh-1"> <i class="fe fe-eye" data-bs-effect="effect-scale" data-bs-toggle="modal"></i> View</a>'
+              '" class="orderDetailsView">' +
+              '</span><span class="bg-label-success">View Order</span>' +
+              "</a>"
             );
           },
         },
 
         {
-          mDataProp: "status",
-          render: (data, type, row, meta) => {
-            const isActive = data == 1;
-            return `
-      <a 
-        id="${row.menu_id}" 
-        class="badge bg-label-${isActive ? "success" : "danger"} btnStatus"  
-        data-id="${row.menu_id}" 
-        data-status="${data}">
-        ${isActive ? "Active" : "Inactive"}
-      </a>`;
+          mDataProp: function (data, type, full, meta) {
+            var status = data.payment_status;
+
+            var backgroundclr = "";
+            if (status == "PENDING") {
+              backgroundclr = "bg-label-warning";
+            } else if (status == "COMPLETED") {
+              backgroundclr = "bg-label-success";
+            } else if (status == "FAILED" || status == "CANCELLED") {
+              backgroundclr = "bg-label-danger";
+            } else if (status == "REFUNDED") {
+              backgroundclr = "bg-label-info";
+            }
+
+            return (
+              '<a order-id="' +
+              data.order_id +
+              '" id="' +
+              meta.row +
+              '" class="orderDetailsView">' +
+              '<span class="badge ' +
+              backgroundclr +
+              '">' +
+              status +
+              "</span> " +
+              "</a>"
+            );
           },
         },
 
-          {
-          mDataProp: "status",
-          render: (data, type, row, meta) => {
-            const isActive = data == 1;
-            return `
-      <a 
-        id="${row.menu_id}" 
-        class="badge bg-label-${isActive ? "success" : "danger"} btnStatus"  
-        data-id="${row.menu_id}" 
-        data-status="${data}">
-        ${isActive ? "Active" : "Inactive"}
-      </a>`;
+        {
+          mDataProp: function (data, type, full, meta) {
+            var status = data.delivery_status;
+
+            var backgroundclr = "";
+            if (status == "Order Pending") {
+              backgroundclr = "bg-label-warning";
+            } else if (status == "New") {
+              backgroundclr = "bg-label-warning";
+            } else if (status == "Pending") {
+              backgroundclr = "bg-label-success";
+            } else if (status == "Shipped") {
+              backgroundclr = "bg-label-success";
+            } else if (status == "Delivered") {
+              backgroundclr = "bg-label-success";
+            } else if (status == "Refund Created") {
+              backgroundclr = "bg-label-info";
+            } else if (status == "Refund Processed") {
+              backgroundclr = "bg-label-warning";
+            } else if (status == "Cancelled" || status == "Refund Failed") {
+              backgroundclr = "bg-label-danger";
+            }
+
+            return (
+              '<a order-id="' +
+              data.order_id +
+              '" id="' +
+              meta.row +
+              '" class="orderDetailsView">' +
+              '<span class="badge ' +
+              backgroundclr +
+              '">' +
+              status +
+              "</span> " +
+              "</a>"
+            );
           },
         },
 
@@ -184,6 +227,10 @@ $(document).ready(function () {
       ],
     });
   }
+
+  $(document).on("click", ".orderDetailsView", function () {
+    $("#vieworder-modal").modal("show");
+  });
 
   // *************************** [Edit Status] *************************************************************************
   let statusId = null;
