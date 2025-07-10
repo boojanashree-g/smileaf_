@@ -1,13 +1,11 @@
+var mode;
 $(document).ready(function () {
   let currentStage = "send";
   let otpSentAt = null;
   let resendEnabled = false;
-  let mode = "new";
   var token = null;
-  var add_id = "";
-  var stateID;
-  var distID;
-  var distName;
+
+  var add_id = null;
   var deleteAddr = "";
 
   const targetSection = localStorage.getItem("goToSection");
@@ -252,43 +250,6 @@ $(document).ready(function () {
     }
   });
 
-  $("#state_id").change(function () {
-    let state_id = $(this).val();
-    var token = localStorage.getItem("token");
-    if (mode == "new") {
-      $.ajax({
-        type: "POST",
-        url: base_Url + "getdist-data",
-        data: { state_id: state_id },
-        headers: { Authorization: "Bearer " + token },
-        dataType: "json",
-        success: function (res) {
-          let distDta = "<option value=''>Select District</option>";
-          for (let i = 0; i < res["response"].length; i++) {
-            distDta += `<option value="${res["response"][i]["dist_id"]}">${res["response"][i]["dist_name"]}</option>`;
-          }
-          $("#dist_id").html(distDta);
-        },
-      });
-    } else if (mode == "edit") {
-      $.ajax({
-        type: "POST",
-        url: base_Url + "getdist-data",
-        data: { state_id: state_id },
-        headers: { Authorization: "Bearer " + token },
-        dataType: "json",
-        success: function (res) {
-          let distDta = "";
-          distDta = `<option value='${distID}'>${distName}</option>`;
-          for (let i = 0; i < res["response"].length; i++) {
-            distDta += `<option value="${res["response"][i]["dist_id"]}">${res["response"][i]["dist_name"]}</option>`;
-          }
-          $("#dist_id").html(distDta);
-        },
-      });
-    }
-  });
-
   function checkoutAddAddress() {
     var form = $("#checkoutAddressForm")[0];
     var data = new FormData(form);
@@ -338,6 +299,48 @@ $(document).ready(function () {
 
   $(".add-address-btn").click(function () {
     $("#personalDetaila").show();
+    mode = "new";
+  });
+  console.log(mode);
+  $("#state_id").change(function () {
+    let state_id = $(this).val();
+    console.log(mode);
+    alert(mode);
+    console.log(state_id);
+
+    var token = localStorage.getItem("token");
+    if (mode == "new") {
+      $.ajax({
+        type: "POST",
+        url: base_Url + "getdist-data",
+        data: { state_id: state_id },
+        headers: { Authorization: "Bearer " + token },
+        dataType: "json",
+        success: function (res) {
+          let distDta = "<option value=''>Select District</option>";
+          for (let i = 0; i < res["response"].length; i++) {
+            distDta += `<option value="${res["response"][i]["dist_id"]}">${res["response"][i]["dist_name"]}</option>`;
+          }
+          $("#dist_id").html(distDta);
+        },
+      });
+    } else if (mode == "edit") {
+      $.ajax({
+        type: "POST",
+        url: base_Url + "getdist-data",
+        data: { state_id: state_id },
+        headers: { Authorization: "Bearer " + token },
+        dataType: "json",
+        success: function (res) {
+          let distDta = "";
+          distDta = `<option value='${distID}'>${distName}</option>`;
+          for (let i = 0; i < res["response"].length; i++) {
+            distDta += `<option value="${res["response"][i]["dist_id"]}">${res["response"][i]["dist_name"]}</option>`;
+          }
+          $("#dist_id").html(distDta);
+        },
+      });
+    }
   });
   // *************************** [4. Address Delete] *************************************************************************
   token = localStorage.getItem("token");
@@ -423,9 +426,10 @@ $("#close-address").click(function () {
 
 // Edit Address
 $("#addressForm").on("click", ".address-edit", function () {
+  mode = "edit";
+
   let addID = $(this).data("addid");
   $("#personalDetaila").show();
-  mode = "edit";
   $(".address-title").html("Edit Address");
 
   token = localStorage.getItem("token");
@@ -441,7 +445,6 @@ $("#addressForm").on("click", ".address-edit", function () {
         showToast(JSONdata.message, "error");
       } else if (JSONdata.code == 200) {
         editViewAddress(JSONdata.address);
-        console.log(JSONdata.address);
       }
     },
     error: function (error) {
@@ -469,14 +472,19 @@ $("#addressForm").on("click", ".address-edit", function () {
   }, 100);
 });
 
+var stateID = null;
+var distID = null;
+var distName = null;
+
 function editViewAddress(address) {
   mode = "edit";
-
   stateID = address.state_id;
   distID = address.dist_id;
   distName = address.dist_name;
-
+  console.log(stateID);
+  console.log(mode);
   $("#state_id").val(stateID).trigger("change");
+
   $("#address").val(address.address);
   $("#landmark").val(address.landmark);
   $("#city").val(address.city);
