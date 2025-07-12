@@ -95,35 +95,12 @@ class RazorpayController extends BaseController
 
     public function Success()
     {
-        $successData = [
-            'orderid' => session()->get('orderid'),
-            'paymentid' => session()->get('paymentid'),
-            'status' => session()->get('status'),
-        ];
-
-
-        return view('success', $successData);
-
+        return view('success');
     }
 
     public function paymentfail()
     {
-        $request = service('request');
-        $data = $request->getGet();
-
-        $order_id = $request->getGet('order_id');
-        $razerpay_order_id = $request->getGet('razorpay_order_id');
-        $payment_id = $request->getGet('payment_id');
-        $reason = $request->getGet('reason');
-        $code = $request->getGet('code');
-        $description = $request->getGet('description');
-        $payment_status = "FAILED";
-        $order_status = "Failed";
-
-        $updateOrderQry = "UPDATE `tbl_orders` SET  razerpay_payment_id = ? , razerpay_order_id =? , `payment_status` = ? , `payment_cancel_reason` =? ,`order_status` = ? WHERE order_id = ?";
-        $updateData = $this->db->query($updateOrderQry, [$payment_id, $razerpay_order_id, $payment_status, $reason, $order_status, $order_id]);
-
-        return view('failed', ['reason' => $reason, 'payment_id' => $payment_id]);
+        return view('failed');
 
     }
 
@@ -156,7 +133,6 @@ class RazorpayController extends BaseController
             return view('cancel', ['cancel_reason' => 'Could not update cancellation status.']);
         }
     }
-
 
     public function paymentstatus()
     {
@@ -304,6 +280,60 @@ class RazorpayController extends BaseController
             $orderQry = "UPDATE tbl_orders SET razerpay_payment_id = ?,razerpay_order_id = ?,razerpay_signature = ?,order_status = ? ,
 						 delivery_message = ?,delivery_status = ?,payment_status = ? WHERE order_id = ?";
             $updateData = $this->db->query($orderQry, [$razorpay_payment_id, $razorpay_order_id, $razorpay_signature, $Orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $orderID]);
+        }
+
+    }
+
+    public function webhookPaymentStatus()
+    {
+
+        $payload = file_get_contents("php://input");
+        $signature = $_SERVER['HTTP_X_RAZORPAY_SIGNATURE'] ?? '';
+        $webhookSecret = getenv('RAZORPAY_WEBHOOK_SECRET_TEST');
+
+        echo "<pre>";
+        print_r($webhookSecret);
+        die;
+
+        // Verify signature
+        $expectedSignature = hash_hmac('sha256', $payload, $webhookSecret);
+        if (!hash_equals($expectedSignature, $signature)) {
+            return $this->response->setStatusCode(403)->setJSON(['message' => 'Invalid signature']);
+        }
+
+        $data = json_decode($payload, true);
+        $event = $data['event'];
+        $payment = $data['payload']['payment']['entity'];
+
+        $razorpay_payment_id = $payment['id'];
+        $razorpay_order_id = $payment['order_id'];
+        $payment_status = $payment['status'];
+
+        // Fetch order_id from notes
+        $orderID = $payment['notes']['order_id'] ?? null;
+
+
+
+        if (!$orderID) {
+            return $this->fail('Order ID missing in notes');
+        }
+
+        // Status handling
+        if ($payment_status === 'captured') {
+            // Update order to success
+            $this->db->query("UPDATE tbl_orders SET payment_status = 'COMPLETED', order_status = 'New', delivery_status = 'New', razorpay_payment_id = ?, razorpay_order_id = ?, payment_method = ? WHERE order_id = ?", [
+                $razorpay_payment_id,
+                $razorpay_order_id,
+                $payment['method'],
+                $orderID
+            ]);
+        } elseif ($payment_status === 'failed') {
+            // Update order to failed
+            $this->db->query("UPDATE tbl_orders SET payment_status = 'FAILED', order_status = 'Failed', razorpay_payment_id = ?, razorpay_order_id = ? WHERE order_id = ?", [
+                $razorpay_payment_id,
+                $razorpay_order_id,
+                $orderID
+            ]);
         }
 
     }

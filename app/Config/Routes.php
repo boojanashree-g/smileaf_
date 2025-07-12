@@ -42,9 +42,9 @@ $routes->post('delete-address', 'MyaccountController::deleteAddress', ['filter' 
 $routes->post('update-defaultaddress', 'MyaccountController::updateDefaultAddress', ['filter' => 'AuthFilter']);
 $routes->post('update-cancel-reason', 'MyaccountController::updateCancelReason', ['filter' => 'AuthFilter']);
 
-$routes->post('place-order', 'checkoutController::placeOrder', ['filter' => 'AuthFilter']);
-$routes->get('checkout', 'checkoutController::checkout');
-$routes->post('get-single-address', 'checkoutController::getSingleAddress');
+$routes->post('place-order', 'CheckoutController::placeOrder', ['filter' => 'AuthFilter']);
+$routes->get('checkout', 'CheckoutController::checkout');
+$routes->post('get-single-address', 'CheckoutController::getSingleAddress');
 
 
 // Checkout userdetails
@@ -63,6 +63,7 @@ $routes->post('insert-buynow', 'CartController::insertBuynow');
 // RazorpayController checkout controller
 $routes->get('payment', 'RazorpayController::payment', ['filter' => 'PaymentAuth']);
 $routes->post('payment-status', 'RazorpayController::paymentstatus');
+$routes->post('webhook-payment-status', 'RazorpayController::webhookPaymentStatus');
 $routes->get('payment-cancelled', 'RazorpayController::paymentcancel');
 $routes->get('payment-failed', 'RazorpayController::paymentfail');
 $routes->get('success', 'RazorpayController::Success');
@@ -186,4 +187,6 @@ $routes->group('admin/order-details', ['namespace' => 'App\Controllers\admin', '
     $routes->post('update-trackingdetails', 'OrderController::updateTrackingDetails');
     $routes->post('get-trackingdetails', 'OrderController::getTrackingDetails');
     $routes->post('delete-data', 'OrderController::deleteData');
+    $routes->post('update-orderstatus', 'OrderController::updateOrderStatus');
+
 });

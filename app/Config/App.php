@@ -26,9 +26,10 @@ class App extends BaseConfig
         // Dynamically set the base URL
         $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === "on") ? "https" : "http";
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        $scriptName = dirname($_SERVER['SCRIPT_NAME']);
+        $subfolder = '/smileaf';
+        // $scriptName = dirname($_SERVER['SCRIPT_NAME']);
 
-        $this->baseURL = $protocol . '://' . $host . $scriptName . '/';
+        $this->baseURL = $protocol . '://' . $host . $subfolder . '/';
     }
 
 

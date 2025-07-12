@@ -158,8 +158,6 @@ class CartController extends BaseController
             }
         }
 
-
-
         $newCartData = [
             'user_id' => $user_id,
             'prod_id' => $prod_id,

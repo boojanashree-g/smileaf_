@@ -157,7 +157,7 @@ class CodeIgniter
     /**
      * Context
      *  web:     Invoked by HTTP request
-     *  php-cli: Invoked by CLI via `php public/index.php`
+     *  php-cli: Invoked by CLI via `php index.php`
      *
      * @phpstan-var 'php-cli'|'web'
      */
@@ -343,7 +343,7 @@ class CodeIgniter
         if ($this->context === null) {
             throw new LogicException(
                 'Context must be set before run() is called. If you are upgrading from 4.1.x, '
-                . 'you need to merge `public/index.php` and `spark` file from `vendor/codeigniter4/framework`.'
+                . 'you need to merge `index.php` and `spark` file from `vendor/codeigniter4/framework`.'
             );
         }
 
@@ -924,7 +924,7 @@ class CodeIgniter
      * CI4 supports three types of requests:
      *  1. Web: URI segments become parameters, sent to Controllers via Routes,
      *      output controlled by Headers to browser
-     *  2. PHP CLI: accessed by CLI via php public/index.php, arguments become URI segments,
+     *  2. PHP CLI: accessed by CLI via php index.php, arguments become URI segments,
      *      sent to Controllers via Routes, output varies
      *
      * @param Controller $class

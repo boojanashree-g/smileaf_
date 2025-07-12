@@ -61,6 +61,9 @@ function insertBuynowData(sourceType) {
     },
     dataType: "json",
     success: function (result) {
+      console.log(result);
+       console.log(base_Url);
+       console.log(base_Url + "checkout?type=" + source_type);return;
       if (result.code == 200) {
         window.location.href = base_Url + "checkout?type=" + source_type;
       } else {

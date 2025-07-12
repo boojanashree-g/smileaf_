@@ -11,8 +11,7 @@ require("components/head.php");
                 <div class="message-box _success mb-0">
                     <i class="fa fa-check-circle" aria-hidden="true"></i>
                     <h2> Your payment was <?php echo $status ?> </h2>
-                    <p><strong>Order id :</strong> <?php echo $orderid ?></p>
-                    <p><strong>Payment id :</strong> <?php echo $paymentid ?></p>
+
                     <div class="confirm_order">
                         <a href="<?php echo base_url() ?>myaccount" type="button"
                             class="continue_shoppingBtn pay_btn prev-step me-4">

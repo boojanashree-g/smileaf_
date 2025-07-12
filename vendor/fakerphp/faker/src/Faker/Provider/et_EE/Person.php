@@ -6,7 +6,7 @@ class Person extends \Faker\Provider\Person
 {
     /**
      * @see https://news.err.ee/114745/most-popular-baby-names-of-2014
-     * @see https://www.stat.ee/public/apps/nimed/TOP
+     * @see https://www.stat.ee/apps/nimed/TOP
      */
     protected static $firstNameMale = [
         'Andrei', 'Aleksei', 'Andres', 'Alexander', 'Aivar', 'Aleksander', 'Artur', 'Andrus', 'Ants', 'Artjom', 'Anatoli', 'Anton', 'Arvo', 'Aare', 'Ain', 'Aleksandr',
@@ -32,7 +32,7 @@ class Person extends \Faker\Provider\Person
 
     /**
      * @see https://news.err.ee/114745/most-popular-baby-names-of-2014
-     * @see https://www.stat.ee/public/apps/nimed/TOP
+     * @see https://www.stat.ee/apps/nimed/TOP
      */
     protected static $firstNameFemale = [
         'Aino', 'Aleksandra', 'Alisa', 'Anastasia', 'Anna', 'Anne', 'Anneli', 'Anu', 'Arina', 'Annika', 'Anastassia', 'Alla', 'Aili', 'Alina', 'Aime', 'Antonina',
@@ -58,7 +58,7 @@ class Person extends \Faker\Provider\Person
 
     /**
      * @see https://en.wikipedia.org/wiki/Category:Estonian-language_surnames
-     * @see https://www.stat.ee/public/apps/nimed/pere/TOP
+     * @see https://www.stat.ee/apps/nimed/pere/TOP
      */
     protected static $lastName = [
         'Aleksejev', 'Andrejev', 'Allik', 'Aas', 'Aleksandrov', 'Aare', 'Aarma', 'Aas', 'Aasmäe', 'Aav', 'Aavik', 'Allik', 'Alver', 'Andrejeva', 'Aleksejeva', 'Aleksandrova', 'Allik', 'Aas',
