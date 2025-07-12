@@ -96,7 +96,6 @@ $(document).ready(function () {
 
             var capitalizedStatus =
               status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
-
             return (
               '<span class="' +
               backgroundclr +
@@ -105,6 +104,8 @@ $(document).ready(function () {
               "</span>" +
               ' <a href="javascript:void(0);" class="editStatusIcon" order-id="' +
               orderId +
+              '" orderStatus="' +
+              status +
               '" title="Edit Status">' +
               '<span class="' +
               backgroundclr +
@@ -238,6 +239,99 @@ $(document).ready(function () {
       },
     });
   });
+
+  // *************************** [Edit Order Status] *************************************************************************
+  let orderStatusID;
+  let updatedOrderStatus;
+
+  $(document).on("click", ".editStatusIcon", function () {
+    orderStatusID = $(this).attr("order-id");
+    $("#order-status").modal("show");
+  });
+
+  $("#confirmCancelBtn").click(function () {
+    $("#cancel-modal1").modal("hide");
+    $("#reason-modal").modal("show");
+  });
+
+  $("#submitCancelReason").click(function () {
+    let cancelReason = $("#cancelReason").val();
+
+    if (cancelReason === "") {
+      alert("Please Enter Cancel Reason");
+      return;
+    } else {
+      updateOrderStatus(updatedOrderStatus, orderStatusID, cancelReason);
+    }
+  });
+
+  $("#update-status").click(function () {
+    $(".updated_order_status").empty();
+    updatedOrderStatus = $("#updated_order_status").val();
+
+    if (updatedOrderStatus === "") {
+      alert("Please Select Order Status");
+      return;
+    } else if (updatedOrderStatus === "Cancelled") {
+      $("#order-status").modal("hide");
+      $("#cancel-modal1").modal("show");
+      $("#reason-modal").modal("hide");
+    } else {
+      updateOrderStatus(updatedOrderStatus, orderStatusID);
+    }
+  });
+
+  function updateOrderStatus(
+    updatedOrderStatus,
+    orderStatusID,
+    cancelReason = ""
+  ) {
+    $.ajax({
+      type: "POST",
+      url: base_Url + "admin/order-details/update-orderstatus",
+      data: {
+        order_id: orderStatusID,
+        status: updatedOrderStatus,
+        reason: cancelReason,
+      },
+      dataType: "json",
+
+      success: function (data) {
+        if (data.code == 200) {
+          Swal.fire({
+            title: "Request Success",
+            text: data.message,
+            icon: "success",
+          });
+
+          $("#order-status").modal("hide");
+          $("#reason-modal").modal("hide");
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        } else if (data.code == 400) {
+          Swal.fire({
+            title: "Request Failed",
+            text: data.message,
+            icon: "error",
+          });
+          $("#order-status").modal("hide");
+          $("#reason-modal").modal("hide");
+        }
+      },
+
+      error: function (xhr, status, error) {
+        Swal.fire({
+          title: "Request Failed",
+          text: "Something went wrong. Please try again later.",
+          icon: "error",
+        });
+        $("#order-status").modal("hide");
+        $("#reason-modal").modal("hide");
+        console.error("AJAX Error:", status, error);
+      },
+    });
+  }
 
   // *************************** [Display Order Details] *************************************************************************
   function displayorderView(orderDetails) {

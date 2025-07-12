@@ -212,6 +212,110 @@
                         <!-- /Modal -->
 
 
+                        <!-- Order Status Update-->
+                        <div class="modal fade" id="order-status" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-simple">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                        <div class="text-center mb-6">
+                                            <h4 class="menu-title mb-2">Order Status</h4>
+                                        </div>
+                                        <form id="menu-form" class="row g-6" onsubmit="return false">
+                                            <div class="col-12 col-md-12">
+                                                <label class="form-label" for="updated_order_status">Order
+                                                    Status</label>
+                                                <?php
+
+                                                $excludedStatuses = ['Initiated', 'New', 'Pending', 'Failed'];
+
+
+                                                $order_status_filtered = array_values(array_diff($order_status_enum, $excludedStatuses));
+                                                ?>
+
+
+                                                <select class="form-select" name="updated_order_status"
+                                                    id="updated_order_status">
+                                                    <option value="">Select Status</option>
+                                                    <?php foreach ($order_status_filtered as $status): ?>
+                                                        <option value="<?= esc($status) ?>"><?= esc($status) ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+
+                                                <span class="error text-danger updated_order_status mt-5"></span>
+                                            </div>
+
+                                            <div class="col-12 text-end">
+                                                <a class="btn btn-primary text-white" id="update-status">Update
+                                                    Status</a>
+
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                       
+
+
+
+                        <!-- Cancel order Modal -->
+                        <!-- First Modal: Confirm Cancel -->
+                        <div class="modal fade" id="cancel-modal1" tabindex="-1"
+                            aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Confirm Cancel Order</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to cancel? <strong id="deleteAddressName"></strong>
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <!-- Trigger inner modal -->
+                                        <button type="button" class="btn btn-danger btndelete"
+                                            id="confirmCancelBtn">Yes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Second Modal: Reason for Cancel -->
+                        <div class="modal fade" id="reason-modal" tabindex="-1" aria-labelledby="reasonModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Cancel Reason</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <textarea class="form-control" id="cancelReason" rows="4"
+                                            placeholder="Enter reason for cancellation..."></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-danger"
+                                            id="submitCancelReason">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
                     </div>
                 </div>
 

@@ -47,7 +47,6 @@
         "modal": {
             "ondismiss": function () {
 
-
                 var cancelOrderID = "<?= esc($order['id']) ?>";
 
                 var error_data = {
@@ -61,62 +60,14 @@
             }
         },
         "handler": function (response) {
-
             var loader = document.querySelector(".loader");
-                loader.style.display = "flex";
-                loader.style.position = "fixed";
-                loader.style.top = "0";
-                loader.style.left = "0";
-
-
-            var payment_data = {
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_signature: response.razorpay_signature,
-                order_id: "<?= esc($order['id']) ?>"
-            };
-
-            // Send a POST request to your server
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "<?= base_url() ?>payment-status", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    try {
-                        var res = JSON.parse(xhr.responseText);
-
-                        if (res.code === 200 && res.status === 'success') {
-                            window.location.href = "<?= base_url('success') ?>";
-                        } else {
-                            document.querySelector(".loader").style.display = "none";
-                            alert("Payment verification failed. Please contact support.");
-                            console.error("Error: ", res.message);
-                        }
-                    } catch (e) {
-                        document.querySelector(".loader").style.display = "none";
-                        alert("Invalid response from server.");
-                        console.error("Invalid JSON response:", xhr.responseText);
-                    }
-                } else {
-                    document.querySelector(".loader").style.display = "none";
-                    alert("Server error. Try again.");
-                    console.error("HTTP Error: ", xhr.status, xhr.statusText);
-                }
-            };
-
-
-            xhr.onerror = function () {
-                document.querySelector(".loader").style.display = "none";
-                alert("Payment request failed. Check your internet connection.");
-                console.error("Request failed. Status: ", xhr.status);
-            };
-
-
-            var data = new URLSearchParams(payment_data).toString();
-            xhr.send(data);
-
+            loader.style.display = "flex";
+            loader.style.position = "fixed";
+            loader.style.top = "0";
+            loader.style.left = "0";
+            window.location.href = "<?= base_url('success') ?>";
         }
+
     };
 
     var rzp1 = new Razorpay(options);

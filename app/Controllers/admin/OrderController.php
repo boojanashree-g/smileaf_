@@ -19,7 +19,19 @@ class OrderController extends BaseController
     {
         $orderStatus = $this->request->getGet('status');
         $res['order_status'] = $orderStatus;
+        $res['order_status_enum'] = $this->getOrderStatusEnumValues();
+
         return view("admin/order_details", $res);
+    }
+
+    private function getOrderStatusEnumValues()
+    {
+        $query = $this->db->query("SHOW COLUMNS FROM tbl_orders LIKE 'order_status'");
+        $row = $query->getRow();
+        preg_match("/^enum\(\'(.*)\'\)$/", $row->Type, $matches);
+        $enum = explode("','", $matches[1]);
+        return $enum;
+
     }
 
     public function getData()
@@ -46,7 +58,7 @@ class OrderController extends BaseController
         }
 
         $orderDetails = $this->db->query($orderqry, $params)->getResultArray();
-         
+
         echo json_encode($orderDetails);
     }
 
@@ -259,5 +271,123 @@ class OrderController extends BaseController
 
         }
     }
+
+    public function updateOrderStatus()
+    {
+        $data = $this->request->getPost();
+
+        $orderID = $this->request->getPost('order_id');
+        $newStatus = $this->request->getPost('status');
+        $cancelReason = $this->request->getPost('reason');
+        $cancelStatus = 0;
+        if (!empty($cancelReason)) {
+            $cancelStatus = 1;
+        }
+
+
+        $order = $this->db->query("SELECT order_status FROM `tbl_orders` WHERE `order_id` =  ?", [$orderID])->getRow();
+
+        if (!$order) {
+            return $this->response->setJSON(['code' => 400, 'status' => false, 'message' => 'Order not found']);
+        }
+
+        $currentStatus = $order->order_status;
+
+
+        $validStatusFlow = [
+            'New' => ['Shipped', 'Cancelled'],
+            'Shipped' => ['Delivered', 'Cancelled'],
+            'Delivered' => [],
+            'Cancelled' => ['Refund'],
+            'Refund' => [],
+        ];
+
+        if (!isset($validStatusFlow[$currentStatus])) {
+            return $this->response->setJSON(['code' => 400, 'status' => false, 'message' => 'Invalid current status']);
+        }
+
+        if (!in_array($newStatus, $validStatusFlow[$currentStatus])) {
+            return $this->response->setJSON([
+                'code' => 400,
+                'status' => false,
+                'message' => "Invalid status change: $currentStatus → $newStatus"
+            ]);
+        }
+
+
+        // Initialize fields
+        $shipped_date = null;
+        $delivered_date = null;
+        $delivery_status = null;
+        $delivery_message = null;
+        $currentDate = date("Y-m-d H:i:s");
+
+        switch ($newStatus) {
+            case 'Shipped':
+                $shipped_date = $currentDate;
+                $delivery_status = 'Shipped';
+                $delivery_message = 'Your order has been shipped and is on its way.';
+                break;
+
+            case 'Delivered':
+                $delivered_date = $currentDate;
+                $delivery_status = 'Delivered';
+                $delivery_message = 'Your order has been delivered.';
+                break;
+
+            case 'Cancelled':
+                $delivery_status = 'Cancelled';
+                $delivery_message = 'Your order has been cancelled.';
+                break;
+
+            case 'Refund':
+                $delivery_status = 'Refund Created';
+                $delivery_message = 'The refund has been created and will be processed shortly.';
+                break;
+        }
+
+
+
+        $updateOrderQry = "
+            UPDATE tbl_orders 
+            SET 
+                `order_status` = ?, 
+                `shipped_date` = ?, 
+                `delivery_date` = ?, 
+                `delivery_status` = ?, 
+                `delivery_message` = ?,
+                `cancel_reason` = ? ,
+                `cancel_status` = ? 
+            WHERE 
+                `flag` = 1 AND `order_id` = ?
+        ";
+
+        $this->db->query($updateOrderQry, [
+            $newStatus,
+            $shipped_date,
+            $delivered_date,
+            $delivery_status,
+            $delivery_message,
+            $cancelReason,
+            $cancelStatus,
+            $orderID
+        ]);
+
+
+        $affectedRows = $this->db->affectedRows();
+        if ($affectedRows) {
+            $result['code'] = 200;
+            $result['status'] = 'success';
+            $result['message'] = 'Status Updated Successfully';
+        } else {
+            $result['code'] = 400;
+            $result['status'] = 'Failure';
+            $result['message'] = 'Something wrong';
+
+        }
+
+        return $this->response->setJSON($result);
+    }
+
 
 }

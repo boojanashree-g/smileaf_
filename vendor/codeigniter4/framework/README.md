@@ -20,7 +20,7 @@ The user guide corresponding to the latest version of the framework can be found
 for better security and separation of components.
 
 This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
+not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *...*, as the rest of your logic and the
 framework are exposed.
 
 **Please** read the user guide for a better explanation of how CI4 works!
