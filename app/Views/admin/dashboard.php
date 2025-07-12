@@ -32,104 +32,141 @@
 
                             <!-- Cards Draggable -->
                             <div class="row mb-6" id="sortable-cards">
+
                                 <div class="col-lg-3 col-md-6 col-sm-12">
-                                    <div class="card drag-item cursor-move mb-lg-0 mb-6">
-                                        <div class="card-body text-center">
-                                            <h2>
-                                                <i class="ti ti-shopping-cart text-success display-6"></i>
-                                            </h2>
-                                            <h4>Monthly Sales</h4>
-                                            <h5>2362</h5>
+                                    <a href="<?= base_url('admin/order-details?status=New') ?>"
+                                        class="text-decoration-none">
+                                        <div class="card drag-item cursor-move mb-lg-0 mb-6">
+                                            <div class="card-body text-center">
+                                                <h2>
+                                                    <i class="ti ti-shopping-cart text-success display-6"></i>
+                                                </h2>
+                                                <h4 class="text-dark">New Orders</h4>
+                                                <h5 class="text-dark"><?= $neworder_count ?></h5>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </a>
+                                </div>
+
+                                <div class="col-lg-3 col-md-6 col-sm-12">
+                                    <a href="<?= base_url('admin/order-details?status=Shipped') ?>"
+                                        class="text-decoration-none">
+                                        <div class="card drag-item cursor-move mb-lg-0 mb-6">
+                                            <div class="card-body text-center">
+                                                <h2>
+                                                    <i class="ti ti-package text-info display-6"></i>
+                                                </h2>
+                                                <h4>Shipping Orders</h4>
+                                                <h5><?= $shipping_count ?></h5>
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
                                 <div class="col-lg-3 col-md-6 col-sm-12">
-                                    <div class="card drag-item cursor-move mb-lg-0 mb-6">
-                                        <div class="card-body text-center">
-                                            <h2>
-                                                <i class="ti ti-world text-info display-6"></i>
-                                            </h2>
-                                            <h4>Monthly Visits</h4>
-                                            <h5>687,123</h5>
+                                    <a href="<?= base_url('admin/order-details?status=Delivered') ?>"
+                                        class="text-decoration-none">
+                                        <div class="card drag-item cursor-move mb-lg-0 mb-6">
+                                            <div class="card-body text-center">
+                                                <h2>
+                                                    <i class="ti ti-truck-delivery text-success display-6"></i>
+
+                                                </h2>
+                                                <h4>Delivered Orders</h4>
+                                                <h5><?= $delivered_count ?></h5>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
                                 <div class="col-lg-3 col-md-6 col-sm-12">
-                                    <div class="card drag-item cursor-move mb-lg-0 mb-6">
-                                        <div class="card-body text-center">
-                                            <h2>
-                                                <i class="ti ti-gift text-danger display-6"></i>
-                                            </h2>
-                                            <h4>Products</h4>
-                                            <h5>985</h5>
+                                    <a href="<?= base_url('admin/order-details?status=Pending') ?>"
+                                        class="text-decoration-none">
+                                        <div class="card drag-item cursor-move mb-lg-0 mb-6">
+                                            <div class="card-body text-center">
+                                                <h2>
+                                                    <i class="ti ti-clock text-warning display-6"></i>
+
+                                                </h2>
+                                                <h4>Pending Orders</h4>
+                                                <h5><?= $pending_count ?></h5>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-6 col-sm-12">
-                                    <div class="card drag-item cursor-move mb-lg-0 mb-6">
-                                        <div class="card-body text-center">
-                                            <h2>
-                                                <i class="ti ti-user text-primary display-6"></i>
-                                            </h2>
-                                            <h4>Users</h4>
-                                            <h5>105,652</h5>
-                                        </div>
-                                    </div>
+                                    </a>
                                 </div>
                             </div>
-                            <!-- /Cards Draggable ends -->
 
+                            <div class="row mb-6" id="sortable-cards">
+
+
+                                <div class="col-lg-3 col-md-6 col-sm-12">
+                                    <a href="<?= base_url('admin/order-details?status=Cancelled') ?>"
+                                        class="text-decoration-none">
+                                        <div class="card drag-item cursor-move mb-lg-0 mb-6">
+                                            <div class="card-body text-center">
+                                                <h2>
+                                                    <i class="ti ti-box-off text-danger display-6"></i>
+
+                                                </h2>
+                                                <h4>Cancel Orders</h4>
+                                                <h5><?= $cancel_count ?></h5>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-lg-3 col-md-6 col-sm-12">
+                                    <a href="<?= base_url('admin/order-details?status=Refund') ?>"
+                                        class="text-decoration-none">
+                                        <div class="card drag-item cursor-move mb-lg-0 mb-6">
+                                            <div class="card-body text-center">
+                                                <h2>
+                                                    <i class="ti ti-rotate-clockwise-2 text-primary display-6"></i>
+
+                                                </h2>
+                                                <h4>Refund Orders</h4>
+                                                <h5><?= $refund_count ?></h5>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="col-lg-3 col-md-6 col-sm-12">
+                                    <a href="<?= base_url('admin/order-details?status=Failed') ?>"
+                                        class="text-decoration-none">
+                                        <div class="card drag-item cursor-move mb-lg-0 mb-6">
+                                            <div class="card-body text-center">
+                                                <h2>
+                                                    <i class="ti ti-credit-card-off text-danger display-6"></i>
+
+                                                </h2>
+                                                <h4>Payment Failed Orders</h4>
+                                                <h5><?= $failed_count ?></h5>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
+                        <!-- /Cards Draggable ends -->
+
                     </div>
-                    <!-- / Content -->
-
-                    <!-- Footer -->
-                    <footer class="content-footer footer bg-footer-theme">
-                        <div class="container-xxl">
-                            <div
-                                class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
-                                <div class="text-body">
-                                    ©
-                                    <script>
-                                        document.write(new Date().getFullYear())
-
-                                    </script>, made with ❤️ by <a href="https://pixinvent.com/" target="_blank"
-                                        class="footer-link">Pixinvent</a>
-                                </div>
-                                <div class="d-none d-lg-inline-block">
-
-                                    <a href="https://themeforest.net/licenses/standard" class="footer-link me-4"
-                                        target="_blank">License</a>
-                                    <a href="https://1.envato.market/pixinvent_portfolio" target="_blank"
-                                        class="footer-link me-4">More Themes</a>
-
-                                    <a href="https://demos.pixinvent.com/vuexy-html-admin-template/documentation/"
-                                        target="_blank" class="footer-link me-4">Documentation</a>
-
-
-                                    <a href="https://pixinvent.ticksy.com/" target="_blank"
-                                        class="footer-link d-none d-sm-inline-block">Support</a>
-
-                                </div>
-                            </div>
-                        </div>
-                    </footer>
-                    <!-- / Footer -->
-                    <div class="content-backdrop fade"></div>
                 </div>
-                <!-- Content wrapper -->
+                <!-- / Content -->
+
+
+                <div class="content-backdrop fade"></div>
             </div>
-            <!-- / Layout page -->
+            <!-- Content wrapper -->
         </div>
+        <!-- / Layout page -->
+    </div>
 
 
 
-        <!-- Overlay -->
-        <div class="layout-overlay layout-menu-toggle"></div>
+    <!-- Overlay -->
+    <div class="layout-overlay layout-menu-toggle"></div>
 
 
-        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
-        <div class="drag-target"></div>
+    <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+    <div class="drag-target"></div>
 
     </div>
     <!-- / Layout wrapper -->

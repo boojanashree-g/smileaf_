@@ -76,6 +76,14 @@ class AdminController extends BaseController
     public function dashboard()
     {
         $res['meta_title'] = "Dashboard";
+        $res['neworder_count'] = $this->newOrderCount();
+        $res['shipping_count'] = $this->shippingOrderCount();
+        $res['delivered_count'] = $this->deliverOrderCount();
+        $res['pending_count'] = $this->pendingOrderCount();
+        $res['cancel_count'] = $this->cancelOrderCount();
+        $res['refund_count'] = $this->refundOrderCount();
+        $res['failed_count'] = $this->failedOrderCount();
+
         return view("admin/dashboard", $res);
     }
 
@@ -86,9 +94,56 @@ class AdminController extends BaseController
         return redirect()->to('admin/');
     }
 
+    private function newOrderCount()
+    {
+        $orderStatus = "new";
+        $resultData = $this->db->query("SELECT COUNT(`order_id`) AS neworder FROM `tbl_orders` WHERE `flag` = 1 AND `order_status` = ?", [$orderStatus])->getRow();
+        $newOrderCount = $resultData->neworder;
+        return $newOrderCount;
+    }
+    private function shippingOrderCount()
+    {
+        $orderStatus = "Shipped";
+        $resultData = $this->db->query("SELECT COUNT(`order_id`) AS Shipped FROM `tbl_orders` WHERE `flag` = 1 AND `order_status` = ?", [$orderStatus])->getRow();
+        $shippedOrderCount = $resultData->Shipped;
+        return $shippedOrderCount;
+    }
+    private function deliverOrderCount()
+    {
+        $orderStatus = "Delivered";
+        $resultData = $this->db->query("SELECT COUNT(`order_id`) AS Delivered FROM `tbl_orders` WHERE `flag` = 1 AND `order_status` = ?", [$orderStatus])->getRow();
+        $DeliveredOrderCount = $resultData->Delivered;
+        return $DeliveredOrderCount;
+    }
 
-
-
+    private function pendingOrderCount()
+    {
+        $orderStatus = "Pending";
+        $resultData = $this->db->query("SELECT COUNT(`order_id`) AS Pending  FROM `tbl_orders` WHERE `flag` = 1 AND `order_status` = ?", [$orderStatus])->getRow();
+        $PendingOrderCount = $resultData->Pending;
+        return $PendingOrderCount;
+    }
+    private function cancelOrderCount()
+    {
+        $orderStatus = "Cancelled";
+        $resultData = $this->db->query("SELECT COUNT(`order_id`) AS Cancelled  FROM `tbl_orders` WHERE `flag` = 1 AND `order_status` = ?", [$orderStatus])->getRow();
+        $CancelledOrderCount = $resultData->Cancelled;
+        return $CancelledOrderCount;
+    }
+    private function refundOrderCount()
+    {
+        $orderStatus = "Refund";
+        $resultData = $this->db->query("SELECT COUNT(`order_id`) AS Refund   FROM `tbl_orders` WHERE `flag` = 1 AND `order_status` = ?", [$orderStatus])->getRow();
+        $RefundOrderCount = $resultData->Refund;
+        return $RefundOrderCount;
+    }
+    private function failedOrderCount()
+    {
+        $orderStatus = "Failed";
+        $resultData = $this->db->query("SELECT COUNT(`order_id`) AS Failed   FROM `tbl_orders` WHERE `flag` = 1 AND `order_status` = ?", [$orderStatus])->getRow();
+        $FailedOrderCount = $resultData->Failed;
+        return $FailedOrderCount;
+    }
 }
 
 

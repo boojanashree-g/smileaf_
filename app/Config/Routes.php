@@ -182,8 +182,8 @@ $routes->group('admin/customer-details', ['namespace' => 'App\Controllers\admin'
 $routes->group('admin/order-details', ['namespace' => 'App\Controllers\admin', 'filter' => 'adminAuth'], function ($routes) {
     $routes->get('/', 'OrderController::orderDetails');
     $routes->post('get-data', 'OrderController::getData');
-
-    $routes->post('insert-data', 'CustomerController::insertData');
-    $routes->post('update-data', 'CustomerController::updateData');
-    $routes->post('delete-data', 'CustomerController::deleteData');
+    $routes->post('get-orderview', 'OrderController::getOrderView');
+    $routes->post('update-trackingdetails', 'OrderController::updateTrackingDetails');
+    $routes->post('get-trackingdetails', 'OrderController::getTrackingDetails');
+    $routes->post('delete-data', 'OrderController::deleteData');
 });
