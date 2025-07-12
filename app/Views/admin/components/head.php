@@ -9,18 +9,6 @@
 
     <!-- Canonical SEO -->
 
-
-    <!-- ? PROD Only: Google Tag Manager (Default ThemeSelection: GTM-5DDHKGP, PixInvent: GTM-5J3LMKC) -->
-    <!-- <script>(function (w, d, s, l, i) {
-            w[l] = w[l] || []; w[l].push({
-                'gtm.start':
-                    new Date().getTime(), event: 'gtm.js'
-            }); var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-                    '../../../../www.googletagmanager.com/gtm5445.html?id=' + i + dl; f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-5J3LMKC');</script> -->
-    <!-- End Google Tag Manager -->
-
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="<?php echo base_url() ?>public/assets/img/favicon.png" />
 

@@ -18,7 +18,7 @@ $(document).ready(function () {
           if (resultData.code === 200) {
             let details = resultData.orderdetails;
             let orderStatus = details.order_status;
-        
+
             const statusMap = {
               New: "Order Placed",
               Shipped: "Shipped",

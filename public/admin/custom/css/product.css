@@ -108,3 +108,22 @@
   color: #666;
   cursor: not-allowed;
 }
+
+.order-header {
+  color: #13417a;
+  font-size: 16px;
+  font-weight: bolder;
+}
+.order-view-modal {
+  padding: 1rem !important;
+}
+
+.custom-option.checked{
+ border:  1px solid #6d6b7745 !important;
+}
+
+.form-check-input:checked {
+    background-color: #13417a !important;
+    border-color: #13417a !important;
+    box-shadow: 0 2px 6px 0 rgba(115, 103, 240, 0.3);
+}
