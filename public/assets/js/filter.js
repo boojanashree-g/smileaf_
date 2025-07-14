@@ -36,7 +36,7 @@ $(document).ready(function () {
 
     // AJAX request
     $.ajax({
-      url: window.location.href,
+      url: base_Url + '/products',
       method: "GET",
       data: {
         type_id: typeIds,
@@ -53,7 +53,7 @@ $(document).ready(function () {
         console.log("AJAX Success", response.products);
         console.log(
           "Products count:",
-          response.products ? response.products.length : 0
+          response.products ? response.products.length : 0 
         );
 
         if (
@@ -141,7 +141,7 @@ $(document).ready(function () {
     products.forEach(function (product) {
       const prodIdEncoded = btoa(product.prod_id); // encoding product ID like PHP
       const productUrl = `${base_Url}product-details/${prodIdEncoded}`;
-      const stockStatus = product.stock_status || 1;
+      const stockStatus = product.available_status ;
       const offerPrice = parseFloat(product.lowest_offer_price || 0);
       const mrp = parseFloat(product.lowest_mrp || 0);
 
@@ -192,8 +192,8 @@ $(document).ready(function () {
                       stockStatus == 0
                         ? `
                         <a href="${productUrl}" class="theme-btn-1 btn quick_btn">
-                            <i class="fas fa-shopping-cart text-danger"></i>
-                            <span class="text-danger">Contact us to order</span>
+                            <i class="fab fa-whatsapp text-success me-2"></i>
+                            <span class="text-success">Contact us to order</span>
                         </a>`
                         : `
                         <a href="${productUrl}" class="theme-btn-1 btn quick_btn">
@@ -220,7 +220,7 @@ $(document).ready(function () {
       const img = product.main_image || "default-image.jpg";
       const price = product.lowest_mrp || "0";
       const offer = product.lowest_offer_price || null;
-      const outOfStock = parseInt(product.lowest_quantity) === 0;
+      const outOfStock = product.available_status;
       const showOffer = offer && offer !== price;
       const description =
         product.description ||
