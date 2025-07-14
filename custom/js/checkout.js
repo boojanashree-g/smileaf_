@@ -201,7 +201,10 @@ $(document).ready(function () {
           showToast(JSONdata.message, "error");
         } else if (JSONdata.code == 200) {
           showToast(JSONdata.message, "success");
-          $('#place-order').prop('disabled', false).addClass('enable').removeClass('disable');
+          $("#place-order")
+            .prop("disabled", false)
+            .addClass("enable")
+            .removeClass("disable");
           $("#loginSection").addClass("inactive-section");
           const $deliverySection = $("#deliverySection");
           $deliverySection.removeClass("inactive-section");
@@ -215,19 +218,17 @@ $(document).ready(function () {
 
           // Show address form
           toggleAddressForm();
-            $(".user-form-section").addClass("d-none");
-            $(".user-display-section")
-              .removeClass("d-none")
-              .html(`
+          $(".user-form-section").addClass("d-none");
+          $(".user-display-section").removeClass("d-none").html(`
                 <span class="logged_in me-5">
                   <i class="fas fa-check-circle me-2"></i>Username - ${username}
                 </span>
                 <span class="logged_in">
                   <i class="fas fa-check-circle me-2"></i>Email - ${email}
                 </span>
-              `);        
-          }
-        },
+              `);
+        }
+      },
       error: function (error) {
         let status = error.status;
         if (status === 401) {
@@ -239,7 +240,6 @@ $(document).ready(function () {
       },
     });
   }
-
 
   function toggleAddressForm() {
     $("#addressForm").addClass("active");
@@ -517,13 +517,13 @@ function validateCheckout() {
   }
 
   //2 - User Details
-  const username = $("#username").val().trim();
-  const email = $("#email").val().trim();
+  // const username = $("#username").val().trim();
+  // const email = $("#email").val().trim();
 
-  if (username == "" || email == "") {
-    showToast("Please Fill UserDetails", "error");
-    return false;
-  }
+  // if (username == "" || email == "") {
+  //   showToast("Please Fill UserDetails", "error");
+  //   return false;
+  // }
 
   // 3 - Address Details
   const addressElem = $(".default_address:checked");

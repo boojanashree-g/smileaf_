@@ -115,15 +115,21 @@ class RazorpayController extends BaseController
         $orderStatus = "Cancelled ";
         $paymentStatus = "CANCELLED";
 
+        $deliveryStatus = "Cancel Modal";
+        $deliveryConfig = new \Config\DeliveryMessages();
+        $deliveryMsg = $deliveryConfig->messages[$deliveryStatus] ?? 'No message available';
+
         $updateOrderQry = "
         UPDATE `tbl_orders` 
         SET `payment_status` = ?, 
-            `payment_cancel_reason` = ?, 
+            `payment_cancel_reason` = ?,
+             `delivery_message` = ?,
+             `delivery_status` = ?, 
             `updated_at` = NOW(),
             `order_status` = ?
         WHERE `order_id` = ?
     ";
-        $updateOrder = $this->db->query($updateOrderQry, [$paymentStatus, $reason, $orderStatus, $orderId]);
+        $updateOrder = $this->db->query($updateOrderQry, [$paymentStatus, $reason, $deliveryMsg, $deliveryStatus, $orderStatus, $orderId]);
 
         $affectedRows = $this->db->affectedRows();
 
@@ -134,166 +140,14 @@ class RazorpayController extends BaseController
         }
     }
 
-    public function paymentstatus()
-    {
-        $data = $this->request->getPost();
-
-        $razorpay_payment_id = $this->request->getPost('razorpay_payment_id');
-        $razorpay_order_id = $this->request->getPost('razorpay_order_id');
-        $razorpay_signature = $this->request->getPost('razorpay_signature');
-
-
-        $secret = $_ENV['RAZORPAY_KEY_SECRET'];
-        $api = new Api($_ENV['RAZORPAY_KEY_ID'], $secret);
-
-        $data = $razorpay_order_id . "|" . $razorpay_payment_id;
-
-
-        $generated_signature = hash_hmac("sha256", $data, $secret);
-        // to get payment method
-        $payment = $api->payment->fetch($razorpay_payment_id);
-
-        $razerpay_paystatus = $payment->status;
-
-        if ($razerpay_paystatus == "captured") {
-            if ($generated_signature == $razorpay_signature) {
-                $payment_method = $payment->method;
-
-
-                $orderDetails = $this->fetchOrderDetails($razorpay_order_id, $secret);
-
-                $userID = $orderDetails['notes']['user_id'];
-                $orderID = $orderDetails['notes']['order_id'];
-                $username = $orderDetails['notes']['username'];
-                $type = $orderDetails['notes']['type'];
-
-                $sess = [
-                    'user_id' => $userID,
-                    'username' => $username,
-                    'loginStatus' => "YES",
-                    'otp_verify' => "YES"
-                ];
-                $this->session->set($sess);
-
-
-                // Delete Products from cart 
-                $getCartqry = "SELECT * FROM `tbl_user_cart` WHERE `user_id` =  ? AND flag = 1 AND  source_type = ?";
-                $cartData = $this->db->query($getCartqry, [$userID, $type])->getResultArray();
-
-
-
-                foreach ($cartData as $cartItem) {
-                    $prodID = $cartItem['prod_id'];
-                    $cartID = $cartItem['cart_id'];
-                    $dltcart = "DELETE FROM tbl_user_cart WHERE cart_id = ? AND prod_id = ?";
-                    $dltRes = $this->db->query($dltcart, [$cartID, $prodID]);
-                }
-
-
-                $itemList = $this->db->query("SELECT * FROM `tbl_order_item` WHERE `order_id` = ? AND `flag` = 1", [$orderID])->getResultArray();
-                foreach ($itemList as $items) {
-                    $prodID = $items['prod_id'];
-                    $variantID = $items['variant_id'];
-                    $checkoutQty = $items['quantity'];
-
-                    // Main Product Table 
-                    $mainProdQry = "SELECT `main_quantity` FROM `tbl_products` WHERE `flag` = 1 AND `prod_id` = ?";
-                    $mainProd = $this->db->query($mainProdQry, [$prodID])->getRow();
-
-                    $oldMainQty = $mainProd ? $mainProd->main_quantity : 0;
-
-
-                    // Variant Table 
-                    $variantQry = "SELECT `quantity` FROM `tbl_variants` WHERE `flag` = 1 AND `variant_id` = ? AND `prod_id` = ?";
-                    $variant = $this->db->query($variantQry, [$variantID, $prodID])->getRow();
-
-                    $oldVariantQty = $variant ? $variant->quantity : 0;
-                    $newVariantQty = $oldVariantQty - $checkoutQty;
-
-
-                    $newMainQty = $oldMainQty - $checkoutQty;
-
-                    // Prevent negative values
-                    $newVariantQty = ($newVariantQty <= 0) ? 0 : $newVariantQty;
-                    $newMainQty = ($newMainQty < 0) ? 0 : $newMainQty;
-                    $newVariantStatus = ($newVariantQty <= 0) ? '0' : '1';
-
-
-                    $this->db->query("UPDATE `tbl_variants` SET `quantity` = ?, `stock_status` =?  WHERE `variant_id` = ? AND `prod_id` = ?", [
-                        $newVariantQty,
-                        $newVariantStatus,
-                        $variantID,
-                        $prodID
-                    ]);
-
-
-                    $this->db->query("UPDATE `tbl_products` SET `main_quantity` = ? WHERE `prod_id` = ?", [
-                        $newMainQty,
-                        $prodID
-                    ]);
-                }
-
-                // Updating Order Status
-                $deliveryStatus = 'New';
-                $deliveryConfig = new \Config\DeliveryMessages();
-                $deliveryMsg = $deliveryConfig->messages[$deliveryStatus] ?? 'No message available';
-                $payment_status = "COMPLETED";
-                $orderstatus = "New";
-
-
-                $orderQry = "UPDATE tbl_orders SET razerpay_payment_id = ?,razerpay_order_id = ?,razerpay_signature = ?,order_status = ? ,delivery_message = ?,delivery_status = ?,payment_status = ?,payment_method = ? WHERE order_id = ?";
-                $updateData = $this->db->query($orderQry, [$razorpay_payment_id, $razorpay_order_id, $razorpay_signature, $orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $payment_method, $orderID]);
-
-                $OrderaffectedRows = $this->db->affectedRows();
-
-                if ($OrderaffectedRows == 1) {
-                    $successData = [
-                        'orderid' => $razorpay_order_id,
-                        'paymentid' => $razorpay_payment_id,
-                        'status' => "Completed",
-                    ];
-                    session()->set($successData);
-
-                    $result['code'] = 200;
-                    $result['status'] = 'success';
-                    $result['message'] = "Orders updated successfully";
-
-                    return $this->response->setJSON($result);
-                } else {
-                    echo "error";
-                }
-            }
-
-
-        } else if ($razerpay_paystatus == "pending") {
-
-            $Orderstatus = 'Pending';
-            $razorpay_signature = "NULL";
-
-            // Updating razerpay order id ,payment id ,paymentstatus 
-            $orderID = session()->get('order_id');
-            $deliveryStatus = "Order Pending";
-            $deliveryConfig = new \Config\DeliveryMessages();
-            $deliveryMsg = $deliveryConfig->messages[$deliveryStatus] ?? 'No message available';
-
-            $payment_status = 'PENDING';
-            $orderQry = "UPDATE tbl_orders SET razerpay_payment_id = ?,razerpay_order_id = ?,razerpay_signature = ?,order_status = ? ,
-						 delivery_message = ?,delivery_status = ?,payment_status = ? WHERE order_id = ?";
-            $updateData = $this->db->query($orderQry, [$razorpay_payment_id, $razorpay_order_id, $razorpay_signature, $Orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $orderID]);
-        }
-
-    }
-
     public function webhookPaymentStatus()
     {
 
         $payload = file_get_contents("php://input");
+
         $signature = $_SERVER['HTTP_X_RAZORPAY_SIGNATURE'] ?? '';
         $webhookSecret = getenv('RAZORPAY_WEBHOOK_SECRET_TEST');
 
-        echo "<pre>";
-        print_r($webhookSecret);
-        die;
 
         // Verify signature
         $expectedSignature = hash_hmac('sha256', $payload, $webhookSecret);
@@ -302,60 +156,318 @@ class RazorpayController extends BaseController
         }
 
         $data = json_decode($payload, true);
+
         $event = $data['event'];
+
         $payment = $data['payload']['payment']['entity'];
+
+        // For Filure
+        $reason = $payment['error_reason'] ?? '';
+        $code = $payment['error_code'] ?? '';
+        $description = $payment['error_description'] ?? '';
 
         $razorpay_payment_id = $payment['id'];
         $razorpay_order_id = $payment['order_id'];
         $payment_status = $payment['status'];
 
-        // Fetch order_id from notes
-        $orderID = $payment['notes']['order_id'] ?? null;
+        $orderid = $payment['notes']['order_id'] ?? null;
+        $notes = $payment['notes'];
 
-
-
-        if (!$orderID) {
-            return $this->fail('Order ID missing in notes');
+        if (!$orderid) {
+            return $this->response->setStatusCode(400)->setJSON(['message' => 'Order ID missing in notes']);
         }
+        if ($event === 'payment.captured') {
 
-        // Status handling
-        if ($payment_status === 'captured') {
-            // Update order to success
-            $this->db->query("UPDATE tbl_orders SET payment_status = 'COMPLETED', order_status = 'New', delivery_status = 'New', razorpay_payment_id = ?, razorpay_order_id = ?, payment_method = ? WHERE order_id = ?", [
-                $razorpay_payment_id,
-                $razorpay_order_id,
-                $payment['method'],
-                $orderID
-            ]);
-        } elseif ($payment_status === 'failed') {
-            // Update order to failed
-            $this->db->query("UPDATE tbl_orders SET payment_status = 'FAILED', order_status = 'Failed', razorpay_payment_id = ?, razorpay_order_id = ? WHERE order_id = ?", [
-                $razorpay_payment_id,
-                $razorpay_order_id,
-                $orderID
-            ]);
+            $payment_method = $payment['method'];
+
+            // User Details from Notes:
+            $userID = $notes['user_id'];
+            $orderID = $orderid;
+            $username = $notes['username'];
+            $type = $notes['type'];
+
+            $sess = [
+                'user_id' => $userID,
+                'username' => $username,
+                'loginStatus' => "YES",
+                'otp_verify' => "YES"
+            ];
+            $this->session->set($sess);
+
+            // Delete Products from cart 
+            $getCartqry = "SELECT * FROM `tbl_user_cart` WHERE `user_id` =  ? AND flag = 1 AND  source_type = ?";
+            $cartData = $this->db->query($getCartqry, [$userID, $type])->getResultArray();
+
+            foreach ($cartData as $cartItem) {
+                $prodID = $cartItem['prod_id'];
+                $cartID = $cartItem['cart_id'];
+                $dltcart = "DELETE FROM tbl_user_cart WHERE cart_id = ? AND prod_id = ?";
+                $dltRes = $this->db->query($dltcart, [$cartID, $prodID]);
+            }
+
+            $itemList = $this->db->query("SELECT * FROM `tbl_order_item` WHERE `order_id` = ? AND `flag` = 1", [$orderID])->getResultArray();
+
+            foreach ($itemList as $items) {
+                $prodID = $items['prod_id'];
+                $variantID = $items['variant_id'];
+                $checkoutQty = $items['quantity'];
+
+                // Main Product Table 
+                $mainProdQry = "SELECT `main_quantity` FROM `tbl_products` WHERE `flag` = 1 AND `prod_id` = ?";
+                $mainProd = $this->db->query($mainProdQry, [$prodID])->getRow();
+
+                $oldMainQty = $mainProd ? $mainProd->main_quantity : 0;
+
+
+                // Variant Table 
+                $variantQry = "SELECT `quantity` FROM `tbl_variants` WHERE `flag` = 1 AND `variant_id` = ? AND `prod_id` = ?";
+                $variant = $this->db->query($variantQry, [$variantID, $prodID])->getRow();
+
+                $oldVariantQty = $variant ? $variant->quantity : 0;
+                $newVariantQty = $oldVariantQty - $checkoutQty;
+
+
+                $newMainQty = $oldMainQty - $checkoutQty;
+
+                // Prevent negative values
+                $newVariantQty = ($newVariantQty <= 0) ? 0 : $newVariantQty;
+                $newMainQty = ($newMainQty < 0) ? 0 : $newMainQty;
+                $newVariantStatus = ($newVariantQty <= 0) ? '0' : '1';
+
+
+                $this->db->query("UPDATE `tbl_variants` SET `quantity` = ?, `stock_status` =?  WHERE `variant_id` = ? AND `prod_id` = ?", [
+                    $newVariantQty,
+                    $newVariantStatus,
+                    $variantID,
+                    $prodID
+                ]);
+
+
+                $this->db->query("UPDATE `tbl_products` SET `main_quantity` = ? WHERE `prod_id` = ?", [
+                    $newMainQty,
+                    $prodID
+                ]);
+            }
+
+
+            // Updating Order Status
+            $deliveryStatus = 'New';
+            $deliveryConfig = new \Config\DeliveryMessages();
+            $deliveryMsg = $deliveryConfig->messages[$deliveryStatus] ?? 'No message available';
+            $payment_status = "COMPLETED";
+            $orderstatus = "New";
+
+
+            $orderQry = "UPDATE tbl_orders SET razerpay_payment_id = ?,razerpay_order_id = ?,razerpay_signature = ?,order_status = ? ,delivery_message = ?,delivery_status = ?,payment_status = ?,payment_method = ? WHERE order_id = ?";
+            $updateData = $this->db->query($orderQry, [$razorpay_payment_id, $razorpay_order_id, $signature, $orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $payment_method, $orderID]);
+
+            $OrderaffectedRows = $this->db->affectedRows();
+
+            if ($OrderaffectedRows == 1) {
+                $result['code'] = 200;
+                $result['status'] = 'success';
+                $result['message'] = "Orders updated successfully";
+            } else {
+                $result['code'] = 400;
+                $result['status'] = 'failure';
+                $result['message'] = "Orders updated failed";
+            }
+
+            echo json_encode($result);
+        } elseif ($event === 'payment.failed') {
+            $payment_status = "FAILED";
+            $order_status = "Failed";
+
+            $deliveryStatus = "Null";
+            $deliveryConfig = new \Config\DeliveryMessages();
+            $deliveryMsg = $deliveryConfig->messages[$deliveryStatus] ?? 'No message available';
+
+            $updateOrderQry = "UPDATE `tbl_orders` SET  razerpay_payment_id = ? , razerpay_order_id =? , razerpay_signature = ? ,delivery_message = ?,delivery_status = ? ,`payment_status` = ? , `payment_cancel_reason` =? ,`order_status` = ? WHERE order_id = ?";
+            $updateData = $this->db->query($updateOrderQry, [$razorpay_payment_id, $razorpay_order_id, $signature, $deliveryMsg, $deliveryStatus, $payment_status, $reason, $order_status, $orderid]);
+            return $this->response->setStatusCode(400)->setJSON(['message' => $reason]);
+
+        } elseif ($event === 'payment.authorized') {
+            $Orderstatus = 'Pending';
+
+            $deliveryStatus = "Order Pending";
+            $deliveryConfig = new \Config\DeliveryMessages();
+            $deliveryMsg = $deliveryConfig->messages[$deliveryStatus] ?? 'No message available';
+
+            $payment_status = 'PENDING';
+            $orderQry = "UPDATE tbl_orders SET razerpay_payment_id = ?,razerpay_order_id = ?,razerpay_signature = ?,order_status = ? ,
+						 delivery_message = ?,delivery_status = ?,payment_status = ? WHERE order_id = ?";
+            $updateData = $this->db->query($orderQry, [$razorpay_payment_id, $razorpay_order_id, $signature, $Orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $orderid]);
         }
-
     }
 
-    public function fetchOrderDetails($razorpay_order_id, $secret)
-    {
-        $key_id = $_ENV['RAZORPAY_KEY_ID'];
+    // Handling Payment status from Frontend
+    // public function paymentstatus()
+    // {
+    //     $data = $this->request->getPost();
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://api.razorpay.com/v1/orders/' . $razorpay_order_id);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-        curl_setopt($ch, CURLOPT_USERPWD, $key_id . ':' . $secret);
+    //     $razorpay_payment_id = $this->request->getPost('razorpay_payment_id');
+    //     $razorpay_order_id = $this->request->getPost('razorpay_order_id');
+    //     $razorpay_signature = $this->request->getPost('razorpay_signature');
 
-        $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            echo 'Error:' . curl_error($ch);
-        }
-        curl_close($ch);
 
-        return json_decode($result, true);
-    }
+    //     $secret = $_ENV['RAZORPAY_KEY_SECRET'];
+    //     $api = new Api($_ENV['RAZORPAY_KEY_ID'], $secret);
+
+    //     $data = $razorpay_order_id . "|" . $razorpay_payment_id;
+
+
+    //     $generated_signature = hash_hmac("sha256", $data, $secret);
+    //     // to get payment method
+    //     $payment = $api->payment->fetch($razorpay_payment_id);
+
+    //     $razerpay_paystatus = $payment->status;
+
+    //     if ($razerpay_paystatus == "captured") {
+    //         if ($generated_signature == $razorpay_signature) {
+    //             $payment_method = $payment->method;
+
+
+    //             $orderDetails = $this->fetchOrderDetails($razorpay_order_id, $secret);
+
+    //             $userID = $orderDetails['notes']['user_id'];
+    //             $orderID = $orderDetails['notes']['order_id'];
+    //             $username = $orderDetails['notes']['username'];
+    //             $type = $orderDetails['notes']['type'];
+
+    //             $sess = [
+    //                 'user_id' => $userID,
+    //                 'username' => $username,
+    //                 'loginStatus' => "YES",
+    //                 'otp_verify' => "YES"
+    //             ];
+    //             $this->session->set($sess);
+
+
+    //             // Delete Products from cart 
+    //             $getCartqry = "SELECT * FROM `tbl_user_cart` WHERE `user_id` =  ? AND flag = 1 AND  source_type = ?";
+    //             $cartData = $this->db->query($getCartqry, [$userID, $type])->getResultArray();
+
+
+
+    //             foreach ($cartData as $cartItem) {
+    //                 $prodID = $cartItem['prod_id'];
+    //                 $cartID = $cartItem['cart_id'];
+    //                 $dltcart = "DELETE FROM tbl_user_cart WHERE cart_id = ? AND prod_id = ?";
+    //                 $dltRes = $this->db->query($dltcart, [$cartID, $prodID]);
+    //             }
+
+
+    //             $itemList = $this->db->query("SELECT * FROM `tbl_order_item` WHERE `order_id` = ? AND `flag` = 1", [$orderID])->getResultArray();
+    //             foreach ($itemList as $items) {
+    //                 $prodID = $items['prod_id'];
+    //                 $variantID = $items['variant_id'];
+    //                 $checkoutQty = $items['quantity'];
+
+    //                 // Main Product Table 
+    //                 $mainProdQry = "SELECT `main_quantity` FROM `tbl_products` WHERE `flag` = 1 AND `prod_id` = ?";
+    //                 $mainProd = $this->db->query($mainProdQry, [$prodID])->getRow();
+
+    //                 $oldMainQty = $mainProd ? $mainProd->main_quantity : 0;
+
+
+    //                 // Variant Table 
+    //                 $variantQry = "SELECT `quantity` FROM `tbl_variants` WHERE `flag` = 1 AND `variant_id` = ? AND `prod_id` = ?";
+    //                 $variant = $this->db->query($variantQry, [$variantID, $prodID])->getRow();
+
+    //                 $oldVariantQty = $variant ? $variant->quantity : 0;
+    //                 $newVariantQty = $oldVariantQty - $checkoutQty;
+
+
+    //                 $newMainQty = $oldMainQty - $checkoutQty;
+
+    //                 // Prevent negative values
+    //                 $newVariantQty = ($newVariantQty <= 0) ? 0 : $newVariantQty;
+    //                 $newMainQty = ($newMainQty < 0) ? 0 : $newMainQty;
+    //                 $newVariantStatus = ($newVariantQty <= 0) ? '0' : '1';
+
+
+    //                 $this->db->query("UPDATE `tbl_variants` SET `quantity` = ?, `stock_status` =?  WHERE `variant_id` = ? AND `prod_id` = ?", [
+    //                     $newVariantQty,
+    //                     $newVariantStatus,
+    //                     $variantID,
+    //                     $prodID
+    //                 ]);
+
+
+    //                 $this->db->query("UPDATE `tbl_products` SET `main_quantity` = ? WHERE `prod_id` = ?", [
+    //                     $newMainQty,
+    //                     $prodID
+    //                 ]);
+    //             }
+
+    //             // Updating Order Status
+    //             $deliveryStatus = 'New';
+    //             $deliveryConfig = new \Config\DeliveryMessages();
+    //             $deliveryMsg = $deliveryConfig->messages[$deliveryStatus] ?? 'No message available';
+    //             $payment_status = "COMPLETED";
+    //             $orderstatus = "New";
+
+
+    //             $orderQry = "UPDATE tbl_orders SET razerpay_payment_id = ?,razerpay_order_id = ?,razerpay_signature = ?,order_status = ? ,delivery_message = ?,delivery_status = ?,payment_status = ?,payment_method = ? WHERE order_id = ?";
+    //             $updateData = $this->db->query($orderQry, [$razorpay_payment_id, $razorpay_order_id, $razorpay_signature, $orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $payment_method, $orderID]);
+
+    //             $OrderaffectedRows = $this->db->affectedRows();
+
+    //             if ($OrderaffectedRows == 1) {
+    //                 $successData = [
+    //                     'orderid' => $razorpay_order_id,
+    //                     'paymentid' => $razorpay_payment_id,
+    //                     'status' => "Completed",
+    //                 ];
+    //                 session()->set($successData);
+
+    //                 $result['code'] = 200;
+    //                 $result['status'] = 'success';
+    //                 $result['message'] = "Orders updated successfully";
+
+    //                 return $this->response->setJSON($result);
+    //             } else {
+    //                 echo "error";
+    //             }
+    //         }
+
+
+    //     } else if ($razerpay_paystatus == "pending") {
+
+    //         $Orderstatus = 'Pending';
+    //         $razorpay_signature = "NULL";
+
+    //         // Updating razerpay order id ,payment id ,paymentstatus 
+    //         $orderID = session()->get('order_id');
+    //         $deliveryStatus = "Order Pending";
+    //         $deliveryConfig = new \Config\DeliveryMessages();
+    //         $deliveryMsg = $deliveryConfig->messages[$deliveryStatus] ?? 'No message available';
+
+    //         $payment_status = 'PENDING';
+    //         $orderQry = "UPDATE tbl_orders SET razerpay_payment_id = ?,razerpay_order_id = ?,razerpay_signature = ?,order_status = ? ,
+    // 					 delivery_message = ?,delivery_status = ?,payment_status = ? WHERE order_id = ?";
+    //         $updateData = $this->db->query($orderQry, [$razorpay_payment_id, $razorpay_order_id, $razorpay_signature, $Orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $orderID]);
+    //     }
+
+    // }
+    // public function fetchOrderDetails($razorpay_order_id, $secret)
+    // {
+    //     $key_id = $_ENV['RAZORPAY_KEY_ID'];
+
+    //     $ch = curl_init();
+    //     curl_setopt($ch, CURLOPT_URL, 'https://api.razorpay.com/v1/orders/' . $razorpay_order_id);
+    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    //     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+    //     curl_setopt($ch, CURLOPT_USERPWD, $key_id . ':' . $secret);
+
+    //     $result = curl_exec($ch);
+    //     if (curl_errno($ch)) {
+    //         echo 'Error:' . curl_error($ch);
+    //     }
+    //     curl_close($ch);
+
+    //     return json_decode($result, true);
+    // }
 
 
 

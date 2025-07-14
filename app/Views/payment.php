@@ -56,7 +56,7 @@
 
                 };
                 var error_query = new URLSearchParams(error_data).toString();
-                window.location.href = "<?= base_url('payment-cancelled') ?>?" + error_query;
+                window.location.replace("<?= base_url('payment-cancelled') ?>?" + error_query);
             }
         },
         "handler": function (response) {
@@ -65,7 +65,7 @@
             loader.style.position = "fixed";
             loader.style.top = "0";
             loader.style.left = "0";
-            window.location.href = "<?= base_url('success') ?>";
+            window.location.replace("<?= base_url('success') ?>");
         }
 
     };
@@ -88,7 +88,7 @@
         };
 
         var error_query = new URLSearchParams(error_data).toString();
-        window.location.href = "<?= base_url('payment-failed') ?>?" + error_query;
+        window.location.replace("<?= base_url('payment-failed') ?>?" + error_query);
     });
 
 
@@ -98,7 +98,6 @@
     };
 
     document.getElementById('rzp-button1').click();
-
 
 
 </script>

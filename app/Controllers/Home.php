@@ -257,6 +257,9 @@ class Home extends BaseController
 
         $res['cart_product'] = $productDetails;
 
+        
+ 
+
 
         return view('cart', $res);
     }
@@ -371,6 +374,14 @@ class Home extends BaseController
                 ->get()->getResultArray();
 
 
+            usort($variantQuery, function ($a, $b) {
+                $a_in_stock = ($a['stock_status'] > 0 && $a['quantity'] > 0) ? 1 : 0;
+                $b_in_stock = ($b['stock_status'] > 0 && $b['quantity'] > 0) ? 1 : 0;
+
+                return $b_in_stock <=> $a_in_stock;
+
+            });
+
             // Fetch product images
             $imageQuery = $db->table('tbl_images')
                 ->select('image_path')
@@ -413,6 +424,23 @@ class Home extends BaseController
             $products[] = $product;
         }
 
+        $inStockProducts = [];
+        $outOfStockProducts = [];
+
+
+        foreach ($products as $prod) {
+            $mainQty = $prod['main_quantity'] ?? 0;
+            $available = $prod['available_status'] ?? 0;
+
+            if ($mainQty > 0 && $available == 1) {
+                $inStockProducts[] = $prod;
+            } else {
+                $outOfStockProducts[] = $prod;
+            }
+        }
+
+        $finalSortedProducts = array_merge($inStockProducts, $outOfStockProducts);
+
 
         // Return JSON for AJAX
         if ($isAjax) {
@@ -433,7 +461,7 @@ class Home extends BaseController
                 ['label' => 'Products']
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
-            'products' => $products,
+            'products' => $finalSortedProducts,
             'productTypes' => $productTypes ?? [],
             'productsize' => $productsize ?? [],
             'productShape' => $productShape ?? [],
@@ -696,32 +724,32 @@ class Home extends BaseController
         return view('productCategories', $data);
     }
 
- public function getSortProducts()
-{
-    $sort = $this->request->getGet('sort');
+    public function getSortProducts()
+    {
+        $sort = $this->request->getGet('sort');
 
-    $orderBy = "";
-    switch ($sort) {
-        case 'priceLowHigh':
-            $orderBy = "ORDER BY c.offer_price ASC";
-            break;
-        case 'priceHighLow':
-            $orderBy = "ORDER BY c.offer_price DESC";
-            break;
-        case 'new':
-            $orderBy = "ORDER BY a.created_at DESC";
-            break;
-        case 'popularity':
-            $orderBy = "ORDER BY a.best_seller DESC";
-            break;
-        default:
-            $orderBy = "ORDER BY a.prod_id DESC";
-            break;
-    }
+        $orderBy = "";
+        switch ($sort) {
+            case 'priceLowHigh':
+                $orderBy = "ORDER BY c.offer_price ASC";
+                break;
+            case 'priceHighLow':
+                $orderBy = "ORDER BY c.offer_price DESC";
+                break;
+            case 'new':
+                $orderBy = "ORDER BY a.created_at DESC";
+                break;
+            case 'popularity':
+                $orderBy = "ORDER BY a.best_seller DESC";
+                break;
+            default:
+                $orderBy = "ORDER BY a.prod_id DESC";
+                break;
+        }
 
-    $db = \Config\Database::connect();
+        $db = \Config\Database::connect();
 
-    $query = "
+        $query = "
         SELECT
             a.`prod_id`,
             a.`prod_name`,
@@ -740,57 +768,57 @@ class Home extends BaseController
         $orderBy
     ";
 
-    $rawProducts = $db->query($query)->getResultArray();
+        $rawProducts = $db->query($query)->getResultArray();
 
-    $products = [];
+        $products = [];
 
-    foreach ($rawProducts as $product) {
-        $prodId = $product['prod_id'];
+        foreach ($rawProducts as $product) {
+            $prodId = $product['prod_id'];
 
-        // Fetch variants
-        $variantQuery = $db->table('tbl_variants')
-            ->select('variant_id, pack_qty, mrp, offer_type, offer_details, offer_price, stock_status, quantity, weight')
-            ->where(['flag' => 1, 'prod_id' => $prodId])
-            ->get()->getResultArray();
+            // Fetch variants
+            $variantQuery = $db->table('tbl_variants')
+                ->select('variant_id, pack_qty, mrp, offer_type, offer_details, offer_price, stock_status, quantity, weight')
+                ->where(['flag' => 1, 'prod_id' => $prodId])
+                ->get()->getResultArray();
 
-        // Fetch images
-        $imageQuery = $db->table('tbl_images')
-            ->select('image_path')
-            ->where(['flag' => 1, 'prod_id' => $prodId])
-            ->get()->getResultArray();
+            // Fetch images
+            $imageQuery = $db->table('tbl_images')
+                ->select('image_path')
+                ->where(['flag' => 1, 'prod_id' => $prodId])
+                ->get()->getResultArray();
 
-        $product['variants'] = $variantQuery;
-        $product['product_images'] = array_column($imageQuery, 'image_path');
+            $product['variants'] = $variantQuery;
+            $product['product_images'] = array_column($imageQuery, 'image_path');
 
-        $totalVariant = count($variantQuery);
-        $lowestOffer = null;
-        $stockCount = 0;
+            $totalVariant = count($variantQuery);
+            $lowestOffer = null;
+            $stockCount = 0;
 
-        foreach ($variantQuery as $variant) {
-            if ($lowestOffer === null || $variant['offer_price'] < $lowestOffer['offer_price']) {
-                $lowestOffer = $variant;
+            foreach ($variantQuery as $variant) {
+                if ($lowestOffer === null || $variant['offer_price'] < $lowestOffer['offer_price']) {
+                    $lowestOffer = $variant;
+                }
+                if ($variant['stock_status'] <= 0 && $variant['quantity'] <= 0) {
+                    $stockCount += 1;
+                }
             }
-            if ($variant['stock_status'] <= 0 && $variant['quantity'] <= 0) {
-                $stockCount += 1;
-            }
+
+            $stockStatus = $stockCount < $totalVariant ? 1 : 0;
+
+            $product['lowest_mrp'] = $lowestOffer['mrp'] ?? null;
+            $product['lowest_offer_price'] = $lowestOffer['offer_price'] ?? null;
+            $product['lowest_quantity'] = $lowestOffer['quantity'] ?? null;
+            $product['available_status'] = $stockStatus;
+
+            $products[] = $product;
         }
 
-        $stockStatus = $stockCount < $totalVariant ? 1 : 0;
-
-        $product['lowest_mrp'] = $lowestOffer['mrp'] ?? null;
-        $product['lowest_offer_price'] = $lowestOffer['offer_price'] ?? null;
-        $product['lowest_quantity'] = $lowestOffer['quantity'] ?? null;
-        $product['available_status'] = $stockStatus;
-
-        $products[] = $product;
+        return $this->response->setJSON([
+            'success' => true,
+            'products' => ['data' => $products],
+            'count' => count($products),
+        ]);
     }
-
-    return $this->response->setJSON([
-        'success' => true,
-        'products' => ['data' => $products],
-        'count' => count($products),
-    ]);
-}
 
 
 }
