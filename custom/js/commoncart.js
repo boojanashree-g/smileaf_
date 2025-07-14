@@ -24,7 +24,7 @@ function insertCartData(sourceType) {
     success: function (result) {
       if (result.code == 200) {
         showToast(result.message, "success");
-
+        window.location.href = base_Url + "/cart";
         $("#quick_buy_modal").modal("hide");
         setTimeout(() => {
           window.location.reload();

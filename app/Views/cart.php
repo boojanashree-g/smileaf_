@@ -31,7 +31,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 15px 30px;
+    padding: 15px 30px; 0
     width: auto;
     max-width: max-content;
     margin: 0 !important;
@@ -214,10 +214,14 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <div class="btn-wrapper text-right text-end">
-                                <a href="<?php echo base_url('checkout') ?>?type=cart"
-                                    class="theme-btn-1 btn btn-effect-1 proceed_checkout">Proceed to checkout <i
-                                        class="fas fa-arrow-right"></i></a>
+                            <div class="btn-wrapper cart_action_div text-right text-end">
+                                <a href="<?php echo base_url('checkout') ?>?type=cart" class="proceed_checkout">Proceed to checkout 
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                                <a href="<?php echo base_url('products') ?>"
+                                    class="continue_shopping_btn" data-abc="true">
+                                    <i class="icon-left-arrow pe-2"></i>continue shopping
+                                </a>
                             </div>
                         </div>
                     </div>

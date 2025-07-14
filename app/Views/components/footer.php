@@ -1,4 +1,4 @@
-<footer class="ltn__footer-area  mt-5">
+<footer class="ltn__footer-area ">
     <div class="footer-top-area  section-bg-1">
         <div class="container-fluid">
             <div class="row justify-content-around">

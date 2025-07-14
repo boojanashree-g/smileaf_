@@ -696,4 +696,101 @@ class Home extends BaseController
         return view('productCategories', $data);
     }
 
+ public function getSortProducts()
+{
+    $sort = $this->request->getGet('sort');
+
+    $orderBy = "";
+    switch ($sort) {
+        case 'priceLowHigh':
+            $orderBy = "ORDER BY c.offer_price ASC";
+            break;
+        case 'priceHighLow':
+            $orderBy = "ORDER BY c.offer_price DESC";
+            break;
+        case 'new':
+            $orderBy = "ORDER BY a.created_at DESC";
+            break;
+        case 'popularity':
+            $orderBy = "ORDER BY a.best_seller DESC";
+            break;
+        default:
+            $orderBy = "ORDER BY a.prod_id DESC";
+            break;
+    }
+
+    $db = \Config\Database::connect();
+
+    $query = "
+        SELECT
+            a.`prod_id`,
+            a.`prod_name`,
+            a.`main_quantity`,
+            a.`main_image`,
+            a.`has_variant`,
+            a.`created_at`,
+            a.`best_seller`,
+            c.`variant_id`,
+            c.`mrp`,
+            c.`offer_price`
+        FROM `tbl_products` AS a
+        INNER JOIN `tbl_variants` AS c ON c.prod_id = a.prod_id
+        WHERE a.flag = 1 AND c.flag = 1
+        GROUP BY a.prod_id
+        $orderBy
+    ";
+
+    $rawProducts = $db->query($query)->getResultArray();
+
+    $products = [];
+
+    foreach ($rawProducts as $product) {
+        $prodId = $product['prod_id'];
+
+        // Fetch variants
+        $variantQuery = $db->table('tbl_variants')
+            ->select('variant_id, pack_qty, mrp, offer_type, offer_details, offer_price, stock_status, quantity, weight')
+            ->where(['flag' => 1, 'prod_id' => $prodId])
+            ->get()->getResultArray();
+
+        // Fetch images
+        $imageQuery = $db->table('tbl_images')
+            ->select('image_path')
+            ->where(['flag' => 1, 'prod_id' => $prodId])
+            ->get()->getResultArray();
+
+        $product['variants'] = $variantQuery;
+        $product['product_images'] = array_column($imageQuery, 'image_path');
+
+        $totalVariant = count($variantQuery);
+        $lowestOffer = null;
+        $stockCount = 0;
+
+        foreach ($variantQuery as $variant) {
+            if ($lowestOffer === null || $variant['offer_price'] < $lowestOffer['offer_price']) {
+                $lowestOffer = $variant;
+            }
+            if ($variant['stock_status'] <= 0 && $variant['quantity'] <= 0) {
+                $stockCount += 1;
+            }
+        }
+
+        $stockStatus = $stockCount < $totalVariant ? 1 : 0;
+
+        $product['lowest_mrp'] = $lowestOffer['mrp'] ?? null;
+        $product['lowest_offer_price'] = $lowestOffer['offer_price'] ?? null;
+        $product['lowest_quantity'] = $lowestOffer['quantity'] ?? null;
+        $product['available_status'] = $stockStatus;
+
+        $products[] = $product;
+    }
+
+    return $this->response->setJSON([
+        'success' => true,
+        'products' => ['data' => $products],
+        'count' => count($products),
+    ]);
+}
+
+
 }

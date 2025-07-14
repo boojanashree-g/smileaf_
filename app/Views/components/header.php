@@ -133,7 +133,7 @@
                                 <?php endif; ?>
 
                                 <li><a href="<?php echo base_url('contact') ?>">Contact</a></li>
-                                <li><a href="<?php echo base_url() ?>">Bulk Enquiry</a></li>
+                                <!-- <li><a href="<?php echo base_url() ?>">Bulk Enquiry</a></li> -->
                             </ul>
                         </div>
                     </nav>
