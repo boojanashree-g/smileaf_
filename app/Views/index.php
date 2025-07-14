@@ -173,7 +173,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="section-title-area ltn__section-title-2 text-center">
+                        <div class="section-title-area ltn__section-title-2 text-center m-0">
                             <h1 class="section-title">Clients Feedbacks<span>.</span></h1>
                         </div>
                     </div>

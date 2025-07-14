@@ -45,12 +45,12 @@
                                 </li>
                                 <li>
                                     <div class="short-by text-center">
-                                        <select class="nice-select">
-                                            <option>Default sorting</option>
-                                            <option>Sort by popularity</option>
-                                            <option>Sort by new arrivals</option>
-                                            <option>Sort by price: low to high</option>
-                                            <option>Sort by price: high to low</option>
+                                        <select id="sortSelect" class="nice-select">
+                                            <option value="default">Default sorting</option>
+                                            <option value="popularity">Sort by popularity</option>
+                                            <option value="new">Sort by new arrivals</option>
+                                            <option value="priceLowHigh">Sort by price: low to high</option>
+                                            <option value="priceHighLow">Sort by price: high to low</option>
                                         </select>
                                     </div>
                                 </li>
@@ -125,8 +125,8 @@
                                                                     data-prodid="<?= esc($product['prod_id']) ?>"
                                                                     data-menuid="<?= $product['menu_id'] ?>"
                                                                     data-submenuid=<?= $product['submenu_id'] ?>>
-                                                                    <i class="fas fa-shopping-cart text-danger"></i>
-                                                                    <span class="text-danger">Contact us to order</span>
+                                                                   <i class="fab fa-whatsapp text-success me-2"></i>
+                                                                    <span class="text-success">Contact us to order</span>
                                                                 </a>
                                                             </div>
                                                         <?php } else if ($product['available_status'] > 0) { ?>
@@ -320,10 +320,89 @@
             </div>
         </div>
         <!-- Main JS -->
+         <script>
+            
+
+  const base_url = "<?= base_url() ?>";
+
+$('#sortSelect').on('change', function () {
+  const sortBy = $(this).val();
+  console.log("Selected sort option:", sortBy);
+
+  const gridTargetElement = $('#product-grid-container');
+  gridTargetElement.html('<p>Loading...</p>');
+
+  $.ajax({
+    url: base_url + 'product-sort',
+    method: 'GET',
+    data: { sort: sortBy },
+    dataType: 'json',
+    success: function (response) {
+        console.log("Full response:", response);
+
+
+
+        let products = response.products?.data || [];
+        console.log(products);
+        if (response.success) {
+            const html = generateGridHtml(products); 
+            $('#product-grid-container').html(html);
+        } else {
+            $('#product-grid-container').html('<p>No products found.</p>');
+        }
+    },
+    error: function () {
+      gridTargetElement.html('<p class="text-danger">Error loading sorted products.</p>');
+    }
+  });
+});
+
+        function generateGridHtml(products) {
+        let html = "";
+        products.forEach(product => {
+            const productUrl = `${base_url}products/${product.prod_id}`;
+            const offerPrice = parseFloat(product.lowest_offer_price || 0);
+            const mrp = parseFloat(product.lowest_mrp || 0);
+            const outOfStock = product.available_status == 0;
+            console.log(product);
+
+            html += `
+            <div class="col-xl-4 col-sm-12 col-12 product-item">
+                <div class="ltn__product-item ltn__product-item-3 text-center">
+                <div class="product-img">
+                    <a href="${productUrl}">
+                    <img src="${base_url}${product.main_image}" alt="${product.prod_name}">
+                    </a>
+                    ${outOfStock ? '<div class="product-badge"><ul><li class="sale-badge">Out of stock</li></ul></div>' : ''}
+                </div>
+                <div class="product-info">
+                    <h2 class="product-title"><a href="${productUrl}"><span class="prod_name_span">${product.prod_name}</span></a></h2>
+                    <div class="product_price_wrapper mt-0">
+                    <div class="product-price mb-0">
+                        <span>₹${offerPrice.toFixed(2)}</span>
+                        ${offerPrice !== mrp ? `<del>₹${mrp.toFixed(2)}</del>` : ''}
+                    </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-evenly">
+                    <a href="${productUrl}" class="theme-btn-1 btn quick_btn">
+                    <i class="fas fa-shopping-cart ${outOfStock ? 'text-danger' : ''}"></i>
+                    <span>${outOfStock ? 'Contact us to order' : 'Buy Now'}</span>
+                    </a>
+                </div>
+                </div>
+            </div>
+            `;
+        });
+
+        return html;
+        }
+        </script>
         <script src="<?php echo base_url() ?>public/assets/js/filter.js"></script>
         <script src="<?php echo base_url() ?>custom/js/productlist.js"></script>
         <script src="<?php echo base_url() ?>public/assets/js/main.js"></script>
         <!-- All JS Plugins -->
         <script src="<?php echo base_url() ?>public/assets/js/plugins.js"></script>
+        
     </body>
 </html>

@@ -9393,6 +9393,8 @@ ul.wp-block-latest-posts.is-grid.alignwide {
   height: 50px;
   line-height: 46px;
   min-width: 190px;
+  display: flex;
+  align-items: center;
 }
 
 .ltn__shop-options .short-by .nice-select .option {
@@ -9402,7 +9404,9 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 }
 
 .ltn__shop-options .short-by .nice-select .current {
-  font-weight: 700;
+  font-weight: 500;
+  text-transform: capitalize;
+  font-size: 15px;
 }
 
 .ltn__grid-list-tab-menu a {

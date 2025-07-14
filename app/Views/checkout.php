@@ -87,36 +87,44 @@
                                 $userDetailsSection = $inactive ? "inactive-section" : "";
                                 $userDetailsHeader = $inactive ? "inactive-header" : "";
                             ?>
+
                             <div class="step-section <?= $userDetailsSection ?>" id="detailSection">
                                 <div class="step-header <?= $userDetailsHeader ?>">
                                     <div class="step-number">2</div>
                                     User Details
                                 </div>
-                                <?php if ($inactive) { ?>
+
+                                <?php if ($inactive): ?>
                                     <div class="inactive-content">
                                         Please complete the previous step to continue
                                     </div>
-                                <?php } else { ?>
-                                    <div class="step-content">
-                                        <div class="">
+
+                                <?php else: ?>
+                                    <?php if (empty($user_details[0]['username']) && empty($user_details[0]['email'])): ?>
+                                        <div class="step-content">
                                             <div class="">
                                                 <div class="row">
                                                     <div class="col-md-6 mb-2">
                                                         <input type="text" class="form-control" placeholder="Name"
                                                             id="username" name="username"
-                                                            value="<?= $user_details[0]['username'] ?>">
+                                                            value="<?= htmlspecialchars($user_details[0]['username']) ?>">
                                                     </div>
                                                     <div class="col-md-6 mb-2">
                                                         <input type="email" class="form-control" placeholder="Enter Email"
                                                             id="email" name="email"
-                                                            value="<?= $user_details[0]['email'] ?>">
+                                                            value="<?= htmlspecialchars($user_details[0]['email']) ?>">
                                                     </div>
                                                 </div>
                                                 <button class="continue-btn" id="continue-userdetail">CONTINUE</button>
                                             </div>
                                         </div>
-                                    </div>
-                                <?php } ?>
+                                    <?php else: ?>
+                                        <div class="step-content">
+                                            <span class="logged_in me-5"><i class="fas fa-check-circle me-2"></i>Username  - <?= $user_details[0]['username'] ?> </span>
+                                            <span class="logged_in"><i class="fas fa-check-circle me-2"></i>Email  - <?= $user_details[0]['email'] ?> </span>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php endif; ?>
                             </div>
 
                             <!-- Delivery Address Section -->
@@ -309,7 +317,7 @@
 
 
                             <div class="place-order-wrapper">
-                                <button class="w-100 mx-0" type="submit" id="place-order">Place order</button>
+                                <button class="w-100 mx-0" type="submit" id="place-order" disabled>Place order</button>
                             </div>
                         </div>
                     </div>

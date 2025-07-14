@@ -227,7 +227,7 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    /* background-color: #45a049; */
 }
 
 button:disabled {
@@ -466,8 +466,8 @@ input[name="set_default"] {
 }
 
 button:hover {
-    background-color: #37724f;
-    color: #fff !important;
+    /* background-color: #37724f;
+    color: #fff !important; */
 }
 
 .btn-outline-primary:hover {
@@ -990,7 +990,7 @@ a.account-card .card:active {
     -webkit-box-shadow: var(--ltn__box-shadow-2);
     box-shadow: var(--ltn__box-shadow-2);
     z-index: 2;
-    min-height: 215px;
+    min-height: 235px;
 }
 
 .ltn__product-area .section-title-area {
@@ -1434,7 +1434,7 @@ a.account-card .card:active {
     justify-content: center;
     background-color: #fff !important;
     color: #000;
-    border: 1px solid;
+    border: 1px solid #198754;
     border-radius: 3px;
 }
 
@@ -2354,4 +2354,25 @@ a.theme-btn-1.btn:focus {
 #continue-userdetail{
     width: 48%;
     text-align: center;
+}
+
+.ltn__testimonial-area .slick-slider .slick-track{
+    margin: 0;
+}
+.continue_shopping_btn{
+   
+    background: black;
+}
+
+.cart_action_div a{
+    height: 50px;
+    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 500;
+    color: #fff;
+    margin: 10px 0;
+    text-transform: capitalize;
 }
