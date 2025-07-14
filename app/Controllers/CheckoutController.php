@@ -65,7 +65,7 @@ class CheckoutController extends BaseController
         }
 
         if (empty($cartData)) {
-            return json_encode(['code' => 400, 'status' => false, 'message' => 'Cart is empty!']);
+            return json_encode(['code' => 400, 'status' => false, 'message' => 'No products have been selected!!.']);
         }
 
         //if 0
@@ -539,7 +539,27 @@ class CheckoutController extends BaseController
             }
         }
 
+        $outOfStockProducts = [];
+
+        foreach ($productDetails as $product) {
+            if ((int) $product['variant_qty'] <= 0) {
+                $outOfStockProducts[] = $product['prod_name'];
+            }
+        }
+
+        if (!empty($outOfStockProducts)) {
+            $sessionData = [
+                'outof_status' => 1,
+                'checkout' => 'Yes'
+            ];
+            session()->set($sessionData);
+            return redirect()->to(base_url('cart'));
+        }
+
+
         $res['checkout_product'] = $productDetails;
+
+
 
         $totalAmt = 0;
         $totalGstValue = 0;

@@ -317,7 +317,7 @@
 
 
                             <div class="place-order-wrapper">
-                                <button class="w-100 mx-0" type="submit" id="place-order" disabled>Place order</button>
+                                <button class="w-100 mx-0" type="submit" id="place-order">Place order</button>
                             </div>
                         </div>
                     </div>
