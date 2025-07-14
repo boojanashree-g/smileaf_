@@ -386,7 +386,7 @@ $('#sortSelect').on('change', function () {
                 </div>
                 <div class="d-flex justify-content-evenly">
                     <a href="${productUrl}" class="theme-btn-1 btn quick_btn">
-                    <i class="fas fa-shopping-cart ${outOfStock ? 'text-danger' : ''}"></i>
+                    <i class="fas fa-whatsapp ${outOfStock ? 'text-danger' : ''}"></i>
                     <span>${outOfStock ? 'Contact us to order' : 'Buy Now'}</span>
                     </a>
                 </div>
