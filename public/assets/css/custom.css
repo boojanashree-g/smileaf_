@@ -1759,15 +1759,15 @@ a.theme-btn-1.btn:focus {
 }
 
 .address-content {
-    background: white;
+    /* background: white;
     border-radius: 0 0 12px 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    overflow: hidden; */
 }
 
 .address-card {
-    padding: 25px;
-    border-bottom: 1px solid #eee;
+    /* padding: 25px; */
+    /* border-bottom: 1px solid #eee; */
     position: relative;
 }
 

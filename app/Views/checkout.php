@@ -7,6 +7,24 @@
         color: rgb(12, 91, 28)
     }
 
+    .address-change button{       
+        background: #fff;        
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        padding: 10px 15px;
+        min-width: 80px;
+    }
+    .address-edit{
+        border: 1px solid #06870c;
+        color: #06870c;
+    }
+    .address-delete{
+        border: 1px solid red;
+        color: red;
+    }    
 </style>
 
 <body class="checkout_page">
@@ -22,7 +40,7 @@
             $otp_verify = session()->get('otp_verify');
             $login_status = session()->get('loginStatus');
         ?>
-        <div class="ltn__checkout-area mt-50">
+        <div class="ltn__checkout-area mt-30">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-7 mb-4">
@@ -98,7 +116,6 @@
                                     <div class="inactive-content">
                                         Please complete the previous step to continue
                                     </div>
-
                                 <?php else: ?>
                                     <?php if (empty($user_details[0]['username']) && empty($user_details[0]['email'])): ?>
                                         <div class="step-content">
@@ -126,17 +143,33 @@
                                     <?php endif; ?>
                                 <?php endif; ?>
                             </div>
+                            <?php 
+                                $inactive = (
+                                    $otp_verify !== 'YES' ||
+                                    $login_status !== 'YES' ||
+                                    !is_array($user_details) ||
+                                    count($user_details) === 0 ||
+                                    empty($user_details[0]['username']) ||
+                                    empty($user_details[0]['email'])
+                                );
+
+                                $addressSection = $inactive ? "inactive-section" : "";
+                                $addressHeader = $inactive ? "inactive-header" : "";
+                            ?>
 
                             <!-- Delivery Address Section -->
-                            <div class="step-section inactive-section" id="deliverySection">
-                                <div class="step-header inactive-header">
+                            <div class="step-section <?= $addressSection ?>" id="deliverySection">
+                                <div class="step-header <?= $addressHeader ?>">
                                     <div class="step-number">3</div>
                                     DELIVERY ADDRESS
                                 </div>
+                                <?php if ($inactive ): ?>
                                 <div class="inactive-content">
                                     Please complete the previous step to continue
                                 </div>
-                                <div class="step-content address-form" id="addressForm">
+                                <?php endif; ?>
+                                <?php if (is_array($user_details) && count($user_details) > 0): ?>  
+                                <div class="step-content " id="addressForm">
                                     <div class="address-content mb-0">
                                         <!-- Existing Address -->
                                         <?php
@@ -148,14 +181,14 @@
                                                 <div class="address-card" id="">
                                                     <div class="address-card-head">
                                                         <div class="address-header-info">
-                                                            <input type="radio" data-addid="<?= $add['add_id'] ?>" name="default_addr" class="checkout-add text-red default_address" <?php $default = $add['default_addr'];
+                                                            <input type="radio" data-addid="<?= $add['add_id'] ?>" name="default_addr" class="checkout-add text-red default_address mb-0" <?php $default = $add['default_addr'];
                                                             echo $default == 1 ? "checked" : "" ?> >
                                                             <div class="address-name-type">
                                                                 <span class="address-name"><?= $add['username'] ?></span>
                                                                 <span class="address-phone"><?= $add['number'] ?></span>
                                                             </div>
                                                         </div>
-                                                        <div class="address-change">
+                                                        <div class="address-change d-flex">
                                                             <button data-addid="<?= $add['add_id'] ?>" class="address-edit">Change</button>
                                                             <button data-addid="<?= $add['add_id'] ?>" class="address-delete">Delete</button>      
                                                         </div>
@@ -258,13 +291,14 @@
                         
                                     </div>
                                 </div>
+                                <?php endif; ?>
                             </div>
                         </div>
 
                     </div>
                     <div class="col-lg-5 col-md-12 col-12">
                         <div class="shoping-cart-total mt-0">
-                            <h4 class="title-2">Cart Totals</h4>
+                            <h4 class="title-2 mb-2">Cart Totals</h4>
                             <table class="table">
                                 <tbody>
                                     <?php foreach ($checkout_product as $product) { ?>
@@ -311,13 +345,25 @@
                                 </tbody>
                             </table>
                             <input type="hidden"  class="checkout-type" value="<?= $type?>"/>
-                          <?php foreach ($gst_subid_list as $item): ?>
+                            <?php foreach ($gst_subid_list as $item): ?>
                                 <input type="hidden" class="sub-id" value="<?= $item ?>" />
                             <?php endforeach; ?>
 
 
                             <div class="place-order-wrapper">
-                                <button class="w-100 mx-0" type="submit" id="place-order">Place order</button>
+                                <?php 
+                                    $isDisabled = (
+                                        $otp_verify !== 'YES' || 
+                                        $login_status !== 'YES' || 
+                                        !is_array($user_details) || 
+                                        count($user_details) === 0 || 
+                                        empty($user_details[0]['username']) || 
+                                        empty($user_details[0]['email']) || 
+                                        !is_array($address) || 
+                                        count($address) === 0
+                                    );
+                                ?>
+                                <button class="w-100 mx-0" type="submit" id="place-order" <?= $isDisabled ? 'disabled' : '' ?>>Place order</button>
                             </div>
                         </div>
                     </div>
