@@ -264,6 +264,8 @@ $(document).ready(function () {
     let orderID = $(this).attr("data-orderid");
     let token = localStorage.getItem("token");
     var detailHtml = "";
+    let returnedItemsHTML = "";
+
 
     $.ajax({
       type: "POST",
@@ -381,7 +383,7 @@ $(document).ready(function () {
                                             </div>
 
                                             <!-- Order Status -->
-                                            <div class="row p-3 bg-white">
+                                            <div class="row p-3 bg-white px-0">
                                                 <div class="${dispClass}">
                                                     <div class="alert ${CommonBgClass} p-2 mb-0" id="statusAlert">
                                                         <h6 class="${CommonClass} mb-0"><b class="orderStatus">${
@@ -458,6 +460,35 @@ $(document).ready(function () {
                                             </div>
                                         </div>`;
 
+          returnedItemsHTML += `
+              <div class="container-fluid mt-4">
+                <div class="row">
+                  <div class="col-12">
+                    <h4 class="returned_products mb-3">Returned Products</h4>
+                  </div>
+                </div>
+
+                <div class="row align-items-center mb-3">
+                  <div class="col-3 col-md-2">
+                    <img class="img-fluid" src="http://localhost/smileaf_main_git/uploads/1751355237_a175428d317d452f71af.jpg" width="90" alt="Returned Product">
+                  </div>
+                  <div class="col-9 col-md-10">
+                    <h6 class="text-charcoal mb-1">
+                      <a href="#" class="text-charcoal">1 x 3</a>
+                    </h6>
+                    <div class="order-details-div">
+                      <ul class="list-unstyled text-pebble small mb-0">
+                        <li class="mt-0"><b>Packs:</b> 15</li>
+                        <li class="mt-0"><b>Price:</b> ₹1200.00</li>
+                      </ul>
+                      <h5 class="text-charcoal mb-0 mt-2"><b>₹1200.00</b></h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+
+        detailHtml += returnedItemsHTML;
         $("#dynamic-order").html(detailHtml);
         $(".orderModal").modal("show");
       },
