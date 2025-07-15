@@ -117,8 +117,8 @@
                                         Please complete the previous step to continue
                                     </div>
                                 <?php else: ?>
-                                    <?php if (empty($user_details[0]['username']) && empty($user_details[0]['email'])): ?>
-                                        <div class="step-content">
+                                   
+                                        <div class="step-content edit-userdetails" style="<?= (!empty($user_details[0]['username']) || !empty($user_details[0]['email'])) ? 'display:none;' : '' ?>">
                                             <div class="">
                                                 <div class="row">
                                                     <div class="col-md-6 mb-2">
@@ -135,12 +135,12 @@
                                                 <button class="continue-btn" id="continue-userdetail">CONTINUE</button>
                                             </div>
                                         </div>
-                                    <?php else: ?>
-                                        <div class="step-content">
+                                   
+                                        <div class="step-content userdetails-display"  style="<?= (empty($user_details[0]['username']) && empty($user_details[0]['email'])) ? 'display:none;' : '' ?>">
                                             <span class="logged_in me-5"><i class="fas fa-check-circle me-2"></i>Username  - <?= $user_details[0]['username'] ?> </span>
                                             <span class="logged_in"><i class="fas fa-check-circle me-2"></i>Email  - <?= $user_details[0]['email'] ?> </span>
                                         </div>
-                                    <?php endif; ?>
+                                  
                                 <?php endif; ?>
                             </div>
                             <?php 
@@ -155,6 +155,8 @@
 
                                 $addressSection = $inactive ? "inactive-section" : "";
                                 $addressHeader = $inactive ? "inactive-header" : "";
+                                $addressDisplay = $inactive ? "d-none" : "";
+
                             ?>
 
                             <!-- Delivery Address Section -->
@@ -169,7 +171,7 @@
                                 </div>
                                 <?php endif; ?>
                                 <?php if (is_array($user_details) && count($user_details) > 0): ?>  
-                                <div class="step-content " id="addressForm">
+                                <div class="step-content <?= $addressDisplay?>" id="addressForm">
                                     <div class="address-content mb-0">
                                         <!-- Existing Address -->
                                         <?php
