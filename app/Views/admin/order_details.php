@@ -258,7 +258,7 @@
                         </div>
 
 
-                       
+
 
 
 
@@ -317,7 +317,7 @@
 
 
                     </div>
-                </div>
+                </div>  
 
                 <!-- Footer -->
                 <?php require "components/bottomfooter.php"; ?>

@@ -23,5 +23,11 @@ require("components/head.php");
     </div>
 </body>
 
+<script>
+    history.replaceState(null, '', window.location.href);
+    window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
 
 </html>

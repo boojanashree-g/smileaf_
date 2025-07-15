@@ -1,6 +1,8 @@
 var mode;
 var add_id = null;
 $(document).ready(function () {
+
+  
   let currentStage = "send";
   let otpSentAt = null;
   let resendEnabled = false;

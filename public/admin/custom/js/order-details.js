@@ -335,7 +335,6 @@ $(document).ready(function () {
 
   // *************************** [Display Order Details] *************************************************************************
   function displayorderView(orderDetails) {
-    console.log(orderDetails);
     $("#vieworder-modal").modal("show");
     let viewOrders = "";
 
@@ -526,7 +525,7 @@ $(document).ready(function () {
                         </div>
 
                         <div class="col-lg-4 mt-4 p-5 d-flex  justify-content-end align-items-start">
-                          <button type="button" class="btn btn-label-success waves-effect print-invoice" data-orderid= ${}>Print Invoice &nbsp;<i class="ti ti-printer"></i>
+                          <button type="button" class="btn btn-label-success waves-effect print-invoice"  data-orderid= ${orderDetails.order_id}>Generate Invoice &nbsp;<i class="ti ti-printer"></i>
                           </button>
                         </div>
                       </div>
@@ -646,7 +645,6 @@ $(document).ready(function () {
       dataType: "json",
 
       success: function (data) {
-        console.log(data);
         $("#courier_partner").val(data.courier_partner);
         $("#tracking_link").val(data.tracking_link);
         $("#tracking_id").val(data.tracking_id);
@@ -734,7 +732,6 @@ $(document).ready(function () {
 
           success: function (data) {
             var resData = $.parseJSON(data);
-            console.log(resData);
 
             if (resData.code == 200) {
               Swal.fire({
@@ -769,5 +766,25 @@ $(document).ready(function () {
         });
       }
     });
+  });
+
+  // *************************** [Invoice Genertation] *************************************************************************
+
+  $(document).on("click", ".print-invoice", function () {
+    let inv_orderID = $(this).data("orderid");
+
+    var encodedOrderID = btoa(inv_orderID);
+    var pdfURL = base_Url + "admin/order-details/pdf-viewpage?orderID=" + encodedOrderID;
+
+    var printWindow = window.open(pdfURL, "_blank");
+
+    // if (printWindow) {
+    //   printWindow.print();
+    //   printWindow.onafterprint = function () {
+    //     printWindow.close();
+    //   };
+    // } else {
+    //   alert("Popup blocked! Please allow popups for this site.");
+    // }
   });
 });

@@ -25,6 +25,21 @@ require("components/head.php");
     </div>
 </body>
 
+<script>
+
+    history.replaceState(null, '', location.href);
+
+    history.pushState(null, '', location.href);
+
+    window.addEventListener('popstate', function (event) {
+
+        history.pushState(null, '', location.href);
+    });
+
+
+    sessionStorage.removeItem("razorpay_started");
+</script>
+
 
 
 
