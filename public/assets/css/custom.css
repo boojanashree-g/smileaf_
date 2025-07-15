@@ -2388,3 +2388,15 @@ a.theme-btn-1.btn:focus {
     padding: 5px;
     font-weight: 600 !important;
 }
+
+.section-bg-1 {
+    background-color: #faf9f4; /* subtle background */
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
