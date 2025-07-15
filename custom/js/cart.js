@@ -181,4 +181,29 @@ $(document).ready(function () {
       },
     });
   });
+
+  $(".proceed_checkout").click(function () {
+    let sourceType = "cart";
+    $.ajax({
+      type: "POST",
+      url: base_Url + "check-product-status",
+      data: { source: sourceType },
+      dataType: "json",
+
+      success: function (resData) {
+        if (resData.code == 400) {
+          let itemDisp = resData.outofStockCount > 1 ? "items" : "item";
+          showToast(
+            `${resData.outofStockCount} ${itemDisp} in your cart are out of stock.Please remove it from your cart to proceed.`,
+            "error"
+          );
+        } else if (resData.code == 200) {
+          window.location.href = base_Url + "checkout?type=" + sourceType;
+        }
+      },
+      error: function (err) {
+        console.log(err);
+      },
+    });
+  });
 });

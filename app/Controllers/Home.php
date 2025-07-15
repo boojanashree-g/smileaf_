@@ -19,7 +19,7 @@ class Home extends BaseController
         $this->db = \Config\Database::connect();
         $this->session = \Config\Services::session();
     }
- public function index()
+    public function index()
     {
         $db = \Config\Database::connect();
         $data = $this->session->get();
@@ -319,8 +319,8 @@ class Home extends BaseController
 
         $res['cart_product'] = $productDetails;
 
-        
- 
+
+
 
 
         return view('cart', $res);
@@ -356,7 +356,7 @@ class Home extends BaseController
         $db = \Config\Database::connect();
         $menuData = $this->getMenuData();
 
-        // Decode submenu ID from URL
+
         $submenuId = $encodedSubmenuId ? base64_decode($encodedSubmenuId) : null;
 
         // Filters from query string
@@ -415,7 +415,7 @@ class Home extends BaseController
         }
 
         if (!empty($shapeIds)) {
-            $productsQuery->whereIn('a.shape_id', (array)$shapeIds);
+            $productsQuery->whereIn('a.shape_id', (array) $shapeIds);
         }
 
         // Fetch product data
@@ -432,7 +432,7 @@ class Home extends BaseController
                 ->get()->getResultArray();
 
 
-            usort($variantQuery, function ($a, $b) {
+            usort($variants, function ($a, $b) {
                 $a_in_stock = ($a['stock_status'] > 0 && $a['quantity'] > 0) ? 1 : 0;
                 $b_in_stock = ($b['stock_status'] > 0 && $b['quantity'] > 0) ? 1 : 0;
 
@@ -458,7 +458,7 @@ class Home extends BaseController
                 if ($lowestOffer === null || $variant['offer_price'] < $lowestOffer['offer_price']) {
                     $lowestOffer = $variant;
                 }
-                if ((int)$variant['stock_status'] <= 0 && (int)$variant['quantity'] <= 0) {
+                if ((int) $variant['stock_status'] <= 0 && (int) $variant['quantity'] <= 0) {
                     $stockCount++;
                 }
             }
@@ -466,9 +466,9 @@ class Home extends BaseController
             $availableStatus = $stockCount < $totalVariant ? 1 : 0;
             $product['available_status'] = $availableStatus;
 
-            // Apply availability filter AFTER available_status is calculated
-            if (!empty($availabilityId) && !in_array($availableStatus, (array)$availabilityId)) {
-                continue; // Skip if doesn't match availability
+
+            if (!empty($availabilityId) && !in_array($availableStatus, (array) $availabilityId)) {
+                continue;
             }
 
             // Attach lowest variant info

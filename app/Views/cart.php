@@ -114,16 +114,18 @@
                         </div>
 
                     <?php } else {
+                        ?>
 
-                        $shoppingTotalClass = "";
-                        foreach ($cart_product as $cart) {
+                        <div class="col-lg-8">
+                            <h4 class="cart_details">Cart Details</h4>
+                            <?=
+                                $shoppingTotalClass = "";
+                            foreach ($cart_product as $cart) {
+                                ?>
 
-                            ?>
-
-                            <div class="col-lg-8">
                                 <div class="shoping-cart-inner">
                                     <div class="shoping-cart-table table-responsive">
-                                        <h4 class="cart_details">Cart Details</h4>
+
                                         <table class="table">
                                             <tbody>
 
@@ -144,8 +146,6 @@
                                                         $stockStatus = $cart['variant_qty'] <= 0 ? "<span class='text-red'>Out of Stock</span>" : "";
                                                         echo $stockStatus;
                                                         ?>
-
-
                                                     </td>
                                                     <!-- <td>
                                                         <h4>Pack of <?= $cart['cart_pack_qty'] ?></h4>
@@ -179,8 +179,8 @@
                                                     </td>
                                                 </tr>
                                             <?php }
-                    }
-                    ?>
+                    } ?>
+
 
                                         <!-- <tr class="cart-coupon-row">
                                         <td colspan="6">
@@ -197,8 +197,8 @@
                         </div>
                     </div>
 
-                    <input type="hidden" id="outof_stock_status" value="<?= session()->get('outof_status') ?>" 
-                    data-checkout="<?= session()->get('outof_status')?>">
+                    <input type="hidden" id="outof_stock_status" value="<?= session()->get('outof_status') ?>"
+                        data-checkout="<?= session()->get('checkout') ?>">
                     <div class="col-lg-4">
                         <div class="shoping-cart-total <?= $shoppingTotalClass ?>">
                             <h4 class="cart_details mb-4">Cart Totals</h4>
@@ -228,7 +228,7 @@
                                 </tbody>
                             </table>
                             <div class="btn-wrapper cart_action_div text-right text-end">
-                                <a href="<?php echo base_url('checkout') ?>?type=cart" class="proceed_checkout">Proceed
+                                <a class="proceed_checkout">Proceed
                                     to checkout
                                     <i class="fas fa-arrow-right"></i>
                                 </a>
@@ -284,14 +284,7 @@
 
     <script src="<?php echo base_url() ?>public/assets/js/main.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            $stockStatus = $("#outof_stock_status").val();
-            alert($stockStatus)
 
-        })
-
-    </script>
 
 </body>
 

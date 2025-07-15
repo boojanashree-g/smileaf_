@@ -539,24 +539,6 @@ class CheckoutController extends BaseController
             }
         }
 
-        $outOfStockProducts = [];
-
-        foreach ($productDetails as $product) {
-            if ((int) $product['variant_qty'] <= 0) {
-                $outOfStockProducts[] = $product['prod_name'];
-            }
-        }
-
-        if (!empty($outOfStockProducts)) {
-            $sessionData = [
-                'outof_status' => 1,
-                'checkout' => 'Yes'
-            ];
-            session()->set($sessionData);
-            return redirect()->to(base_url('cart'));
-        }
-
-
         $res['checkout_product'] = $productDetails;
 
 
@@ -661,6 +643,86 @@ class CheckoutController extends BaseController
         }
 
         echo json_encode($res);
+
+    }
+
+    public function checkProductStatus()
+    {
+
+        $userID = session()->get('user_id');
+
+        $sourceType = $this->request->getPost("source");
+
+
+        if ($sourceType == 'cart') {
+            $query = "SELECT * FROM tbl_user_cart WHERE user_id = ? AND flag =1 AND source_type = ?";
+            $cartData = $this->db->query($query, [$userID, $sourceType])->getResultArray();
+        } else if ($sourceType == 'buy_now') {
+            $query = "SELECT * FROM tbl_user_cart WHERE user_id = ? AND flag =1 AND source_type = ?";
+            $cartData = $this->db->query($query, [$userID, $sourceType])->getResultArray();
+        }
+
+
+        $query = "SELECT cart_id  FROM tbl_user_cart WHERE user_id = ? AND flag =1 AND source_type = ?";
+        $cartCount = $this->db->query($query, [$userID, 'cart'])->getResultArray();
+        if (count($cartCount) > 0) {
+            $res['cart_count'] = sizeof($cartCount);
+
+        } else {
+            $res['cart_count'] = 0;
+        }
+
+
+
+        $productDetails = [];
+        foreach ($cartData as $item) {
+            $cartID = $item['cart_id'];
+
+            $query = "SELECT
+                a.`prod_id`,
+                a.`prod_name`,
+                a.`main_quantity`,
+                a.`main_image`,
+                a.`has_variant`,
+                a.url,
+                b.cart_id,
+                b.quantity AS cart_quantity,
+                b.prod_price AS cart_prod_price,
+                b.total_price AS cart_total_price,
+                b.pack_qty AS cart_pack_qty,
+                b.user_id,
+                c.variant_id,
+                c.pack_qty,
+                c.mrp,
+                c.offer_price,
+                c.quantity AS variant_qty,
+                d.sub_id ,d.gst
+            FROM `tbl_products` AS a
+            INNER JOIN tbl_user_cart AS b ON a.prod_id = b.prod_id
+            INNER JOIN tbl_variants AS c ON c.prod_id = b.prod_id AND c.pack_qty = b.pack_qty
+            INNER JOIN tbl_submenu AS d  ON d.sub_id = a.submenu_id 
+            WHERE a.flag = 1 AND b.flag = 1 AND c.flag = 1 AND b.cart_id = ?";
+
+            $result = $this->db->query($query, [$cartID])->getResultArray();
+            if ($result) {
+                $productDetails = array_merge($productDetails ?? [], $result);
+            }
+        }
+
+        $outOfStockProducts = [];
+
+        foreach ($productDetails as $product) {
+            if ((int) $product['variant_qty'] <= 0) {
+                $outOfStockProducts[] = $product['prod_name'];
+            }
+        }
+
+        $outofStock = count($outOfStockProducts);
+
+        return $this->response->setJSON([
+            'code' => $outofStock > 0 ? 400 : 200,
+            'outofStockCount' => $outofStock,
+        ]);
 
     }
 }
