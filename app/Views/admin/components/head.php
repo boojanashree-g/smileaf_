@@ -68,6 +68,9 @@
 
     <link rel="stylesheet" href="<?php echo base_url() ?>public/admin/vendor/libs/dropzone/dropzone.css" />
 
+    <!-- Invoice -->
+    <link rel="stylesheet" href="<?php echo base_url() ?>public/admin/vendor/libs/flatpickr/flatpickr.css" />
+    <link rel="stylesheet" href="<?php echo base_url() ?>public/admin/vendor/css/pages/app-invoice.css" />
 
     <!-- DATA TABLES CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">

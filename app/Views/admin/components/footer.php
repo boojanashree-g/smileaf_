@@ -60,3 +60,10 @@
 <script src="<?php echo base_url() ?>public/admin/js/extended-ui-sweetalert2.js"></script>
 <script src="<?php echo base_url() ?>public/admin/vendor/libs/sweetalert2/sweetalert2.js"></script>
 <script src="<?php echo base_url() ?>public/admin/js/forms-file-upload.js"></script>
+
+<script src="<?php echo base_url() ?>public/admin/js/offcanvas-send-invoice.js"></script>
+
+<script src="<?php echo base_url() ?>public/admin/vendor/libs/moment/moment.js"></script>
+<script src="<?php echo base_url() ?>public/admin/vendor/libs/flatpickr/flatpickr.js"></script>
+<script src="<?php echo base_url() ?>public/admin/vendor/libs/cleavejs/cleave.js"></script>
+<script src="<?php echo base_url() ?>public/admin/vendor/libs/cleavejs/cleave-phone.js"></script>

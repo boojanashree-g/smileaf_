@@ -415,6 +415,11 @@
          $(document).ready(function () {
             $('#state_id, #dist_id').show();
             $('.nice-select').remove();
+
+            if (sessionStorage.getItem("razorpay_started")) {
+  
+            window.location.href = base_Url + 'cart';
+}
          });
     </script>
 </body>

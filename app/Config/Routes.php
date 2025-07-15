@@ -192,5 +192,6 @@ $routes->group('admin/order-details', ['namespace' => 'App\Controllers\admin', '
     $routes->post('get-trackingdetails', 'OrderController::getTrackingDetails');
     $routes->post('delete-data', 'OrderController::deleteData');
     $routes->post('update-orderstatus', 'OrderController::updateOrderStatus');
+    $routes->get('pdf-viewpage', 'OrderController::pdfView');
 
 });
