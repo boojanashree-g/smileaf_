@@ -216,7 +216,7 @@
             li.innerHTML = `
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <div style="display: flex; align-items: center;">
-                        <img src="https://16e2abb77013.ngrok-free.app/smileaf_main_git/${item.main_image}" alt="${item.prod_name}" style="width: 70px; height: 60px; object-fit: cover; margin-right: 10px;">
+                        <img src="${baseUrl}${item.main_image}" alt="${item.prod_name}" style="width: 70px; height: 60px; object-fit: cover; margin-right: 10px;">
                         <div>
                         <div style="font-weight: 500;font-size: 20px;">${item.prod_name}</div>
                         <div style="font-size: 15px; color: #888;">₹${item.lowest_offer_price ?? 'N/A'}</div>
