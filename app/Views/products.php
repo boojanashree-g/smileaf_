@@ -90,7 +90,7 @@
                                                         </div>
                                                         <div class="product-info">
                                                             <h2 class="product-title">
-                                                                <a href="<?= base_url($product['url']) ?>">
+                                                                <a href="<?= base_url("product-details/" . base64_encode($product['prod_id'])) ?>">
                                                                     <span
                                                                         class="prod_name_span"><?= esc($product['prod_name']) ?></span>
                                                                 </a>

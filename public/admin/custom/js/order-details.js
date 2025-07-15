@@ -339,6 +339,8 @@ $(document).ready(function () {
     $("#vieworder-modal").modal("show");
     let viewOrders = "";
 
+    let ReasonC =
+      orderDetails.order_status.trim() === "Cancelled" ? "" : "d-none";
     let paymentMethod = orderDetails.payment_method;
     let capitalizedMethod =
       paymentMethod.charAt(0).toUpperCase() +
@@ -457,6 +459,12 @@ $(document).ready(function () {
                                   Status</b>: <span
                                   class="ms-2"><span class="badge bg-label-primary">${orderDetails.order_status}</span>
                           </div>
+                           <div class="d-flex mb-1 ${ReasonC}"> 
+                              <b class="me-2 "
+                                  style="min-width: 160px;">Cancel Reason</b> :<span
+                                  class="ms-2">${orderDetails.delivery_message}</span>
+                          </div>
+                          
                           <div class="d-flex mb-1"> 
                               <b class="me-2"
                                   style="min-width: 160px;">Razorpay
@@ -509,9 +517,22 @@ $(document).ready(function () {
 
               <div class="col-xl-12 mb-6 mb-xl-0 mt-2">
                   <div class="card">
-                      <h5 class="card-header order-header"><i
-                              class="ti ti-shopping-cart"></i> Order Items
-                      </h5>
+                   <div class="d-flex flex-column">
+                      <div class="row">
+                        <div class="col-lg-8">
+                          <h5 class="card-header order-header">
+                            <i class="ti ti-shopping-cart"></i> Order Items
+                          </h5>
+                        </div>
+
+                        <div class="col-lg-4 mt-4 p-5 d-flex  justify-content-end align-items-start">
+                          <button type="button" class="btn btn-label-success waves-effect print-invoice" data-orderid= ${}>Print Invoice &nbsp;<i class="ti ti-printer"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                      
                       <div class="table-responsive text-nowrap">
                           <table class="table">
                               <thead class="table-light">
