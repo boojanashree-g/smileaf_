@@ -25,6 +25,7 @@ $routes->get('product-categories/(:segment)', 'Home::productCategories/$1');
 // $routes->post('signup-otp', 'SignupController::signupOTP');
 // $routes->post('check-signotp', 'SignupController::checkSignOTP');
 $routes->get('product-sort', 'Home::getSortProducts');
+$routes->get('search-suggestions', 'SearchController::suggestions');
 
 
 // new

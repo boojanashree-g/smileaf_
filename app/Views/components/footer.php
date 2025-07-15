@@ -184,3 +184,66 @@
         });
     });
 </script>
+
+<script>
+  const input = document.getElementById('searchInput');
+  const suggestionsBox = document.getElementById('suggestions');
+
+  input.addEventListener('input', () => {
+    const query = input.value.trim();
+    suggestionsBox.innerHTML = '';
+
+    if (!query) {
+      suggestionsBox.style.display = 'none';
+      return;
+    }
+    const baseUrl = "<?php echo base_url(); ?>";
+    fetch(`${baseUrl}/search-suggestions?query=${encodeURIComponent(query)}`)
+      .then(res => res.json())
+      .then(data => {
+        suggestionsBox.innerHTML = '';
+        if (data.length === 0) {
+            const li = document.createElement('li');
+            li.textContent = 'No results found';
+            li.style.padding = '8px';
+            li.style.color = '#999';
+            suggestionsBox.appendChild(li);
+            suggestionsBox.style.display = 'block';
+            return;
+        }
+        data.forEach(item => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center;">
+                        <img src="https://16e2abb77013.ngrok-free.app/smileaf_main_git/${item.main_image}" alt="${item.prod_name}" style="width: 70px; height: 60px; object-fit: cover; margin-right: 10px;">
+                        <div>
+                        <div style="font-weight: 500;font-size: 20px;">${item.prod_name}</div>
+                        <div style="font-size: 15px; color: #888;">₹${item.lowest_offer_price ?? 'N/A'}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            li.style.padding = '8px';
+            li.style.cursor = 'pointer';
+            li.addEventListener('click', () => {
+                const encodedId = btoa(item.prod_id.toString());
+                window.location.href = `${baseUrl}/product-details/${encodedId}`;
+            });
+            suggestionsBox.appendChild(li);
+        });
+        suggestionsBox.style.display = 'block';
+      })
+      .catch(err => {
+        console.error('Error fetching suggestions:', err);
+        suggestionsBox.style.display = 'none';
+      });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.search-input-wrap')) {
+      suggestionsBox.style.display = 'none';
+    }
+  });
+</script>
+
