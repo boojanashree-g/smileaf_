@@ -16,13 +16,14 @@
                             </a>
                         </div>
                     </div>
-                    <div class="search_bar dsmnone ">
-                        <form class="search-form" action="#" method="GET">
-                            <div class="search-input-wrap">
-                                <input type="text" name="query" placeholder="Search Product..." class="search-input" />
-                                <button type="submit" class="search-icon-btn">
-                                    <i class="fas fa-search"></i>
-                                </button>
+                    <div class="search_bar dsmnone">
+                        <form class="search-form" action="#" method="GET" autocomplete="off">
+                            <div class="search-input-wrap" style="position: relative;">
+                            <input type="text" id="searchInput" name="query" placeholder="Search Product..." class="search-input" />
+                            <button type="submit" class="search-icon-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <ul id="suggestions" class="suggestions-list" style="position: absolute; top: 103%; left: 21px; right: 0; z-index: 10; background: white; list-style: none; padding: 0; margin: 0; display: none; width: 92%;"></ul>
                             </div>
                         </form>
                     </div>
