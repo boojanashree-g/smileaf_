@@ -218,14 +218,10 @@ $(document).ready(function () {
 
           // Show address form
           toggleAddressForm();
-          $(".user-form-section").addClass("d-none");
-          $(".user-display-section").removeClass("d-none").html(`
-                <span class="logged_in me-5">
-                  <i class="fas fa-check-circle me-2"></i>Username - ${username}
-                </span>
-                <span class="logged_in">
-                  <i class="fas fa-check-circle me-2"></i>Email - ${email}
-                </span>
+          $(".edit-userdetails").addClass("d-none");
+          $(".userdetails-display").css("display", "block").html(`
+                <span class="logged_in me-5"><i class="fas fa-check-circle me-2"></i>Username  - ${username} </span>
+                <span class="logged_in"><i class="fas fa-check-circle me-2"></i>Email  - ${email} </span>
               `);
         }
       },
@@ -242,7 +238,7 @@ $(document).ready(function () {
   }
 
   function toggleAddressForm() {
-    $("#addressForm").addClass("active");
+    $("#addressForm").addClass("active").removeClass("d-none");
   }
 
   // *************************** [3. Address Details] *************************************************************************
