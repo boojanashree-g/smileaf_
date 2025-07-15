@@ -37,7 +37,7 @@
         <!-- SLIDER AREA END -->
 
         <!-- BANNER AREA START -->
-        <div class="ltn__banner-area mt-15">
+        <div class="ltn__banner-area mt-2">
             <div class="container">
                 <div class="row ltn__custom-gutter--- justify-content-center">
                     <div class="col-lg-4 col-md-6 mb-2">
@@ -127,6 +127,13 @@
                                         <img src="<?= base_url() . $product['main_image'] ?>" alt="#">
                                     </a>
                                 </div>
+                                <?php if ($product['available_status'] == 0): ?>
+                                    <div class="product-badge">
+                                        <ul>
+                                            <li class="sale-badge">Out of stock</li>
+                                        </ul>
+                                    </div>
+                                <?php endif; ?>
                                 <div class="home_products product-info">
                                     <h2 class="product-title">
                                         <a href="<?= base_url('product-details/' . base64_encode($product['prod_id'])) ?>" class="featured_prod_name">
@@ -134,7 +141,7 @@
                                             
                                         </a>
                                         <p class="product-price-info">
-                                            <span class="topseller_price">₹1000.00</span>
+                                            <span class="topseller_price">₹<?= esc($product['lowest_offer_price'] ?? 0) ?></span>
                                             <span class="quickbuy_span">View Details <i class="fas fa-arrow-alt-circle-right"></i></span>                                        
                                         </p>                                       
                                     </h2>

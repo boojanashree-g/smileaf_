@@ -19,35 +19,97 @@ class Home extends BaseController
         $this->db = \Config\Database::connect();
         $this->session = \Config\Services::session();
     }
-    public function index()
+ public function index()
     {
         $db = \Config\Database::connect();
         $data = $this->session->get();
 
+        // Load menu and banner data
         $mainmenu = $this->getMenuData();
         $bannerModel = new BannerModel();
         $bannerData = $bannerModel->where(['flag !=' => 0, 'has_banner' => 1])->findAll();
+
         $data = array_merge($this->getMenuData(), [
             'bannerData' => $bannerData
         ]);
 
-        $data['bestSeller'] = $db->table('tbl_products')
+        // Fetch raw best sellers
+        $rawProducts = $db->table('tbl_products')
             ->where('flag !=', 0)
             ->where('best_seller', 1)
             ->get()
             ->getResultArray();
 
+        $products = [];
+
+        foreach ($rawProducts as $product) {
+            $prodId = $product['prod_id'];
+
+            // Fetch product variants
+            $variantQuery = $db->table('tbl_variants')
+                ->select('variant_id, pack_qty, mrp, offer_type, offer_details, offer_price, stock_status, quantity, weight')
+                ->where(['flag' => 1, 'prod_id' => $prodId])
+                ->get()
+                ->getResultArray();
+
+            // Fetch product images
+            $imageQuery = $db->table('tbl_images')
+                ->select('image_path')
+                ->where(['flag' => 1, 'prod_id' => $prodId])
+                ->get()
+                ->getResultArray();
+
+            $product['variants'] = $variantQuery;
+            $product['product_images'] = array_column($imageQuery, 'image_path');
+            $product['main_image'] = !empty($product['product_images']) ? $product['product_images'][0] : 'assets/images/default.png';
+
+            // Find lowest offer & stock availability
+            $totalVariant = count($variantQuery);
+            $lowestOffer = null;
+            $stockCount = 0;
+
+            foreach ($variantQuery as $variant) {
+                if ($lowestOffer === null || $variant['offer_price'] < $lowestOffer['offer_price']) {
+                    $lowestOffer = $variant;
+                }
+                if ($variant['stock_status'] <= 0 && $variant['quantity'] <= 0) {
+                    $stockCount += 1;
+                }
+            }
+
+            $stockStatus = $stockCount < $totalVariant ? 1 : 0;
+
+            if ($lowestOffer) {
+                $product['lowest_mrp'] = $lowestOffer['mrp'];
+                $product['lowest_offer_price'] = $lowestOffer['offer_price'];
+                $product['lowest_quantity'] = $lowestOffer['quantity'];
+                $product['available_status'] = $stockStatus;
+            } else {
+                $product['lowest_mrp'] = null;
+                $product['lowest_offer_price'] = null;
+                $product['lowest_quantity'] = null;
+                $product['available_status'] = $stockStatus;
+            }
+
+            $products[] = $product;
+        }
+
+        // Replace original bestSeller data with enriched data
+        $data['bestSeller'] = $products;
+
+        // Featured Products
         $data['featured_products'] = $db->table('tbl_featured_products a')
-            ->select(' a.*,b.slug')
+            ->select('a.*, b.slug')
             ->join('tbl_submenu b', 'a.sub_id = b.sub_id', 'left')
             ->where('a.flag !=', 0)
             ->where('b.flag !=', 0)
             ->get()
             ->getResultArray();
 
-
+        // Load index view
         return view('index', $data);
     }
+
 
     private function getMenuData()
     {
@@ -294,23 +356,21 @@ class Home extends BaseController
         $db = \Config\Database::connect();
         $menuData = $this->getMenuData();
 
-        // Decode submenu ID from URL 
-        $submenuId = null;
-        if ($encodedSubmenuId) {
-            $submenuId = base64_decode($encodedSubmenuId);
-        }
+        // Decode submenu ID from URL
+        $submenuId = $encodedSubmenuId ? base64_decode($encodedSubmenuId) : null;
 
-        // Filter parameters from query string
+        // Filters from query string
         $typeIds = $this->request->getGet('type_id');
         $sizeIds = $this->request->getGet('size_id');
         $shapeIds = $this->request->getGet('shape_id');
+        $availabilityId = $this->request->getGet('availability');
 
         // Detect AJAX
         $isAjax = $this->request->isAJAX() ||
             $this->request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest' ||
             $this->request->getGet('ajax') == '1';
 
-        // Load filter dropdowns only if not AJAX
+        // Load dropdowns only if not AJAX
         if (!$isAjax) {
             $typeQuery = $db->table('tbl_filter_type')->where('flag !=', 0)->get();
             $sizeQuery = $db->table('tbl_filter_size')->where('flag !=', 0)->get();
@@ -355,20 +415,18 @@ class Home extends BaseController
         }
 
         if (!empty($shapeIds)) {
-            $productsQuery->whereIn('a.shape_id', (array) $shapeIds);
+            $productsQuery->whereIn('a.shape_id', (array)$shapeIds);
         }
 
         // Fetch product data
         $rawProducts = $productsQuery->get()->getResultArray();
-
-
 
         $products = [];
         foreach ($rawProducts as $product) {
             $prodId = $product['prod_id'];
 
             // Fetch variants
-            $variantQuery = $db->table('tbl_variants')
+            $variants = $db->table('tbl_variants')
                 ->select('variant_id, pack_qty, mrp, offer_type, offer_details, offer_price, stock_status, quantity, weight')
                 ->where(['flag' => 1, 'prod_id' => $prodId])
                 ->get()->getResultArray();
@@ -388,37 +446,40 @@ class Home extends BaseController
                 ->where(['flag' => 1, 'prod_id' => $prodId])
                 ->get()->getResultArray();
 
-            $product['variants'] = $variantQuery;
+            $product['variants'] = $variants;
             $product['product_images'] = array_column($imageQuery, 'image_path');
 
-
-            $totalVariant = count($variantQuery);
-
-            $lowestOffer = null;
+            // Calculate availability
+            $totalVariant = count($variants);
             $stockCount = 0;
-            foreach ($variantQuery as $variant) {
+            $lowestOffer = null;
+
+            foreach ($variants as $variant) {
                 if ($lowestOffer === null || $variant['offer_price'] < $lowestOffer['offer_price']) {
                     $lowestOffer = $variant;
                 }
-                if ($variant['stock_status'] <= 0 && $variant['quantity'] <= 0) {
-                    $stockCount += 1;
+                if ((int)$variant['stock_status'] <= 0 && (int)$variant['quantity'] <= 0) {
+                    $stockCount++;
                 }
             }
 
-            $stockStatus = $stockCount < $totalVariant ? 1 : 0;
+            $availableStatus = $stockCount < $totalVariant ? 1 : 0;
+            $product['available_status'] = $availableStatus;
 
+            // Apply availability filter AFTER available_status is calculated
+            if (!empty($availabilityId) && !in_array($availableStatus, (array)$availabilityId)) {
+                continue; // Skip if doesn't match availability
+            }
+
+            // Attach lowest variant info
             if ($lowestOffer) {
                 $product['lowest_mrp'] = $lowestOffer['mrp'];
                 $product['lowest_offer_price'] = $lowestOffer['offer_price'];
                 $product['lowest_quantity'] = $lowestOffer['quantity'];
-                $product['available_status'] = $stockStatus;
-
             } else {
                 $product['lowest_mrp'] = null;
                 $product['lowest_offer_price'] = null;
                 $product['lowest_quantity'] = null;
-                $product['available_status'] = $stockStatus;
-
             }
 
             $products[] = $product;
@@ -453,7 +514,7 @@ class Home extends BaseController
             ]);
         }
 
-        // For normal page rendering
+        // Normal page rendering
         $data = array_merge($menuData, [
             'page_title' => 'Products',
             'breadcrumb_items' => [
@@ -466,6 +527,7 @@ class Home extends BaseController
             'productsize' => $productsize ?? [],
             'productShape' => $productShape ?? [],
         ]);
+
         return view('products', $data);
     }
 

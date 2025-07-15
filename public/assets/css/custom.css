@@ -1946,9 +1946,9 @@ a.theme-btn-1.btn:focus {
     transform: translate(-50%);
 }
 
-.home_page .slick-track {
+/* .home_page .slick-track {
     margin: 20px 0px;
-}
+} */
 
 .featured_prod_name {
     display: flex;
