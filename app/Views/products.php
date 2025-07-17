@@ -27,10 +27,12 @@
         <?php require("components/header.php") ?>
         <!-- HEADER AREA END -->
         <!-- PRODUCT DETAILS AREA START -->
-        <div class="ltn__product-area ltn__product-gutter my-4">
+        <div class="ltn__product-area ltn__product-gutter">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-9 order-lg-2">
+                        <!-- Mobile Filter/Sort Buttons (for small screens only) -->
+   
                         <div class="ltn__shop-options">
                             <ul>
                                 <li>
@@ -44,6 +46,13 @@
                                     </div>
                                 </li>
                                 <li>
+                                    <div class="d-lg-none d-flex justify-content-end ">
+                                        <button class="btn btn-outline-secondary me-2" id="mobileFilterBtn">
+                                            <i class="fas fa-filter"></i> 
+                                        </button>
+                                    </div>
+                                </li>
+                                <li class="dsmnone">
                                     <div class="short-by text-center">
                                         <select id="sortSelect" class="nice-select">
                                             <option value="default">Default sorting</option>
@@ -54,7 +63,7 @@
                                         </select>
                                     </div>
                                 </li>
-                                <li>
+                                <li class="dsmnone">
                                     <div class="showing-product-number text-right text-end">
                                         <span><?= count($products) . ' ' . (count($products) == 1 ? 'Product' : 'Products') ?></span>
                                     </div>
@@ -135,7 +144,7 @@
                                                                         class="theme-btn-1 btn quick_btn"
                                                                         data-prodid="<?= esc($product['prod_id']) ?>"
                                                                         data-menuid="<?= $product['menu_id'] ?>"
-                                                                        data-submenuid=<?= $product['submenu_id'] ?>>
+                                                                        data-submenuid=<?= $product['submenu_id'] ?> style="border:1px solid;">
                                                                         <i class="fas fa-shopping-cart"></i>
                                                                         <span>Buy Now</span>
                                                                     </a>
@@ -160,15 +169,14 @@
                                         <!-- ltn__product-item -->
                                         <?php if (!empty($products)): ?>
                                             <?php foreach ($products as $product): ?>
-                                                <div class="col-lg-12 product-item"
+                                                <div class="col-lg-12 col-12product-item"
                                                     data-name="<?= strtolower(esc($product['prod_name'])) ?>">
 
                                                     <div class="ltn__product-item ltn__product-item-3" style="min-height:auto;">
                                                         <div class="product-img">
-                                                            <a
-                                                                href="<?= base_url("product-details/" . base64_encode($product['prod_id'])) ?>">
+                                                            <a href="<?= base_url("product-details/" . base64_encode($product['prod_id'])) ?>">
                                                                 <img src="<?= base_url($product['main_image']) ?>"
-                                                                    alt="<?= esc($product['prod_name']) ?>">
+                                                                    alt="<?= esc($product['prod_name']) ?>" width="290">
                                                             </a>
                                                             <?php if ($product['available_status'] == 0): ?>
                                                                 <div class="product-badge">
@@ -195,25 +203,6 @@
                                                             </div>
                                                             <div class="product-brief">
                                                                 <?= $product['description'] ?? 'Premium quality product available at best prices.' ?>
-                                                            </div>
-                                                            <div class="product-hover-action">
-                                                                <ul>
-                                                                    <!-- <li>
-                                                                        <a class="quick_btn_list"
-                                                                            data-prodid="<?= esc($product['prod_id']) ?>"
-                                                                            data-menuid="<?= $product['menu_id'] ?>"
-                                                                            data-submenuid=<?= $product['submenu_id'] ?>>
-                                                                            <i class="far fa-eye"></i>
-                                                                        </a>
-                                                                    </li> -->
-                                                                    <!-- <li>
-                                                                        <a href="#" title="Wishlist" data-bs-toggle="modal"
-                                                                            data-bs-target="#liton_wishlist_modal">
-                                                                            <i class="far fa-heart"></i>
-                                                                        </a>
-                                                                    </li> -->
-
-                                                                </ul>
                                                             </div>
                                                         </div>
                                                     </div>

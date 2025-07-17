@@ -37,10 +37,10 @@
         <!-- SLIDER AREA END -->
 
         <!-- BANNER AREA START -->
-        <div class="ltn__banner-area mt-2">
-            <div class="container">
+        <div class="ltn__banner-area ">
+            <div class="container sm-padding">
                 <div class="row ltn__custom-gutter--- justify-content-center">
-                    <div class="col-lg-4 col-md-6 mb-2">
+                    <div class="col-lg-4 col-md-6 col-3 sm-padding">
                         <div class="ltn__banner-item">
                             <div class="ltn__banner-img">
                                 <a href="shop.html">
@@ -49,7 +49,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 mb-2">
+                    <div class="col-lg-4 col-md-6 col-3 sm-padding">
                         <div class="ltn__banner-item">
                             <div class="ltn__banner-img">
                                 <a href="shop.html">
@@ -58,7 +58,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 mb-2">
+                    <div class="col-lg-4 col-md-6 col-3 sm-padding">
                         <div class="ltn__banner-item">
                             <div class="ltn__banner-img">
                                 <a href="shop.html">
@@ -86,7 +86,7 @@
                     <?php if (!empty($featured_products)): ?>
                     <div class="row">
                         <?php foreach ($featured_products as $product): ?>
-                            <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                            <div class="col-lg-4 col-xl-3  col-md-4 col-sm-6 col-12">
                                 <div class="ltn__product-item ltn__product-item-3 text-left ">
                                     <div class="product-img">
                                         <a href="<?= base_url('/products/' . $product['slug'] . '/' . base64_encode($product['sub_id'])) ?>">
@@ -120,7 +120,7 @@
                 <?php if (!empty($bestSeller)): ?>
                 <div class="row">
                     <?php foreach ($bestSeller as $product): ?>
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                        <div class="col-lg-4 col-xl-3 col-md-4 col-sm-6 col-12">
                             <div class="ltn__product-item ltn__product-item-3 text-left ">
                                 <div class="product-img">
                                     <a href="<?= base_url('product-details/' . base64_encode($product['prod_id'])) ?>">
