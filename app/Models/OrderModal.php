@@ -46,6 +46,7 @@ class OrderModal extends Model
         'payment_cancel_reason',
         'gst',
         'sgst',
-        'cgst'
+        'cgst',
+        'is_returned'
     ];
 }

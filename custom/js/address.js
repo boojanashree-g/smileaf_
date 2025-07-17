@@ -266,7 +266,6 @@ $(document).ready(function () {
     var detailHtml = "";
     let returnedItemsHTML = "";
 
-
     $.ajax({
       type: "POST",
       url: "view-orderdetail",
@@ -275,9 +274,14 @@ $(document).ready(function () {
       headers: { Authorization: "Bearer " + token },
       success: function (resultData) {
         let orderItemsHTML = "";
+        let returnItemsHTML = "";
+
         let ShippingCharge = 100.0;
 
         let orderSummary = resultData.summary["order_status"];
+
+        let returnedProdDisplay =
+          resultData.summary["is_returned"] == 1 ? "" : "d-none";
         let CommonClass = "";
         let CommonBgClass = "";
         let TrackOrderDisp = "",
@@ -352,6 +356,38 @@ $(document).ready(function () {
             `;
         });
 
+        resultData.summary.returned_items.forEach((item) => {
+          returnItemsHTML += `
+                <div class="row align-items-center mb-3">
+                    <div class="col-3 col-md-4">
+                        <img class="img-fluid" src="${
+                          base_Url + item.main_image
+                        }" alt="${item.prod_name}" width="90">
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <h6 class="text-charcoal mb-1">
+                            <a href="#" class="text-charcoal">${
+                              item.quantity
+                            } x ${item.prod_name}</a>
+                        </h6>
+                        <div class="order-details-div">
+                            <ul class="list-unstyled text-pebble small mb-0">
+                                <li class="mt-0"><b>Packs:</b> ${
+                                  item.pack_qty
+                                }</li>
+                                <li class="mt-0"><b>Price:</b> ${
+                                  item.prod_price
+                                }</li>
+                            </ul>
+                            <h5 class="text-charcoal mb-0"><b>₹${
+                              item.sub_total
+                            }</b></h5>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
         detailHtml += `<div class="container-fluid">
                                             <!-- Order Header -->
                                             <div class="row bg-snow p-3">
@@ -387,8 +423,8 @@ $(document).ready(function () {
                                                 <div class="${dispClass}">
                                                     <div class="alert ${CommonBgClass} p-2 mb-0" id="statusAlert">
                                                         <h6 class="${CommonClass} mb-0"><b class="orderStatus">${
-                                                          resultData.summary["order_status"]
-                                                        }</b></h6>
+          resultData.summary["order_status"]
+        }</b></h6>
                                                         <p class="${CommonClass} mb-0 d-none d-md-block" id="deliveryInfo">
                                                             ${
                                                               resultData
@@ -460,31 +496,15 @@ $(document).ready(function () {
                                             </div>
                                         </div>`;
 
-          returnedItemsHTML += `
-              <div class="container-fluid mt-4">
+        returnedItemsHTML += `
+              <div class="container-fluid mt-4 ${returnedProdDisplay}">
                 <div class="row">
                   <div class="col-12">
                     <h4 class="returned_products mb-3">Returned Products</h4>
                   </div>
                 </div>
 
-                <div class="row align-items-center mb-3">
-                  <div class="col-3 col-md-2">
-                    <img class="img-fluid" src="http://localhost/smileaf_main_git/uploads/1751355237_a175428d317d452f71af.jpg" width="90" alt="Returned Product">
-                  </div>
-                  <div class="col-9 col-md-10">
-                    <h6 class="text-charcoal mb-1">
-                      <a href="#" class="text-charcoal">1 x 3</a>
-                    </h6>
-                    <div class="order-details-div">
-                      <ul class="list-unstyled text-pebble small mb-0">
-                        <li class="mt-0"><b>Packs:</b> 15</li>
-                        <li class="mt-0"><b>Price:</b> ₹1200.00</li>
-                      </ul>
-                      <h5 class="text-charcoal mb-0 mt-2"><b>₹1200.00</b></h5>
-                    </div>
-                  </div>
-                </div>
+                ${returnItemsHTML}
               </div>
             `;
 
@@ -574,6 +594,185 @@ $(document).ready(function () {
           window.location.href = base_Url;
         } else {
           showToast(error, "error");
+        }
+      },
+    });
+  }
+
+  // *************************** [Return  Products] *************************************************************************
+  $(".returnproduct").click(function () {
+    let status = $(this).data("status");
+    let returnOrderID = $(this).data("orderid");
+    let token = localStorage.getItem("token");
+
+    let deliveredTime = new Date($(this).data("deliverytime"));
+    const now = new Date();
+    const diffDays = (now - deliveredTime) / (1000 * 60 * 60 * 24);
+
+    if (status === "Delivered" && diffDays <= 7) {
+      getReturnProducts(returnOrderID, token);
+    } else {
+      alert("Return not allowed for this order.");
+    }
+  });
+
+  function getReturnProducts(orderID, token) {
+    $.ajax({
+      type: "POST",
+      url: base_Url + "get-return-products",
+      data: {
+        order_id: orderID,
+      },
+      dataType: "JSON",
+      headers: { Authorization: "Bearer " + token },
+      success: function (JSONdata) {
+        console.log(JSONdata);
+        $(".return_product_modal").modal("show");
+        displayReturnDetails(JSONdata);
+      },
+      error: function (error) {
+        let status = error.status;
+        if (status === 401) {
+          localStorage.removeItem("token");
+          window.location.href = base_Url;
+        } else {
+          showToast(error, "error");
+        }
+      },
+    });
+  }
+
+  function displayReturnDetails(result) {
+    let returnHtml = "";
+    let itemRows = "";
+
+    let itemList = result.items;
+
+    itemList.forEach((item, index) => {
+      itemRows += `
+        <tr>
+            <td>
+                <input type="checkbox" class="return-check" data-index="${index}" name="return_items[${index}][selected]" value="1">
+            </td>
+            <td>
+                <strong>${item.prod_name}</strong><br>
+                Pack Qty: ${item.pack_qty} <br>
+                Price : ₹ ${item.prod_price}
+                <input type="hidden" name="return_items[${index}][prod_id]" value="${item.prod_id}">
+                <input type="hidden" name="return_items[${index}][variant_id]" value="${item.variant_id}">
+                <input type="hidden" name="return_items[${index}][quantity]" value="${item.quantity}">
+                <input type="hidden" name="return_items[${index}][prod_price]" value="${item.prod_price}">
+                <input type="hidden" name="return_items[${index}][sub_total]" value="${item.sub_total}">
+                <input type="hidden" name="return_items[${index}][main_image]" value="${item.main_image}">
+                <input type="hidden" name="return_items[${index}][prod_name]" value="${item.prod_name}">
+                <input type="hidden" name="return_items[${index}][pack_qty]" value="${item.pack_qty}">
+            </td>
+            <td>
+                <img width="100px" src="${base_Url}${item.main_image}" />
+            </td>
+            <td>
+                <textarea name="return_items[${index}][reason]" class="form-control return-reason" data-index="${index}" placeholder="Mention reason..."></textarea>
+                <div class="text-danger error-msg" id="error-${index}" style="display:none;">Please enter a reason.</div>
+            </td>
+        </tr>`;
+    });
+
+    $("#return-orderno").html(`Return Products from Order ${result.order_no}`);
+
+    returnHtml += `
+    <form id="return-form">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>Product</th>
+                    <th>Product Image</th>
+                    <th>Reason for Return</th>
+                </tr>
+            </thead>
+            <tbody>
+                 <input type="hidden" name="order_id" value="${result.order_id}">
+
+                ${itemRows}
+            </tbody>
+        </table>
+        
+        <div class="text-end">
+            <button type="submit" class="btn btn-warning return-submit">Submit Return Request</button>
+        </div>
+    </form>`;
+
+    $("#return-products").html(returnHtml);
+  }
+
+  $(document).on("submit", "#return-form", function (e) {
+    e.preventDefault();
+
+    let valid = true;
+    let atLeastOneSelected = false;
+
+    $(".return-check").each(function () {
+      let index = $(this).data("index");
+      let isChecked = $(this).is(":checked");
+      let reason = $(`textarea[data-index="${index}"]`).val().trim();
+
+      $(`#error-${index}`).hide();
+
+      if (isChecked) {
+        atLeastOneSelected = true;
+
+        if (reason === "") {
+          valid = false;
+          $(`#error-${index}`).show();
+        }
+      }
+    });
+
+    if (!atLeastOneSelected) {
+      showToast("Please select at least one product to return.", "warning");
+
+      return;
+    }
+
+    if (!valid) {
+      showToast("Please fill in reason for all selected products.", "warning");
+      return;
+    }
+    submitReturnData();
+  });
+
+  function submitReturnData() {
+    let formElement = document.getElementById("return-form");
+    let formData = new FormData(formElement);
+    $("#loader-overlay").show();
+    $.ajax({
+      type: "POST",
+      url: base_Url + "submit-return-products",
+      data: formData,
+      processData: false,
+      contentType: false,
+      dataType: "JSON",
+      headers: { Authorization: "Bearer " + token },
+      success: function (JSONdata) {
+        $("#loader-overlay").hide();
+        if (JSONdata.code == 200) {
+          $(".return_product_modal").modal("hide");
+          $(".returnproduct").addClass("d-none");
+          showToast(JSONdata.message, "success");
+          $(".returnproduct").html("Return Requested");
+        } else if (JSONdata.code == 400) {
+          $(".return_product_modal").modal("hide");
+          showToast(JSONdata.message, "error");
+        }
+      },
+      error: function (error) {
+        $("#loader-overlay").hide();
+        let status = error.status;
+        if (status === 401) {
+          localStorage.removeItem("token");
+          window.location.href = base_Url;
+        } else {
+          showToast("Something went wrong.", "error");
         }
       },
     });

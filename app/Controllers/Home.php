@@ -507,7 +507,7 @@ class Home extends BaseController
         if ($isAjax) {
             return $this->response->setJSON([
                 'success' => true,
-                'products' => $finalSortedProducts,
+                'products' => $products,
                 'count' => count($products),
                 'mainmenus' => $menuData,
                 'groupedSubmenus' => $menuData['submenu']
@@ -608,7 +608,7 @@ class Home extends BaseController
                 'order_sub_total' => $orderSubTotal,
                 'order_total_amt' => $OrderTotalAmt,
                 'delivered_time' => $deliveryTime,
-
+                'is_returned' => $orders['is_returned'],
                 'items' => []
             ];
 
@@ -716,9 +716,13 @@ class Home extends BaseController
     public function orderTracking()
     {
         $orderID = base64_decode($this->request->getGet('order_id'));
-
+        $userID = session()->get('user_id');
 
         $menuData = $this->getMenuData();
+
+        $trackingQry = "SELECT `courier_partner` ,`tracking_link`,`tracking_id` FROM `tbl_orders` WHERE `flag` = 1 AND `order_id` = ? AND `user_id` = ?";
+        $trackingDetails = $this->db->query($trackingQry, [$orderID, $userID])->getRowArray();
+
         $data = array_merge($menuData, [
             'page_title' => 'Order Tracking',
             'breadcrumb_items' => [
@@ -726,8 +730,11 @@ class Home extends BaseController
                 ['label' => 'Order Tracking']
             ],
             'banner_image' => base_url('public/assets/img/banner/bg_4.png'),
-            'order_id' => $orderID
+            'order_id' => $orderID,
+            'tracking_details' => $trackingDetails
+
         ]);
+
 
         return view('orderTracking', $data);
     }
@@ -735,8 +742,9 @@ class Home extends BaseController
     public function getOrderStatus()
     {
         $userID = session()->get('user_id');
-        $orderNo = $this->request->getPost('order_no');
+
         $orderID = $this->request->getPost('main_orderid');
+
 
         $orderQuery = "SELECT 
                         DATE_FORMAT(`order_date`, '%d-%m-%Y %r') AS `order_date`,
@@ -744,9 +752,9 @@ class Home extends BaseController
                         DATE_FORMAT(`delivery_date`, '%d-%m-%Y %r') AS `delivery_date`,
                         `order_status`
                         FROM `tbl_orders`
-                        WHERE `flag` = 1 AND `order_id` = ? AND `order_no` = ? AND `user_id` = ?
+                        WHERE `flag` = 1 AND `order_id` = ?   AND `user_id` = ?
                         ";
-        $orderDetails = $this->db->query($orderQuery, [$orderID, $orderNo, $userID])->getRowArray();
+        $orderDetails = $this->db->query($orderQuery, [$orderID, $userID])->getRowArray();
 
 
         $res = [

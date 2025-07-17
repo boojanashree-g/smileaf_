@@ -41,7 +41,7 @@
                                                 <h2>
                                                     <i class="ti ti-shopping-cart text-success display-6"></i>
                                                 </h2>
-                                                <h4 class="text-dark">New Orders</h4>
+                                                <h5 class="text-dark">New Orders</h5>
                                                 <h5 class="text-dark"><?= $neworder_count ?></h5>
                                             </div>
                                         </div>
@@ -56,7 +56,7 @@
                                                 <h2>
                                                     <i class="ti ti-package text-info display-6"></i>
                                                 </h2>
-                                                <h4>Shipping Orders</h4>
+                                                <h5>Shipping Orders</h5>
                                                 <h5><?= $shipping_count ?></h5>
                                             </div>
                                         </div>
@@ -71,7 +71,7 @@
                                                     <i class="ti ti-truck-delivery text-success display-6"></i>
 
                                                 </h2>
-                                                <h4>Delivered Orders</h4>
+                                                <h5>Delivered Orders</h5>
                                                 <h5><?= $delivered_count ?></h5>
                                             </div>
                                         </div>
@@ -86,7 +86,7 @@
                                                     <i class="ti ti-clock text-warning display-6"></i>
 
                                                 </h2>
-                                                <h4>Pending Orders</h4>
+                                                <h5>Pending Orders</h5>
                                                 <h5><?= $pending_count ?></h5>
                                             </div>
                                         </div>
@@ -106,8 +106,24 @@
                                                     <i class="ti ti-box-off text-danger display-6"></i>
 
                                                 </h2>
-                                                <h4>Cancel Orders</h4>
+                                                <h5>Cancel Orders</h5>
                                                 <h5><?= $cancel_count ?></h5>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-lg-3 col-md-6 col-sm-12">
+                                    <a href="<?= base_url('admin/order-details?status=Returned') ?>"
+                                        class="text-decoration-none">
+                                        <div class="card drag-item cursor-move mb-lg-0 mb-6">
+                                            <div class="card-body text-center">
+                                                <h2>
+                                                    <i class="ti ti-package-import text-info display-6"></i>
+
+
+                                                </h2>
+                                                <h5>Returned Orders</h5>
+                                                <h5><?= $returned_count ?></h5>
                                             </div>
                                         </div>
                                     </a>
@@ -121,7 +137,7 @@
                                                     <i class="ti ti-rotate-clockwise-2 text-primary display-6"></i>
 
                                                 </h2>
-                                                <h4>Refund Orders</h4>
+                                                <h5>Refund Orders</h5>
                                                 <h5><?= $refund_count ?></h5>
                                             </div>
                                         </div>
@@ -137,7 +153,7 @@
                                                     <i class="ti ti-credit-card-off text-danger display-6"></i>
 
                                                 </h2>
-                                                <h4>Payment Failed Orders</h4>
+                                                <h5>Payment Failed Orders</h5>
                                                 <h5><?= $failed_count ?></h5>
                                             </div>
                                         </div>

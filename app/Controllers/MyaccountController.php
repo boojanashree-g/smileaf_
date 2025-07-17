@@ -3,7 +3,8 @@
 namespace App\Controllers;
 use App\Models\UserModel;
 use App\Models\AddressModel;
-
+use PHPMailer\PHPMailer\Exception;
+use App\Libraries\PHPMailer_Lib;
 class MyaccountController extends BaseController
 {
     protected $db;
@@ -356,6 +357,11 @@ class MyaccountController extends BaseController
         $itemDetails = $this->db->query($query, [$orderID])->getResultArray();
 
 
+        $query2 = "SELECT * FROM `tbl_return_items` WHERE `flag` = 1 AND `order_id` = ?";
+        $returnedItems = $this->db->query($query2, [$orderID])->getResultArray();
+
+
+
         $orderSummaries = [
             'order_id' => $orderID,
             'order_no' => $orders[0]['order_no'],
@@ -373,8 +379,9 @@ class MyaccountController extends BaseController
             'cgst' => $orders[0]['cgst'],
             'sgst' => $orders[0]['sgst'],
             'gst' => $orders[0]['gst'],
-
-            'items' => []
+            'returned_items' => [],
+            'items' => [],
+            'is_returned' => $orders[0]['is_returned'],
         ];
 
         foreach ($itemDetails as $item) {
@@ -409,6 +416,39 @@ class MyaccountController extends BaseController
             }
         }
 
+        if (count($returnedItems) > 0) {
+            foreach ($returnedItems as $item) {
+                $prodID = $item['prod_id'];
+                $variantID = $item['variant_id'];
+                $quantity = $item['quantity'];
+                $prod_price = $item['prod_price'];
+                $sub_total = $item['sub_total'];
+
+                $packQtyQuery = "SELECT
+                            a.`pack_qty`,
+                            b.prod_name,
+                            b.main_image
+                        FROM
+                            `tbl_variants` AS a
+                        INNER JOIN tbl_products AS b
+                            ON a.prod_id = b.prod_id
+                        WHERE
+                            b.`flag` = 1 AND a.flag = 1 AND a.variant_id = ? AND a.prod_id = ?";
+                $packData = $this->db->query($packQtyQuery, [$variantID, $prodID])->getRow();
+
+                if ($packData) {
+                    $productDetails = [
+                        'prod_name' => $packData->prod_name,
+                        'main_image' => $packData->main_image,
+                        'pack_qty' => $packData->pack_qty,
+                        'quantity' => $quantity,
+                        'prod_price' => $prod_price,
+                        'sub_total' => $sub_total,
+                    ];
+                    $orderSummaries['returned_items'][] = $productDetails;
+                }
+            }
+        }
 
         krsort($orderSummaries);
 
@@ -460,5 +500,303 @@ class MyaccountController extends BaseController
         }
         echo json_encode($res);
     }
+
+    public function getReturnProducts()
+    {
+        $orderID = $this->request->getPost('order_id');
+
+        $userID = $this->session->get('user_id');
+        // Get Order Summary
+        $Orderquery = "SELECT * FROM `tbl_orders` WHERE `user_id` = ? AND order_id = ? AND`flag` = 1  AND  order_status <> 'initiated'";
+        $orders = $this->db->query($Orderquery, [$userID, $orderID])->getResultArray();
+
+
+        $orderSummaries = [];
+
+        $orderID = $orders[0]['order_id'];
+        $courierCharge = $orders[0]['courier_charge'];
+        $orderSubTotal = $orders[0]['sub_total'];
+        $OrderTotalAmt = $orders[0]['total_amt'];
+        $orderDate = date('d-m-Y', strtotime($orders[0]['order_date']));
+
+        $query = "SELECT * FROM `tbl_order_item` WHERE `flag` = 1 AND `order_id` = ?";
+        $itemDetails = $this->db->query($query, [$orderID])->getResultArray();
+
+        $orderSummaries = [
+            'order_id' => $orderID,
+            'order_no' => $orders[0]['order_no'],
+            'bill_no' => $orders[0]['bill_no'],
+            'bill_date' => $orders[0]['bill_date'],
+            'order_status' => $orders[0]['order_status'],
+            'order_date' => $orderDate,
+            'payment_status' => $orders[0]['payment_status'],
+            'payment_cancel_reason' => $orders[0]['payment_cancel_reason'],
+            'delivery_status' => $orders[0]['delivery_status'],
+            'delivery_message' => $orders[0]['delivery_message'],
+            'courier_charge' => $courierCharge,
+            'order_sub_total' => $orderSubTotal,
+            'order_total_amt' => $OrderTotalAmt,
+            'cgst' => $orders[0]['cgst'],
+            'sgst' => $orders[0]['sgst'],
+            'gst' => $orders[0]['gst'],
+            'items' => [],
+        ];
+
+        foreach ($itemDetails as $item) {
+            $prodID = $item['prod_id'];
+            $variantID = $item['variant_id'];
+            $quantity = $item['quantity'];
+            $prod_price = $item['prod_price'];
+            $sub_total = $item['sub_total'];
+
+            $packQtyQuery = "SELECT
+                            a.`pack_qty`,
+                            b.prod_name,
+                            b.main_image
+                        FROM
+                            `tbl_variants` AS a
+                        INNER JOIN tbl_products AS b
+                            ON a.prod_id = b.prod_id
+                        WHERE
+                            b.`flag` = 1 AND a.flag = 1 AND a.variant_id = ? AND a.prod_id = ?";
+            $packData = $this->db->query($packQtyQuery, [$variantID, $prodID])->getRow();
+
+            if ($packData) {
+                $productDetails = [
+                    'prod_name' => $packData->prod_name,
+                    'main_image' => $packData->main_image,
+                    'pack_qty' => $packData->pack_qty,
+                    'quantity' => $quantity,
+                    'prod_price' => $prod_price,
+                    'sub_total' => $sub_total,
+                    'prod_id' => $prodID,
+                    'variant_id' => $variantID
+                ];
+                $orderSummaries['items'][] = $productDetails;
+            }
+        }
+
+
+        return $this->response->setJSON($orderSummaries);
+
+    }
+
+    public function submitReturnProducts()
+    {
+        $data = $this->request->getPost('return_items');
+
+        $orderID = $this->request->getPost('order_id');
+
+        $userQuery = "SELECT
+                        a.`user_id`,
+                        b.`username`,
+                        b.`number`,
+                        b.`email`
+                    FROM
+                        `tbl_orders` AS a
+                    INNER JOIN tbl_users AS b
+                    ON
+                        a.user_id = b.user_id
+                    WHERE
+                        a.flag = 1 AND b.flag = 1 AND a.order_id = ?";
+        $userDetails = $this->db->query($userQuery, [$orderID])->getRow();
+
+        $userName = $userDetails->username;
+        $number = $userDetails->number;
+        $email = $userDetails->email;
+
+        $refundData = [];
+        $emailData = [];
+        foreach ($data as $formData) {
+            $selected = $formData['selected'] ?? null;
+            $prod_id = $formData['prod_id'] ?? null;
+            $variant_id = $formData['variant_id'] ?? null;
+            $reason = $formData['reason'] ?? null;
+            $quantity = $formData['quantity'] ?? null;
+            $prod_price = $formData['prod_price'] ?? null;
+            $main_image = $formData['main_image'] ?? null;
+            $prod_name = $formData['prod_name'] ?? null;
+            $pack_qty = $formData['pack_qty'] ?? null;
+            $subtotal = $prod_price * $quantity;
+
+            if ($selected == 1) {
+                $variantQry = "SELECT `mrp` ,`offer_type`,`offer_details`,`offer_price` FROM `tbl_variants` WHERE `flag` = 1 AND `variant_id` = ? AND `prod_id` = ?";
+                $variantData = $this->db->query($variantQry, [$variant_id, $prod_id])->getRow();
+                $refundData[] = [
+                    'order_id' => $orderID,
+                    'prod_id' => $prod_id,
+                    'variant_id' => $variant_id,
+                    'quantity' => $quantity,
+                    'prod_price' => $prod_price,
+                    'sub_total' => $subtotal,
+                    'mrp' => $variantData->mrp,
+                    'offer_type' => $variantData->offer_type,
+                    'offer_details' => $variantData->offer_details,
+                    'offer_price' => $variantData->offer_price,
+                    'reason' => $reason
+                ];
+
+                $emailData['email_products'][] = [
+                    'image' => $main_image,
+                    'prod_name' => $prod_name,
+                    'pack_qty' => $pack_qty,
+                    'reason' => $reason,
+                ];
+            }
+        }
+
+        if (!empty($emailData)) {
+            $emailData['username'] = $userName;
+            $emailData['email'] = $email;
+            $emailData['number'] = $number;
+
+            $sendEmail = $this->sendReturnEmail($emailData);
+
+            if ($sendEmail == 1) {
+
+                foreach ($refundData as $refund) {
+                    $insertReturnData = $this->db->table('tbl_return_items')->insert($refund);
+                }
+                $affectedRows = $this->db->affectedRows();
+                if ($affectedRows > 0) {
+                    $refundProdCount = count($refundData);
+
+                    $actualOrderItems = $this->db->query("SELECT COUNT(`item_id`) AS item_count FROM `tbl_order_item` WHERE  `flag` = 1 AND `order_id` = ?", [$orderID])->getRow();
+                    $actualOrderCount = $actualOrderItems->item_count;
+
+                    if ($refundProdCount == $actualOrderCount) {
+                        $orderStatus = 'Returned';
+                        $deliveryStatus = 'Returned';
+                        $deliveryMessage = 'All items have been returned. Your refund will be processed shortly.';
+                        $is_returned = 1;
+
+                        $updateOrderQry = "UPDATE tbl_orders SET `order_status` = ? ,`delivery_status` = ?, `delivery_message` =? , `is_returned` = ? WHERE `order_id` = ? AND `flag` = 1";
+                        $updateData = $this->db->query($updateOrderQry, [$orderStatus, $deliveryStatus, $deliveryMessage, $is_returned, $orderID]);
+
+                    } else if ($refundProdCount < $actualOrderCount) {
+                        $is_returned = 1;
+                        $updateOrderQry = "UPDATE tbl_orders SET  `is_returned` = ? WHERE `order_id` = ? AND `flag` = 1";
+                        $updateOrder = $this->db->query($updateOrderQry, [$is_returned, $orderID]);
+                    }
+                }
+
+                $res['code'] = 200;
+                $res['status'] = 'success';
+                $res['message'] = 'Email send and data updated successfully!';
+            } else {
+                $res['code'] = 400;
+                $res['status'] = 'failure';
+                $res['message'] = 'Failed to send Email!';
+            }
+            return $this->response->setJSON($res);
+
+        }
+
+    }
+
+    private function sendReturnEmail($data)
+    {
+        $emailProducts = $data['email_products'];
+        $userName = $data['username'];
+        $email = $data['email'];
+        $number = $data['number'];
+
+        helper('url');
+
+        $to_email = "narmathi@appteq.in";
+        $from_email = $email;
+
+        $phpmailer_lib = new PHPMailer_Lib();
+        $mail = $phpmailer_lib->load();
+
+        $emailHtml = "";
+        foreach ($emailProducts as $emailProd) {
+            $prodMainImg = base_url($emailProd['image']);
+            $prod_name = htmlspecialchars($emailProd['prod_name']);
+            $pack_qty = htmlspecialchars($emailProd['pack_qty']);
+            $reason = htmlspecialchars($emailProd['reason']);
+
+            $emailHtml .= '
+        <table style="border-collapse: collapse; width: 100%; max-width: 750px; margin-top:15px" align="center">
+            <tr style="background-color: #f2f2f2;">
+                <th style="padding: 8px; border: 1px solid #ddd;">Image</th>
+                <th style="padding: 8px; border: 1px solid #ddd;">Product Name</th>
+                <th style="padding: 8px; border: 1px solid #ddd;">Pack Qty</th>
+                <th style="padding: 8px; border: 1px solid #ddd;">Reason</th>
+            </tr>
+            <tr>    
+                <td style="padding: 8px; border: 1px solid #ddd;">
+                    <a href="' . $prodMainImg . '" target="_blank">Click to view the image</a>
+                </td>
+                <td style="padding: 8px; border: 1px solid #ddd;">' . $prod_name . '</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">' . $pack_qty . '</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">' . $reason . '</td>
+            </tr>
+        </table>';
+        }
+
+        try {
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'narmathigopalan2002@gmail.com';
+            $mail->Password = 'qtfnzuhtbmuxyxks';
+            $mail->SMTPSecure = 'ssl';
+            $mail->Port = 465;
+
+            $mail->setFrom($from_email, 'Regarding Return Products');
+            $mail->addAddress($to_email);
+
+            $mail->Subject = 'Return Product Request';
+            $mail->isHTML(true);
+
+            $mail->Body = '
+        <table align="center" border="0" cellpadding="0" cellspacing="0"
+           width="750" bgcolor="white" style="border:2px solid #dad8c9;padding:15px">
+        <tbody>
+            <tr>
+                <td align="center">
+                    <table align="center" border="0" cellpadding="0"
+                           cellspacing="0" class="col-550" width="750">
+                        <tr>
+                            <td align="center" style="background-color:  #538cc6; height: 70px;">
+                                <a href="#" style="text-decoration: none;">
+                                    <h2 style="color:#ffffff;">Returned Products</h2>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+      
+
+        <table style="border-collapse: collapse; width: 100%; max-width: 750px; margin-top:15px" align="center">
+            <tr style="background-color: #f2f2f2;">
+                <th style="padding: 8px; border: 1px solid #ddd;">Username</th>
+                <th style="padding: 8px; border: 1px solid #ddd;">Email</th>
+                <th style="padding: 8px; border: 1px solid #ddd;">Mobile</th>
+            </tr>
+            <tr>
+                <td style="padding: 8px; border: 1px solid #ddd;text-align:center">' . htmlspecialchars($userName) . '</td>
+                <td style="padding: 8px; border: 1px solid #ddd;text-align:center">' . htmlspecialchars($email) . '</td>
+                <td style="padding: 8px; border: 1px solid #ddd;text-align:center">' . htmlspecialchars($number) . '</td>
+            </tr>
+        </table>
+        ' . $emailHtml;
+
+            $mailsent = $mail->send();
+            if ($mailsent == 1) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (Exception $e) {
+            log_message('error', 'Mail Error: ' . $mail->ErrorInfo);
+            return false;
+        }
+    }
+
 
 }

@@ -17,6 +17,7 @@ class DeliveryMessages extends BaseConfig
         'Refund Processed' => 'Refund will be credited within 5-7 working days',
         'Refund Failed' => 'Refund is Failed',
         'Null' => 'Payment failed. Order not processed.',
-        'Cancel Modal' => 'Transaction cancelled by user before payment confirmation'
+        'Cancel Modal' => 'Transaction cancelled by user before payment confirmation',
+        'Returned' => 'All items have been returned. Your refund will be processed shortly.'
     ];
 }

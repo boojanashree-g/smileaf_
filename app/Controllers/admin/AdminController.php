@@ -83,6 +83,7 @@ class AdminController extends BaseController
         $res['cancel_count'] = $this->cancelOrderCount();
         $res['refund_count'] = $this->refundOrderCount();
         $res['failed_count'] = $this->failedOrderCount();
+        $res['returned_count'] = $this->returnedOrderCount();
 
         return view("admin/dashboard", $res);
     }
@@ -143,6 +144,13 @@ class AdminController extends BaseController
         $resultData = $this->db->query("SELECT COUNT(`order_id`) AS Failed   FROM `tbl_orders` WHERE `flag` = 1 AND `order_status` = ?", [$orderStatus])->getRow();
         $FailedOrderCount = $resultData->Failed;
         return $FailedOrderCount;
+    }
+    private function returnedOrderCount()
+    {
+        $orderStatus = "Returned";
+        $resultData = $this->db->query("SELECT COUNT(`order_id`) AS Returned   FROM `tbl_orders` WHERE `flag` = 1 AND  is_returned = 1 AND `order_status` = ?", [$orderStatus])->getRow();
+        $ReturnedOrderCount = $resultData->Returned;
+        return $ReturnedOrderCount;
     }
 }
 
