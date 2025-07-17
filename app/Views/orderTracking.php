@@ -75,73 +75,73 @@
 
 <body>
 
-<div class="body-wrapper">
-    <?php require("components/header.php") ?>
+    <div class="body-wrapper">
+        <?php require("components/header.php") ?>
 
-    <div class="ltn__login-area mt-25">
-        <div class="container">
-            <?php
-            $status = 'Shipped';
-            $statuses = ['Order Placed', 'Shipped', 'Delivered'];
-            $icons = ['fa-check', 'fa-box', 'fa-truck'];
-            $timestamps = [
-                'Order Placed' => '2025-06-09 10:15 AM',
-                'Shipped' => '2025-06-10 09:00 AM',
-                'Delivered' => '--',
-            ];
-            ?>
+        <div class="ltn__login-area mt-25">
+            <div class="container">
 
-            <div class="row justify-content-center">
-                <!-- Courier Details -->
-                <div class="col-lg-5 col-md-10 mb-4">
-                    <div class="account-login-inner p-4 section-bg-1 rounded shadow-sm h-100">
-                        <h3 class="mb-4 fw-semibold text-center">Courier Details</h3>
-                        
-                        <div class="row mb-3">
-                            <div class="col-sm-4 text-start fw-bold">Courier Partner:</div>
-                            <div class="col-sm-8 text-start">Test</div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <div class="col-sm-4 text-start fw-bold">Courier ID:</div>
-                            <div class="col-sm-8 text-start">2325888R</div>
-                        </div>
+                <div class="row justify-content-center">
+                    <!-- Courier Details -->
+                    <div class="col-lg-5 col-md-10 mb-4">
+                        <div class="account-login-inner p-4 section-bg-1 rounded shadow-sm h-100">
+                            <h3 class="mb-4 fw-semibold text-center">Courier Details</h3>
 
-                        <div class="row mb-3">
-                            <div class="col-sm-4 text-start fw-bold">URL:</div>
-                            <div class="col-sm-8 text-start text-primary">
-                                <a href="https://example.com" target="_blank">https://example.com</a>
+                            <div class="row mb-3">
+                                <div class="col-sm-4 text-start fw-bold">Courier Partner:</div>
+                                <div class="col-sm-8 text-start">
+                                    <?= trim($tracking_details['courier_partner'] ?? '') !== '' ? $tracking_details['courier_partner'] : '-' ?>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4 text-start fw-bold">Tracking ID:</div>
+                                <?= trim($tracking_details['tracking_id'] ?? '') !== '' ? $tracking_details['tracking_id'] : '-' ?>
+
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4 text-start fw-bold">URL:</div>
+                                <div class="col-sm-8 text-start text-primary">
+                                    <a href="<?= trim($tracking_details['tracking_link'] ?? '') !== '' ? $tracking_details['tracking_link'] : '#' ?>"
+                                        target="_blank">
+                                        <?= trim($tracking_details['tracking_link'] ?? '') !== '' ? $tracking_details['tracking_link'] : '-' ?></a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Order Tracking Progress -->
-                <div class="col-lg-7 col-md-10 mb-4">
-                    <div class="account-login-inner p-4 section-bg-1 rounded shadow-sm h-100">
-                        <h3 class="mb-4 fw-semibold text-center">Order Tracking</h3>
-                        <div class="order-tracking-status">
+
+                    <input type="hidden" id="order_id" value="<?= $order_id ?>" />
+
+                    <div class="col-lg-7 col-md-10 mb-4 account-login-inner p-4 section-bg-1 rounded shadow-sm h-100">
+                        <h3 class="mb-4 fw-semibold text-center">Order Details</h3>
+                        <div class="order-tracking-status d-none ">
                             <div class="track">
-                                <?php foreach ($statuses as $index => $s):
-                                    $isActive = array_search($s, $statuses) <= array_search($status, $statuses) ? 'active' : '';
-                                ?>
-                                    <div class="step <?php echo $isActive; ?>">
-                                        <span class="icon"><i class="fas <?php echo $icons[$index]; ?>"></i></span>
-                                        <span class="text"><?php echo $s; ?></span>
-                                        <span class="datetime"><?php echo $timestamps[$s]; ?></span>
+                                <?php
+                                $statuses = ['Order Placed', 'Shipped', 'Delivered'];
+                                $icons = ['fa-check', 'fa-box', 'fa-truck'];
+                                foreach ($statuses as $index => $label):
+                                    ?>
+                                    <div class="step">
+                                        <span class="icon"><i class="fas <?= $icons[$index] ?>"></i></span>
+                                        <span class="text"><?= $label ?></span>
+                                        <span class="datetime">--</span>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
                         </div>
+
                     </div>
                 </div>
-            </div> <!-- row -->
-        </div> <!-- container -->
+            </div>
+        </div>
+
+        <?php require("components/footer.php") ?>
     </div>
 
-    <?php require("components/footer.php") ?>
-</div> <!-- body-wrapper -->
-
-<script src="<?php echo base_url() ?>custom/js/ordertracking.js"></script>
+    <script src="<?php echo base_url() ?>custom/js/ordertracking.js"></script>
 </body>
+
 </html>

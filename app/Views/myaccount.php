@@ -60,6 +60,32 @@
     padding:0;
     
 }
+#loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+ background: rgba(255, 255, 255, 1); 
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader {
+  border: 6px solid #f3f3f362;
+  border-top: 6px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 
 </style>
 <body>
@@ -134,6 +160,7 @@
                                                                             'Cancelled' => 'bg-warm-red',        
                                                                             'Refund'    => 'bg-sandy-beige',
                                                                             'Failed'    => 'bg-burnt-umber',
+                                                                            'Returned'   =>'bg-warm-red',
                                                                         ];                                                          
 
 
@@ -141,15 +168,17 @@
 
 
                                                                         // Check if return is valid
-                                                                        $canReturn = false;
-                                                                        if ($orderStatus === 'Delivered') {
+                                                                        $returnStatus = false;
+                                                                        if ($orderStatus === 'Delivered' && $orderDetails['is_returned'] != 1) {
 
                                                                             $deliveredTime = strtotime($orderDetails['delivered_time']);
                                                                             $now = time();
                                                                             $diffDays = floor(($now - $deliveredTime) / (60 * 60 * 24));
 
                                                                             if ($diffDays <= 7) {
-                                                                                $canReturn = true;
+                                                                                $returnStatus = true;
+                                                                                $returnText = $orderDetails['is_returned'] == 1 ? 'Return Requested' : 'Return';
+  
                                                                             }
 
                                                                         }
@@ -170,12 +199,12 @@
                                                                                 <a class="btn-sm btn-view-order view-order"
                                                                                 data-orderid="<?= esc($orderDetails['order_id']) ?>" title="View Order"><i class='far fa-eye' style='font-size:14px;'></i></a>
 
-                                                                                <?php if ($canReturn): ?>
+                                                                                <?php if ($returnStatus): ?>
                                                                                     &nbsp;&nbsp;
-                                                                                    <a class="btn-sm btn-return-policy returnpolicy"
+                                                                                    <a class="btn-sm btn-return-policy returnproduct"
                                                                                     data-status="<?= esc($orderStatus) ?>"
                                                                                     data-deliverytime="<?= esc($orderDetails['delivered_time']) ?>"
-                                                                                    data-orderid="<?= esc($orderDetails['order_id']) ?>">Return</a>
+                                                                                    data-orderid="<?= esc($orderDetails['order_id']) ?>"><?= $returnText?></a>
                                                                                 <?php endif; ?>
 
                                                                                 <?php if ($dispCancel): ?>
@@ -300,6 +329,11 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div id="loader-overlay" style="display: none;">
+                                <div class="loader"></div>
+                        </div>
+
                         <!-- PRODUCT TAB AREA END -->
                         <!-- Add Address Modal -->
                         <div class="modal fade slide-from-center" id="addAddressModal" tabindex="-1" aria-hidden="true">
@@ -465,6 +499,30 @@
                             </div>
                         </div>
 
+
+                         <!-- Order Details Modal -->
+                        <div class="modal fade return_product_modal" id="return_product_modal" tabindex="-1"
+                            aria-labelledby="orderModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl">
+                              
+                                <div class="modal-content">
+                                    <div class="modal-header bg-snow">
+                                        <h5 class="modal-title text-charcoal" id="orderModalLabel">Order Details</h5>
+                                        <button type="button" class="btn-close" onclick="returnModalClose()" data-bs-dismi
+                                            ss="modal" aria-label="Close"></button>
+                                    </div>
+
+                                    <div class="modal-body p-3" id="return-products">
+                                       <p id="return-orderno"></p>
+                                        
+                                        <!-- Dynamic Render -->
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+
                     </div>
                 </div>
             </div>
@@ -501,27 +559,11 @@
         function ModalClose() {
             $('.orderModal').modal('hide');
         }
+        function returnModalClose() {
+            $('.return_product_modal').modal('hide');
+        }
 
-
-        // Return Product
-        $(".returnpolicy").click(function () {
-            let status = $(this).data("status");
-
-            let deliveredTime = new Date($(this).data("deliverytime"));
-
-            const now = new Date();
-
-            const diffDays = (now - deliveredTime) / (1000 * 60 * 60 * 24);
-
-            if (status === "Delivered" && diffDays <= 7) {
-                alert("Return process initiated for Order ID: " + $(this).data("orderid"));
-            } else {
-                alert("Return not allowed for this order.");
-            }
-
-        })
-
-    </script>
+     </script>
 
 
     <script src="<?php echo base_url() ?>custom/js/myaccount.js"></script>

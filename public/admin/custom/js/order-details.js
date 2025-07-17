@@ -90,6 +90,9 @@ $(document).ready(function () {
               case "Refund":
                 backgroundclr = "badge bg-label-secondary";
                 break;
+              case "Returned":
+                backgroundclr = "badge bg-label-danger";
+                break;
               default:
                 backgroundclr = "badge bg-label-light";
             }
@@ -169,8 +172,11 @@ $(document).ready(function () {
               backgroundclr = "bg-label-secondary";
             } else if (status == "Refund Processed") {
               backgroundclr = "bg-label-secondary";
-            } else if (status == "Cancelled" || status == "Refund Failed") {
+            } else if (status == "Cancelled" || status == "Refund Failed" || status == "Returned" ) {
               backgroundclr = "bg-label-danger";
+            }
+            else{
+               backgroundclr = "bg-label-warning";
             }
 
             return (
@@ -774,7 +780,8 @@ $(document).ready(function () {
     let inv_orderID = $(this).data("orderid");
 
     var encodedOrderID = btoa(inv_orderID);
-    var pdfURL = base_Url + "admin/order-details/pdf-viewpage?orderID=" + encodedOrderID;
+    var pdfURL =
+      base_Url + "admin/order-details/pdf-viewpage?orderID=" + encodedOrderID;
 
     var printWindow = window.open(pdfURL, "_blank");
 

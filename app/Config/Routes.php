@@ -43,6 +43,8 @@ $routes->post('update-address', 'MyaccountController::updateAddress', ['filter' 
 $routes->post('delete-address', 'MyaccountController::deleteAddress', ['filter' => 'AuthFilter']);
 $routes->post('update-defaultaddress', 'MyaccountController::updateDefaultAddress', ['filter' => 'AuthFilter']);
 $routes->post('update-cancel-reason', 'MyaccountController::updateCancelReason', ['filter' => 'AuthFilter']);
+$routes->post('get-return-products', 'MyaccountController::getReturnProducts', ['filter' => 'AuthFilter']);
+$routes->post('submit-return-products', 'MyaccountController::submitReturnProducts', ['filter' => 'AuthFilter']);
 
 $routes->post('place-order', 'CheckoutController::placeOrder', ['filter' => 'AuthFilter']);
 $routes->get('checkout', 'CheckoutController::checkout');
