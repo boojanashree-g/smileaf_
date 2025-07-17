@@ -144,73 +144,6 @@
     </div>
     </div>
     <!-- ltn__header-middle-area end -->
-    <!-- Utilize Cart Menu Start -->
-    <div id="ltn__utilize-cart-menu" class="ltn__utilize ltn__utilize-cart-menu">
-        <div class="ltn__utilize-menu-inner ltn__scrollbar">
-            <div class="ltn__utilize-menu-head">
-                <span class="ltn__utilize-menu-title">Cart</span>
-                <button class="ltn__utilize-close">×</button>
-            </div>
-            <div class="mini-cart-product-area ltn__scrollbar">
-                <div class="mini-cart-item clearfix">
-                    <div class="mini-cart-img">
-                        <a href="#"><img src="<?php echo base_url() ?>public/assets/img/plate_img/round-plate/10RSP.jpg"
-                                alt="Image"></a>
-                        <span class="mini-cart-item-delete"><i class="icon-cancel"></i></span>
-                    </div>
-                    <div class="mini-cart-info">
-                        <h6><a href="#">Red Hot Tomato</a></h6>
-                        <span class="mini-cart-quantity">1 x $65.00</span>
-                    </div>
-                </div>
-                <div class="mini-cart-item clearfix">
-                    <div class="mini-cart-img">
-                        <a href="#"><img src="<?php echo base_url() ?>public/assets/img/plate_img/round-plate/10RSP.jpg"
-                                alt="Image"></a>
-                        <span class="mini-cart-item-delete"><i class="icon-cancel"></i></span>
-                    </div>
-                    <div class="mini-cart-info">
-                        <h6><a href="#">Vegetables Juices</a></h6>
-                        <span class="mini-cart-quantity">1 x $85.00</span>
-                    </div>
-                </div>
-                <div class="mini-cart-item clearfix">
-                    <div class="mini-cart-img">
-                        <a href="#"><img src="<?php echo base_url() ?>public/assets/img/plate_img/round-plate/10RSP.jpg"
-                                alt="Image"></a>
-                        <span class="mini-cart-item-delete"><i class="icon-cancel"></i></span>
-                    </div>
-                    <div class="mini-cart-info">
-                        <h6><a href="#">Orange Sliced Mix</a></h6>
-                        <span class="mini-cart-quantity">1 x $92.00</span>
-                    </div>
-                </div>
-                <div class="mini-cart-item clearfix">
-                    <div class="mini-cart-img">
-                        <a href="#"><img src="<?php echo base_url() ?>public/assets/img/plate_img/round-plate/10RSP.jpg"
-                                alt="Image"></a>
-                        <span class="mini-cart-item-delete"><i class="icon-cancel"></i></span>
-                    </div>
-                    <div class="mini-cart-info">
-                        <h6><a href="#">Orange Fresh Juice</a></h6>
-                        <span class="mini-cart-quantity">1 x $68.00</span>
-                    </div>
-                </div>
-            </div>
-            <div class="mini-cart-footer">
-                <div class="mini-cart-sub-total">
-                    <h5>Subtotal: <span>$310.00</span></h5>
-                </div>
-                <div class="btn-wrapper">
-                    <a href="<?php echo base_url('cart') ?>" class="theme-btn-1 btn btn-effect-1">View Cart</a>
-                    <a href="<?php echo base_url('checkout') ?>" class="theme-btn-2 btn btn-effect-2">Checkout</a>
-                </div>
-                <p>Free Shipping on All Orders Over $100!</p>
-            </div>
-
-        </div>
-    </div>
-    <!-- Utilize Cart Menu End -->
 
     <!-- Utilize Mobile Menu Start -->
     <div id="ltn__utilize-mobile-menu" class="ltn__utilize ltn__utilize-mobile-menu">
@@ -222,19 +155,31 @@
                 </div>
                 <button class="ltn__utilize-close">×</button>
             </div>
-            <div class="ltn__utilize-menu-search-form">
-                <form action="#">
-                    <input type="text" placeholder="Search...">
-                    <button><i class="fas fa-search"></i></button>
-                </form>
-            </div>
             <div class="ltn__utilize-menu">
                 <ul>
                     <li><a href="<?php echo base_url() ?>">Home</a></li>
                     <li><a href="<?php echo base_url('products') ?>">Shop</a></li>
-                    <li><a href="<?php echo base_url() ?>">Disposable Dinnerware</a></li>
+                    <?php if (!empty($mainmenu)): ?>
+                                    <?php foreach ($mainmenu as $menu): ?>
+                                        <?php
+                                        $menuSlug = base_url('/product-categories/' . $menu['slug']);
+                                        $hasChildren = isset($submenu[$menu['menu_id']]);
+                                        ?>
+
+                                        <?php if ($hasChildren): ?>
+                                            <li class="menu-icon">
+                                                <a href="<?= $menuSlug ?>"><?= esc($menu['menu_name']) ?></a>                                                
+                                            </li>
+                                        <?php else: ?>
+                                            <li>
+                                                <a href="<?= $menuSlug ?>"><?= esc($menu['menu_name']) ?></a>
+                                            </li>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                    <!-- <li><a href="<?php echo base_url() ?>">Disposable Dinnerware</a></li>
                     <li><a href="<?php echo base_url() ?>">Reusable Dinnerware</a></li>
-                    <li><a href="<?php echo base_url() ?>">Accessories</a></li>
+                    <li><a href="<?php echo base_url() ?>">Accessories</a></li> -->
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
             </div>
