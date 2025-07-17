@@ -21,7 +21,7 @@
         <!-- BREADCRUMB AREA END -->
 
         <!-- PRODUCT DETAILS AREA START -->
-        <div class="ltn__product-area ltn__product-gutter my-4">
+        <div class="ltn__product-area ltn__product-gutter product_categories">
             <div class="container">
                 <div class="row">
                     <div class="tab-content">
@@ -32,7 +32,7 @@
                                     <div class="row">
                                         <?php if (!empty($submenus)): ?>
                                             <?php foreach ($submenus as $submenu): ?>
-                                                <div class="col-xl-3 col-sm-6 col-6">
+                                                <div class="col-xl-3 col-sm-6 col-12">
                                                     <div class="ltn__product-item ltn__product-item-3 text-center">
                                                         <div class="product-img">
                                                             <a href="<?= base_url('products/' . $submenu['slug'] . '/' . base64_encode($submenu['sub_id'])) ?>">

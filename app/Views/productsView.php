@@ -29,7 +29,7 @@
         <!-- BREADCRUMB AREA END -->
 
         <!-- SHOP DETAILS AREA START -->
-        <div class="ltn__shop-details-area my-4">
+        <div class="ltn__shop-details-area">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12 col-md-12">
@@ -248,90 +248,74 @@
 
     <!-- PRODUCT SLIDER AREA START -->
     <div class="ltn__product-slider-area ltn__product-gutter pb-70 products_page">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="section-title-area ltn__section-title-2">
-                        <h1 class="section-title text-center">Related Products</h1>
-                    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title-area ltn__section-title-2">
+                    <h1 class="section-title text-center">Related Products</h1>
                 </div>
             </div>
-            <div class="row ltn__related-product-slider-one-active slick-arrow-1">
+        </div>
 
-                <?php if (!empty($related_products) && is_array($related_products)): ?>
-                    <?php foreach ($related_products as $related): ?>
-                        <div class="col-lg-12">
-                            <div class="ltn__product-item ltn__product-item-3 text-center">
-                                <div class="product-img">
-                                <a
-                                    href="<?= base_url("product-details/" . base64_encode($related['prod_id'])) ?>">
+        <div class="row ltn__related-product-slider-one-active slick-arrow-1">
+            <?php if (!empty($related_products) && is_array($related_products)): ?>
+                <?php foreach ($related_products as $related): ?>
+                    <div>
+                        <div class="ltn__product-item ltn__product-item-3 text-center">
+                            <div class="product-img">
+                                <a href="<?= base_url("product-details/" . base64_encode($related['prod_id'])) ?>">
                                     <img src="<?= base_url($related['main_image']) ?>"
-                                        alt="<?= esc($related['prod_name']) ?>">
+                                         alt="<?= esc($related['prod_name']) ?>"
+                                         loading="lazy">
                                 </a>
                                 <?php if ($related['available_status'] == 0): ?>
                                     <div class="product-badge">
                                         <ul>
-                                            <li class="sale-badge">
-                                                Out of stock
-                                            </li>
+                                            <li class="sale-badge">Out of stock</li>
                                         </ul>
                                     </div>
                                 <?php endif; ?>
                             </div>
                             <div class="product-info">
-                                    <h2 class="product-title">
-                                        <a href="<?= base_url($related['url']) ?>">
-                                            <span
-                                                class="prod_name_span"><?= esc($related['prod_name']) ?></span>
-                                        </a>
-                                    </h2>
-                                    <div class="product_price_wrapper mt-0">
-                                        <div class="product-price mb-0">
-                                            <span>₹<?= esc($related['lowest_offer_price'] ?? 0) ?></span>
-                                            <?php if (!empty($related['lowest_offer_price']) && $related['lowest_offer_price'] != $related['lowest_mrp']): ?>
-                                                <del>₹<?= esc($related['lowest_mrp']) ?></del>
-                                            <?php endif; ?>
-                                        </div>
-                                        <!-- <a href="#" title="Wishlist" class="wishlist-btn">
-                                            <i class="far fa-heart"></i>
-                                        </a> -->
+                                <h2 class="product-title">
+                                    <a href="<?= base_url($related['url']) ?>">
+                                        <span class="prod_name_span"><?= esc($related['prod_name']) ?></span>
+                                    </a>
+                                </h2>
+                                <div class="product_price_wrapper mt-0">
+                                    <div class="product-price mb-0">
+                                        <span>₹<?= esc($related['lowest_offer_price'] ?? 0) ?></span>
+                                        <?php if (!empty($related['lowest_offer_price']) && $related['lowest_offer_price'] != $related['lowest_mrp']): ?>
+                                            <del>₹<?= esc($related['lowest_mrp']) ?></del>
+                                        <?php endif; ?>
                                     </div>
+                                </div>
                             </div>
-                                <?php if ($related['available_status'] == 0) { ?>
-                            <div class="d-flex justify-content-evenly">
+
+                            <div class="d-flex justify-content-center mt-2">
                                 <a href="<?= base_url("product-details/" . base64_encode($related['prod_id'])) ?>"
-                                    class="theme-btn-1 btn quick_btn"
-                                    data-prodid="<?= esc($related['prod_id']) ?>"
-                                    data-menuid="<?= $related['menu_id'] ?>"
-                                    data-submenuid=<?= $related['submenu_id'] ?>>
-                                    <i class="fas fa-shopping-cart text-danger"></i>
-                                    <span class="text-danger">Contact us to order</span>
+                                   class="theme-btn-1 btn quick_btn <?= $related['available_status'] == 0 ? 'text-danger' : '' ?>"
+                                   data-prodid="<?= esc($related['prod_id']) ?>"
+                                   data-menuid="<?= $related['menu_id'] ?>"
+                                   data-submenuid="<?= $related['submenu_id'] ?>">
+                                    <i class="fas fa-shopping-cart <?= $related['available_status'] == 0 ? 'text-danger' : '' ?>"></i>
+                                    <span class="<?= $related['available_status'] == 0 ? 'text-danger' : '' ?>">
+                                        <?= $related['available_status'] == 0 ? 'Contact us to order' : 'Buy Now' ?>
+                                    </span>
                                 </a>
-                            </div>
-                            <?php } else if ($related['available_status'] > 0) { ?>
-                            <div class="d-flex justify-content-evenly">
-                                <a href="<?= base_url("product-details/" . base64_encode($related['prod_id'])) ?>"
-                                    class="theme-btn-1 btn quick_btn"
-                                    data-prodid="<?= esc($related['prod_id']) ?>"
-                                    data-menuid="<?= $related['menu_id'] ?>"
-                                    data-submenuid=<?= $related['submenu_id'] ?>>
-                                    <i class="fas fa-shopping-cart"></i>
-                                    <span>Buy Now</span>
-                                </a>
-                            </div>
-                            <?php } ?>
                             </div>
                         </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <div class="col-12 text-center">
-                        <p>No related products found.</p>
                     </div>
-                <?php endif; ?>
-
-            </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="col-12 text-center">
+                    <p>No related products found.</p>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
+</div>
+
 
     <!-- PRODUCT SLIDER AREA END -->
 

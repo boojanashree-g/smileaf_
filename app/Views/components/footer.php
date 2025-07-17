@@ -1,5 +1,5 @@
 <footer class="ltn__footer-area ">
-    <div class="footer-top-area  section-bg-1">
+    <div class="section-bg-1 pt-3">
         <div class="container-fluid">
             <div class="row justify-content-around">
                 <div class="col-xl-3 col-md-6 col-sm-6 col-12">
@@ -246,4 +246,49 @@
     }
   });
 </script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const menuToggle = document.querySelector('.mobile-menu-toggle a');
+    const menu = document.getElementById('ltn__utilize-mobile-menu');
+    const overlay = document.querySelector('.ltn__utilize-overlay');
+    const closeBtn = document.querySelector('.ltn__utilize-close');
+
+    const openMenu = () => {
+      menu.classList.add('ltn__utilize-open');
+      overlay.classList.add('ltn__utilize-open');
+    };
+
+    const closeMenu = () => {
+      menu.classList.remove('ltn__utilize-open');
+      overlay.classList.remove('ltn__utilize-open');
+    };
+
+    if (menuToggle && menu && overlay) {
+      menuToggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        openMenu();
+      });
+
+      closeBtn.addEventListener('click', closeMenu);
+      overlay.addEventListener('click', closeMenu);
+
+      // BONUS: Click outside menu to close
+      document.addEventListener('click', function (e) {
+        const clickedInsideMenu = menu.contains(e.target) || menuToggle.contains(e.target);
+        if (!clickedInsideMenu && menu.classList.contains('ltn__utilize-open')) {
+          closeMenu();
+        }
+      });
+
+      // ESC key closes the menu too (because we have standards)
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && menu.classList.contains('ltn__utilize-open')) {
+          closeMenu();
+        }
+      });
+    }
+  });
+</script>
+
+
 

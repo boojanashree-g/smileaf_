@@ -15,7 +15,8 @@
         justify-content: center;
         font-size: 13px;
         padding: 10px 15px;
-        min-width: 80px;
+        min-width: auto;
+        gap: 5px;
     }
     .address-edit{
         border: 1px solid #06870c;
@@ -40,11 +41,11 @@
             $otp_verify = session()->get('otp_verify');
             $login_status = session()->get('loginStatus');
         ?>
-        <div class="ltn__checkout-area mt-30">
+        <div class="ltn__checkout-area">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-7 mb-4">
-                        <div class="checkout-container">
+                        <div class="checkout-container  ">
                             <!-- Login Section -->
                             <div class="step-section" id="loginSection">
                                 <div class="step-header">
@@ -191,9 +192,14 @@
                                                             </div>
                                                         </div>
                                                         <div class="address-change d-flex">
-                                                            <button data-addid="<?= $add['add_id'] ?>" class="address-edit">Change</button>
-                                                            <button data-addid="<?= $add['add_id'] ?>" class="address-delete">Delete</button>      
+                                                            <button data-addid="<?= $add['add_id'] ?>" class="address-edit">
+                                                                <i class="fas fa-pen"></i> <span class="d-none d-sm-inline">Change</span>
+                                                            </button>
+                                                            <button data-addid="<?= $add['add_id'] ?>" class="address-delete">
+                                                                <i class="fas fa-trash-alt"></i> <span class="d-none d-sm-inline">Delete</span>
+                                                            </button>
                                                         </div>
+
 
                                                     </div>
                                                     <div class="address-text">
@@ -270,7 +276,7 @@
                                                 </div>
                                                 <div class="form-row mb-0">                                                    
                                                     <div class="form-col">
-                                                        <input type="checkbox" class="form-check-input form_defaultaddr"
+                                                        <input type="checkbox" class="form-check-input form_defaultaddr mt-0"
                                                             id="default_addr" name="default_addr" style="height: 17px !important;">
                                                         <label class="form-check-label" for="default_addr">Set as
                                                             default address</label>
@@ -318,8 +324,6 @@
                                         </tr>
 
                                     <?php } ?>
-
-
                                     <tr>
                                         <td><strong>Sub Total</strong></td>
                                         <td><strong class="order-subtotal">₹<?= number_format($subtotal, 2) ?></strong>

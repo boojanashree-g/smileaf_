@@ -71,6 +71,10 @@
         font-size: 20px;
         font-weight: 700 !important;
     }
+    /* footer{
+        position:fixed;
+        bottom : 0;
+    } */
 </style>
 
 <body>
@@ -270,12 +274,12 @@
         <!-- SHOPING CART AREA END -->
 
         <!-- FOOTER AREA START -->
-        <?php require("components/footer.php") ?>
         <!-- FOOTER AREA END -->
 
 
     </div>
     <!-- Body main wrapper end -->
+        <?php require("components/footer.php") ?>
 
     <!-- All JS Plugins -->
     <script src="<?php echo base_url() ?>public/assets/js/plugins.js"></script>

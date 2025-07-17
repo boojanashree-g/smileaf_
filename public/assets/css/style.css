@@ -6531,7 +6531,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 .ltn__utilize.ltn__utilize-mobile-menu {
   right: auto;
   left: 0;
-  padding: 50px 40px;
+  padding:0px;
   -webkit-transform: translateX(-100%);
   -ms-transform: translateX(-100%);
   transform: translateX(-100%);
@@ -6553,7 +6553,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
   -ms-touch-action: auto;
   touch-action: auto;
   overflow-x: hidden !important;
-  padding-right: 20px;
+  padding: 20px;
 }
 
 .ltn__utilize-menu-search-form {
@@ -6580,10 +6580,6 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 @media (max-width: 479px) {
   .ltn__utilize {
     width: 300px;
-  }
-
-  .ltn__utilize.ltn__utilize-mobile-menu {
-    padding: 50px 20px;
   }
 }
 
@@ -6953,8 +6949,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
   }
 
   .ltn__drop-menu ul li ul {
-    left: 50%;
-    right: 50%;
+    right: 0%;
     -webkit-transform: translateX(-50%);
     -ms-transform: translateX(-50%);
     transform: translateX(-50%);
