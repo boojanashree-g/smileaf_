@@ -507,7 +507,7 @@ class Home extends BaseController
         if ($isAjax) {
             return $this->response->setJSON([
                 'success' => true,
-                'products' => $products,
+                'products' => $finalSortedProducts,
                 'count' => count($products),
                 'mainmenus' => $menuData,
                 'groupedSubmenus' => $menuData['submenu']

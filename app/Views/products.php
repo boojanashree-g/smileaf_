@@ -27,7 +27,7 @@
         <?php require("components/header.php") ?>
         <!-- HEADER AREA END -->
         <!-- PRODUCT DETAILS AREA START -->
-        <div class="ltn__product-area ltn__product-gutter my-4">
+        <div class="ltn__product-area ltn__product-gutter">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-9 order-lg-2">
@@ -41,7 +41,7 @@
                                             <a class="active show" data-bs-toggle="tab" href="#liton_product_grid"><i
                                                     class="fas fa-th-large"></i></a>
                                             <a data-bs-toggle="tab" href="#liton_product_list"><i
-                                                    class="fas fa-list"></i></a>
+                                                    class="fas fa-list dsmnone"></i></a>
                                         </div>
                                     </div>
                                 </li>
@@ -79,7 +79,7 @@
                                         <!-- ltn__product-item -->
                                         <?php if (!empty($products)): ?>
                                             <?php foreach ($products as $product): ?>
-                                                <div class="col-xl-4 col-sm-12   col-12 product-item"
+                                                <div class="col-xl-4 col-sm-12 col-md-6 col-12 product-item"
                                                     data-name="<?= strtolower(esc($product['prod_name'])) ?>">
                                                     <div class="ltn__product-item ltn__product-item-3 text-center">
                                                         <div class="product-img">
@@ -164,7 +164,7 @@
                             </div>
 
                             <!-- List View Tab -->
-                            <div class="tab-pane fade" id="liton_product_list">
+                            <div class="tab-pane fade dsmnone" id="liton_product_list">
                                 <div class="ltn__product-tab-content-inner ltn__product-list-view">
                                     <div class="row" id="product-list-container">
                                         <!-- ltn__product-item -->

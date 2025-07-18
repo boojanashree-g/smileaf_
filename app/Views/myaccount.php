@@ -99,7 +99,7 @@
         <!-- HEADER AREA END -->
 
         <!-- WISHLIST AREA START -->
-        <div class="liton__wishlist-area pb-0">
+        <div class="liton__wishlist-area pb-3">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
@@ -230,10 +230,12 @@
                                             <div class="tab-pane fade" id="liton_tab_1_4">
                                                 <div class="ltn__myaccount-tab-content-inner">
                                                     <h3>My Addresses</h3>
-                                                    <p>Here are your addresses. Want to add another? <a href="#"
-                                                            class="btn btn-sm btn-outline-primary float-end"
-                                                            id="add-address">Add
-                                                            Address</a></p>
+                                                    <p class="add-address-tab">Here are your addresses. Want to add another? 
+                                                        <a href="#" class="btn btn-sm btn-outline-primary float-end" id="add-address">
+                                                            <i class="fas fa-plus d-inline d-sm-none"></i>
+                                                            <span class="d-none d-sm-inline">Add Address</span>
+                                                        </a>
+                                                    </p>
                                                     <div class="other_address">
                                                         <div class="row m-0">
                                                             <?php

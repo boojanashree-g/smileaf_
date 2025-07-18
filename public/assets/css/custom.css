@@ -2262,6 +2262,10 @@ footer{
     /* position: fixed;
     bottom: 0; */
 }
+
+    .ltn__product-area{
+        padding-top: 10px;
+    }
 /* responsive */
 
 @media (max-width: 768.99px) {
@@ -2323,7 +2327,11 @@ footer{
     }
 
     .ltn__header-options {
-        order: 2
+        order: 2;
+        flex: none !important;
+    }
+    .ltn__drop-menu.user-menu{
+        margin-right: 10px;
     }
 
     .search_bar {
@@ -2425,9 +2433,6 @@ footer{
         display: flex;
         flex-direction: column;
     }
-    .ltn__product-area{
-        padding-top: 10px;
-    }
     .ltn__banner-area .ltn__custom-gutter--- {
         gap: 5px;
     }
@@ -2480,16 +2485,28 @@ footer{
     /* .product_categories,.ltn__login-area{
         padding-top: 135px !important;
     } */
+     header .ltn__header-middle-area{
+        overflow: inherit;
+     }
+    #liton_tab_1_4 .add-address-tab{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 }
 
 .liton__wishlist-area{
-        padding-top: 125px !important;
+        /* padding-top: 125px !important; */
 }
 
 .product_categories{
     margin: 15px;
 }
+header .ltn__header-middle-area{
+        overflow: inherit;
+     }
 @media (min-width: 769px) and (max-width: 990.99px) {
+     
     .inner_banner_container {
         height: 200px !important;
     }
