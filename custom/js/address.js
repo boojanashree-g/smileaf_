@@ -760,6 +760,9 @@ $(document).ready(function () {
           $(".returnproduct").addClass("d-none");
           showToast(JSONdata.message, "success");
           $(".returnproduct").html("Return Requested");
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         } else if (JSONdata.code == 400) {
           $(".return_product_modal").modal("hide");
           showToast(JSONdata.message, "error");

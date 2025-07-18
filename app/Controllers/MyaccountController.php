@@ -344,7 +344,6 @@ class MyaccountController extends BaseController
         $Orderquery = "SELECT * FROM `tbl_orders` WHERE `user_id` = ? AND order_id = ? AND`flag` = 1  AND  order_status <> 'initiated'";
         $orders = $this->db->query($Orderquery, [$userID, $orderID])->getResultArray();
 
-
         $orderSummaries = [];
 
         $orderID = $orders[0]['order_id'];
@@ -664,20 +663,21 @@ class MyaccountController extends BaseController
                     $actualOrderItems = $this->db->query("SELECT COUNT(`item_id`) AS item_count FROM `tbl_order_item` WHERE  `flag` = 1 AND `order_id` = ?", [$orderID])->getRow();
                     $actualOrderCount = $actualOrderItems->item_count;
 
-                    if ($refundProdCount == $actualOrderCount) {
+                    if ($refundProdCount <= $actualOrderCount) {
                         $orderStatus = 'Returned';
                         $deliveryStatus = 'Returned';
-                        $deliveryMessage = 'All items have been returned. Your refund will be processed shortly.';
+                        $deliveryMessage = 'Items have been returned. Your refund will be processed shortly.';
                         $is_returned = 1;
 
                         $updateOrderQry = "UPDATE tbl_orders SET `order_status` = ? ,`delivery_status` = ?, `delivery_message` =? , `is_returned` = ? WHERE `order_id` = ? AND `flag` = 1";
                         $updateData = $this->db->query($updateOrderQry, [$orderStatus, $deliveryStatus, $deliveryMessage, $is_returned, $orderID]);
 
-                    } else if ($refundProdCount < $actualOrderCount) {
-                        $is_returned = 1;
-                        $updateOrderQry = "UPDATE tbl_orders SET  `is_returned` = ? WHERE `order_id` = ? AND `flag` = 1";
-                        $updateOrder = $this->db->query($updateOrderQry, [$is_returned, $orderID]);
                     }
+                    // else if ($refundProdCount < $actualOrderCount) {
+                    //     $is_returned = 1;
+                    //     $updateOrderQry = "UPDATE tbl_orders SET  `is_returned` = ? WHERE `order_id` = ? AND `flag` = 1";
+                    //     $updateOrder = $this->db->query($updateOrderQry, [$is_returned, $orderID]);
+                    // }
                 }
 
                 $res['code'] = 200;
