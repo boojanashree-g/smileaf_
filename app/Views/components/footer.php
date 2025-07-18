@@ -130,8 +130,8 @@
             <div class="row">
                 <div class="col-md-12 col-12">
                     <div class="ltn__copyright-design clearfix">
-                        <p class="text-center">All Rights Reserved @ <a href="<?= base_url() ?>">Smileaf &nbsp;</a><span
-                                    class="current-year"></span></p>
+                        <p class="text-center">All Rights Reserved @ <a href="<?= base_url() ?>">Smileaf &nbsp;</a>
+                          <span class="current-year"></span></p>
                     </div>
                 </div>
                 <!-- <div class="col-md-6 col-12 align-self-center">
