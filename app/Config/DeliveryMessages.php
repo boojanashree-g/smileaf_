@@ -18,6 +18,6 @@ class DeliveryMessages extends BaseConfig
         'Refund Failed' => 'Refund is Failed',
         'Null' => 'Payment failed. Order not processed.',
         'Cancel Modal' => 'Transaction cancelled by user before payment confirmation',
-        'Returned' => 'All items have been returned. Your refund will be processed shortly.'
+        'Returned' => 'Items have been returned. Your refund will be processed shortly.'
     ];
 }
