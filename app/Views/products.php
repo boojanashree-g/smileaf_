@@ -27,7 +27,7 @@
         <?php require("components/header.php") ?>
         <!-- HEADER AREA END -->
         <!-- PRODUCT DETAILS AREA START -->
-        <div class="ltn__product-area ltn__product-gutter">
+        <div class="ltn__product-area ltn__product-gutter my-4">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-9 order-lg-2">
@@ -47,9 +47,10 @@
                                 </li>
                                 <li>
                                     <div class="d-lg-none d-flex justify-content-end ">
-                                        <button class="btn btn-outline-secondary me-2" id="mobileFilterBtn">
+                                        <button class="btn btn-outline-secondary me-2" id="mobileFilterBtn" data-bs-toggle="modal" data-bs-target="#mobileFilterModal">
                                             <i class="fas fa-filter"></i> 
                                         </button>
+
                                     </div>
                                 </li>
                                 <li class="dsmnone">
@@ -218,78 +219,22 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3 ">
-                        <aside class="sidebar ltn__shop-sidebar">
-                            <div class="widget ltn__menu-widget">
-                                <h4 class="ltn__widget-title ltn__widget-title-border">Product Availability</h4>
-                                <ul>
-                                    <li>
-                                        <label><input type="checkbox" class="filter-checkbox" name="availability[]"
-                                                value="1">&nbsp;&nbsp; Available</label>
-                                    </li>
-                                    <li>
-                                        <label><input type="checkbox" class="filter-checkbox" name="availability[]"
-                                                value="0">&nbsp;&nbsp; Out of Stock</label>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <!-- Category Widget -->
-                            <div class="widget ltn__menu-widget">
-                                <h4 class="ltn__widget-title ltn__widget-title-border">Product Types</h4>
-                                <ul>
-                                    <?php if (!empty($productTypes)): ?>
-                                        <?php foreach ($productTypes as $type): ?>
-                                            <li>
-                                                <label>
-                                                    <input type="checkbox" class="filter-checkbox" name="type_id[]"
-                                                        value="<?= esc($type->type_id) ?>">
-                                                    &nbsp;&nbsp;<?= esc($type->type_name) ?>
-                                                </label>
-                                            </li>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <li>No product types found.</li>
-                                    <?php endif; ?>
-                                </ul>
-                            </div>
-                            <div class="widget ltn__menu-widget">
-                                <h4 class="ltn__widget-title ltn__widget-title-border">Product Shape</h4>
-                                <ul>
-                                    <?php if (!empty($productShape)): ?>
-                                        <?php foreach ($productShape as $shape): ?>
-                                            <li>
-                                                <label>
-                                                    <input type="checkbox" class="filter-checkbox" name="shape_id[]"
-                                                        value="<?= esc($shape->shape_id) ?>">
-                                                    &nbsp;&nbsp;<?= esc($shape->shape_name) ?>
-                                                </label>
-                                            </li>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <li>No product types found.</li>
-                                    <?php endif; ?>
-                                </ul>
-                            </div>
-                            <div class="widget ltn__menu-widget">
-                                <h4 class="ltn__widget-title ltn__widget-title-border">Product Size</h4>
-                                <ul>
-                                    <?php if (!empty($productsize)): ?>
-                                        <?php foreach ($productsize as $size): ?>
-                                            <li>
-                                                <label>
-                                                    <input type="checkbox" class="filter-checkbox" name="size_id[]"
-                                                        value="<?= esc($size->size_id) ?>">
-                                                    &nbsp;&nbsp;<?= esc($size->size_name) ?>
-                                                </label>
-                                            </li>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <li>No product types found.</li>
-                                    <?php endif; ?>
-                                </ul>
-                            </div>
-                        </aside>
+                    <div class="col-lg-3 d-none d-lg-block">
+                        <?php require("components/product_filter_sidebar.php") ?>
+                    </div>
+                </div>                
+            </div>
+        </div>
+        <!-- Mobile Filter Modal -->
+        <div class="modal fade" id="mobileFilterModal" tabindex="-1" aria-labelledby="mobileFilterModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-fullscreen-sm-down">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="mobileFilterModalLabel">Filters</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <?php require("components/product_filter_sidebar.php") ?>
                     </div>
                 </div>
             </div>
