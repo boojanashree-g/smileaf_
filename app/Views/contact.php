@@ -23,7 +23,7 @@
         <!-- BREADCRUMB AREA END -->
 
         <!-- CONTACT ADDRESS AREA START -->
-        <div class="ltn__contact-address-area mb-90">
+        <div class="ltn__contact-address-area mb-25">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-3">
@@ -32,7 +32,7 @@
                                 <img src="<?php echo base_url() ?>public/assets/img/icons/10.png" alt="Icon Image">
                             </div>
                             <h3>Email Address</h3>
-                            <p>info@cactusintl.com</p>
+                            <p>smileafproducts@gmail.com</p>
                         </div>
                     </div>
                     <div class="col-lg-3">
@@ -50,7 +50,7 @@
                                 <img src="<?php echo base_url() ?>public/assets/img/icons/12.png" alt="Icon Image">
                             </div>
                             <h3>Office Address</h3>
-                            <p>Cactus International, 3/142,Near Varadaraja Mills(Unit 2),SundakkamPalayam,Nambiyam
+                            <p>3/142,Near Varadaraja Mills(Unit 2),SundakkamPalayam,Nambiyam
                                 Palayam Post, Avinashi,Tirupur,Tamilnadu, India - 641670.</p>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
         <!-- CONTACT ADDRESS AREA END -->
 
         <!-- CONTACT MESSAGE AREA START -->
-        <div class="ltn__contact-message-area mb-120">
+        <!-- <div class="ltn__contact-message-area mb-120">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
@@ -112,17 +112,13 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- CONTACT MESSAGE AREA END -->
 
         <!-- GOOGLE MAP AREA START -->
-        <div class="google-map mb-120">
+        <div class="google-map ">
 
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d9334.271551495209!2d-73.97198251485975!3d40.668170674982946!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25b0456b5a2e7%3A0x68bdf865dda0b669!2sBrooklyn%20Botanic%20Garden%20Shop!5e0!3m2!1sen!2sbd!4v1590597267201!5m2!1sen!2sbd"
-                width="100%" height="100%" frameborder="0" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-
-        </div>
+         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3916.2057296385938!2d76.94489794470627!3d11.023185689830681!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba85786401fe1ab%3A0xda64e66506003bd0!2sVaratharaja%20Mills!5e0!3m2!1sen!2sin!4v1752837932679!5m2!1sen!2sin" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe> </div>
         <!-- GOOGLE MAP AREA END -->
 
         <!-- FOOTER AREA START -->

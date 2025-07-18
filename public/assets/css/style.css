@@ -12770,7 +12770,7 @@ blockquote::before {
 }
 
 .google-map {
-  height: 800px;
+  /* height: 800px; */
 }
 
 .ltn__contact-address-item-3 {
@@ -16091,7 +16091,8 @@ input.cart-plus-minus-box {
 }
 
 .footer-widget {
-  margin-bottom: 60px;
+  margin-bottom: 20px;
+  margin-top: 15px;
 }
 
 .footer-logo {
@@ -16311,8 +16312,8 @@ input.cart-plus-minus-box {
     Copyright Area
 ---------------------------------------------------- */
 .ltn__copyright-area {
-  padding-top: 30px;
-  padding-bottom: 30px;
+     padding-top: 12px;
+    padding-bottom: 12px;
 }
 
 .ltn__copyright-area .payment-method {

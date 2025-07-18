@@ -42,7 +42,7 @@
                                         <i class="icon-call"></i>
                                     </div>
                                     <div class="footer-address-info">
-                                        <p><a href="tel:+0123-456789">(+91) 9842578248<br>(+91) 9788331756</a></p>
+                                        <p><a href="tel:+9842578248">(+91) 9842578248<br>(+91) 9788331756</a></p>
                                     </div>
                                 </li>
                                 <li>
@@ -50,7 +50,7 @@
                                         <i class="icon-mail"></i>
                                     </div>
                                     <div class="footer-address-info">
-                                        <p><a href="mailto:example@example.com">info@cactusintl.com</a></p>
+                                        <p><a href="mailto:smileafproducts@gmail.com">smileafproducts@gmail.com</a></p>
                                     </div>
                                 </li>
                             </ul>
@@ -74,12 +74,14 @@
                  </div> -->
                 <div class="col-xl-2 col-md-6 col-sm-6 col-12">
                     <div class="footer-widget footer-menu-widget clearfix">
-                        <h4 class="footer-title">Quick Links</h4>
+                        <h4 class="footer-title">Legal & Help Center
+
+                        </h4>
                         <div class="footer-menu">
                             <ul>
                                 <li><a href="<?php echo base_url('signin') ?>">Login</a></li>
-                                <li><a href="<?php echo base_url('myaccount') ?>">My account</a></li>
-                                <li><a href="<?php echo base_url('order-tracking') ?>">Order tracking</a></li>
+                                <li><a href="<?php echo base_url('terms-and-conditions') ?>">Terms & Conditions</a></li>
+                                <li><a href="<?php echo base_url('privacy-policy') ?>">Privacy & Policy</a></li>
                                 <li><a href="<?php echo base_url('contact') ?>">Contact us</a></li>
                             </ul>
                         </div>
@@ -126,19 +128,20 @@
     <div class="ltn__copyright-area ltn__copyright-2 section-bg-2  ltn__border-top-2--- plr--5">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-6 col-12">
+                <div class="col-md-12 col-12">
                     <div class="ltn__copyright-design clearfix">
-                        <p>All Rights Reserved @ Smileaf <span class="current-year"></span></p>
+                        <p class="text-center">All Rights Reserved @ <a href="<?= base_url() ?>">Smileaf</a><span
+                                    class="current-year"></span></p>
                     </div>
                 </div>
-                <div class="col-md-6 col-12 align-self-center">
+                <!-- <div class="col-md-6 col-12 align-self-center">
                     <div class="ltn__copyright-menu text-end">
                         <ul>
                             <li><a href="<?php echo base_url('terms-and-conditions') ?>">Terms & Conditions</a></li>
                             <li><a href="<?php echo base_url('privacy-policy') ?>">Privacy & Policy</a></li>
                         </ul>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -186,34 +189,34 @@
 </script>
 
 <script>
-  const input = document.getElementById('searchInput');
-  const suggestionsBox = document.getElementById('suggestions');
+    const input = document.getElementById('searchInput');
+    const suggestionsBox = document.getElementById('suggestions');
 
-  input.addEventListener('input', () => {
-    const query = input.value.trim();
-    suggestionsBox.innerHTML = '';
-
-    if (!query) {
-      suggestionsBox.style.display = 'none';
-      return;
-    }
-    const baseUrl = "<?php echo base_url(); ?>";
-    fetch(`${baseUrl}/search-suggestions?query=${encodeURIComponent(query)}`)
-      .then(res => res.json())
-      .then(data => {
+    input.addEventListener('input', () => {
+        const query = input.value.trim();
         suggestionsBox.innerHTML = '';
-        if (data.length === 0) {
-            const li = document.createElement('li');
-            li.textContent = 'No results found';
-            li.style.padding = '8px';
-            li.style.color = '#999';
-            suggestionsBox.appendChild(li);
-            suggestionsBox.style.display = 'block';
+
+        if (!query) {
+            suggestionsBox.style.display = 'none';
             return;
         }
-        data.forEach(item => {
-            const li = document.createElement('li');
-            li.innerHTML = `
+        const baseUrl = "<?php echo base_url(); ?>";
+        fetch(`${baseUrl}/search-suggestions?query=${encodeURIComponent(query)}`)
+            .then(res => res.json())
+            .then(data => {
+                suggestionsBox.innerHTML = '';
+                if (data.length === 0) {
+                    const li = document.createElement('li');
+                    li.textContent = 'No results found';
+                    li.style.padding = '8px';
+                    li.style.color = '#999';
+                    suggestionsBox.appendChild(li);
+                    suggestionsBox.style.display = 'block';
+                    return;
+                }
+                data.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <div style="display: flex; align-items: center;">
                         <img src="${baseUrl}${item.main_image}" alt="${item.prod_name}" style="width: 70px; height: 60px; object-fit: cover; margin-right: 10px;">
@@ -224,71 +227,68 @@
                     </div>
                 </div>
             `;
-            li.style.padding = '8px';
-            li.style.cursor = 'pointer';
-            li.addEventListener('click', () => {
-                const encodedId = btoa(item.prod_id.toString());
-                window.location.href = `${baseUrl}/product-details/${encodedId}`;
+                    li.style.padding = '8px';
+                    li.style.cursor = 'pointer';
+                    li.addEventListener('click', () => {
+                        const encodedId = btoa(item.prod_id.toString());
+                        window.location.href = `${baseUrl}/product-details/${encodedId}`;
+                    });
+                    suggestionsBox.appendChild(li);
+                });
+                suggestionsBox.style.display = 'block';
+            })
+            .catch(err => {
+                console.error('Error fetching suggestions:', err);
+                suggestionsBox.style.display = 'none';
             });
-            suggestionsBox.appendChild(li);
-        });
-        suggestionsBox.style.display = 'block';
-      })
-      .catch(err => {
-        console.error('Error fetching suggestions:', err);
-        suggestionsBox.style.display = 'none';
-      });
-  });
+    });
 
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.search-input-wrap')) {
-      suggestionsBox.style.display = 'none';
-    }
-  });
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-input-wrap')) {
+            suggestionsBox.style.display = 'none';
+        }
+    });
 </script>
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const menuToggle = document.querySelector('.mobile-menu-toggle a');
-    const menu = document.getElementById('ltn__utilize-mobile-menu');
-    const overlay = document.querySelector('.ltn__utilize-overlay');
-    const closeBtn = document.querySelector('.ltn__utilize-close');
+    document.addEventListener('DOMContentLoaded', function () {
+        const menuToggle = document.querySelector('.mobile-menu-toggle a');
+        const menu = document.getElementById('ltn__utilize-mobile-menu');
+        const overlay = document.querySelector('.ltn__utilize-overlay');
+        const closeBtn = document.querySelector('.ltn__utilize-close');
 
-    const openMenu = () => {
-      menu.classList.add('ltn__utilize-open');
-      overlay.classList.add('ltn__utilize-open');
-    };
+        const openMenu = () => {
+            menu.classList.add('ltn__utilize-open');
+            overlay.classList.add('ltn__utilize-open');
+        };
 
-    const closeMenu = () => {
-      menu.classList.remove('ltn__utilize-open');
-      overlay.classList.remove('ltn__utilize-open');
-    };
+        const closeMenu = () => {
+            menu.classList.remove('ltn__utilize-open');
+            overlay.classList.remove('ltn__utilize-open');
+        };
 
-    if (menuToggle && menu && overlay) {
-      menuToggle.addEventListener('click', function (e) {
-        e.preventDefault();
-        openMenu();
-      });
+        if (menuToggle && menu && overlay) {
+            menuToggle.addEventListener('click', function (e) {
+                e.preventDefault();
+                openMenu();
+            });
 
-      closeBtn.addEventListener('click', closeMenu);
-      overlay.addEventListener('click', closeMenu);
+            closeBtn.addEventListener('click', closeMenu);
+            overlay.addEventListener('click', closeMenu);
 
-      // BONUS: Click outside menu to close
-      document.addEventListener('click', function (e) {
-        const clickedInsideMenu = menu.contains(e.target) || menuToggle.contains(e.target);
-        if (!clickedInsideMenu && menu.classList.contains('ltn__utilize-open')) {
-          closeMenu();
+            // BONUS: Click outside menu to close
+            document.addEventListener('click', function (e) {
+                const clickedInsideMenu = menu.contains(e.target) || menuToggle.contains(e.target);
+                if (!clickedInsideMenu && menu.classList.contains('ltn__utilize-open')) {
+                    closeMenu();
+                }
+            });
+
+            // ESC key closes the menu too (because we have standards)
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && menu.classList.contains('ltn__utilize-open')) {
+                    closeMenu();
+                }
+            });
         }
-      });
-
-      // ESC key closes the menu too (because we have standards)
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && menu.classList.contains('ltn__utilize-open')) {
-          closeMenu();
-        }
-      });
-    }
-  });
+    });
 </script>
-
-
-

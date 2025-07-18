@@ -1,3 +1,11 @@
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+
 .icon-search.for-search-show,
 .ltn__utilize-toggle,
 .header-icons,
