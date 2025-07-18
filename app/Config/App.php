@@ -31,7 +31,7 @@ class App extends BaseConfig
 
     //     $this->baseURL = $protocol . '://' . $host . $subfolder . '/';
     // }
-    public string $baseURL = 'https://7a0bbbc5f9b3.ngrok-free.app/smileaf/';
+    public string $baseURL = 'https://f5ed83f95449.ngrok-free.app/smileaf/';
 
 
 
