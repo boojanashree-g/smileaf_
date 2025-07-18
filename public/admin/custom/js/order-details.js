@@ -172,11 +172,14 @@ $(document).ready(function () {
               backgroundclr = "bg-label-secondary";
             } else if (status == "Refund Processed") {
               backgroundclr = "bg-label-secondary";
-            } else if (status == "Cancelled" || status == "Refund Failed" || status == "Returned" ) {
+            } else if (
+              status == "Cancelled" ||
+              status == "Refund Failed" ||
+              status == "Returned"
+            ) {
               backgroundclr = "bg-label-danger";
-            }
-            else{
-               backgroundclr = "bg-label-warning";
+            } else {
+              backgroundclr = "bg-label-warning";
             }
 
             return (
@@ -357,7 +360,14 @@ $(document).ready(function () {
       paymentStatus.slice(1).toLowerCase();
 
     let orderItemsData = orderDetails.items;
+    let returnOrderItemsData = orderDetails.returned_items;
+    console.log(returnOrderItemsData);
     let orderItemHtml = "";
+    let returnOrderItemHtml = "";
+
+    let is_returned = orderDetails.is_returned;
+    let returnOrderDisp = is_returned == 0 ? "d-none" : "";
+
     orderItemsData.forEach(function (items, i) {
       let offerType = items.offer_type;
 
@@ -371,51 +381,118 @@ $(document).ready(function () {
       let offerDetails = items.offer_details == 0 ? "-" : items.offer_details;
 
       orderItemHtml += `
-     <tr>
-        <td>${i + 1} .</td>
-        <td class="sorting_1">
-            <div
-                class="d-flex align-items-center">
-                <div
-                    class="avatar-wrapper me-3 rounded-2 bg-label-secondary">
-                    <div class="avatar"><img
-                            src="${base_Url + items.main_image}"
-                            alt="Product-8"
-                            class="rounded">
-                    </div>
-                </div>
+      <tr>
+          <td>${i + 1} .</td>
+          <td class="sorting_1">
+              <div
+                  class="d-flex align-items-center">
+                  <div
+                      class="avatar-wrapper me-3 rounded-2 bg-label-secondary">
+                      <div class="avatar"><img
+                              src="${base_Url + items.main_image}"
+                              alt="Product-8"
+                              class="rounded">
+                      </div>
+                  </div>
 
-            </div>
-        </td>
+              </div>
+          </td>
 
-        <td>
-            <div
-                class="d-flex flex-column justify-content-center">
-                <span
-                    class="text-heading text-wrap fw-medium">${
-                      items.prod_name
-                    }</span>
-                <span
-                    class="text-truncate mb-0 d-none d-sm-block"><small>Pack Quantity :${
-                      items.pack_qty
-                    } </small></span>
-            </div>
-        </td>
-        <td>₹${items.prod_price} 
-        </td>
-        <td><span
-                class="badge bg-label-primary me-1">${displayOfferType}
-                </span>
-        </td>
-        <td>${offerDetails}
-        </td>
-        <td>₹${items.offer_price} 
-        </td>
-          <td>${items.quantity} 
-        </td>
-        <td>₹${items.sub_total}</td>
+          <td>
+              <div
+                  class="d-flex flex-column justify-content-center">
+                  <span
+                      class="text-heading text-wrap fw-medium">${
+                        items.prod_name
+                      }</span>
+                  <span
+                      class="text-truncate mb-0 d-none d-sm-block"><small>Pack Quantity :${
+                        items.pack_qty
+                      } </small></span>
+              </div>
+          </td>
+          <td>₹${items.prod_price} 
+          </td>
+          <td><span
+                  class="badge bg-label-primary me-1">${displayOfferType}
+                  </span>
+          </td>
+          <td>${offerDetails}
+          </td>
+          <td>₹${items.offer_price} 
+          </td>
+            <td>${items.quantity} 
+          </td>
+          <td>₹${items.sub_total}</td>
 
-    </tr>`;
+      </tr>`;
+    });
+
+    returnOrderItemsData.forEach(function (items, i) {
+      let offerType = items.offer_type;
+
+      let displayOfferType =
+        offerType == 0
+          ? "None"
+          : offerType == 1
+          ? "Flat Discount"
+          : "Percentage";
+
+      let offerDetails = items.offer_details == 0 ? "-" : items.offer_details;
+
+      returnOrderItemHtml += `
+      <tr>
+          <td>${i + 1} .</td>
+          <td class="sorting_1">
+              <div
+                  class="d-flex align-items-center">
+                  <div
+                      class="avatar-wrapper me-3 rounded-2 bg-label-secondary">
+                      <div class="avatar"><img
+                              src="${base_Url + items.main_image}"
+                              alt="Product-8"
+                              class="rounded">
+                      </div>
+                  </div>
+
+              </div>
+          </td>
+
+          <td>
+              <div
+                  class="d-flex flex-column justify-content-center">
+                  <span
+                      class="text-heading text-wrap fw-medium">${
+                        items.prod_name
+                      }</span>
+                  <span
+                      class="text-truncate mb-0 d-none d-sm-block"><small>Pack Quantity :${
+                        items.pack_qty
+                      } </small></span>
+              </div>
+          </td>
+          <td>₹${items.prod_price} 
+          </td>
+          <td><span
+                  class="badge bg-label-primary me-1">${displayOfferType}
+                  </span>
+          </td>
+          <td>${offerDetails}
+          </td>
+          <td>₹${items.offer_price} 
+          </td>
+            <td>${items.quantity} 
+          </td>
+          <td>₹${items.sub_total}</td>
+
+      </tr>
+      
+       
+       <tr>
+       <td><b>Returned Reson : </b>&nbsp${items.reason} 
+          </td>
+       </tr>
+       `;
     });
 
     viewOrders += `
@@ -555,7 +632,6 @@ $(document).ready(function () {
                               </thead>
                               <tbody class="table-border-bottom-0">
                                   
-
                                   ${orderItemHtml}
                                   <tr>
                                       <td colspan="4"></td>
@@ -624,6 +700,40 @@ $(document).ready(function () {
                                                ₹${orderDetails.order_total_amt}</span>
                                       </td>
                                   </tr>
+
+                              </tbody>
+                          </table>
+
+
+
+                          <div class="d-flex flex-column  ${returnOrderDisp}">
+                            <div class="row">
+                              <div class="col-lg-8">
+                                <h5 class="card-header order-header">
+                                 <i class="ti ti-package-export"></i>  Returned Product Items
+                                </h5>
+                              </div>
+                            </div>
+                          </div>
+                           <table class="table ${returnOrderDisp}">
+                              <thead class="table-light">
+                                  <tr>
+                                      <th>S.No</th>
+                                      <th>Items</th>
+                                      <th>Product name</th>
+                                      <th>MRP</th>
+                                      <th>Offer Type</th>
+                                      <th>Offer Details</th>
+                                      <th>Offer Price</th>
+                                      <th>Quantity</th>
+                                      <th>Total Price</th>
+                                  </tr>
+                              </thead>
+                              <tbody class="table-border-bottom-0">
+                                  
+
+                                   ${returnOrderItemHtml}
+                                 
 
                               </tbody>
                           </table>

@@ -147,8 +147,14 @@ class AdminController extends BaseController
     }
     private function returnedOrderCount()
     {
-        $orderStatus = "Returned";
-        $resultData = $this->db->query("SELECT COUNT(`order_id`) AS Returned   FROM `tbl_orders` WHERE `flag` = 1 AND  is_returned = 1 AND `order_status` = ?", [$orderStatus])->getRow();
+        $orderStatuses = ["Returned", "Delivered"];
+        $sql = "SELECT COUNT(`order_id`) AS Returned 
+            FROM `tbl_orders` 
+            WHERE `flag` = 1 
+              AND `is_returned` = 1 
+              AND `order_status` IN (?, ?)";
+
+        $resultData = $this->db->query($sql, $orderStatuses)->getRow();
         $ReturnedOrderCount = $resultData->Returned;
         return $ReturnedOrderCount;
     }

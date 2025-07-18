@@ -60,6 +60,7 @@ class OrderController extends BaseController
 
         $orderDetails = $this->db->query($orderqry, $params)->getResultArray();
 
+
         echo json_encode($orderDetails);
     }
 
@@ -114,8 +115,14 @@ class OrderController extends BaseController
         $query = "SELECT * FROM `tbl_order_item` WHERE `flag` = 1 AND `order_id` = ?";
         $itemDetails = $this->db->query($query, [$orderID])->getResultArray();
 
+        $isReturned = $orders[0]['is_returned'];
 
-
+        if ($isReturned == 1) {
+            $query2 = "SELECT * FROM `tbl_return_items` WHERE `flag` = 1 AND `order_id` = ?";
+            $returnedItems = $this->db->query($query2, [$orderID])->getResultArray();
+        } else {
+            $returnedItems = [];
+        }
 
         $orderSummaries = [
             'order_id' => $orderID,
@@ -138,7 +145,9 @@ class OrderController extends BaseController
             'sgst' => $orders[0]['sgst'],
             'gst' => $orders[0]['gst'],
             'items' => [],
-            'user_details' => $userDetails
+            'user_details' => $userDetails,
+            'returned_items' => [],
+            'is_returned' => $orders[0]['is_returned'],
         ];
 
 
@@ -180,7 +189,49 @@ class OrderController extends BaseController
         }
 
 
+
+        if (count($returnedItems) > 0) {
+            foreach ($returnedItems as $item) {
+                $prodID = $item['prod_id'];
+                $variantID = $item['variant_id'];
+                $quantity = $item['quantity'];
+                $prod_price = $item['prod_price'];
+                $sub_total = $item['sub_total'];
+                $reason = $item['reason'];
+
+                $packQtyQuery = "SELECT
+                            a.`pack_qty`,
+                            a.offer_type,a.offer_details,a.offer_price,
+                            b.prod_name,
+                            b.main_image
+                        FROM
+                            `tbl_variants` AS a
+                        INNER JOIN tbl_products AS b
+                            ON a.prod_id = b.prod_id
+                        WHERE
+                            b.`flag` = 1 AND a.flag = 1 AND a.variant_id = ? AND a.prod_id = ?";
+                $packData = $this->db->query($packQtyQuery, [$variantID, $prodID])->getRow();
+
+                if ($packData) {
+                    $productDetails = [
+                        'prod_name' => $packData->prod_name,
+                        'main_image' => $packData->main_image,
+                        'pack_qty' => $packData->pack_qty,
+                        'quantity' => $quantity,
+                        'prod_price' => $prod_price,
+                        'sub_total' => $sub_total,
+                        'offer_type' => $packData->offer_type,
+                        'offer_details' => $packData->offer_details,
+                        'offer_price' => $packData->offer_price,
+                        'reason' => $reason
+                    ];
+                    $orderSummaries['returned_items'][] = $productDetails;
+                }
+            }
+        }
+
         krsort($orderSummaries);
+
 
         if ($orderSummaries) {
             $res['summary'] = $orderSummaries;
