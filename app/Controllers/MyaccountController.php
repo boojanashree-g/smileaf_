@@ -703,8 +703,10 @@ class MyaccountController extends BaseController
 
         helper('url');
 
-        $to_email = "narmathi@appteq.in";
+        $to_email = "smileafproducts@gmail.com";
         $from_email = $email;
+
+
 
         $phpmailer_lib = new PHPMailer_Lib();
         $mail = $phpmailer_lib->load();
@@ -739,15 +741,16 @@ class MyaccountController extends BaseController
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'narmathigopalan2002@gmail.com';
-            $mail->Password = 'qtfnzuhtbmuxyxks';
+            $mail->Username = 'smileafproducts@gmail.com';
+            $mail->Password = 'pjzuemnpybiosqov';
             $mail->SMTPSecure = 'ssl';
             $mail->Port = 465;
 
-            $mail->setFrom($from_email, 'Regarding Return Products');
+            $mail->setFrom($to_email, 'Smileaf');
             $mail->addAddress($to_email);
-
-            $mail->Subject = 'Return Product Request';
+            $mail->addReplyTo($from_email, $userName);
+            $mail->addCC($from_email, $userName);
+            $mail->Subject = 'Smileaf | Returned Items Notification';
             $mail->isHTML(true);
 
             $mail->Body = '
