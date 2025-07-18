@@ -2501,6 +2501,21 @@ footer{
         align-items: center;
         justify-content: space-between;
     }
+    #orderModal .modal-dialog{
+        width: auto;
+    }
+    .ltn__tab-menu-list .nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+}
+.ltn__contact-address-area{
+    padding: 10px;
+}
+.ltn__tab-menu-list .nav {
+    flex-direction: column;
+    gap: 10px;
 }
 
 .liton__wishlist-area{

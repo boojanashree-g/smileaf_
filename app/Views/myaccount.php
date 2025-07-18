@@ -107,7 +107,7 @@
                         <div class="ltn__product-tab-area">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col-lg-4">
+                                    <div class="col-12 col-lg-4 mb-4">
                                         <div class="ltn__tab-menu-list mb-50">
                                             <div class="nav">
                                                 <a class="active show" data-bs-toggle="tab" href="#liton_tab_1_2">Orders
@@ -120,7 +120,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-8">
+                                    <div class="col-12 col-lg-8 col-md-12">
                                         <div class="tab-content">
                                             <!-- Orders Tab - Now properly active -->
                                             <div class="tab-pane fade active show" id="liton_tab_1_2">
@@ -422,7 +422,7 @@
                                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <p class="mb-0">Are you sure you want to delete this item? This action cannot be undone.</p>
+                                        <p class="mb-0">Are you sure you want to delete this address? This action cannot be undone.</p>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
