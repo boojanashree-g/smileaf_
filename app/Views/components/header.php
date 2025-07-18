@@ -134,7 +134,6 @@
                                 <?php endif; ?>
 
                                 <li><a href="<?php echo base_url('contact') ?>">Contact</a></li>
-                                <!-- <li><a href="<?php echo base_url() ?>">Bulk Enquiry</a></li> -->
                             </ul>
                         </div>
                     </nav>
@@ -180,7 +179,7 @@
                     <!-- <li><a href="<?php echo base_url() ?>">Disposable Dinnerware</a></li>
                     <li><a href="<?php echo base_url() ?>">Reusable Dinnerware</a></li>
                     <li><a href="<?php echo base_url() ?>">Accessories</a></li> -->
-                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="<?php echo base_url('contact') ?>">Contact</a></li>
                 </ul>
             </div>
             <div class="ltn__utilize-buttons ltn__utilize-buttons-2">
@@ -207,7 +206,7 @@
                         <a href="<?php echo base_url('cart') ?>" title="Shoping Cart">
                             <span class="utilize-btn-icon">
                                 <i class="fas fa-shopping-cart"></i>
-                                <sup>5</sup>
+                                <sup><?= $cart_count ?></sup>
                             </span>
                             Shoping Cart
                         </a>
