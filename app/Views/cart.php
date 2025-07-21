@@ -121,14 +121,14 @@
                         ?>
 
                         <div class="col-lg-8">
-                            <h4 class="cart_details">Cart Details</h4>
+                            <h4 class="cart_details mb-4">Cart Details</h4>
                             <?=
                                 $shoppingTotalClass = "";
                             foreach ($cart_product as $cart) {
                                 ?>
 
                                 <div class="shoping-cart-inner">
-                                    <div class="shoping-cart-table table-responsive">
+                                    <div class="table-responsive">
 
                                         <table class="table">
                                             <tbody>
@@ -210,24 +210,24 @@
                                 <tbody>
                                     <tr>
                                         <td>Sub total</td>
-                                        <td class="order-subtotal">-</td>
+                                        <td class="order-subtotal cart-total-amt">-</td>
                                     </tr>
                                     <tr>
                                         <td>CGST(Includes)</td>
-                                        <td class="gst-td">-</td>
+                                        <td class="gst-td cart-total-amt">-</td>
                                     </tr>
                                     <tr>
                                         <td>SGST(Includes)</td>
-                                        <td class="sgst-td">-</td>
+                                        <td class="sgst-td cart-total-amt">-</td>
                                     </tr>
                                     <tr>
                                         <td>Shipping Charge</td>
-                                        <td class="shipping-charge">₹100.00</td>
+                                        <td class="shipping-charge cart-total-amt">₹100.00</td>
                                     </tr>
 
                                     <tr>
                                         <td><strong>Order Total</strong></td>
-                                        <td><strong class="order_total_amt"></strong></td>
+                                        <td class="cart-total-amt"><strong class="order_total_amt "></strong></td>
                                     </tr>
                                 </tbody>
                             </table>
