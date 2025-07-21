@@ -380,7 +380,7 @@ class SigninController extends BaseController
     public function logout()
     {
 
-        $this->session->destroy();
+        $this->session->remove(['jwt', 'user_id', 'loginStatus', 'otp_verify']);
         return redirect()->to('/');
     }
 
