@@ -291,8 +291,22 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="d-flex justify-content-center mt-2">
+                            <?php if ($related['available_status'] == 0) { ?>
+                            <div class="d-flex justify-content-evenly">
+                                <a href="<?= base_url("product-details/" . base64_encode($related['prod_id'])) ?>" class="theme-btn-1 btn quick_btn" data-prodid="<?= esc($related['prod_id']) ?>" data-menuid="<?= $related['menu_id'] ?>" data-submenuid=<?= $related['submenu_id'] ?>>
+                                    <i class="fab fa-whatsapp text-success me-2"></i>
+                                    <span class="text-success">Contact us to order</span>
+                                </a>
+                            </div>
+                            <?php } else if ($related['available_status'] > 0) { ?>
+                                <div class="d-flex justify-content-evenly">
+                                    <a href="<?= base_url("product-details/" . base64_encode($related['prod_id'])) ?>" class="theme-btn-1 btn quick_btn" data-prodid="<?= esc($related['prod_id']) ?>" data-menuid="<?= $related['menu_id'] ?>" data-submenuid=<?= $related['submenu_id'] ?> style="border:1px solid;">
+                                        <i class="fas fa-shopping-cart"></i>
+                                        <span>Buy Now</span>
+                                    </a>
+                                </div>
+                            <?php } ?>
+                            <!-- <div class="d-flex justify-content-center mt-2">
                                 <a href="<?= base_url("product-details/" . base64_encode($related['prod_id'])) ?>"
                                    class="theme-btn-1 btn quick_btn <?= $related['available_status'] == 0 ? 'text-danger' : '' ?>"
                                    data-prodid="<?= esc($related['prod_id']) ?>"
@@ -303,7 +317,7 @@
                                         <?= $related['available_status'] == 0 ? 'Contact us to order' : 'Buy Now' ?>
                                     </span>
                                 </a>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 <?php endforeach; ?>
