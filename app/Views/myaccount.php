@@ -108,7 +108,7 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-12 col-lg-4 mb-4">
-                                        <div class="ltn__tab-menu-list mb-50">
+                                        <div class="ltn__tab-menu-list ">
                                             <div class="nav">
                                                 <a class="active show" data-bs-toggle="tab" href="#liton_tab_1_2">Orders
                                                     <i class="fas fa-file-alt"></i></a>
@@ -126,7 +126,7 @@
                                             <div class="tab-pane fade active show" id="liton_tab_1_2">
                                                 <div class="ltn__myaccount-tab-content-inner">
                                                     <!-- <h3>My Orders</h3> -->
-                                                    <div class="table-responsive text-center d-flex flex-column align-items-center">
+                                                    <div class="table-responsive">
                                                         <?php
                                                         if (count($summary) <= 0) { ?>
                                                             <img src="<?php echo base_url() ?>public/assets/img/empty-box-concept.png" width="200" />
