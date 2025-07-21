@@ -119,7 +119,7 @@
                                                 <a id="btn-logout">Logout <i class="fas fa-sign-out-alt"></i></a>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>  
                                     <div class="col-12 col-lg-8 col-md-12">
                                         <div class="tab-content">
                                             <!-- Orders Tab - Now properly active -->
