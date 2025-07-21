@@ -2530,6 +2530,9 @@ footer{
     .shoping-cart-total .cart-total-amt {
         text-align: end;
     }
+    .shoping-cart-inner td{
+        border-bottom: 0px;
+    }
 
 }
 .ltn__contact-address-area{
