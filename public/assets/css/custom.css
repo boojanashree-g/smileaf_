@@ -2533,6 +2533,9 @@ footer{
     .shoping-cart-inner td{
         border-bottom: 0px;
     }
+    .action_btn{        
+        min-width: 110px;
+    }
 
 }
 .ltn__contact-address-area{

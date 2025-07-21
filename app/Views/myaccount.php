@@ -49,9 +49,9 @@
     color: white !important;
     border: none;
     cursor: pointer;
-    align-items: center;
+    /* align-items: center;
     display: flex;
-    justify-content: center;
+    justify-content: center; */
 }
 
 .btn-small{
@@ -195,7 +195,7 @@
                                                                                     class="badge <?= $orderClass ?> status_btn"><?= $orderDetails['order_status'] ?></span>
                                                                             </td>
                                                                             <td>₹<?= $orderDetails['order_total_amt'] ?></td>
-                                                                            <td class="d-flex-">
+                                                                            <td class="action_btn">
                                                                                 <a class="btn-sm btn-view-order view-order"
                                                                                 data-orderid="<?= esc($orderDetails['order_id']) ?>" title="View Order"><i class='far fa-eye' style='font-size:14px;'></i></a>
 
