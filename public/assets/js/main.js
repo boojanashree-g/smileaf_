@@ -506,32 +506,31 @@
             nextArrow: '<a class="slick-next"><i class="fas fa-arrow-right" alt="Arrow Icon"></i></a>',
             responsive: [
                 {
-                    breakpoint: 992,
+                    breakpoint: 1200,
                     settings: {
                         slidesToShow: 3,
                         slidesToScroll: 1
                     }
                 },
                 {
-                    breakpoint: 768,
+                    breakpoint: 992,
                     settings: {
-                        arrows: false,
-                        dots: true,
                         slidesToShow: 2,
                         slidesToScroll: 1
                     }
                 },
                 {
-                    breakpoint: 580,
+                    breakpoint: 576,
                     settings: {
                         arrows: false,
                         dots: true,
-                        slidesToShow: 2,
+                        slidesToShow: 1,
                         slidesToScroll: 1
                     }
                 }
             ]
         });
+
 
         /* --------------------------------------------------------
             17. Tab Product Slider One

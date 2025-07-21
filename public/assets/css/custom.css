@@ -2487,6 +2487,7 @@ footer{
     } */
     .slick-track #main-image{
         height: auto !important;
+        max-height: 300px;
     }
     .ltn__checkout-area{
         margin-bottom: 15px;
@@ -2512,7 +2513,7 @@ footer{
         flex-direction: row;
         flex-wrap: wrap;
     }
-    .cart-plus-minus{
+    .liton__shoping-cart-area .cart-plus-minus{
         border: 2px solid #d3d3d3;
         height: 40px;
         line-height: 30px;
