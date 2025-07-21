@@ -78,7 +78,7 @@
     <div class="body-wrapper">
         <?php require("components/header.php") ?>
 
-        <div class="ltn__login-area mt-25">
+        <div class="ltn__login-area my-5">
             <div class="container">
 
 
@@ -104,7 +104,7 @@
                             <div class="row mb-3">
                                 <div class="col-sm-4 text-start fw-bold">URL:</div>
                                 <div class="col-sm-8 text-start text-primary">
-                                    <a href="<?= trim($tracking_details['tracking_link'] ?? '') !== '' ? $tracking_details['tracking_link'] : '#' ?>"
+                                    <a href="<?= trim($tracking_details['tracki ng_link'] ?? '') !== '' ? $tracking_details['tracking_link'] : '#' ?>"
                                         target="_blank">
                                         <?= trim($tracking_details['tracking_link'] ?? '') !== '' ? $tracking_details['tracking_link'] : '-' ?></a>
                                 </div>
@@ -115,7 +115,7 @@
 
                     <input type="hidden" id="order_id" value="<?= $order_id ?>" />
 
-                    <div class="col-lg-7 col-md-10 mb-4 account-login-inner p-4 section-bg-1 rounded shadow-sm h-100">
+                    <div class="col-lg-7 col-md-10 mb-4 mx-0 account-login-inner p-4 section-bg-1 rounded shadow-sm h-100">
                         <h3 class="mb-4 fw-semibold text-center">Order Details</h3>
                         <div class="order-tracking-status d-none ">
                             <div class="track">

@@ -16,6 +16,9 @@
     .sub-image img{
         max-height: 100px;
     }
+    .products_page .ltn__product-item-3{
+        margin: 10px;
+    }
 </style>
 
 <body>

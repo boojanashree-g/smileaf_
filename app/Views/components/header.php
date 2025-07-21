@@ -1,8 +1,7 @@
 <header class="ltn__header-area ltn__header-5 ltn__header-transparent">
 
     <!-- ltn__header-middle-area start -->
-    <div
-        class="ltn__header-middle-area ltn__header-sticky ltn__sticky-bg-black ltn__logo-right-menu-option plr--9--- header_parent pb-0">
+    <div class="ltn__header-middle-area ltn__header-sticky ltn__sticky-bg-black ltn__logo-right-menu-option plr--9--- header_parent pb-0">
         <div class="container">
             <!-- <div class="primaryHeader"> -->
             <div class="row">
@@ -140,7 +139,6 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
     <!-- ltn__header-middle-area end -->
 
