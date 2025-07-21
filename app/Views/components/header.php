@@ -1,7 +1,8 @@
 <header class="ltn__header-area ltn__header-5 ltn__header-transparent">
 
     <!-- ltn__header-middle-area start -->
-    <div class="ltn__header-middle-area ltn__header-sticky ltn__sticky-bg-black ltn__logo-right-menu-option plr--9--- header_parent pb-0">
+    <div
+        class="ltn__header-middle-area ltn__header-sticky ltn__sticky-bg-black ltn__logo-right-menu-option plr--9--- header_parent pb-0">
         <div class="container">
             <!-- <div class="primaryHeader"> -->
             <div class="row">
@@ -18,11 +19,14 @@
                     <div class="search_bar dsmnone">
                         <form class="search-form" action="#" method="GET" autocomplete="off">
                             <div class="search-input-wrap" style="position: relative;">
-                            <input type="text" id="searchInput" name="query" placeholder="Search Product..." class="search-input" />
-                            <button type="button" class="search-icon-btn">
-                                <i class="fas fa-search"></i>
-                            </button>
-                            <ul id="suggestions" class="suggestions-list" style="position: absolute; top: 103%; left: 21px; right: 0; z-index: 10; background: white; list-style: none; padding: 0; margin: 0; display: none; width: 92%;"></ul>
+                                <input type="text" id="searchInput" name="query" placeholder="Search Product..."
+                                    class="search-input" />
+                                <button type="button" class="search-icon-btn">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                                <ul id="suggestions" class="suggestions-list"
+                                    style="position: absolute; top: 103%; left: 21px; right: 0; z-index: 10; background: white; list-style: none; padding: 0; margin: 0; display: none; width: 92%;">
+                                </ul>
                             </div>
                         </form>
                     </div>
@@ -157,23 +161,23 @@
                     <li><a href="<?php echo base_url() ?>">Home</a></li>
                     <li><a href="<?php echo base_url('products') ?>">Shop</a></li>
                     <?php if (!empty($mainmenu)): ?>
-                                    <?php foreach ($mainmenu as $menu): ?>
-                                        <?php
-                                        $menuSlug = base_url('/product-categories/' . $menu['slug']);
-                                        $hasChildren = isset($submenu[$menu['menu_id']]);
-                                        ?>
+                        <?php foreach ($mainmenu as $menu): ?>
+                            <?php
+                            $menuSlug = base_url('/product-categories/' . $menu['slug']);
+                            $hasChildren = isset($submenu[$menu['menu_id']]);
+                            ?>
 
-                                        <?php if ($hasChildren): ?>
-                                            <li class="menu-icon">
-                                                <a href="<?= $menuSlug ?>"><?= esc($menu['menu_name']) ?></a>                                                
-                                            </li>
-                                        <?php else: ?>
-                                            <li>
-                                                <a href="<?= $menuSlug ?>"><?= esc($menu['menu_name']) ?></a>
-                                            </li>
-                                        <?php endif; ?>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
+                            <?php if ($hasChildren): ?>
+                                <li class="menu-icon">
+                                    <a href="<?= $menuSlug ?>"><?= esc($menu['menu_name']) ?></a>
+                                </li>
+                            <?php else: ?>
+                                <li>
+                                    <a href="<?= $menuSlug ?>"><?= esc($menu['menu_name']) ?></a>
+                                </li>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                     <!-- <li><a href="<?php echo base_url() ?>">Disposable Dinnerware</a></li>
                     <li><a href="<?php echo base_url() ?>">Reusable Dinnerware</a></li>
                     <li><a href="<?php echo base_url() ?>">Accessories</a></li> -->

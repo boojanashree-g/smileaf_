@@ -329,7 +329,7 @@ class OrderController extends BaseController
         $data = $this->request->getPost();
 
         $orderID = $this->request->getPost('order_id');
-        $newStatus = $this->request->getPost('status');
+        $newStatus = trim($this->request->getPost('status'));
         $cancelReason = $this->request->getPost('reason');
         $cancelStatus = 0;
         if (!empty($cancelReason)) {
@@ -343,7 +343,8 @@ class OrderController extends BaseController
             return $this->response->setJSON(['code' => 400, 'status' => false, 'message' => 'Order not found']);
         }
 
-        $currentStatus = $order->order_status;
+        $currentStatus = trim($order->order_status);
+
 
 
         $validStatusFlow = [
@@ -354,9 +355,11 @@ class OrderController extends BaseController
             'Refund' => [],
         ];
 
+
         if (!isset($validStatusFlow[$currentStatus])) {
             return $this->response->setJSON(['code' => 400, 'status' => false, 'message' => 'Invalid current status']);
         }
+
 
         if (!in_array($newStatus, $validStatusFlow[$currentStatus])) {
             return $this->response->setJSON([
@@ -365,6 +368,7 @@ class OrderController extends BaseController
                 'message' => "Invalid status change: $currentStatus → $newStatus"
             ]);
         }
+
 
 
         // Initialize fields
