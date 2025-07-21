@@ -2271,6 +2271,10 @@ footer{
     bottom: 0; */
 }
 
+.ltn__shop-details-area{
+    margin: 20px 0;
+}
+
     .ltn__product-area{
         padding-top: 10px;
     }
@@ -2538,6 +2542,7 @@ footer{
     }
 
 }
+
 .ltn__contact-address-area{
     padding: 10px;
 }
