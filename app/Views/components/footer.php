@@ -1,4 +1,4 @@
-<footer class="ltn__footer-area ">
+<footer class="ltn__footer-area mt-5">
     <div class="section-bg-1 pt-3">
         <div class="container-fluid">
             <div class="row justify-content-around">
@@ -131,7 +131,8 @@
                 <div class="col-md-12 col-12">
                     <div class="ltn__copyright-design clearfix">
                         <p class="text-center">All Rights Reserved @ <a href="<?= base_url() ?>">Smileaf &nbsp;</a>
-                          <span class="current-year"></span></p>
+                            <span class="current-year"></span>
+                        </p>
                     </div>
                 </div>
                 <!-- <div class="col-md-6 col-12 align-self-center">
