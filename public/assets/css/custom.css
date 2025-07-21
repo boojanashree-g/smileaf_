@@ -304,12 +304,12 @@ button:disabled {
     color: #37724f !important;
 }
 
-.signin_wrapper {
+/* .signin_wrapper {
     padding: 0;
     margin-bottom: 50px;
     border-radius: 10px;
     box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
-}
+} */
 
 .signin_wrapper ul li {
     margin-top: 0;
@@ -2526,8 +2526,14 @@ footer{
     margin: 15px;
 }
 header .ltn__header-middle-area{
-        overflow: inherit;
-     }
+    overflow: inherit;
+}
+
+.account-login-inner{
+    margin: 15px;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+    border-radius: 10px;
+}
 @media (min-width: 769px) and (max-width: 990.99px) {
      
     .inner_banner_container {
