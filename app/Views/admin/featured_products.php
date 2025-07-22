@@ -7,6 +7,11 @@
 <?php require "components/head.php"; ?>
 
 <body>
+    <!-- Loader -->
+    <div id="ajax-loader" class="d-none">
+        <div class="loader"></div>
+    </div>
+
     <div class="layout-wrapper layout-content-navbar  ">
         <div class="layout-container">
 
@@ -85,8 +90,9 @@
                                                 <select id="sub_id" name="sub_id" class="form-select">
                                                     <option value="">Select Submenu</option>
                                                     <?php foreach ($submenu as $row): ?>
-                                                    <option value="<?= esc($row['sub_id']) ?>">
-                                                        <?= esc($row['submenu']) ?></option>
+                                                        <option value="<?= esc($row['sub_id']) ?>">
+                                                            <?= esc($row['submenu']) ?>
+                                                        </option>
                                                     <?php endforeach; ?>
                                                 </select>
                                                 <span class="error text-danger sub_id mt-5"></span>

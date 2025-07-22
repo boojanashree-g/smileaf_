@@ -19,6 +19,10 @@
 </style>
 
 <body>
+        <!-- Loader -->
+    <div id="ajax-loader" class="d-none">
+        <div class="loader"></div>
+    </div>
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5J3LMKC" height="0" width="0"
             style="display: none; visibility: hidden"></iframe></noscript>
 

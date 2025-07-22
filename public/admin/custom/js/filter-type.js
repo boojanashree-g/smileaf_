@@ -12,7 +12,7 @@ $(document).ready(function () {
     $("#type-modal").modal("show");
     if (mode == "new") {
       $("#btn-submit").html("Submit");
-      $(".type-title").text("Add Filter Type");
+      $(".type-title").text("Add Product Types");
     }
   });
 
@@ -87,16 +87,19 @@ $(document).ready(function () {
 
   // *************************** [get Data] *************************************************************************
   function getTypeDetails() {
+    $("#ajax-loader").removeClass("d-none");
     $.ajax({
       type: "POST",
       url: base_Url + "admin/filter-types/get-data",
       dataType: "json",
       success: function (data) {
+        $("#ajax-loader").addClass("d-none");
         res_DATA = data;
         dispTypeDetails(res_DATA);
       },
       error: function () {
         console.log("Error");
+        $("#ajax-loader").addClass("d-none");
       },
     });
   }
@@ -156,7 +159,7 @@ $(document).ready(function () {
   $(document).on("click", ".btnStatus", function () {
     $("#status-modal").modal("show");
     $("#update-status").val();
-    $(".status-title").html("Types Status");
+    $(".status-title").html("Status");
 
     let statuss = $(this).data("status");
     $("#update-status").val(statuss);
@@ -216,7 +219,7 @@ $(document).ready(function () {
 
     if (mode == "edit") {
       $("#btn-submit").html("Update");
-      $(".type-title").text("Edit Filter Type");
+      $(".type-title").text("Edit Product Types");
     }
 
     var index = $(this).attr("id");

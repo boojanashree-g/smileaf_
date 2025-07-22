@@ -72,6 +72,9 @@
     <link rel="stylesheet" href="<?php echo base_url() ?>public/admin/vendor/libs/flatpickr/flatpickr.css" />
     <link rel="stylesheet" href="<?php echo base_url() ?>public/admin/vendor/css/pages/app-invoice.css" />
 
+    <!--  Spinkit -->
+    <link rel="stylesheet" href="<?php echo base_url() ?>public/admin/vendor/libs/spinkit/spinkit.css" />
+
     <!-- DATA TABLES CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
@@ -80,6 +83,6 @@
         const token = localStorage.getItem("token");
         var base_Url = "<?php echo base_url() ?>";
     </script>
-
+  
 
 </head>

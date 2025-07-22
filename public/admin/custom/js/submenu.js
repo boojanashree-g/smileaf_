@@ -107,15 +107,18 @@ $(document).ready(function () {
 
   // *************************** [get Data] *************************************************************************
   function getSubmenuDetails() {
+    $("#ajax-loader").removeClass("d-none");
     $.ajax({
       type: "POST",
       url: base_Url + "admin/sub-menu/get-data",
       dataType: "json",
       success: function (data) {
+        $("#ajax-loader").addClass("d-none");
         res_DATA = data;
         dispsubMenuDetails(res_DATA);
       },
       error: function () {
+        $("#ajax-loader").addClass("d-none");
         console.log("Error");
       },
     });

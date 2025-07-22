@@ -25,8 +25,9 @@ class CustomerController extends BaseController
         return view("admin/customer_details", $res);
     }
 
-    private function decode($encodedId){
-        return base64_decode($encodedId); 
+    private function decode($encodedId)
+    {
+        return base64_decode($encodedId);
     }
 
     public function insertData()
@@ -36,8 +37,8 @@ class CustomerController extends BaseController
 
         $userID = $this->decode($this->session->get('user_id'));
         $username = $request->getPost('customer_name');
-        $number   = $request->getPost('customer_mobile');
-        $email    = $request->getPost('customer_email');
+        $number = $request->getPost('customer_mobile');
+        $email = $request->getPost('customer_email');
 
         $existing = $this->db->query(
             "SELECT user_id FROM tbl_users WHERE number = ? AND flag = 1 LIMIT 1",
@@ -45,31 +46,31 @@ class CustomerController extends BaseController
         )->getRowArray();
 
         $userData = [
-            'username'    => $username,
-            'number'      => $number,
-            'email'       => $email,
+            'username' => $username,
+            'number' => $number,
+            'email' => $email,
             'is_verified' => 1,
-            'flag'        => 1,
+            'flag' => 1,
         ];
 
         if ($existing) {
             $UserModel->update($existing['user_id'], $userData);
 
             return $this->response->setJSON([
-                'code'    => 200,
+                'code' => 200,
                 'message' => 'User with same number found. Updated successfully.',
             ]);
         } else {
             if ($UserModel->insert($userData)) {
                 return $this->response->setJSON([
-                    'code'    => 201,
+                    'code' => 201,
                     'message' => 'New user created successfully.',
                 ]);
             } else {
                 return $this->response->setJSON([
-                    'code'    => 500,
+                    'code' => 500,
                     'message' => 'Insert failed.',
-                    'errors'  => $UserModel->errors(),
+                    'errors' => $UserModel->errors(),
                 ]);
             }
         }
@@ -81,97 +82,97 @@ class CustomerController extends BaseController
         echo json_encode($res);
     }
 
-  public function deleteData()
-{
-    try {
+    public function deleteData()
+    {
+        try {
+            $request = $this->request;
+
+            // Get user_id from POST data
+            $user_id = $request->getPost('user_id');
+
+            if (empty($user_id)) {
+                return $this->response->setJSON([
+                    'code' => 400,
+                    'status' => 'failure',
+                    'message' => 'User ID is required.'
+                ]);
+            }
+
+            // Update flag only if not already deleted
+            $query = 'UPDATE `tbl_users` SET `flag` = 0 WHERE `user_id` = ? AND `flag` != 0';
+            $updateData = $this->db->query($query, [$user_id]);
+
+            $affected_rows = $this->db->affectedRows();
+
+            if ($affected_rows > 0) {
+                return $this->response->setJSON([
+                    'code' => 200,
+                    'status' => 'success',
+                    'message' => 'Deleted successfully.'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'code' => 400,
+                    'status' => 'failure',
+                    'message' => 'User already deleted or not found.'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'code' => 500,
+                'status' => 'error',
+                'message' => 'Server Error: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+
+    public function updateData()
+    {
+        $UserModel = new \App\Models\UserModel();
         $request = $this->request;
 
-        // Get user_id from POST data
         $user_id = $request->getPost('user_id');
+        $username = $request->getPost('customer_name');
+        $number = $request->getPost('customer_mobile');
+        $email = $request->getPost('customer_email');
+        $isVerified = $request->getPost('is_verified') == '1' ? 1 : 0;
 
-        if (empty($user_id)) {
+
+        // Check if user exists and is not soft-deleted
+        $existing = $this->db->query(
+            "SELECT user_id FROM tbl_users WHERE user_id = ? AND flag = 1 LIMIT 1",
+            [$user_id]
+        )->getRowArray();
+
+        if (!$existing) {
             return $this->response->setJSON([
-                'code' => 400,
-                'status' => 'failure',
-                'message' => 'User ID is required.'
+                'code' => 404,
+                'message' => 'User not found or already deleted.',
             ]);
         }
 
-        // Update flag only if not already deleted
-        $query = 'UPDATE `tbl_users` SET `flag` = 0 WHERE `user_id` = ? AND `flag` != 0';
-        $updateData = $this->db->query($query, [$user_id]);
+        $userData = [
+            'username' => $username,
+            'number' => $number,
+            'email' => $email,
+            'is_verified' => $isVerified,
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
 
-        $affected_rows = $this->db->affectedRows();
-
-        if ($affected_rows > 0) {
+        if ($UserModel->update($user_id, $userData)) {
             return $this->response->setJSON([
-                'code'    => 200,
-                'status'  => 'success',
-                'message' => 'Deleted successfully.'
+                'code' => 200,
+                'message' => 'User updated successfully.',
             ]);
         } else {
             return $this->response->setJSON([
-                'code'    => 400,
-                'status'  => 'failure',
-                'message' => 'User already deleted or not found.'
+                'code' => 500,
+                'message' => 'Update failed.',
+                'errors' => $UserModel->errors(),
             ]);
         }
-    } catch (\Exception $e) {
-        return $this->response->setJSON([
-            'code'    => 500,
-            'status'  => 'error',
-            'message' => 'Server Error: ' . $e->getMessage()
-        ]);
     }
-}
-
-
-   public function updateData()
-{
-    $UserModel = new \App\Models\UserModel();
-    $request = $this->request;
-
-    $user_id = $request->getPost('user_id');
-    $username = $request->getPost('customer_name');
-    $number   = $request->getPost('customer_mobile');
-    $email    = $request->getPost('customer_email');
-    $isVerified = $request->getPost('is_verified') == '1' ? 1 : 0;
-
-
-    // Check if user exists and is not soft-deleted
-    $existing = $this->db->query(
-        "SELECT user_id FROM tbl_users WHERE user_id = ? AND flag = 1 LIMIT 1",
-        [$user_id]
-    )->getRowArray();
-
-    if (!$existing) {
-        return $this->response->setJSON([
-            'code'    => 404,
-            'message' => 'User not found or already deleted.',
-        ]);
-    }
-
-    $userData = [
-        'username' => $username,
-        'number'   => $number,
-        'email'    => $email,
-        'is_verified' => $isVerified,
-        'updated_at' => date('Y-m-d H:i:s')
-    ];
-
-    if ($UserModel->update($user_id, $userData)) {
-        return $this->response->setJSON([
-            'code'    => 200,
-            'message' => 'User updated successfully.',
-        ]);
-    } else {
-        return $this->response->setJSON([
-            'code'    => 500,
-            'message' => 'Update failed.',
-            'errors'  => $UserModel->errors(),
-        ]);
-    }
-}
 
 
 }

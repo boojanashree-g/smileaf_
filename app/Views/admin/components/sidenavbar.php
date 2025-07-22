@@ -42,6 +42,21 @@
                         <div data-i18n="Product Details">Featured Product </div>
                     </a>
                 </li>
+                <li class="menu-item">
+                    <a href="<?= base_url('admin/filter-types') ?>" class="menu-link">
+                        <div data-i18n="Product Types">Product Types</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="<?= base_url('admin/filter-shapes') ?>" class="menu-link">
+                        <div data-i18n="Product Shapes">Product Shapes</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="<?= base_url('admin/filter-size') ?>" class="menu-link">
+                        <div data-i18n="Product Size">Product Size</div>
+                    </a>
+                </li>
             </ul>
         </li>
         <li class="menu-item parent-item">
@@ -82,37 +97,15 @@
                 </li>
             </ul>
         </li>
-        <li class="menu-item parent-item">
+        <!-- <li class="menu-item parent-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
 
                 <i class="menu-icon tf-icons ti ti-filter"></i>
                 <div data-i18n="Manage Filters">Manage Filters</div>
             </a>
 
-            <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="<?= base_url('admin/filter-types') ?>" class="menu-link">
-                        <div data-i18n="Filter Types">Filter Types</div>
-                    </a>
-                </li>
-            </ul>
 
-            <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="<?= base_url('admin/filter-shapes') ?>" class="menu-link">
-                        <div data-i18n="Filter Shapes">Filter Shapes</div>
-                    </a>
-                </li>
-            </ul>
-
-            <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="<?= base_url('admin/filter-size') ?>" class="menu-link">
-                        <div data-i18n="Filter Size">Filter Size</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
+        </li> -->
         <li class="menu-item parent-item">
             <a href="<?= base_url() ?>admin/banner" class="menu-link menu-toggle-">
                 <i class="menu-icon tf-icons ti ti-wallet"></i>

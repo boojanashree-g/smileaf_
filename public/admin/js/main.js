@@ -353,11 +353,11 @@ document.getElementById("layout-menu") &&
                 e(a);
             };
           }),
-          (s = "search-vertical.json"),
+          (s = ""),
           $("#layout-menu").hasClass("menu-horizontal") &&
             (s = "search-horizontal.json"),
           (a = $.ajax({
-            url: assetsPath + "json/" + s,
+            // url: assetsPath + "json/" + s,
             dataType: "json",
             async: !1,
           }).responseJSON),

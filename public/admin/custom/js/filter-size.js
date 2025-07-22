@@ -12,7 +12,7 @@ $(document).ready(function () {
     $("#size-modal").modal("show");
     if (mode == "new") {
       $("#btn-submit").html("Submit");
-      $(".size-title").text("Add Filter");
+      $(".size-title").text("Add Product Size");
     }
   });
 
@@ -87,15 +87,18 @@ $(document).ready(function () {
 
   // *************************** [get Data] *************************************************************************
   function getTypeDetails() {
+    $("#ajax-loader").removeClass("d-none");
     $.ajax({
       type: "POST",
       url: base_Url + "admin/filter-size/get-data",
       dataType: "json",
       success: function (data) {
+        $("#ajax-loader").addClass("d-none");
         res_DATA = data;
         dispTypeDetails(res_DATA);
       },
       error: function () {
+        $("#ajax-loader").addClass("d-none");
         console.log("Error");
       },
     });
@@ -156,7 +159,7 @@ $(document).ready(function () {
   $(document).on("click", ".btnStatus", function () {
     $("#status-modal").modal("show");
     $("#update-status").val();
-    $(".status-title").html("Types Status");
+    $(".status-title").html("Status");
 
     let statuss = $(this).data("status");
     $("#update-status").val(statuss);
@@ -216,7 +219,7 @@ $(document).ready(function () {
 
     if (mode == "edit") {
       $("#btn-submit").html("Update");
-      $(".size-title").text("Edit Filter");
+      $(".size-title").text("Edit Product Size");
     }
 
     var index = $(this).attr("id");

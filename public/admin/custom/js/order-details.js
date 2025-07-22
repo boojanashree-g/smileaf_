@@ -7,17 +7,25 @@ $(document).ready(function () {
   // *************************** [get Data] *************************************************************************
   function getOrderDetails() {
     let orderStatus = $("#order_status").val();
+    $("#ajax-loader").removeClass("d-none");
+
     $.ajax({
       type: "POST",
       data: { status: orderStatus },
       url: base_Url + "admin/order-details/get-data",
       dataType: "json",
+
       success: function (data) {
+        $("#ajax-loader").addClass("d-none");
         res_DATA = data;
         dispOrderDetails(res_DATA);
       },
       error: function () {
         console.log("Error");
+        $("#ajax-loader").addClass("d-none");
+      },
+      complete: function () {
+        $("#ajax-loader").fadeOut();
       },
     });
   }
@@ -368,6 +376,10 @@ $(document).ready(function () {
     let is_returned = orderDetails.is_returned;
     let returnOrderDisp = is_returned == 0 ? "d-none" : "";
 
+    let cancel_status = orderDetails.cancel_status;
+    let cancel_reason = orderDetails.cancel_reason;
+    let cancelOrderDisp = cancel_status == 0 ? "d-none" : "";
+
     orderItemsData.forEach(function (items, i) {
       let offerType = items.offer_type;
 
@@ -398,7 +410,7 @@ $(document).ready(function () {
               </div>
           </td>
 
-          <td>
+          <td>  
               <div
                   class="d-flex flex-column justify-content-center">
                   <span
@@ -424,7 +436,6 @@ $(document).ready(function () {
             <td>${items.quantity} 
           </td>
           <td>₹${items.sub_total}</td>
-
       </tr>`;
     });
 
@@ -489,8 +500,9 @@ $(document).ready(function () {
       
        
        <tr>
-       <td><b>Returned Reson : </b>&nbsp${items.reason} 
+       <td><b>Returned Reason : </b>&nbsp${items.reason} 
           </td>
+        
        </tr>
        `;
     });
@@ -700,9 +712,24 @@ $(document).ready(function () {
                                                ₹${orderDetails.order_total_amt}</span>
                                       </td>
                                   </tr>
-
                               </tbody>
                           </table>
+                        
+
+                          
+                         
+                          <div class="d-flex flex-column  ${cancelOrderDisp}">
+                            <div class="row">
+                              <div class="col-lg-8">
+                                <h5 class="card-header order-header">
+                                <i class="ti ti-box-off text-danger "></i> Cancel Reason :&nbsp${cancel_reason}
+                                </h5> 
+                              </div>
+                            
+                            </div>
+                          </div>
+                         
+                      
 
 
 

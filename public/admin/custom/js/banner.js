@@ -113,18 +113,19 @@ $(document).ready(function () {
   }
   // *************************** [get Data] *************************************************************************
   function getBannerDetails() {
+    $("#ajax-loader").removeClass("d-none");
     $.ajax({
       type: "POST",
       url: base_Url + "admin/banner/get-data",
       dataType: "json",
       success: function (data) {
+        $("#ajax-loader").addClass("d-none");
         res_DATA = data;
-
-        console.log(res_DATA);
 
         dispBannerDetails(res_DATA);
       },
       error: function () {
+        $("#ajax-loader").addClass("d-none");
         console.log("Error");
       },
     });
@@ -265,8 +266,6 @@ $(document).ready(function () {
 
   // *************************** [Edit Data] *************************************************************************
 
-
-
   $(document).on("click", ".btnEdit", function () {
     $("#banner-modal").modal("show");
     mode = "edit";
@@ -279,7 +278,6 @@ $(document).ready(function () {
     var index = $(this).attr("id");
 
     $("#banner_link").val(res_DATA[index].banner_link);
-    
 
     $("#banner_image_url").attr("src", base_Url + res_DATA[index].banner_image);
     $("#banner_image_url").addClass("active");

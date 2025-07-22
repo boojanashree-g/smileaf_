@@ -30,14 +30,14 @@ $(document).ready(function () {
         {
           mDataProp: "email",
         },
-        {
-          mDataProp: "is_verified",
-          render: function (data, type, row, meta) {
-            return data == 1
-              ? '<span class="badge bg-success">Verified</span>'
-              : '<span class="badge bg-secondary">Not Verified</span>';
-          },
-        },
+        // {
+        //   mDataProp: "is_verified",
+        //   render: function (data, type, row, meta) {
+        //     return data == 1
+        //       ? '<span class="badge bg-success">Verified</span>'
+        //       : '<span class="badge bg-secondary">Not Verified</span>';
+        //   },
+        // },
         {
           mDataProp: function (data, type, full, meta) {
             return (
@@ -56,16 +56,19 @@ $(document).ready(function () {
 
   // *************************** [get Data] *************************************************************************
   function getCustomerDetails() {
+    $("#ajax-loader").removeClass("d-none");
     $.ajax({
       type: "POST",
       url: base_Url + "admin/customer-details/get-data",
       dataType: "json",
       success: function (data) {
+        $("#ajax-loader").addClass("d-none");
         console.log(data);
         res_DATA = data.users;
         dispCustomerDetails(res_DATA);
       },
       error: function () {
+        $("#ajax-loader").addClass("d-none");
         console.log("Error");
       },
     });
@@ -92,12 +95,18 @@ $(document).ready(function () {
       $(".customer_name").html("Please Enter Name*").show();
     } else if ($("#customer_mobile").val() === "" && mode == "new") {
       $(".customer_mobile").html("Please Enter Mobile Number*").show();
+    } else if (!isPhoneNumber($.trim($("#customer_mobile").val()))) {
+      $(".customer_mobile").html("Please Enter Valid Mobile Number*").show();
     } else if ($("#customer_email").val() === "" && mode == "new") {
       $(".customer_email").html("Please Enter Email*").show();
     } else {
       insertData();
     }
   });
+
+  function isPhoneNumber(phone_no) {
+    return /^\d{10}$/.test(phone_no);
+  }
 
   //*************************** [Insert] **************************************************************************
   function insertData() {
@@ -106,7 +115,7 @@ $(document).ready(function () {
 
     let url;
     if (mode === "new") {
-      url = base_Url + "admin/customer-details/insert-data";
+    url = base_Url + "admin/customer-details/insert-data";
     } else if (mode === "edit") {
       url = base_Url + "admin/customer-details/update-data";
       data.append("user_id", user_id);

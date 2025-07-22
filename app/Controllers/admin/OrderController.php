@@ -148,6 +148,8 @@ class OrderController extends BaseController
             'user_details' => $userDetails,
             'returned_items' => [],
             'is_returned' => $orders[0]['is_returned'],
+            'cancel_status' => $orders[0]['cancel_status'],
+            'cancel_reason' => $orders[0]['cancel_reason'],
         ];
 
 
