@@ -210,8 +210,7 @@ $(document).ready(function () {
       cache: false,
       dataType: "json",
       success: function (JSONdata) {
-        console.log(JSONdata);
-
+        
         localStorage.setItem("token", JSONdata.token);
         localStorage.setItem("loginStatus", "YES");
 
