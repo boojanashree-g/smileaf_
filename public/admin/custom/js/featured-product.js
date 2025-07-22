@@ -7,17 +7,20 @@ $(document).ready(function () {
 
   // *************************** [get Data] *************************************************************************
   function getFeaturedProductDetails() {
+    $("#ajax-loader").removeClass("d-none");
     $.ajax({
       type: "POST",
       url: base_Url + "admin/featured-products/getFeaturedProductDetails",
       dataType: "json",
       success: function (data) {
+        $("#ajax-loader").addClass("d-none");
         res_DATA = data;
         console.log(data, "data");
         dispProductDetails(res_DATA);
       },
       error: function () {
         console.log("Error");
+        $("#ajax-loader").addClass("d-none");
       },
     });
   }
@@ -205,50 +208,50 @@ $(document).ready(function () {
     });
   }
 
-$(document).on("click", ".btnEdit", function () {
-  $("#product-modal").modal("show");
-  $("#images").val("");
-  $("#preview").empty();
+  $(document).on("click", ".btnEdit", function () {
+    $("#product-modal").modal("show");
+    $("#images").val("");
+    $("#preview").empty();
 
-  selectedFiles = [];
-  existingImages = [];
-  mode = "edit";
+    selectedFiles = [];
+    existingImages = [];
+    mode = "edit";
 
-  if (mode == "edit") {
-    $("#btn-submit").html("Update");
-    $(".subcat-title").text("Edit Product Details");
-  }
+    if (mode == "edit") {
+      $("#btn-submit").html("Update");
+      $(".subcat-title").text("Edit Product Details");
+    }
 
-  var index = $(this).attr("id");
+    var index = $(this).attr("id");
 
-  const data = res_DATA[index];
+    const data = res_DATA[index];
 
-  prod_id = data.prod_id;
+    prod_id = data.prod_id;
 
-  $("#sub_id").val(data.submenu_id); 
-  $("#prod_name").val(data.prod_name);
+    $("#sub_id").val(data.submenu_id);
+    $("#prod_name").val(data.prod_name);
 
-  if (data.image_url) {
-    $("#main_image_url")
-      .attr("src", base_Url + data.image_url)
-      .css("display", "block");
-  } else {
-    $("#main_image_url").css("display", "none");
-  }
-});
+    if (data.image_url) {
+      $("#main_image_url")
+        .attr("src", base_Url + data.image_url)
+        .css("display", "block");
+    } else {
+      $("#main_image_url").css("display", "none");
+    }
+  });
 
-$("#main_image").on("change", function (event) {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      $("#main_image_url").attr("src", e.target.result).css("display", "block");
-    };
-    reader.readAsDataURL(file);
-  }
-});
-
-
+  $("#main_image").on("change", function (event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        $("#main_image_url")
+          .attr("src", e.target.result)
+          .css("display", "block");
+      };
+      reader.readAsDataURL(file);
+    }
+  });
 
   $(document).on("click", ".BtnDelete", function () {
     mode = "delete";
@@ -307,5 +310,4 @@ $("#main_image").on("change", function (event) {
       }
     });
   });
-
 });

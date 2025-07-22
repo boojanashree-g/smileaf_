@@ -112,6 +112,10 @@
     .rtl table tr td:nth-child(2) {
         text-align: left;
     }
+
+    .amt-details td {
+        border: none !important;
+    }
 </style>
 
 <body>
@@ -217,47 +221,72 @@
                             </tr>
                         <?php } ?>
 
-                        <tr class="item">
-                            <td style="text-align: right" colspan="6">
+                        <!-- Note Row -->
+
+
+                        <tr class="item amt-details">
+
+                            <td colspan="4" rowspan="5" style="text-align:justify;margin-top:0">
+                                <strong style="font-size:15px">Notes:</strong><br>
+                                This is a system-generated invoice and does not require a signature.
+                                Smileaf products are eco-friendly and made from natural or reusable materials.
+
+                            </td>
+                            <td style="text-align: right" colspan="2">
                                 <b>Sub Total :</b>
                             </td>
                             <td colspan="1" style="text-align: left">
                                 <?= $order_sub_total ?>
                             </td>
                         </tr>
-                        <tr class="item">
-                            <td style="text-align: right" colspan="6">
+                        <tr class="item amt-details">
+                            <td style="text-align: right" colspan="2">
                                 <b>CGST(Includes) :</b>
                             </td>
                             <td colspan="1" style="text-align: left">
-                                 <?= $cgst ?>
+                                <?= $cgst ?>
                             </td>
                         </tr>
-                        <tr class="item">
-                            <td style="text-align: right" colspan="6">
+                        <tr class="item amt-details">
+                            <td style="text-align: right" colspan="2">
                                 <b>SGST(Includes) :</b>
                             </td>
                             <td colspan="1" style="text-align: left">
                                 <?= $sgst ?>
                             </td>
                         </tr>
-                        <tr class="item">
-                            <td style="text-align: right" colspan="6">
+                        <tr class="item amt-details">
+                            <td style="text-align: right" colspan="2">
                                 <b>Shipping :</b>
                             </td>
                             <td colspan="1" style="text-align: left">
-                                 <?= $courier_charge ?>
+                                <?= $courier_charge ?>
                             </td>
                         </tr>
 
-                        <tr class="item">
-                            <td style="text-align: right" colspan="6">
+                        <tr class="item amt-details">
+                            <td style="text-align: right" colspan="2">
                                 <b>Total Price :</b>
                             </td>
                             <td colspan="1" style="text-align: left">
                                 <?= $order_total_amt ?>
                             </td>
                         </tr>
+
+                        <tr>
+                            <td colspan="7"
+                                style="padding: 20px; text-align: center; font-family: Arial, sans-serif; font-size: 14px; border-top: 1px solid #ccc;">
+                                <strong
+                                    style="font-size: 16px; display: block; margin-bottom: 5px; color: #07641fff;">Thank
+                                    you for your purchase!</strong>
+                                We truly appreciate your trust in <strong>Smileaf</strong>.<br>
+                                We're committed to delivering eco-conscious, quality products.<br>
+                                <em>We look forward to serving you again!</em>
+                            </td>
+                        </tr>
+
+
+
                     </table>
                 </td>
             </tr>

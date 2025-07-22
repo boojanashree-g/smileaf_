@@ -240,15 +240,18 @@ $(document).ready(function () {
 
   // *************************** [get Data] *************************************************************************
   function getProductDetails() {
+    $("#ajax-loader").removeClass("d-none");
     $.ajax({
       type: "POST",
       url: base_Url + "admin/product-details/get-data",
       dataType: "json",
       success: function (data) {
+        $("#ajax-loader").addClass("d-none");
         res_DATA = data;
         dispProductDetails(res_DATA);
       },
       error: function () {
+        $("#ajax-loader").addClass("d-none");
         console.log("Error");
       },
     });
@@ -280,17 +283,21 @@ $(document).ready(function () {
         },
         {
           mDataProp: function (data, type, full, meta) {
-            if (data.main_image !== null)
+            if (data.main_image !== null) {
               return (
                 "<a href='" +
                 base_Url +
                 data.main_image +
-                "' target='_blank'><img src='" +
+                "' target='_blank'>" +
+                "<img src='" +
                 base_Url +
                 data.main_image +
-                "' alt='banner image' width='30'></a>"
+                "' alt='banner image' width='30' height='30'  style='object-fit:cover; border-radius:4px;' />" +
+                "</a>"
               );
-            else return "";
+            } else {
+              return "";
+            }
           },
         },
 

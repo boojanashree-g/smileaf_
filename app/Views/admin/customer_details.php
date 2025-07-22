@@ -8,6 +8,10 @@
 
 
 <body>
+    <!-- Loader -->
+    <div id="ajax-loader" class="d-none">
+        <div class="loader"></div>
+    </div>
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5J3LMKC" height="0" width="0"
             style="display: none; visibility: hidden"></iframe></noscript>
 
@@ -59,7 +63,7 @@
                                                         <th>User Name</th>
                                                         <th>Mobile Number</th>
                                                         <th>Email</th>
-                                                        <th>Status</th>
+                                                        <!-- <th>Status</th> -->
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -97,20 +101,20 @@
                                                 <span class="error text-danger customer_mobile mt-5"></span>
                                             </div>
 
-                                            <div class="col-12 col-md-6">
+                                            <div class="col-12 col-md-12">
                                                 <label for="customer_email" class="form-label">Email</label>
                                                 <input class="form-control" type="email" id="customer_email"
                                                     name="customer_email" placeholder="Enter Email*">
                                                 <span class="error text-danger customer_email mt-5"></span>
                                             </div>
-                                            <div class="col-md-6 d-flex align-items-end">
+                                            <!-- <div class="col-md-6 d-flex align-items-end">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" id="is_verified"
                                                         name="is_verified" />
                                                     <label class="form-check-label" for="is_verified">Mark as
                                                         Verified</label>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div class="col-12 text-end">
                                                 <a class="btn btn-primary text-white" id="btn-submit"></a>
                                             </div>

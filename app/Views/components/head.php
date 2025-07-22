@@ -49,4 +49,6 @@
     <script>
         var base_Url = "<?php echo base_url() ?>";
     </script>
+
+    
 </head>

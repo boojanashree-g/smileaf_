@@ -20,7 +20,7 @@ class FilterSizeController extends BaseController
 
     public function filterSize()
     {
-        $res['meta_title'] = "Filter Size";
+        $res['meta_title'] = "Product Size";
         return view("admin/filter_size", $res);
     }
 

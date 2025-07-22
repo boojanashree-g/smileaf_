@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 
+
+
 <html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact " dir="ltr"
     data-theme="theme-default" data-assets-path="<?php echo base_url(); ?>assets/"
     data-template="vertical-menu-template" data-style="light">
 
 <?php require "components/head.php"; ?>
 
+<style>
+
+</style>
 
 <body>
+    <!-- Loader -->
+    <div id="ajax-loader" class="d-none">
+        <div class="loader"></div>
+    </div>
+
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5J3LMKC" height="0" width="0"
             style="display: none; visibility: hidden"></iframe></noscript>
 

@@ -20,7 +20,7 @@ class FilterTypeController extends BaseController
 
     public function filterType()
     {
-        $res['meta_title'] = "Filter Types";
+        $res['meta_title'] = "Product Types";
         return view("admin/filter_type", $res);
     }
 

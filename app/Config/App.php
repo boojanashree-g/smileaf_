@@ -18,22 +18,21 @@ class App extends BaseConfig
      */
     // public string $baseURL = 'http://localhost/ci4projects/smileaf';
 
-    // public function __construct()
-    // {
-    //     // Ensure the parent constructor is called first
-    //     parent::__construct();
+    public function __construct()
+    {
+        // Ensure the parent constructor is called first
+        parent::__construct();
 
-    //     // Dynamically set the base URL
-    //     $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === "on") ? "https" : "http";
-    //     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    //     $subfolder = '/smileaf';
-    //     // $scriptName = dirname($_SERVER['SCRIPT_NAME']);
+        // Dynamically set the base URL
+        $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === "on") ? "https" : "http";
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        // $subfolder = '/smileaf';
+        $scriptName = dirname($_SERVER['SCRIPT_NAME']);
 
-    //     $this->baseURL = $protocol . '://' . $host . $subfolder . '/';
-    // }
-    public string $baseURL = 'https://f5ed83f95449.ngrok-free.app/smileaf/';
+        $this->baseURL = $protocol . '://' . $host . $scriptName . '/';
+    }
 
-
+    // public string $baseURL = 'https://5a0b3b29f6bf.ngrok-free.app/smileaf';
 
 
     /**

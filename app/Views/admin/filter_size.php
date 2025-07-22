@@ -7,6 +7,10 @@
 <?php require "components/head.php"; ?>
 
 <body>
+    <!-- Loader -->
+    <div id="ajax-loader" class="d-none">
+        <div class="loader"></div>
+    </div>
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5J3LMKC" height="0" width="0"
             style="display: none; visibility: hidden"></iframe></noscript>
 
@@ -28,13 +32,13 @@
                         <!-- Page Header -->
                         <div
                             class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-                            <h4 class="page-title fw-semibold fs-18 mb-0">Manage Filters</h4>
+                            <h4 class="page-title fw-semibold fs-18 mb-0">Product Size</h4>
                             <div class="ms-md-1 ms-0">
                                 <nav>
-                                    <ol class="breadcrumb mb-0">
+                                    <!-- <ol class="breadcrumb mb-0">
                                         <li class="breadcrumb-item active" aria-current="page">Manage Filters</li>
                                         <li class="breadcrumb-item active" aria-current="page">Filter Size</li>
-                                    </ol>
+                                    </ol> -->
                                 </nav>
                             </div>
                         </div>

@@ -20,7 +20,7 @@ class FilterShapeController extends BaseController
 
     public function filterShape()
     {
-        $res['meta_title'] = "Filter Shapes";
+        $res['meta_title'] = "Product Shapes";
         return view("admin/filter_shapes", $res);
     }
 

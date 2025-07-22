@@ -7,6 +7,12 @@
 <?php require "components/head.php"; ?>
 
 <body>
+
+    <!-- Loader -->
+    <div id="ajax-loader" class="d-none">
+        <div class="loader"></div>
+    </div>
+
     <div class="layout-wrapper layout-content-navbar  ">
         <div class="layout-container">
 

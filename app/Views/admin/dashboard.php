@@ -153,7 +153,7 @@
                                                     <i class="ti ti-credit-card-off text-danger display-6"></i>
 
                                                 </h2>
-                                                <h5>Payment Failed Orders</h5>
+                                                <h5>Payment Failures</h5>
                                                 <h5><?= $failed_count ?></h5>
                                             </div>
                                         </div>
