@@ -942,7 +942,7 @@ input[type="password"] {
 textarea {
   resize: vertical;
   padding: 15px 20px;
-  min-height: 150px;
+  min-height: 75px;
 }
 
 button {
@@ -16845,7 +16845,33 @@ input.cart-plus-minus-box {
     padding: 12px 30px;
   }
 }
+  /* Generic placeholder color */
+textarea::placeholder,
+input::placeholder {
+  color: #d3d3d3 !important;
+  opacity: 1;
+}
 
+textarea::-webkit-input-placeholder,
+input::-webkit-input-placeholder {
+  color: #d3d3d3 !important;
+}
+
+textarea:-ms-input-placeholder,
+input:-ms-input-placeholder {
+  color: #d3d3d3 !important;
+}
+
+textarea::-ms-input-placeholder,
+input::-ms-input-placeholder {
+  color: #d3d3d3 !important;
+}
+
+textarea::-moz-placeholder,
+input::-moz-placeholder {
+  color: #d3d3d3 !important;
+  opacity: 1;
+}
 /* ----------------------------------------------------
     END
 ---------------------------------------------------- */
