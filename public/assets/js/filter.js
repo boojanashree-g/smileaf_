@@ -28,12 +28,12 @@ $(document).ready(function () {
     let gridTargetElement = getTargetElement("grid");
     let listTargetElement = getTargetElement("list");
 
-    console.log("Grid target element found:", gridTargetElement.length);
-    console.log("List target element found:", listTargetElement.length);
-
     // Show loading indicator in both views
     showLoadingIndicator(gridTargetElement, listTargetElement);
-
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
     // AJAX request
     $.ajax({
       url: base_Url + '/products',
@@ -50,12 +50,6 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
-        console.log("AJAX Success", response.products);
-        console.log(
-          "Products count:",
-          response.products ? response.products.length : 0 
-        );
-
         if (
           response.success &&
           response.products &&
@@ -69,7 +63,6 @@ $(document).ready(function () {
           gridTargetElement.html(gridHtml);
           listTargetElement.html(listHtml);
 
-          console.log("Content updated for both views");
         } else {
           console.log("No products found or response failed");
           showNoProductsMessage(gridTargetElement, listTargetElement);
