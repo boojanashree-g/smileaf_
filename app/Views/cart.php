@@ -143,7 +143,7 @@
                                                         <td class="cart-product-info">
                                                             <h4>
                                                                 <a class="prod_details_h4"
-                                                                    href="<?php echo base_url() ?>product-details/<?= $cart['url'] ?>"><?= $cart['prod_name'] ?></a>
+                                                                    href="<?php echo base_url() ?>product-details/<?= base64_encode($cart['prod_id']) ?>"><?= $cart['prod_name'] ?></a>
                                                             </h4>
                                                             <span>Pack of <?= $cart['cart_pack_qty'] ?></span><br>
                                                             <?php

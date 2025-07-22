@@ -213,6 +213,8 @@ header .ltn__header-middle-area {
     font-size: 1.2rem;
     border: 1px solid #948c8ca3;
     border-radius: 4px;
+    color: #000;
+    padding: 0;
 }
 
 input::-webkit-outer-spin-button,
