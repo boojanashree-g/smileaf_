@@ -16,15 +16,15 @@ class AuthMiddleware implements FilterInterface
 
         $authHeader = $request->getHeaderLine('authorization');
 
+
         if ($authHeader && preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
             $accessToken = $matches[1];
         }
-       
+
         // If no token in header, check the URL parameter (?token=...)
         if (!$accessToken) {
             $accessToken = $request->getGet('token');
         }
-
 
         if (!$accessToken) {
             return $this->unauthorizedResponse('Token not provided');
