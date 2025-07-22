@@ -41,7 +41,7 @@
             $otp_verify = session()->get('otp_verify');
             $login_status = session()->get('loginStatus');
         ?>
-        <div class="ltn__checkout-area">
+        <div class="ltn__checkout-area mt-4">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-7 mb-4">
@@ -227,7 +227,7 @@
                                             <form id="checkoutAddressForm">
                                                 <h6>Address</h6>
                                                 <div class="form-row">
-                                                    <textarea class="form-control-  mb-0" id="address" name="address" rows="4"
+                                                    <textarea class="form-control-  mb-0" id="address" name="address" rows="2"
                                                         placeholder="House/Flat No, Street Name, Area"
                                                         required></textarea>
                                                 </div>
@@ -423,8 +423,35 @@
             if (sessionStorage.getItem("razorpay_started")) {
   
             window.location.href = base_Url + 'cart';
-}
+            }
          });
-    </script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Regex: only letters, numbers, and spaces allowed
+            const allowedPattern = /^[a-zA-Z0-9 ]*$/;
+
+            function sanitizeInput(event) {
+                const input = event.target;
+                const sanitized = input.value.replace(/[^a-zA-Z0-9 ]/g, '');
+                if (input.value !== sanitized) {
+                    input.value = sanitized;
+                }
+            }
+
+            const usernameInput = document.getElementById('username');
+            if (usernameInput) {
+                usernameInput.addEventListener('input', sanitizeInput);
+            }
+
+            // Bonus: block paste of evil characters
+            usernameInput.addEventListener('paste', function (e) {
+                e.preventDefault();
+                const text = (e.clipboardData || window.clipboardData).getData('text');
+                const sanitized = text.replace(/[^a-zA-Z0-9 ]/g, '');
+                document.execCommand("insertText", false, sanitized);
+            });
+        });
+</script>
+
 </body>
 </html>

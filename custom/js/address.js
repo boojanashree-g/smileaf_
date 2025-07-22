@@ -334,7 +334,7 @@ $(document).ready(function () {
                     </div>
                     <div class="col-9 col-md-8">
                         <h6 class="text-charcoal mb-1">
-                            <a href="#" class="text-charcoal">${
+                            <a href="" class="text-charcoal">${
                               item.quantity
                             } x ${item.prod_name}</a>
                         </h6>
@@ -392,7 +392,7 @@ $(document).ready(function () {
                                             <!-- Order Header -->
                                             <div class="row bg-snow p-3">
                                                 <div class="col-6 col-md-4">
-                                                    <h6 class="text-charcoal mb-0">Order Number</h6>
+                                                    <h6 class="text-charcoal mb-0"><i class="fas fa-receipt text-muted"></i> Order Number</h6>
                                                     <span class="text-pebble" id="orderNumber">${
                                                       resultData.summary[
                                                         "order_no"
@@ -400,7 +400,7 @@ $(document).ready(function () {
                                                     }</span>
                                                 </div>
                                                 <div class="col-6 col-md-4">
-                                                    <h6 class="text-charcoal mb-0">Order Date</h6>
+                                                    <h6 class="text-charcoal mb-0"><i class="fas fa-calendar-alt text-muted fa-fw"></i>Order Date</h6>
                                                     <span class="text-pebble" id="orderDate">${
                                                       resultData.summary[
                                                         "order_date"
@@ -408,7 +408,7 @@ $(document).ready(function () {
                                                     }</span>
                                                 </div>
                                                 <div class="col-6 col-md-4">
-                                                    <h6 class="text-charcoal mb-0">Order Total</h6>
+                                                    <h6 class="text-charcoal mb-0"><i class="fas fa-money-bill-wave text-muted fa-fw me-1"></i>Order Total</h6>
                                                     <span class="text-pebble" id="orderTotal">₹${
                                                       resultData.summary[
                                                         "order_total_amt"
@@ -441,7 +441,7 @@ $(document).ready(function () {
                                                         "order_id"
                                                       ]
                                                     }
-                                                     id="trackButton">Track Shipping</button>       
+                                                     id="trackButton"><i class="fas fa-truck-moving"></i> Track Shipping </button>       
                                                 </div>
                                             </div>
 
