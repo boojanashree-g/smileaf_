@@ -280,8 +280,10 @@ class CheckoutController extends BaseController
             $insertOrder = $OrderModal->insert($orderData);
 
             $OrderID = $this->db->insertID();
+            $paymetRedirectCheck = 'ORD_' . time() . bin2hex(random_bytes(3));
             $sess = [
                 'order_id' => $OrderID,
+                'current_order_id' => $paymetRedirectCheck
             ];
             $this->session->set($sess);
 
@@ -540,7 +542,6 @@ class CheckoutController extends BaseController
         }
 
         $res['checkout_product'] = $productDetails;
-
 
 
         $totalAmt = 0;

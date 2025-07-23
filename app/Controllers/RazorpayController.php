@@ -16,16 +16,42 @@ class RazorpayController extends BaseController
     }
     public function payment()
     {
-
         $previousURL = previous_url();
         $orderID = session()->get('order_id');
         $userID = session()->get('user_id');
         $type = $this->request->getGet('type');
 
+        $paymentStatus = ['PENDING' ,'COMPLETED' ,'FAILED' ,'CANCELLED'];
+        // Check the orderID is already has rzporderID
+        $orderQuery = "SELECT `order_id` 
+                        FROM `tbl_orders` 
+                        WHERE `order_id` = ?
+                        AND (
+                            (`razerpay_payment_id` IS NOT NULL AND `razerpay_payment_id` != '')
+                            AND
+                            (`razerpay_order_id` IS NOT NULL AND `razerpay_order_id` != '')
+                            AND
+                            (`razerpay_signature` IS NOT NULL AND `razerpay_signature` != '')
+                        )";
+        $checkOrder = $this->db->query($orderQuery, [$orderID])->getRow();
+        $oldOrder = $checkOrder->order_id;
+
+        if ($oldOrder != '') {
+            return redirect()->to('myaccount');
+        }
+
+
+        if (session()->get('payment_status_' . $orderID)) {
+            return redirect()->to('myaccount');
+        }
+        // Check the orderID is already has rzporderID
+
+
+
+
         if (!$orderID || !$userID) {
             return redirect()->to('/')->with('error', 'Invalid session. Please try again.');
         }
-
 
         $sql = "SELECT
             a.`username`,
@@ -100,6 +126,10 @@ class RazorpayController extends BaseController
 
     public function paymentfail()
     {
+        session()->set('payment_attempted', true);
+        session()->set('payment_status', 'failed');
+        session()->set('payment_redirect', 'payment-failed');
+
         return view('failed');
 
     }
@@ -107,8 +137,14 @@ class RazorpayController extends BaseController
 
     public function paymentcancel()
     {
+        session()->set('payment_attempted', true);
+        session()->set('payment_status', 'cancelled');
+        session()->set('payment_redirect', 'cancel');
+
+
         $request = service('request');
         $data = $request->getGet();
+
 
         $orderId = $request->getGet('order_id');
         $reason = $request->getGet('reason') ?? 'User cancelled payment';
@@ -297,6 +333,20 @@ class RazorpayController extends BaseController
             $orderQry = "UPDATE tbl_orders SET razerpay_payment_id = ?,razerpay_order_id = ?,razerpay_signature = ?,order_status = ? ,
 						 delivery_message = ?,delivery_status = ?,payment_status = ? WHERE order_id = ?";
             $updateData = $this->db->query($orderQry, [$razorpay_payment_id, $razorpay_order_id, $signature, $Orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $orderid]);
+        }
+    }
+
+
+    public function checkPaymentStatus()
+    {
+        $orderId = $this->request->getGet('order_id');
+
+        $paymentData = $this->db->query('SELECT * FROM `tbl_orders` WHERE `order_id` = ?', [$orderId])->getRow();
+
+        if ($paymentData && $paymentData->payment_status === 'COMPLETED') {
+            return $this->response->setJSON(['status' => 'success']);
+        } else {
+            return $this->response->setJSON(['status' => 'pending']);
         }
     }
 
