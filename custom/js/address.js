@@ -2,10 +2,6 @@
 $(document).ready(function () {
   var mode, add_id, res_DATA;
 
-  function getToken() {
-    let token = localStorage.getItem("token");
-    return token;
-  }
   const hash = window.location.hash;
   if (hash) {
     // Activate the tab based on hash
@@ -24,9 +20,8 @@ $(document).ready(function () {
 
   $("#state_id").change(function () {
     let state_id = $(this).val();
-    getToken();
+    let token = localStorage.getItem("token");
 
-    dispatchEvent;
     if (mode == "new") {
       $.ajax({
         type: "POST",
@@ -89,7 +84,7 @@ $(document).ready(function () {
   function insertData() {
     var form = $("#addAddressForm")[0];
     var data = new FormData(form);
-    getToken();
+    let token = localStorage.getItem("token");
     mode == "new";
     var url;
     if (mode == "new") {
@@ -139,7 +134,7 @@ $(document).ready(function () {
 
   // *************************** [get Data] *************************************************************************
   function getAddressDetails() {
-    getToken();
+    let token = localStorage.getItem("token");
     $.ajax({
       type: "GET",
       url: base_Url + "get-address",
@@ -185,7 +180,7 @@ $(document).ready(function () {
   // *************************** [Delete Data] *************************************************************************
   $(".address-delete").click(function () {
     mode = "delete";
-    getToken();
+    let token = localStorage.getItem("token");
     $("#deleteConfirmModal").modal("show");
 
     var index = $(this).attr("index");
@@ -267,7 +262,7 @@ $(document).ready(function () {
   // *************************** [View Order] *************************************************************************
   $(".view-order").click(function () {
     let orderID = $(this).attr("data-orderid");
-    getToken();
+    let token = localStorage.getItem("token");
     var detailHtml = "";
     let returnedItemsHTML = "";
 
@@ -276,7 +271,7 @@ $(document).ready(function () {
       url: "view-orderdetail",
       data: { orderid: orderID },
       dataType: "JSON",
-      headers: { authorization: "Bearer " + token },
+      headers: { Authorization: "Bearer " + token },
       success: function (resultData) {
         let orderItemsHTML = "";
         let returnItemsHTML = "";
@@ -339,9 +334,9 @@ $(document).ready(function () {
                     </div>
                     <div class="col-9 col-md-8">
                         <h6 class="text-charcoal mb-1">
-                            <a href="" class="text-charcoal">${
+                            ${
                               item.quantity
-                            } x ${item.prod_name}</a>
+                            } x ${item.prod_name}
                         </h6>
                         <div class="order-details-div">
                             <ul class="list-unstyled text-pebble small mb-0">
@@ -415,12 +410,9 @@ $(document).ready(function () {
                                                 <div class="col-6 col-md-4">
                                                     <h6 class="text-charcoal mb-0"><i class="fas fa-money-bill-wave text-muted fa-fw me-1"></i>Order Total</h6>
                                                     <span class="text-pebble" id="orderTotal">₹${
-                                                      resultData.summary[
-                                                        "order_total_amt"
-                                                      ]
+                                                      Number(resultData.summary["order_total_amt"]).toLocaleString("en-IN")
                                                     }</span>
-                                                </div>
-                                              
+                                                </div>                                              
                                             </div>
 
                                             <!-- Order Status -->
@@ -608,7 +600,8 @@ $(document).ready(function () {
   $(".returnproduct").click(function () {
     let status = $(this).data("status");
     let returnOrderID = $(this).data("orderid");
-    getToken();
+    let token = localStorage.getItem("token");
+
     let deliveredTime = new Date($(this).data("deliverytime"));
     const now = new Date();
     const diffDays = (now - deliveredTime) / (1000 * 60 * 60 * 24);
@@ -785,3 +778,7 @@ $(document).ready(function () {
     });
   }
 });
+
+function encodeBase64PHP(str) {
+  return btoa(unescape(encodeURIComponent(str)));
+}
