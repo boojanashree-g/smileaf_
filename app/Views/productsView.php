@@ -88,11 +88,12 @@
                                             }
                                             ?>
 
-                                            <span id="offer-price">₹<?= esc($priceToShow) ?></span>
+                                          <span id="offer-price">₹<?= number_format((float)$priceToShow, 0) ?></span>
                                             <del id="mrp-price"
                                                 style="<?= ($priceToShow != $mrpToShow) ? '' : 'display:none;' ?>">
-                                                ₹<?= esc($mrpToShow) ?>
+                                                ₹<?= number_format((float)$mrpToShow, 0) ?>
                                             </del>
+
                                         </div>
 
                                     </div>
@@ -286,12 +287,17 @@
                                         </a>
                                     </h2>
                                     <div class="product_price_wrapper mt-0">
-                                        <div class="product-price mb-0">
-                                            <span>₹<?= esc($related['lowest_offer_price'] ?? 0) ?></span>
+                                       <div class="product-price mb-0">
+                                            <span>
+                                                ₹<?= number_format((float)($related['lowest_offer_price'] ?? 0), 0) ?>
+                                            </span>
                                             <?php if (!empty($related['lowest_offer_price']) && $related['lowest_offer_price'] != $related['lowest_mrp']): ?>
-                                                <del>₹<?= esc($related['lowest_mrp']) ?></del>
+                                                <del>
+                                                    ₹<?= number_format((float)$related['lowest_mrp'], 0) ?>
+                                                </del>
                                             <?php endif; ?>
                                         </div>
+
                                     </div>
                                 </div>
                                 <?php if ($related['available_status'] == 0) { ?>
@@ -352,19 +358,29 @@
 
 
 
-                var offer = parseFloat($(this).data('offer')).toFixed(2);
-                var mrp = parseFloat($(this).data('mrp')).toFixed(2);
+                var offer = parseFloat($(this).data('offer')) ||0;
+                var mrp = parseFloat($(this).data('mrp')) ||0;
 
                 var qty = parseInt($(this).data('quantity')) || 1;
                 if (qty <= 0) {
                     qty = 1
                 }
 
+                var formattedOffer = offer.toLocaleString('en-IN', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                });
 
-                $('#offer-price').text('₹' + offer);
+                var formattedMrp = mrp.toLocaleString('en-IN', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                });
+
+
+               $('#offer-price').text('₹' + formattedOffer);
 
                 if (mrp !== offer) {
-                    $('#mrp-price').text('₹' + mrp).show();
+                    $('#mrp-price').text('₹' + formattedMrp).show();
                 } else {
                     $('#mrp-price').hide();
                 }

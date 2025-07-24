@@ -71,6 +71,7 @@
         font-size: 20px;
         font-weight: 700 !important;
     }
+
     /* footer{
         position:fixed;
         bottom : 0;
@@ -179,8 +180,9 @@
                                                         </td>
                                                         <td class="cart-product-subtotal total_<?= $cart['cart_id'] ?>"
                                                             data-gst="<?= $cart['gst'] ?>">
-                                                            ₹<?= $cart['cart_total_price'] ?>
+                                                            ₹<?= number_format((float) $cart['cart_total_price'], 0) ?>
                                                         </td>
+
                                                     </tr>
                                                 <?php }
                         } ?>

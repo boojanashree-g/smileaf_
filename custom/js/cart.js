@@ -107,14 +107,14 @@ $(document).ready(function () {
     // Display total
     $(".order_total_amt").text(
       "₹" +
-        finalTotal.toLocaleString("en-IN", {
+        Number(finalTotal).toLocaleString("en-IN", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         })
     );
     $(".order-subtotal").text(
       "₹" +
-        subTotal.toLocaleString("en-IN", {
+        Number(subTotal).toLocaleString("en-IN", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         })
@@ -126,14 +126,14 @@ $(document).ready(function () {
 
       $("td.gst-td").text(
         "₹" +
-          halfGst.toLocaleString("en-IN", {
+          Number(halfGst).toLocaleString("en-IN", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })
       );
       $("td.sgst-td").text(
         "₹" +
-          halfGst.toLocaleString("en-IN", {
+          Number(halfGst).toLocaleString("en-IN", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })
