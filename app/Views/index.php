@@ -1,7 +1,50 @@
 <!doctype html>
 <html class="no-js" lang="zxx">
 <?php require("components/head.php"); ?>
+<style>
+    .product-title {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 10px;
+}
 
+.featured_prod_name {
+    font-size: 18px;
+    font-weight: 500;
+    white-space: nowrap;
+    width: 235px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.product-price-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    font-size: 16px;
+    gap: 10px;
+}
+
+.topseller_price {
+    font-weight: bold;
+    color: #000;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.quickbuy_span {
+    border: 1px solid;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+</style>
 
 <body class="home_page jost">
     <div class="body-wrapper">
@@ -87,16 +130,15 @@
                     <?php foreach ($featured_products as $product): ?>
                         <div class="col-lg-4 col-xl-3  col-md-4 col-sm-6 col-12">
                             <div class="ltn__product-item ltn__product-item-3 text-left ">
-                                <div class="product-img">
-                                    <a
-                                        href="<?= base_url('/products/' . $product['slug'] . '/' . base64_encode($product['sub_id'])) ?>">
-                                        <img src="<?= base_url() . $product['image_url'] ?>" alt="#">
+                                <div class="">
+                                    <a href="<?= base_url('/products/' . $product['slug'] . '/' . base64_encode($product['sub_id'])) ?>" class="d-flex justify-content-center">
+                                        <img src="<?= base_url() . $product['image_url'] ?>" alt="#" class="featured_img" style="max-height: 270px;">
                                     </a>
                                 </div>
                                 <div class="home_products product-info">
                                     <h2 class="product-title">
                                         <a href="<?= base_url('/products/' . $product['slug'] . '/' . base64_encode($product['sub_id'])) ?>"
-                                            class="featured_prod_name">
+                                            class="featured_prod_name d-flex">
                                             <span><?= esc($product['prod_name']) ?></span>
                                             <i class="fas fa-arrow-alt-circle-right"></i>
                                         </a>
@@ -124,8 +166,8 @@
                         <div class="col-lg-4 col-xl-3 col-md-4 col-sm-6 col-12">
                             <div class="ltn__product-item ltn__product-item-3 text-left ">
                                 <div class="product-img">
-                                    <a href="<?= base_url('product-details/' . base64_encode($product['prod_id'])) ?>">
-                                        <img src="<?= base_url() . $product['main_image'] ?>" alt="#">
+                                    <a href="<?= base_url('product-details/' . base64_encode($product['prod_id'])) ?>" class="d-flex justify-content-center">
+                                        <img src="<?= base_url() . $product['main_image'] ?>" alt="#" class="featured_img" style="min-height: 270px;">
                                     </a>
                                 </div>
                                 <?php if ($product['available_status'] == 0): ?>
@@ -136,19 +178,17 @@
                                     </div>
                                 <?php endif; ?>
                                 <div class="home_products product-info">
-                                    <h2 class="product-title">
-                                        <a href="<?= base_url('product-details/' . base64_encode($product['prod_id'])) ?>"
-                                            class="featured_prod_name">
-                                            <span><?= esc($product['prod_name']) ?></span>
-
+                                    <div class="product-title">
+                                        <a href="<?= base_url('product-details/' . base64_encode($product['prod_id'])) ?>" class="featured_prod_name">
+                                            <?= esc($product['prod_name']) ?>
                                         </a>
-                                        <p class="product-price-info">
-                                            <span
-                                                class="topseller_price">₹<?= esc($product['lowest_offer_price'] ?? 0) ?></span>
-                                            <span class="quickbuy_span">View Details <i
-                                                    class="fas fa-arrow-alt-circle-right"></i></span>
-                                        </p>
-                                    </h2>
+                                        <div class="product-price-info">
+                                            <span class="topseller_price">₹<?= esc($product['lowest_offer_price'] ?? 0) ?></span>
+                                            <span class="quickbuy_span">
+                                                View Details <i class="fas fa-arrow-alt-circle-right"></i>
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
