@@ -348,15 +348,9 @@ $(document).ready(function () {
                     </div>
                     <div class="col-9 col-md-8">
                         <h6 class="text-charcoal mb-1">
-<<<<<<< HEAD
                           <aclass="text-charcoal">
                             ${item.quantity} x ${item.prod_name}
                           </a>
-=======
-                            ${
-                              item.quantity
-                            } x ${item.prod_name}
->>>>>>> b5aa819f990c6e618c07db10189482c662a283d6
                         </h6>
                        <div class="order-details-div">
                           <ul class="list-unstyled text-pebble small mb-0">
@@ -445,16 +439,9 @@ $(document).ready(function () {
                                                 </div>
                                                 <div class="col-6 col-md-4">
                                                     <h6 class="text-charcoal mb-0"><i class="fas fa-money-bill-wave text-muted fa-fw me-1"></i>Order Total</h6>
-<<<<<<< HEAD
                                                     <span class="text-pebble" id="orderTotal">₹${formattedOrderTotal}</span>
                                                 </div>
                                               
-=======
-                                                    <span class="text-pebble" id="orderTotal">₹${
-                                                      Number(resultData.summary["order_total_amt"]).toLocaleString("en-IN")
-                                                    }</span>
-                                                </div>                                              
->>>>>>> b5aa819f990c6e618c07db10189482c662a283d6
                                             </div>
 
                                             <!-- Order Status -->

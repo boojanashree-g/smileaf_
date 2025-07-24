@@ -1800,19 +1800,11 @@ a.theme-btn-1.btn:focus {
 }
 
 .product-price-info {
-<<<<<<< HEAD
-  margin: 0;
-  padding: 10px 0 0 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-=======
     margin: 0;
     /*padding: 10px 0 20px 0;*/
     display: flex;
     justify-content: space-between;
     align-items: center;
->>>>>>> b5aa819f990c6e618c07db10189482c662a283d6
 }
 
 .quickbuy_span {
@@ -2534,51 +2526,6 @@ footer {
   /* .product_categories,.ltn__login-area{
         padding-top: 135px !important;
     } */
-<<<<<<< HEAD
-  header .ltn__header-middle-area {
-    overflow: inherit;
-  }
-  #liton_tab_1_4 .add-address-tab {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  #orderModal .modal-dialog {
-    width: auto;
-  }
-  .ltn__tab-menu-list .nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-  .liton__shoping-cart-area .cart-plus-minus {
-    border: 2px solid #d3d3d3;
-    height: 40px;
-    line-height: 30px;
-    width: 85px;
-    text-align: center;
-  }
-  .cart-product-info {
-    min-width: 115px;
-  }
-  .cart-product-subtotal {
-    display: flex;
-    align-items: end;
-    justify-content: end;
-  }
-  .shoping-cart-inner tr {
-    display: flex;
-    align-items: center;
-  }
-  .shoping-cart-total .cart-total-amt {
-    text-align: end;
-  }
-  .shoping-cart-inner td {
-    border-bottom: 0px;
-  }
-  .action_btn {
-    min-width: 110px;
-  }
-=======
      header .ltn__header-middle-area{
         overflow: inherit;
      }
@@ -2628,7 +2575,6 @@ footer {
         width:100% !important;
     }
 
->>>>>>> b5aa819f990c6e618c07db10189482c662a283d6
 }
 
 .ltn__contact-address-area {
