@@ -19,6 +19,7 @@ $(document).ready(function () {
 
   $("#btn-submit").click(function (e) {
     const $button = $("#verify-otp");
+    const $loader = $(".spinner-overlay");
     $button.prop("disabled", false).text("Verify OTP");
 
     e.preventDefault();
@@ -27,7 +28,7 @@ $(document).ready(function () {
     const form = $("#login-form");
     const number = form.find('input[name="number"]');
     $("input").css("border-color", "#ccc");
-
+    $loader.show();
     if (!$.trim(number.val())) {
       isValid = false;
       number.css("border-color", "red");
@@ -41,6 +42,7 @@ $(document).ready(function () {
     }
 
     if (!isValid) {
+      $loader.hide();
       showToast(errorMessage, "error");
       return;
     }
@@ -64,6 +66,7 @@ $(document).ready(function () {
       cache: false,
       dataType: "json",
       success: function (JSONdata) {
+        $(".spinner-overlay").hide();
         if (JSONdata.code == 400) {
           showToast(JSONdata.message, "error");
         } else if (JSONdata.code == 200) {
@@ -210,7 +213,6 @@ $(document).ready(function () {
       cache: false,
       dataType: "json",
       success: function (JSONdata) {
-        
         localStorage.setItem("token", JSONdata.token);
         localStorage.setItem("loginStatus", "YES");
 
@@ -275,9 +277,15 @@ $(document).ready(function () {
           showToast(JSONdata.message, "success");
           $("#signinotp-modal").modal("hide");
 
-          setTimeout(() => {
-            window.location.href = redirectURL;
-          }, 1000);
+          if (redirectURL.includes("signin")) {
+            setTimeout(() => {
+              window.location.href = base_Url;
+            }, 1000);
+          } else {
+            setTimeout(() => {
+              window.location.href = redirectURL;
+            }, 1000);
+          }
         } else if (JSONdata.code == 500) {
           showToast(JSONdata.message, "error");
           $("#signinotp-modal").modal("hide");

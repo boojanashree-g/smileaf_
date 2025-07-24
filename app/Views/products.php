@@ -20,6 +20,7 @@
         color: #fff;
     }
 </style>
+
 <body class="products_page">
     <!-- Body main wrapper start -->
     <div class="wrapper">
@@ -32,7 +33,7 @@
                 <div class="row">
                     <div class="col-lg-9 order-lg-2">
                         <!-- Mobile Filter/Sort Buttons (for small screens only) -->
-   
+
                         <div class="ltn__shop-options">
                             <ul>
                                 <li>
@@ -47,8 +48,9 @@
                                 </li>
                                 <li>
                                     <div class="d-lg-none d-flex justify-content-end ">
-                                        <button class="btn btn-outline-secondary me-2" id="mobileFilterBtn" data-bs-toggle="modal" data-bs-target="#mobileFilterModal">
-                                            <i class="fas fa-filter"></i> 
+                                        <button class="btn btn-outline-secondary me-2" id="mobileFilterBtn"
+                                            data-bs-toggle="modal" data-bs-target="#mobileFilterModal">
+                                            <i class="fas fa-filter"></i>
                                         </button>
 
                                     </div>
@@ -100,16 +102,21 @@
                                                         </div>
                                                         <div class="product-info">
                                                             <h2 class="product-title">
-                                                                <a href="<?= base_url("product-details/" . base64_encode($product['prod_id'])) ?>">
+                                                                <a
+                                                                    href="<?= base_url("product-details/" . base64_encode($product['prod_id'])) ?>">
                                                                     <span
                                                                         class="prod_name_span"><?= esc($product['prod_name']) ?></span>
                                                                 </a>
                                                             </h2>
                                                             <div class="product_price_wrapper mt-0">
                                                                 <div class="product-price mb-0">
-                                                                    <span>₹<?= esc($product['lowest_offer_price'] ?? 0) ?></span>
+                                                                    <span>
+                                                                        ₹<?= number_format((float) ($product['lowest_offer_price'] ?? 0), 0) ?>
+                                                                    </span>
                                                                     <?php if (!empty($product['lowest_offer_price']) && $product['lowest_offer_price'] != $product['lowest_mrp']): ?>
-                                                                        <del>₹<?= esc($product['lowest_mrp']) ?></del>
+                                                                        <del>
+                                                                            ₹<?= number_format((float) ($product['lowest_mrp']), 0) ?>
+                                                                        </del>
                                                                     <?php endif; ?>
                                                                 </div>
                                                                 <!-- <a href="#" title="Wishlist" class="wishlist-btn">
@@ -135,7 +142,7 @@
                                                                     data-prodid="<?= esc($product['prod_id']) ?>"
                                                                     data-menuid="<?= $product['menu_id'] ?>"
                                                                     data-submenuid=<?= $product['submenu_id'] ?>>
-                                                                   <i class="fab fa-whatsapp text-success me-2"></i>
+                                                                    <i class="fab fa-whatsapp text-success me-2"></i>
                                                                     <span class="text-success">Contact us to order</span>
                                                                 </a>
                                                             </div>
@@ -145,7 +152,8 @@
                                                                         class="theme-btn-1 btn quick_btn"
                                                                         data-prodid="<?= esc($product['prod_id']) ?>"
                                                                         data-menuid="<?= $product['menu_id'] ?>"
-                                                                        data-submenuid=<?= $product['submenu_id'] ?> style="border:1px solid;">
+                                                                        data-submenuid=<?= $product['submenu_id'] ?>
+                                                                        style="border:1px solid;">
                                                                         <i class="fas fa-shopping-cart"></i>
                                                                         <span>Buy Now</span>
                                                                     </a>
@@ -175,7 +183,8 @@
 
                                                     <div class="ltn__product-item ltn__product-item-3" style="min-height:auto;">
                                                         <div class="product-img">
-                                                            <a href="<?= base_url("product-details/" . base64_encode($product['prod_id'])) ?>">
+                                                            <a
+                                                                href="<?= base_url("product-details/" . base64_encode($product['prod_id'])) ?>">
                                                                 <img src="<?= base_url($product['main_image']) ?>"
                                                                     alt="<?= esc($product['prod_name']) ?>" width="290">
                                                             </a>
@@ -222,11 +231,12 @@
                     <div class="col-lg-3 d-none d-lg-block">
                         <?php require("components/product_filter_sidebar.php") ?>
                     </div>
-                </div>                
+                </div>
             </div>
         </div>
         <!-- Mobile Filter Modal -->
-        <div class="modal fade" id="mobileFilterModal" tabindex="-1" aria-labelledby="mobileFilterModalLabel" aria-hidden="true">
+        <div class="modal fade" id="mobileFilterModal" tabindex="-1" aria-labelledby="mobileFilterModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-fullscreen-sm-down">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -254,53 +264,53 @@
             </div>
         </div>
         <!-- Main JS -->
-         <script>
-            
-
-  const base_url = "<?= base_url() ?>";
-
-$('#sortSelect').on('change', function () {
-  const sortBy = $(this).val();
-  console.log("Selected sort option:", sortBy);
-
-  const gridTargetElement = $('#product-grid-container');
-  gridTargetElement.html('<p>Loading...</p>');
-
-  $.ajax({
-    url: base_url + 'product-sort',
-    method: 'GET',
-    data: { sort: sortBy },
-    dataType: 'json',
-    success: function (response) {
-        console.log("Full response:", response);
+        <script>
 
 
+            const base_url = "<?= base_url() ?>";
 
-        let products = response.products?.data || [];
-        console.log(products);
-        if (response.success) {
-            const html = generateGridHtml(products); 
-            $('#product-grid-container').html(html);
-        } else {
-            $('#product-grid-container').html('<p>No products found.</p>');
-        }
-    },
-    error: function () {
-      gridTargetElement.html('<p class="text-danger">Error loading sorted products.</p>');
-    }
-  });
-});
+            $('#sortSelect').on('change', function () {
+                const sortBy = $(this).val();
+                console.log("Selected sort option:", sortBy);
 
-        function generateGridHtml(products) {
-        let html = "";
-        products.forEach(product => {
-            const productUrl = `${base_url}products/${product.prod_id}`;
-            const offerPrice = parseFloat(product.lowest_offer_price || 0);
-            const mrp = parseFloat(product.lowest_mrp || 0);
-            const outOfStock = product.available_status == 0;
-            console.log(product);
+                const gridTargetElement = $('#product-grid-container');
+                gridTargetElement.html('<p>Loading...</p>');
 
-            html += `
+                $.ajax({
+                    url: base_url + 'product-sort',
+                    method: 'GET',
+                    data: { sort: sortBy },
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log("Full response:", response);
+
+
+
+                        let products = response.products?.data || [];
+                        console.log(products);
+                        if (response.success) {
+                            const html = generateGridHtml(products);
+                            $('#product-grid-container').html(html);
+                        } else {
+                            $('#product-grid-container').html('<p>No products found.</p>');
+                        }
+                    },
+                    error: function () {
+                        gridTargetElement.html('<p class="text-danger">Error loading sorted products.</p>');
+                    }
+                });
+            });
+
+            function generateGridHtml(products) {
+                let html = "";
+                products.forEach(product => {
+                    const productUrl = `${base_url}products/${product.prod_id}`;
+                    const offerPrice = parseFloat(product.lowest_offer_price || 0);
+                    const mrp = parseFloat(product.lowest_mrp || 0);
+                    const outOfStock = product.available_status == 0;
+                    console.log(product);
+
+                    html += `
             <div class="col-xl-4 col-sm-12 col-12 product-item">
                 <div class="ltn__product-item ltn__product-item-3 text-center">
                 <div class="product-img">
@@ -327,16 +337,17 @@ $('#sortSelect').on('change', function () {
                 </div>
             </div>
             `;
-        });
+                });
 
-        return html;
-        }
+                return html;
+            }
         </script>
         <script src="<?php echo base_url() ?>public/assets/js/filter.js"></script>
         <script src="<?php echo base_url() ?>custom/js/productlist.js"></script>
         <script src="<?php echo base_url() ?>public/assets/js/main.js"></script>
         <!-- All JS Plugins -->
         <script src="<?php echo base_url() ?>public/assets/js/plugins.js"></script>
-        
-    </body>
+
+</body>
+
 </html>

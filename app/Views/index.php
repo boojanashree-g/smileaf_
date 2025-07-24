@@ -23,9 +23,9 @@
                                 <?= esc($banner['banner_title'] ?? 'Subtitle goes here') ?>
                             </h1>
                             <?php if (!empty($banner['banner_link'])): ?>
-                                <a href="<?=$banner['banner_link'] ?>" class="banner-btn">
+                                <a href="<?= $banner['banner_link'] ?>" class="banner-btn">
                                     Explore More
-                                </a>    
+                                </a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -42,9 +42,8 @@
                 <div class="col-lg-4 col-md-6 col-3 sm-padding">
                     <div class="ltn__banner-item">
                         <div class="ltn__banner-img">
-                            <a href="shop.html">
-                                <img src="<?= base_url() ?>public/assets/img/adcard/Card_1.jpg"
-                                    alt="Banner Image">
+                            <a href="<?= base_url() ?>products/sugarcane-bagasse/MTI=">
+                                <img src="<?= base_url() ?>public/assets/img/adcard/Card_1.jpg" alt="Banner Image">
                             </a>
                         </div>
                     </div>
@@ -52,9 +51,8 @@
                 <div class="col-lg-4 col-md-6 col-3 sm-padding">
                     <div class="ltn__banner-item">
                         <div class="ltn__banner-img">
-                            <a href="shop.html">
-                                <img src="<?= base_url() ?>public/assets/img/adcard/Card_2.jpg"
-                                    alt="Banner Image">
+                            <a href="<?= base_url() ?>product-categories/disposable-plates">
+                                <img src="<?= base_url() ?>public/assets/img/adcard/Card_2.jpg" alt="Banner Image">
                             </a>
                         </div>
                     </div>
@@ -62,9 +60,8 @@
                 <div class="col-lg-4 col-md-6 col-3 sm-padding">
                     <div class="ltn__banner-item">
                         <div class="ltn__banner-img">
-                            <a href="shop.html">
-                                <img src="<?= base_url() ?>public/assets/img/adcard/Card_3.jpg"
-                                    alt="Banner Image">
+                            <a href="<?= base_url() ?>products/rice-husk-dinnerware/OA==">
+                                <img src="<?= base_url() ?>public/assets/img/adcard/Card_3.jpg" alt="Banner Image">
                             </a>
                         </div>
                     </div>

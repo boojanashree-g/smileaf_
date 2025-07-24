@@ -32,11 +32,11 @@ $(document).ready(function () {
     showLoadingIndicator(gridTargetElement, listTargetElement);
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
     // AJAX request
     $.ajax({
-      url: base_Url + '/products',
+      url: base_Url + "/products",
       method: "GET",
       data: {
         type_id: typeIds,
@@ -62,7 +62,6 @@ $(document).ready(function () {
           // Update both views
           gridTargetElement.html(gridHtml);
           listTargetElement.html(listHtml);
-
         } else {
           console.log("No products found or response failed");
           showNoProductsMessage(gridTargetElement, listTargetElement);
@@ -134,9 +133,12 @@ $(document).ready(function () {
     products.forEach(function (product) {
       const prodIdEncoded = btoa(product.prod_id); // encoding product ID like PHP
       const productUrl = `${base_Url}product-details/${prodIdEncoded}`;
-      const stockStatus = product.available_status ;
+      const stockStatus = product.available_status;
       const offerPrice = parseFloat(product.lowest_offer_price || 0);
       const mrp = parseFloat(product.lowest_mrp || 0);
+
+      const formattedPrice = Number(mrp).toLocaleString("en-IN"); // ₹12,345
+      const formattedOffer = Number(offerPrice).toLocaleString("en-IN");
 
       html += `
         <div class="col-xl-4 col-sm-12 col-12 product-item"
@@ -170,10 +172,10 @@ $(document).ready(function () {
                     </h2>
                     <div class="product_price_wrapper mt-0">
                         <div class="product-price mb-0">
-                            <span>₹${offerPrice.toFixed(2)}</span>
+                            <span>${formattedOffer}</span>
                             ${
                               offerPrice !== mrp && mrp !== 0
-                                ? `<del>₹${mrp.toFixed(2)}</del>`
+                                ? `<del>${formattedPrice}</del>`
                                 : ""
                             }
                         </div>
@@ -213,8 +215,13 @@ $(document).ready(function () {
       const img = product.main_image || "default-image.jpg";
       const price = product.lowest_mrp || "0";
       const offer = product.lowest_offer_price || null;
+
+      const formattedPrice = Number(price).toLocaleString("en-IN"); // ₹12,345
+      const formattedOffer = Number(offer).toLocaleString("en-IN");
+
       const outOfStock = product.available_status;
       const showOffer = offer && offer !== price;
+
       const description =
         product.description ||
         "Premium quality product available at best prices.";
@@ -244,8 +251,8 @@ $(document).ready(function () {
       }</a>
             </h2>
             <div class="product-price">
-              <span>₹${price}</span>
-              ${showOffer ? `<del>₹${offer}</del>` : ""}
+              <span>${formattedPrice}</span>
+              ${showOffer ? `<del>${formattedOffer}</del>` : ""}
             </div>
             <div class="product-brief">
               ${description}

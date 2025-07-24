@@ -2,6 +2,9 @@
 <html class="no-js" lang="zxx">
 
 <?php require("components/head.php") ?>
+<style>
+   
+</style>
 
 <body>
 
@@ -18,6 +21,10 @@
         <!-- BREADCRUMB AREA END -->
 
         <!-- LOGIN AREA START -->
+        <div class="spinner-overlay" style="display: none;">
+            <div class="spinner-login"></div>
+        </div>
+
         <div class="ltn__login-area">
             <div class="container">
                 <div class="row justify-content-center my-4">
@@ -45,8 +52,8 @@
                                         <input type="number" id="number" placeholder="Mobile Number*" name="number">
                                         <div class="btn-wrapper mt-0">
                                             <button type="button" class="theme-btn-1 btn reverse-color btn-block"
-                                                id="btn-submit">Send OTP</button>
-
+                                                id="btn-submit">Send OTP
+                                            </button>
                                         </div>
                                     </form>
                                 </div>

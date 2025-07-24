@@ -217,10 +217,12 @@
             </div>
             <div class="ltn__social-media-2">
                 <ul>
-                    <li><a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-                    <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a></li>
-                    <li><a href="#" title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
-                    <li><a href="#" title="Instagram"><i class="fab fa-instagram"></i></a></li>
+                    <li><a href="https://www.facebook.com/share/16YvyVLMJm/" title="Facebook"><i
+                                class="fab fa-facebook-f"></i></a></li>
+                    <!-- <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a></li>
+                        <li><a href="#" title="Linkedin"><i class="fab fa-linkedin"></i></a></li> -->
+                    <li><a href="https://www.instagram.com/smileaf_natural_products?igsh=d2JweGlicGh2cmN4"
+                            title="Instagram"><i class="fab fa-instagram"></i></a></li>
                 </ul>
             </div>
         </div>

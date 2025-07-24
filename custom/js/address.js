@@ -329,6 +329,20 @@ $(document).ready(function () {
           dispClass = "col-md-12";
         }
 
+        const orderTotalAmt =
+          Number(resultData.summary["order_total_amt"]) || 0;
+        const formattedOrderTotal = orderTotalAmt.toLocaleString("en-IN", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+
+        const orderSubTotal =
+          Number(resultData.summary["order_sub_total"]) || 0;
+        const formattedOrderSubTotal = orderSubTotal.toLocaleString("en-IN", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+
         resultData.summary.items.forEach((item) => {
           orderItemsHTML += `
                 <div class="row align-items-center mb-3">
@@ -339,22 +353,29 @@ $(document).ready(function () {
                     </div>
                     <div class="col-9 col-md-8">
                         <h6 class="text-charcoal mb-1">
-                            <a href="" class="text-charcoal">${
-                              item.quantity
-                            } x ${item.prod_name}</a>
+                          <aclass="text-charcoal">
+                            ${item.quantity} x ${item.prod_name}
+                          </a>
                         </h6>
-                        <div class="order-details-div">
-                            <ul class="list-unstyled text-pebble small mb-0">
-                                <li class="mt-0"><b>Packs:</b> ${
-                                  item.pack_qty
-                                }</li>
-                                <li class="mt-0"><b>Price:</b> ${
-                                  item.prod_price
-                                }</li>
-                            </ul>
-                            <h5 class="text-charcoal mb-0"><b>₹${
-                              item.sub_total
-                            }</b></h5>
+                       <div class="order-details-div">
+                          <ul class="list-unstyled text-pebble small mb-0">
+                            <li class="mt-0"><b>Packs:</b> ${item.pack_qty}</li>
+                            <li class="mt-0"><b>Price:</b> ₹${Number(
+                              item.prod_price
+                            ).toLocaleString("en-IN", {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}</li>
+                          </ul>
+                          <h5 class="text-charcoal mb-0">
+                            <b>₹${Number(item.sub_total).toLocaleString(
+                              "en-IN",
+                              {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              }
+                            )}</b>
+                          </h5>
                         </div>
                     </div>
                 </div>
@@ -370,24 +391,33 @@ $(document).ready(function () {
                         }" alt="${item.prod_name}" width="90">
                     </div>
                     <div class="col-9 col-md-8">
-                        <h6 class="text-charcoal mb-1">
-                            <a href="#" class="text-charcoal">${
-                              item.quantity
-                            } x ${item.prod_name}</a>
+                       <h6 class="text-charcoal mb-1">
+                          <aclass="text-charcoal">
+                            ${item.quantity} x ${item.prod_name}
+                          </a>
                         </h6>
+
                         <div class="order-details-div">
-                            <ul class="list-unstyled text-pebble small mb-0">
-                                <li class="mt-0"><b>Packs:</b> ${
-                                  item.pack_qty
-                                }</li>
-                                <li class="mt-0"><b>Price:</b> ${
-                                  item.prod_price
-                                }</li>
-                            </ul>
-                            <h5 class="text-charcoal mb-0"><b>₹${
-                              item.sub_total
-                            }</b></h5>
+                          <ul class="list-unstyled text-pebble small mb-0">
+                            <li class="mt-0"><b>Packs:</b> ${item.pack_qty}</li>
+                            <li class="mt-0"><b>Price:</b> ₹${Number(
+                              item.prod_price
+                            ).toLocaleString("en-IN", {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}</li>
+                          </ul>
+                          <h5 class="text-charcoal mb-0">
+                            <b>₹${Number(item.sub_total).toLocaleString(
+                              "en-IN",
+                              {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              }
+                            )}</b>
+                          </h5>
                         </div>
+
                     </div>
                 </div>
             `;
@@ -414,11 +444,7 @@ $(document).ready(function () {
                                                 </div>
                                                 <div class="col-6 col-md-4">
                                                     <h6 class="text-charcoal mb-0"><i class="fas fa-money-bill-wave text-muted fa-fw me-1"></i>Order Total</h6>
-                                                    <span class="text-pebble" id="orderTotal">₹${
-                                                      resultData.summary[
-                                                        "order_total_amt"
-                                                      ]
-                                                    }</span>
+                                                    <span class="text-pebble" id="orderTotal">₹${formattedOrderTotal}</span>
                                                 </div>
                                               
                                             </div>
@@ -457,12 +483,7 @@ $(document).ready(function () {
                                                     <tbody>
                                                         <tr>
                                                             <td>Sub total</td>
-                                                            <td class="order-subtotal amt">₹${
-                                                              resultData
-                                                                .summary[
-                                                                "order_sub_total"
-                                                              ]
-                                                            }</td>
+                                                            <td class="order-subtotal amt">₹${formattedOrderSubTotal}</td>
                                                         </tr>
                                                         <tr>
                                                             <td>CGST(Includes)</td>
@@ -489,12 +510,7 @@ $(document).ready(function () {
 
                                                         <tr>
                                                             <td><strong>Order Total</strong></td>
-                                                            <td><strong class="order_total_amt amt">₹${
-                                                              resultData
-                                                                .summary[
-                                                                "order_total_amt"
-                                                              ]
-                                                            }</strong></td>
+                                                            <td><strong class="order_total_amt amt">₹${formattedOrderTotal}</strong></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
