@@ -338,7 +338,6 @@ class OrderController extends BaseController
             $cancelStatus = 1;
         }
 
-
         $order = $this->db->query("SELECT order_status FROM `tbl_orders` WHERE `order_id` =  ?", [$orderID])->getRow();
 
         if (!$order) {
@@ -412,26 +411,32 @@ class OrderController extends BaseController
         }
 
 
-
         $updateOrderQry = "
-            UPDATE tbl_orders 
+           UPDATE tbl_orders 
             SET 
                 `order_status` = ?, 
-                `ready_to_ship_date` = ?, 
-                `shipped_date` = ?, 
-                `delivery_date` = ?, 
+                `ready_to_ship_date` = IF(ready_to_ship_date = '0000-00-00 00:00:00' AND ? != '', ?, ready_to_ship_date),
+                `shipped_date` = IF(shipped_date = '0000-00-00 00:00:00' AND ? != '', ?, shipped_date),
+                `delivery_date` = IF(delivery_date = '0000-00-00 00:00:00' AND ? != '', ?, delivery_date),
                 `delivery_status` = ?, 
                 `delivery_message` = ?,
-                `cancel_reason` = ? ,
-                `cancel_status` = ? 
+                `cancel_reason` = ?,
+                `cancel_status` = ?
             WHERE 
                 `flag` = 1 AND `order_id` = ?
+
         ";
+
+
+
 
         $this->db->query($updateOrderQry, [
             $newStatus,
             $ready_to_ship_date,
+            $ready_to_ship_date,
             $shipped_date,
+            $shipped_date,
+            $delivered_date,
             $delivered_date,
             $delivery_status,
             $delivery_message,

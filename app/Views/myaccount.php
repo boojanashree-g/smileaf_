@@ -488,8 +488,21 @@
                                             aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <textarea class="form-control" id="cancelReason" rows="4"
-                                            placeholder="Enter reason for cancellation..."></textarea>
+                                        <!-- <textarea class="form-control" id="cancelReason" rows="4"
+                                            placeholder="Enter reason for cancellation..."></textarea> -->
+
+                                        <select name="cancel_reason"  class="form-control cancel-reason" >
+                                        <option value="">-- Select cancel reason --</option>
+                                        <option value="Ordered by mistake">Ordered by mistake</option>
+                                            <option value="Found a better price elsewhere">Found a better price elsewhere</option>
+                                            <option value="Product no longer needed">Product no longer needed</option>
+                                            <option value="Changed mind">Changed mind</option>
+                                            <option value="Ordered wrong item/variant">Ordered wrong item/variant</option>
+                                            <option value="Expected delivery time is too long">Expected delivery time is too long</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                        <textarea name="other_cancel_reason" id="other_cancel_reason"  class="form-control mt-2 d-none other-cancel-reason" rows="3"
+                                        placeholder = "Enter reason to cancel!!"></textarea>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
@@ -549,6 +562,7 @@
         $(document).ready(function () {
             $('#state_id, #dist_id').show();
             $('.nice-select').remove();
+            $(".cancel-reason").css("display","block");
 
             // Logout button functionality
             $('#btn-logout').on('click', function (e) {
