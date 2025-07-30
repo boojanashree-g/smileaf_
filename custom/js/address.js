@@ -302,6 +302,11 @@ $(document).ready(function () {
           CommonBgClass = "alert-info";
           TrackOrderDisp = "";
           dispClass = "col-md-9";
+        } else if (orderSummary == "Readytoship") {
+          CommonClass = "text-info";
+          CommonBgClass = "alert-info";
+          TrackOrderDisp = "";
+          dispClass = "col-md-9";
         } else if (orderSummary == "Delivered") {
           CommonClass = "text-success";
           CommonBgClass = "alert-success";
@@ -348,15 +353,9 @@ $(document).ready(function () {
                     </div>
                     <div class="col-9 col-md-8">
                         <h6 class="text-charcoal mb-1">
-<<<<<<< HEAD
                           <aclass="text-charcoal">
                             ${item.quantity} x ${item.prod_name}
                           </a>
-=======
-                            ${
-                              item.quantity
-                            } x ${item.prod_name}
->>>>>>> b5aa819f990c6e618c07db10189482c662a283d6
                         </h6>
                        <div class="order-details-div">
                           <ul class="list-unstyled text-pebble small mb-0">
@@ -445,16 +444,9 @@ $(document).ready(function () {
                                                 </div>
                                                 <div class="col-6 col-md-4">
                                                     <h6 class="text-charcoal mb-0"><i class="fas fa-money-bill-wave text-muted fa-fw me-1"></i>Order Total</h6>
-<<<<<<< HEAD
                                                     <span class="text-pebble" id="orderTotal">₹${formattedOrderTotal}</span>
                                                 </div>
                                               
-=======
-                                                    <span class="text-pebble" id="orderTotal">₹${
-                                                      Number(resultData.summary["order_total_amt"]).toLocaleString("en-IN")
-                                                    }</span>
-                                                </div>                                              
->>>>>>> b5aa819f990c6e618c07db10189482c662a283d6
                                             </div>
 
                                             <!-- Order Status -->
@@ -699,9 +691,19 @@ $(document).ready(function () {
             <td>
                 <img width="100px" src="${base_Url}${item.main_image}" />
             </td>
+          
             <td>
-                <textarea name="return_items[${index}][reason]" class="form-control return-reason" data-index="${index}" placeholder="Mention reason..."></textarea>
-                <div class="text-danger error-msg" id="error-${index}" style="display:none;">Please enter a reason.</div>
+                <select name="return_items[${index}][reason]"  class="form-control return-reason"  data-index="${index}" >
+                  <option value="">-- Select a reason --</option>
+                  <option value="ordered_by_mistake">Ordered by Mistake</option>
+                  <option value="found_better_price">Found a Better Price</option>
+                  <option value="product_not_needed">Product No Longer Needed</option>
+                  <option value="delivery_too_late">Delivery Taking Too Long</option>
+                  <option value="changed_my_mind">Changed My Mind</option>
+                  <option value="wrong_item_ordered">Wrong Item Ordered</option>
+                  <option value="other">Other (please specify)</option>
+                </select>
+                 <div class="text-danger error-msg" id="error-${index}" style="display:none;">Please select a reason.</div>
             </td>
         </tr>`;
     });
@@ -743,7 +745,7 @@ $(document).ready(function () {
     $(".return-check").each(function () {
       let index = $(this).data("index");
       let isChecked = $(this).is(":checked");
-      let reason = $(`textarea[data-index="${index}"]`).val().trim();
+      let reason = $(`select[data-index="${index}"]`).val().trim();
 
       $(`#error-${index}`).hide();
 

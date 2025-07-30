@@ -71,14 +71,14 @@ class ProductController extends BaseController
                 $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
                 if (in_array($MainImg->getMimeType(), $allowedTypes)) {
-                    if ($MainImg->getSize() < 512000) {  // 500 KB
+                    if ($MainImg->getSize() < 10485760) {  // 2 MB
                         $randomName = $MainImg->getRandomName();
                         $MainImg->move('./uploads/', $randomName);
                     } else {
                         return $this->response->setJSON([
                             'code' => 400,
                             'status' => 'error',
-                            'msg' => 'Main image must be less than 500KB.'
+                            'msg' => 'Main image must be less than 10MB.'
                         ]);
                     }
                 } else {
@@ -159,7 +159,7 @@ class ProductController extends BaseController
                             $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
                             if (in_array($subImg->getMimeType(), $allowedTypes)) {
-                                if ($subImg->getSize() <= 512000) {  // 500 KB
+                                if ($subImg->getSize() <= 10485760) {  // 2 MB
                                     $randomName = $subImg->getRandomName();
                                     $subImg->move('./uploads/', $randomName);
 
@@ -173,7 +173,7 @@ class ProductController extends BaseController
                                     return $this->response->setJSON([
                                         'code' => 400,
                                         'status' => 'error',
-                                        'msg' => 'Images  must be less than 500KB.'
+                                        'msg' => 'Images  must be less than 10MB.'
                                     ]);
                                 }
                             } else {
@@ -270,6 +270,7 @@ class ProductController extends BaseController
 
         }
 
+   
 
         echo json_encode($productDetails);
     }
@@ -296,6 +297,10 @@ class ProductController extends BaseController
 
             $MainImg = $request->getFile('main_image');
 
+            // echo "<pre>";
+            // print_r( $MainImg);
+            // die;
+
             $randomName = '';
 
             if ($MainImg && $MainImg->isValid()) {
@@ -310,7 +315,7 @@ class ProductController extends BaseController
 
                 $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
                 if (in_array($MainImg->getMimeType(), $allowedTypes)) {
-                    if ($MainImg->getSize() <= 512000) {  // 500 KB
+                    if ($MainImg->getSize() <= 10485760) {  // 2 MB
                         $randomName = $MainImg->getRandomName();
                         $MainImg->move('./uploads/', $randomName);
 
@@ -320,7 +325,7 @@ class ProductController extends BaseController
                         return $this->response->setJSON([
                             'code' => 400,
                             'status' => 'error',
-                            'msg' => 'Main image must be less than 500KB.'
+                            'msg' => 'Main image must be less than 10MB.'
                         ]);
                     }
                 } else {
@@ -450,7 +455,7 @@ class ProductController extends BaseController
                         foreach ($images['images'] as $subImg) {
                             if ($subImg->isValid() && !$subImg->hasMoved()) {
                                 $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-                                $maxSize = 512000;
+                                $maxSize = 10485760;
 
                                 if (!in_array($subImg->getMimeType(), $allowedTypes)) {
                                     return $this->response->setJSON([
@@ -464,7 +469,7 @@ class ProductController extends BaseController
                                     return $this->response->setJSON([
                                         'code' => 400,
                                         'status' => 'error',
-                                        'msg' => 'Images must be less than 500KB.'
+                                        'msg' => 'Images must be less than 10MB.'
                                     ]);
                                 }
 
@@ -779,11 +784,11 @@ class ProductController extends BaseController
                     ]);
                 }
 
-                if ($MainImg->getSize() > 512000) {
+                if ($MainImg->getSize() > 10485760) {
                     return $this->response->setJSON([
                         'code' => 400,
                         'status' => 'error',
-                        'msg' => 'Image must be less than 500KB.'
+                        'msg' => 'Image must be less than 10MB.'
                     ]);
                 }
 

@@ -155,7 +155,8 @@
                                                                             'Initiated' => 'bg-secondary', 
                                                                             'New'       => 'bg-warm-coral',   
                                                                             'Pending'   => 'bg-mustard-yellow', 
-                                                                            'Shipped'   => 'bg-warm-orange',    
+                                                                            'Shipped'   => 'bg-warm-orange', 
+                                                                            'Readytoship'   => 'bg-warm-orange',       
                                                                             'Delivered' => 'bg-warm-olive', 
                                                                             'Cancelled' => 'bg-warm-red',        
                                                                             'Refund'    => 'bg-sandy-beige',
@@ -180,11 +181,10 @@
                                                                                 $returnText = $orderDetails['is_returned'] == 1 ? 'Return Requested' : 'Return';
   
                                                                             }
-
                                                                         }
 
                                                                         $dispCancel = false;
-                                                                        if ($orderStatus === 'New' || $orderStatus === 'Shipped') {
+                                                                        if ($orderStatus === 'New' || $orderStatus === 'Readytoship') {
                                                                             $dispCancel = true;
                                                                         }
                                                                         ?>

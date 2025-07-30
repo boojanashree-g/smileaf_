@@ -21,7 +21,7 @@ class RazorpayController extends BaseController
         $userID = session()->get('user_id');
         $type = $this->request->getGet('type');
 
-        $paymentStatus = ['PENDING' ,'COMPLETED' ,'FAILED' ,'CANCELLED'];
+        $paymentStatus = ['PENDING', 'COMPLETED', 'FAILED', 'CANCELLED'];
         // Check the orderID is already has rzporderID
         $orderQuery = "SELECT `order_id` 
                         FROM `tbl_orders` 
@@ -121,6 +121,10 @@ class RazorpayController extends BaseController
 
     public function Success()
     {
+        session()->set('payment_attempted', true);
+        session()->set('payment_status', 'success');
+        session()->set('payment_redirect', 'success');
+
         return view('success');
     }
 
@@ -308,7 +312,6 @@ class RazorpayController extends BaseController
                 $result['status'] = 'failure';
                 $result['message'] = "Orders updated failed";
             }
-
             echo json_encode($result);
         } elseif ($event === 'payment.failed') {
             $payment_status = "FAILED";

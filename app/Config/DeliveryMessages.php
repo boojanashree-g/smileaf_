@@ -10,6 +10,7 @@ class DeliveryMessages extends BaseConfig
         'Order Pending' => 'Payment not yet completed from the bank',
         'New' => 'Your order has been placed.',
         'Pending' => 'Your payment is still pending. We will process your order once the payment is confirmed.',
+        'Readytoship' => 'Order packed and ready to ship!',
         'Shipped' => 'Your order has been shipped and is on its way.',
         'Delivered' => 'Your order has been delivered.',
         'Cancelled' => 'Your order has been cancelled.',

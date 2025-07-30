@@ -11,14 +11,26 @@
         background-color: rgba(136, 131, 131, 0.72);
     }
     .slick-track #main-image{
-        height: 350px;
+        object-fit: contain;
+    display: block;
+    max-height: 449px;
+    width: 100%;
+    padding: 4%;
+    margin: 2% 3%;
+    margin-bottom: 1px;
+    border: 1px solid #eee;
     }
     .sub-image img{
         max-height: 100px;
+        border: 1px solid #eee;
     }
     .products_page .ltn__product-item-3{
         margin: 10px;
     }
+
+
+
+
 </style>
 
 <body>
@@ -42,21 +54,28 @@
                                     <div class="ltn__shop-details-img-gallery">
                                         <div class="ltn__shop-details-large-img">
                                             <div class="single-large-img">
-                                                <a href="<?= esc(base_url() . $products[0]['main_image']) ?>"
+                                                <a class="main-url" href="<?= esc(base_url() . $products[0]['main_image']) ?>"
                                                     data-rel="lightcase:myCollection">
                                                     <img id="main-image" src="<?= esc(base_url() . $products[0]['main_image']) ?>"
                                                         alt="Image">
                                                 </a>
                                             </div>
                                         </div>
+                                    
                                         <div class="ltn__shop-details-small-img slick-arrow-2">
+                                            <!-- First: main image -->
+                                            <div class="single-small-img sub-image active" data-image="<?= $products[0]['main_image'] ?>">
+                                                <img src="<?= base_url() . $products[0]['main_image'] ?>" alt="Main Image">
+                                            </div>
+
+                                          
                                             <?php foreach ($image_data as $images): ?>
                                                 <div class="single-small-img sub-image" data-image="<?= $images['image_path'] ?>">
-                                                    <img src="<?= base_url() ?><?= $images['image_path'] ?>" alt="Image">
+                                                    <img src="<?= base_url() . $images['image_path'] ?>" alt="Image">
                                                 </div>
                                             <?php endforeach; ?>
                                         </div>
-                                    </div>
+                                                                            </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="modal-product-info shop-details-info ps-0">
@@ -441,7 +460,9 @@
                 let currentImg = $(this).data("image");
                 let mainImage =  base_Url + currentImg;
 
-                $("#main-image").attr("src" ,mainImage)
+                $("#main-image").attr("src" ,mainImage);
+                $(".main-url").attr("href" ,mainImage) ;  
+
 
 
                

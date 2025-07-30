@@ -14,8 +14,10 @@
 
                         <div class="ltn__social-media mt-20">
                             <ul>
-                                <li><a href="https://www.facebook.com/share/16YvyVLMJm/" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-                                <li><a href="https://www.instagram.com/smileaf_natural_products?igsh=d2JweGlicGh2cmN4" title="Instagram"><i class="fab fa-instagram"></i></a></li>
+                                <li><a href="https://www.facebook.com/share/16YvyVLMJm/" title="Facebook"><i
+                                            class="fab fa-facebook-f"></i></a></li>
+                                <li><a href="https://www.instagram.com/smileaf_natural_products?igsh=d2JweGlicGh2cmN4"
+                                        title="Instagram"><i class="fab fa-instagram"></i></a></li>
                                 <!-- <li><a href="#" title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
                                 <li><a href="#" title="Youtube"><i class="fab fa-youtube"></i></a></li> -->
                             </ul>
@@ -32,8 +34,9 @@
                                         <i class="icon-placeholder"></i>
                                     </div>
                                     <div class="footer-address-info">
-                                        <p>3/142,Near Varadaraja Mills(Unit 2),
-                                            SundakkamPalayam,Nambiyam Palayam Post, Avinashi,Tirupur,Tamilnadu, India -
+                                        <p>Cactus International,3/142,Near Varadaraja Mills(Unit 2),
+                                            SundakkamPalayam,Nambiyam Palayam Post, Avinashi,Tirupur,<br>Tamilnadu,
+                                            India -
                                             641670.</p>
                                     </div>
                                 </li>

@@ -77,6 +77,7 @@ class AdminController extends BaseController
     {
         $res['meta_title'] = "Dashboard";
         $res['neworder_count'] = $this->newOrderCount();
+        $res['readytoship_count'] = $this->ReadytoShipCount();
         $res['shipping_count'] = $this->shippingOrderCount();
         $res['delivered_count'] = $this->deliverOrderCount();
         $res['pending_count'] = $this->pendingOrderCount();
@@ -101,6 +102,14 @@ class AdminController extends BaseController
         $resultData = $this->db->query("SELECT COUNT(`order_id`) AS neworder FROM `tbl_orders` WHERE `flag` = 1 AND `order_status` = ?", [$orderStatus])->getRow();
         $newOrderCount = $resultData->neworder;
         return $newOrderCount;
+    }
+
+    private function ReadytoShipCount()
+    {
+        $orderStatus = "Readytoship";
+        $resultData = $this->db->query("SELECT COUNT(`order_id`) AS Readytoship FROM `tbl_orders` WHERE `flag` = 1 AND `order_status` = ?", [$orderStatus])->getRow();
+        $readytoShipCount = $resultData->Readytoship;
+        return $readytoShipCount;
     }
     private function shippingOrderCount()
     {

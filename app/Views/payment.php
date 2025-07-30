@@ -66,7 +66,7 @@
             loader.style.top = "0";
             loader.style.left = "0";
             setTimeout(function () {
-                window.location.href = "<?= site_url('success') ?>"
+                window.location.href = "<?= base_url('success') ?>"
             }, 500);
 
         }

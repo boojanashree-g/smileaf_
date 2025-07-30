@@ -121,8 +121,8 @@
                         <div class="order-tracking-status d-none ">
                             <div class="track">
                                 <?php
-                                $statuses = ['Order Placed', 'Shipped', 'Delivered'];
-                                $icons = ['fa-check', 'fa-box', 'fa-truck'];
+                                $statuses = ['Order Placed', 'Readytoship', 'Shipped', 'Delivered'];
+                                $icons = ['fa-check', 'fa-box', 'fa-box-open', 'fa-truck'];
                                 foreach ($statuses as $index => $label):
                                     ?>
                                     <div class="step">
