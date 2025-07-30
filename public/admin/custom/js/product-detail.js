@@ -344,6 +344,8 @@ $(document).ready(function () {
     $("#product-modal").modal("show");
     $("#main_image_url").css("display", "none");
     $("#images").val("");
+    $("#main_image").val("");
+
     $("#preview").empty();
     if (description) {
       description.setData("");
@@ -378,9 +380,13 @@ $(document).ready(function () {
     description.setData(res_DATA[index].description);
     produsage.setData(res_DATA[index].product_usage);
 
-    $("#main_image_url").attr("src", base_Url + res_DATA[index].main_image);
-    $("#main_image_url").addClass("active");
-    $("#main_image_url").css("display", "block");
+    
+    if (res_DATA[index].main_image) {
+      $("#main_image_url").attr("src", base_Url + res_DATA[index].main_image);
+      $("#main_image_url").css("display", "block");
+    } else {
+      $("#main_image_url").css("display", "none");
+    }
 
     let has_variant = res_DATA[index].has_variant;
     let isVariantChecked = Number(has_variant) === 1;

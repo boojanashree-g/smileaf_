@@ -350,7 +350,8 @@ class OrderController extends BaseController
 
 
         $validStatusFlow = [
-            'New' => ['Shipped', 'Cancelled'],
+            'New' => ['Readytoship', 'Cancelled'],
+            'Readytoship' => ['Shipped', 'Cancelled'],
             'Shipped' => ['Delivered', 'Cancelled'],
             'Delivered' => [],
             'Cancelled' => ['Refund'],
@@ -381,6 +382,12 @@ class OrderController extends BaseController
         $currentDate = date("Y-m-d H:i:s");
 
         switch ($newStatus) {
+            case 'Readytoship':
+                $ready_to_ship_date = $currentDate;
+                $delivery_status = 'Readytoship';
+                $delivery_message = 'Order packed and ready to ship!';
+                break;
+
             case 'Shipped':
                 $shipped_date = $currentDate;
                 $delivery_status = 'Shipped';
@@ -410,6 +417,7 @@ class OrderController extends BaseController
             UPDATE tbl_orders 
             SET 
                 `order_status` = ?, 
+                `ready_to_ship_date` = ?, 
                 `shipped_date` = ?, 
                 `delivery_date` = ?, 
                 `delivery_status` = ?, 
@@ -422,6 +430,7 @@ class OrderController extends BaseController
 
         $this->db->query($updateOrderQry, [
             $newStatus,
+            $ready_to_ship_date,
             $shipped_date,
             $delivered_date,
             $delivery_status,

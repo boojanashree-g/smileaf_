@@ -748,6 +748,7 @@ class Home extends BaseController
 
         $orderQuery = "SELECT 
                         DATE_FORMAT(`order_date`, '%d-%m-%Y %r') AS `order_date`,
+                        DATE_FORMAT(`ready_to_ship_date`, '%d-%m-%Y %r') AS `ready_to_ship_date`,
                         DATE_FORMAT(`shipped_date`, '%d-%m-%Y %r') AS `shipped_date`,
                         DATE_FORMAT(`delivery_date`, '%d-%m-%Y %r') AS `delivery_date`,
                         `order_status`
@@ -755,7 +756,6 @@ class Home extends BaseController
                         WHERE `flag` = 1 AND `order_id` = ?   AND `user_id` = ?
                         ";
         $orderDetails = $this->db->query($orderQuery, [$orderID, $userID])->getRowArray();
-
 
         $res = [
             'code' => 200,

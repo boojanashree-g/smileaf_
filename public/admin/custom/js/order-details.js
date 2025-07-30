@@ -85,6 +85,9 @@ $(document).ready(function () {
               case "Pending":
                 backgroundclr = "badge bg-label-dark";
                 break;
+              case "Readytoship":
+                backgroundclr = "badge bg-label-primary";
+                break;
               case "Shipped":
                 backgroundclr = "badge bg-label-primary";
                 break;
@@ -98,6 +101,7 @@ $(document).ready(function () {
               case "Refund":
                 backgroundclr = "badge bg-label-secondary";
                 break;
+
               case "Returned":
                 backgroundclr = "badge bg-label-danger";
                 break;
@@ -172,7 +176,7 @@ $(document).ready(function () {
               backgroundclr = "bg-label-info";
             } else if (status == "Pending") {
               backgroundclr = "bg-label-dark";
-            } else if (status == "Shipped") {
+            } else if (status == "Shipped" || status == "Readytoship") {
               backgroundclr = "bg-label-primary";
             } else if (status == "Delivered") {
               backgroundclr = "bg-label-success";

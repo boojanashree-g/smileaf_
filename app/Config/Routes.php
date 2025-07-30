@@ -73,7 +73,7 @@ $routes->match(['get', 'post'], 'webhook-payment-status', 'RazorpayController::w
 
 $routes->get('payment-cancelled', 'RazorpayController::paymentcancel');
 $routes->get('payment-failed', 'RazorpayController::paymentfail');
-$routes->get('success', 'RazorpaTyController::Success');
+$routes->get('success', 'RazorpayController::Success');
 $routes->get('check-payment-status', 'RazorpayController::checkPaymentStatus');
 
 

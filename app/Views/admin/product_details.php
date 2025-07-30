@@ -111,7 +111,7 @@
 
                                             <!--  Filter Start -->
                                             <div class="col-3 col-md-3">
-                                                <label class="form-label">Filter Type</label>
+                                                <label class="form-label">Product Type</label>
                                                 <select class="form-select" for="type_id" name="type_id" id="type_id">
                                                     <option value="">Select Option</option>
                                                     <?php foreach ($filter_type as $type) { ?>
@@ -124,7 +124,7 @@
                                             </div>
 
                                             <div class="col-3 col-md-3">
-                                                <label class="form-label">Filter Shapes</label>
+                                                <label class="form-label">Product Shapes</label>
                                                 <select class="form-select" for="shape_id" name="shape_id"
                                                     id="shape_id">
 
@@ -141,7 +141,7 @@
                                             </div>
 
                                             <div class="col-3 col-md-3">
-                                                <label class="form-label">Filter Size</label>
+                                                <label class="form-label">Product Size</label>
                                                 <select class="form-select" for="size_id" name="size_id" id="size_id">
                                                     <option value="">Select Option</option>
                                                     <?php foreach ($filter_size as $size) { ?>
