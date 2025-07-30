@@ -2529,54 +2529,55 @@ footer {
   /* .product_categories,.ltn__login-area{
         padding-top: 135px !important;
     } */
-  header .ltn__header-middle-area {
-    overflow: inherit;
-  }
-  #liton_tab_1_4 .add-address-tab {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  #orderModal .modal-dialog {
-    width: auto;
-  }
-  .ltn__tab-menu-list .nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-  .liton__shoping-cart-area .cart-plus-minus {
-    border: 2px solid #d3d3d3;
-    height: 40px;
-    line-height: 30px;
-    width: 85px;
-    text-align: center;
-  }
-  .cart-product-info {
-    min-width: 115px;
-  }
-  .cart-product-subtotal {
-    display: flex;
-    align-items: end;
-    justify-content: end;
-  }
-  .shoping-cart-inner tr {
-    display: flex;
-    align-items: center;
-  }
-  .shoping-cart-total .cart-total-amt {
-    text-align: end;
-  }
-  .shoping-cart-inner td {
-    border-bottom: 0px;
-  }
-  .action_btn {
-    min-width: 110px;
-  }
-  .featured_prod_name {
-    overflow: auto !important;
-    white-space: inherit !important;
-    width: 100% !important;
-  }
+     header .ltn__header-middle-area{
+        overflow: inherit;
+     }
+    #liton_tab_1_4 .add-address-tab{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    #orderModal .modal-dialog{
+        width: auto;
+    }
+    .ltn__tab-menu-list .nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    .liton__shoping-cart-area .cart-plus-minus{
+        border: 2px solid #d3d3d3;
+        height: 40px;
+        line-height: 30px;
+        width: 85px;
+        text-align: center;
+    }
+    .cart-product-info{
+        min-width: 115px;
+    }
+    .cart-product-subtotal{
+        display: flex;
+        align-items: end;
+        justify-content: end;
+    }
+    .shoping-cart-inner tr{
+        display: flex;
+        align-items: center;
+    }
+    .shoping-cart-total .cart-total-amt {
+        text-align: end;
+    }
+    .shoping-cart-inner td{
+        border-bottom: 0px;
+    }
+    .action_btn{        
+        min-width: 110px;
+    }
+    .featured_prod_name {
+        overflow: auto !important;
+        white-space: inherit !important;
+        width:100% !important;
+    }
+
 }
 
 .ltn__contact-address-area {
