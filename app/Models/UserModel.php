@@ -21,7 +21,7 @@ class UserModel extends Model
         'otp',
         'otp_expiry',
         'is_verified',
-        'flag'
+        'whatsapp_number'
 
     ];
 }

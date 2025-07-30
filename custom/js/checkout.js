@@ -1,8 +1,6 @@
 var mode;
 var add_id = null;
 $(document).ready(function () {
-
-  
   let currentStage = "send";
   let otpSentAt = null;
   let resendEnabled = false;
@@ -169,9 +167,18 @@ $(document).ready(function () {
   }
 
   // *************************** [2. User Details] *************************************************************************
+  $("input[name='whatsapp_verify']").change(function () {
+    $("#whatsapp_number").addClass("d-none");
+    const verifynum = $(this).val();
+    if (verifynum == "no") {
+      $("#whatsapp_number").removeClass("d-none");
+    }
+  });
   $("#continue-userdetail").click(function () {
     const username = $("#username").val().trim();
     const email = $("#email").val().trim();
+    const isverify = $("input[name='whatsapp_verify']:checked").val();
+    const whatsappNumber = $("#whatsapp_number").val();
 
     if (username === "") {
       showToast("Please Enter Username", "error");
@@ -179,8 +186,14 @@ $(document).ready(function () {
       showToast("Please Enter Email", "error");
     } else if (!isValidEmail(email)) {
       showToast("Please Enter valid mail", "error");
+    } else if (!isverify) {
+      showToast("Please select an option", "error");
+    } else if (isverify == "no" && whatsappNumber == "") {
+      showToast("Please Enter whatsapp number", "error");
+    } else if (isverify == "no" && !isPhoneNumber(whatsappNumber)) {
+      showToast("Please Enter valid number", "error");
     } else {
-      saveDetails(username, email);
+      saveDetails(username, email, isverify, whatsappNumber);
     }
   });
 
@@ -188,14 +201,22 @@ $(document).ready(function () {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   }
+  function isPhoneNumber(phone_no) {
+    return /^\d{10}$/.test(phone_no);
+  }
 
   var token = localStorage.getItem("token");
 
-  function saveDetails(username, email) {
+  function saveDetails(username, email, isverify, whatsappNumber) {
     $.ajax({
       type: "POST",
       url: base_Url + "save-userdetails",
-      data: { username: username, email: email },
+      data: {
+        username: username,
+        email: email,
+        isverify: isverify,
+        whatapp_number: whatsappNumber,
+      },
       dataType: "JSON",
       headers: { Authorization: "Bearer " + token },
       success: function (JSONdata) {
@@ -247,20 +268,34 @@ $(document).ready(function () {
   $("#address-checkout").click(function () {
     let pincode = $("#pincode").val().trim().replace(/\s/g, "");
 
-    if ($("#address").val() === "" && mode == "new") {
+    if ($("#address").val() === "" && (mode === "new" || mode === "edit")) {
       showToast("Please fill address!", "info");
-    } else if ($("#state_id").val() === "" && mode == "new") {
+    } else if (
+      $("#state_id").val() === "" &&
+      (mode === "new" || mode === "edit")
+    ) {
       showToast("Please Select State!", "info");
-    } else if ($("#dist_id").val() === "") {
+    } else if (
+      $("#dist_id").val() === "" &&
+      (mode === "new" || mode === "edit")
+    ) {
       showToast("Please Select District!", "info");
-    } else if ($("#landmark").val() === "" && mode == "new") {
+    } else if (
+      $("#landmark").val() === "" &&
+      (mode === "new" || mode === "edit")
+    ) {
       showToast("Please Enter Landmark", "info");
-    } else if ($("#city").val() === "" && mode == "new") {
+    } else if ($("#city").val() === "" && (mode === "new" || mode === "edit")) {
       showToast("Please Enter City", "info");
-    } else if (pincode === "" && mode == "new") {
+    } else if (pincode === "" && (mode === "new" || mode === "edit")) {
       showToast("Please Enter Pincode", "info");
+    } else if (
+      !/^\d{6}$/.test(pincode) &&
+      (mode === "new" || mode === "edit")
+    ) {
+      showToast("Please enter a valid 6-digit pincode", "info");
     } else {
-      checkoutAddAddress();
+      // checkoutAddAddress();
     }
   });
 

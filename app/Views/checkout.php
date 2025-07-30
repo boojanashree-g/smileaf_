@@ -119,7 +119,7 @@
                                     </div>
                                 <?php else: ?>
                                    
-                                        <div class="step-content edit-userdetails" style="<?= (!empty($user_details[0]['username']) || !empty($user_details[0]['email'])) ? 'display:none;' : '' ?>">
+                                        <div class="step-content edit-userdetails" style="<?= (!empty($user_details[0]['username']) &&  !empty($user_details[0]['email']) &&  !empty($user_details[0]['whatsapp_number'])) ? 'display:none;' : '' ?>">
                                             <div class="">
                                                 <div class="row">
                                                     <div class="col-md-6 mb-2">
@@ -132,6 +132,23 @@
                                                             id="email" name="email"
                                                             value="<?= htmlspecialchars($user_details[0]['email']) ?>">
                                                     </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <label class="form-label">WhatsApp on this number?</label><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input whatsapp_verify" type="radio" name="whatsapp_verify" id="whatsapp_yes" value="yes">
+                                                            <label class="form-check-label" for="whatsapp_yes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input whatsapp_verify" type="radio" name="whatsapp_verify" id="whatsapp_no" value="no">
+                                                            <label class="form-check-label" for="whatsapp_no">No</label>
+                                                        </div>
+                                                    </div>
+                                                     <div class="col-md-6 mb-2">
+                                                        <input type="number" class="form-control d-none" placeholder="Enter whatsapp number"
+                                                            id="whatsapp_number" name="whatsapp_number"
+                                                            value="<?= htmlspecialchars($user_details[0]['email']) ?>">
+                                                    </div>
+
                                                 </div>
                                                 <button class="continue-btn" id="continue-userdetail">CONTINUE</button>
                                             </div>
@@ -411,10 +428,6 @@
     <!-- Main JS -->
     <script src="<?php echo base_url() ?>public/assets/js/main.js"></script>
     <script src="<?php echo base_url() ?>custom/js/checkout.js"></script>
-
-
-  
-    
     <script>
          $(document).ready(function () {
             $('#state_id, #dist_id').show();
