@@ -499,16 +499,8 @@ $(document).ready(function () {
             <td>${items.quantity} 
           </td>
           <td>₹${items.sub_total}</td>
-
-      </tr>
-      
-       
-       <tr>
-       <td><b>Returned Reason : </b>&nbsp${items.reason} 
-          </td>
-        
-       </tr>
-       `;
+          <td>${items.reason} </td>
+       </tr>`;
     });
 
     viewOrders += `
@@ -758,6 +750,7 @@ $(document).ready(function () {
                                       <th>Offer Price</th>
                                       <th>Quantity</th>
                                       <th>Total Price</th>
+                                      <th>Returned Reason</th>
                                   </tr>
                               </thead>
                               <tbody class="table-border-bottom-0">

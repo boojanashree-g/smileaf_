@@ -472,7 +472,12 @@ class MyaccountController extends BaseController
         $orderId = $this->request->getPost('order_id');
         $orderStatus = $this->request->getPost('order_status');
         $CancelReason = $this->request->getPost('cancel_reason');
+        $otherCancelReason = $this->request->getPost('other_cancel_reason');
         $userID = session()->get('user_id');
+
+        if ($CancelReason == 'other') {
+            $CancelReason = $otherCancelReason;
+        }
 
         $newOrderStatus = "Cancelled";
         $newDeliveryStatus = "Cancelled";
@@ -582,7 +587,10 @@ class MyaccountController extends BaseController
 
     public function submitReturnProducts()
     {
+
+
         $data = $this->request->getPost('return_items');
+
 
         $orderID = $this->request->getPost('order_id');
 
@@ -616,7 +624,14 @@ class MyaccountController extends BaseController
             $main_image = $formData['main_image'] ?? null;
             $prod_name = $formData['prod_name'] ?? null;
             $pack_qty = $formData['pack_qty'] ?? null;
+            $custom_reason = $formData['custom_reason'] ?? null;
             $subtotal = $prod_price * $quantity;
+
+
+
+            if ($reason === 'other') {
+                $reason = $custom_reason;
+            }
 
             if ($selected == 1) {
                 $variantQry = "SELECT `mrp` ,`offer_type`,`offer_details`,`offer_price` FROM `tbl_variants` WHERE `flag` = 1 AND `variant_id` = ? AND `prod_id` = ?";
@@ -643,6 +658,7 @@ class MyaccountController extends BaseController
                 ];
             }
         }
+
 
         if (!empty($emailData)) {
             $emailData['username'] = $userName;

@@ -573,19 +573,34 @@ $(document).ready(function () {
     }, 200);
   });
 
+  var selectedCancelReason = null;
+  $(".cancel-reason").on("change", function () {
+    $(".other-cancel-reason").addClass("d-none");
+    let selectedVal = $(this).val();
+    if (selectedVal == "other") {
+      $(".other-cancel-reason").removeClass("d-none");
+      selectedCancelReason = selectedVal;
+    }
+  });
+
   $("#submitCancelReason").on("click", function () {
-    var reason = $("#cancelReason").val().trim();
-    if (reason === "") {
-      showToast("Please enter a cancellation reason.", "warning");
+    var reason = $(".cancel-reason").val().trim();
+    var otherCancelReason = $("#other_cancel_reason").val();
+
+    if (reason == "") {
+      showToast("Please select cancellation reason.", "warning");
+      return;
+    } else if (reason == "other" && otherCancelReason == "") {
+      showToast("Please Enter cancel reason!!", "warning");
       return;
     } else {
-      submitCancel(canclOrderID, canclOrderStatus, reason);
+      submitCancel(canclOrderID, canclOrderStatus, reason ,otherCancelReason);
     }
   });
 
   token = localStorage.getItem("token");
 
-  function submitCancel(orderID, orderStatus, reason) {
+  function submitCancel(orderID, orderStatus, reason ,otherCancelReason) {
     $.ajax({
       type: "POST",
       url: base_Url + "update-cancel-reason",
@@ -593,6 +608,7 @@ $(document).ready(function () {
         order_id: orderID,
         order_status: orderStatus,
         cancel_reason: reason,
+        other_cancel_reason : otherCancelReason
       },
       dataType: "JSON",
       headers: { Authorization: "Bearer " + token },
@@ -695,16 +711,19 @@ $(document).ready(function () {
             <td>
                 <select name="return_items[${index}][reason]"  class="form-control return-reason"  data-index="${index}" >
                   <option value="">-- Select a reason --</option>
-                  <option value="ordered_by_mistake">Ordered by Mistake</option>
-                  <option value="found_better_price">Found a Better Price</option>
-                  <option value="product_not_needed">Product No Longer Needed</option>
-                  <option value="delivery_too_late">Delivery Taking Too Long</option>
-                  <option value="changed_my_mind">Changed My Mind</option>
-                  <option value="wrong_item_ordered">Wrong Item Ordered</option>
-                  <option value="other">Other (please specify)</option>
+                   <option value="Product is damaged">Product is damaged</option>
+                    <option value="Received wrong item">Received wrong item</option>
+                    <option value="Product not as described">Product not as described</option>
+                    <option value="Poor quality">Poor quality</option>
+                    <option value="Delivered late">Delivered late</option>
+                    <option value="Changed my mind">Changed my mind</option>
+                    <option value="No longer needed">No longer needed</option>
+                    <option value="other">Other</option>
                 </select>
-                 <div class="text-danger error-msg" id="error-${index}" style="display:none;">Please select a reason.</div>
+                 <textarea name="return_items[${index}][custom_reason]"  data-index="${index}" class="form-control mt-2 d-none other-reason" rows="3"
+                 placeholder = "Please enter reason"></textarea>
             </td>
+          
         </tr>`;
     });
 
@@ -736,16 +755,33 @@ $(document).ready(function () {
     $("#return-products").html(returnHtml);
   }
 
+  $(document).on("change", ".return-reason", function () {
+    let selectedVal = $(this).val();
+    let indexVal = $(this).data("index");
+
+    let $textarea = $(
+      `textarea[name="return_items[${indexVal}][custom_reason]"]`
+    );
+    if (selectedVal == "other") {
+      $textarea.removeClass("d-none");
+    } else {
+      $textarea.addClass("d-none").val("");
+    }
+  });
+
   $(document).on("submit", "#return-form", function (e) {
     e.preventDefault();
 
     let valid = true;
+    let valid2 = true;
     let atLeastOneSelected = false;
 
     $(".return-check").each(function () {
       let index = $(this).data("index");
       let isChecked = $(this).is(":checked");
-      let reason = $(`select[data-index="${index}"]`).val().trim();
+      let reason = $(`select[data-index="${index}"]`).val()?.trim() || "";
+      let otherReason =
+        $(`textarea[data-index="${index}"]`).val()?.trim() || "";
 
       $(`#error-${index}`).hide();
 
@@ -755,6 +791,8 @@ $(document).ready(function () {
         if (reason === "") {
           valid = false;
           $(`#error-${index}`).show();
+        } else if (reason === "other" && otherReason == "") {
+          valid2 = false;
         }
       }
     });
@@ -766,7 +804,11 @@ $(document).ready(function () {
     }
 
     if (!valid) {
-      showToast("Please fill in reason for all selected products.", "warning");
+      showToast("Please select a reason for selected products.", "warning");
+      return;
+    }
+    if (!valid2) {
+      showToast("Please Enter other reason for selected product.", "warning");
       return;
     }
     submitReturnData();
