@@ -18,28 +18,28 @@ class App extends BaseConfig
      */
     // public string $baseURL = 'http://localhost/ci4projects/smileaf';
 
-    public function __construct()
-    {
-        // Ensure the parent constructor is called first
-        parent::__construct();
+    // public function __construct()
+    // {
+    //     // Ensure the parent constructor is called first
+    //     parent::__construct();
 
-        // Dynamically set the base URL
-        $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === "on") ? "https" : "http";
-        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        // $subfolder = '/smileaf';
-        $scriptName = dirname($_SERVER['SCRIPT_NAME']);
+    //     // Dynamically set the base URL
+    //     $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === "on") ? "https" : "http";
+    //     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    //     // $subfolder = '/smileaf';
+    //     $scriptName = dirname($_SERVER['SCRIPT_NAME']);
 
-        $this->baseURL = $protocol . '://' . $host . $scriptName . '/';
-    }
+    //     $this->baseURL = $protocol . '://' . $host . $scriptName . '/';
+    // }
 
-    // public string $baseURL = 'https://5a0b3b29f6bf.ngrok-free.app/smileaf';
+    public string $baseURL = 'https://9979b80cc1da.ngrok-free.app/smileaf/';
 
 
     /**
      * Allowed Hostnames in the Site URL other than the hostname in the baseURL.
      * If you want to accept multiple Hostnames, set this.
      *
-     * E.g. When your site URL ($baseURL) is 'http://example.com/', and your site
+     * E.g. When your site URL ($baseURL) is 'http://example.com/', and your site0.
      *      also accepts 'http://media.example.com/' and
      *      'http://accounts.example.com/':
      *          ['media.example.com', 'accounts.example.com']

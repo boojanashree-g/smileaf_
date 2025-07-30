@@ -12,19 +12,27 @@ $(document).ready(function () {
       if (resultData.code === 200) {
         let details = resultData.orderdetails;
         let orderStatus = details.order_status;
+        console.log(orderStatus);
 
         const statusMap = {
           New: "Order Placed",
+          Readytoship: "Readytoship",
           Shipped: "Shipped",
           Delivered: "Delivered",
         };
 
         const currentStatus = statusMap[orderStatus] || "Order Placed";
 
-        const statusFlow = ["Order Placed", "Shipped", "Delivered"];
+        const statusFlow = [
+          "Order Placed",
+          "Readytoship",
+          "Shipped",
+          "Delivered",
+        ];
 
         const timestamps = {
           "Order Placed": details.order_date,
+          Readytoship: details.ready_to_ship_date,
           Shipped: details.shipped_date,
           Delivered: details.delivery_date,
         };
@@ -36,6 +44,7 @@ $(document).ready(function () {
           if (
             statusFlow.indexOf(stepText) <= statusFlow.indexOf(currentStatus)
           ) {
+            console.log("yesss");
             $(this).addClass("active");
             $(this)
               .find(".datetime")

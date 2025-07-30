@@ -39,7 +39,7 @@
                                         <div class="card drag-item cursor-move mb-lg-0 mb-6">
                                             <div class="card-body text-center">
                                                 <h2>
-                                                    <i class="ti ti-shopping-cart text-success display-6"></i>
+                                                    <i class="ti ti-shopping-cart text-primary display-6"></i>
                                                 </h2>
                                                 <h5 class="text-dark">New Orders</h5>
                                                 <h5 class="text-dark"><?= $neworder_count ?></h5>
@@ -49,6 +49,20 @@
                                 </div>
 
                                 <div class="col-lg-3 col-md-6 col-sm-12">
+                                    <a href="<?= base_url('admin/order-details?status=Readytoship') ?>"
+                                        class="text-decoration-none">
+                                        <div class="card drag-item cursor-move mb-lg-0 mb-6">
+                                            <div class="card-body text-center">
+                                                <h2>
+                                                    <i class="ti ti-truck-loading text-secondary display-6"></i>
+                                                </h2>
+                                                <h5>Ready to ship</h5>
+                                                <h5><?= $readytoship_count ?></h5>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-lg-3 col-md-6 col-sm-12">
                                     <a href="<?= base_url('admin/order-details?status=Shipped') ?>"
                                         class="text-decoration-none">
                                         <div class="card drag-item cursor-move mb-lg-0 mb-6">
@@ -56,7 +70,7 @@
                                                 <h2>
                                                     <i class="ti ti-package text-info display-6"></i>
                                                 </h2>
-                                                <h5>Shipping Orders</h5>
+                                                <h5>Shipped Orders</h5>
                                                 <h5><?= $shipping_count ?></h5>
                                             </div>
                                         </div>
@@ -77,6 +91,10 @@
                                         </div>
                                     </a>
                                 </div>
+
+                            </div>
+
+                            <div class="row mb-6" id="sortable-cards">
                                 <div class="col-lg-3 col-md-6 col-sm-12">
                                     <a href="<?= base_url('admin/order-details?status=Pending') ?>"
                                         class="text-decoration-none">
@@ -92,10 +110,6 @@
                                         </div>
                                     </a>
                                 </div>
-                            </div>
-
-                            <div class="row mb-6" id="sortable-cards">
-
 
                                 <div class="col-lg-3 col-md-6 col-sm-12">
                                     <a href="<?= base_url('admin/order-details?status=Cancelled') ?>"

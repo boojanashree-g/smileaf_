@@ -302,6 +302,11 @@ $(document).ready(function () {
           CommonBgClass = "alert-info";
           TrackOrderDisp = "";
           dispClass = "col-md-9";
+        } else if (orderSummary == "Readytoship") {
+          CommonClass = "text-info";
+          CommonBgClass = "alert-info";
+          TrackOrderDisp = "";
+          dispClass = "col-md-9";
         } else if (orderSummary == "Delivered") {
           CommonClass = "text-success";
           CommonBgClass = "alert-success";
@@ -686,9 +691,19 @@ $(document).ready(function () {
             <td>
                 <img width="100px" src="${base_Url}${item.main_image}" />
             </td>
+          
             <td>
-                <textarea name="return_items[${index}][reason]" class="form-control return-reason" data-index="${index}" placeholder="Mention reason..."></textarea>
-                <div class="text-danger error-msg" id="error-${index}" style="display:none;">Please enter a reason.</div>
+                <select name="return_items[${index}][reason]"  class="form-control return-reason"  data-index="${index}" >
+                  <option value="">-- Select a reason --</option>
+                  <option value="ordered_by_mistake">Ordered by Mistake</option>
+                  <option value="found_better_price">Found a Better Price</option>
+                  <option value="product_not_needed">Product No Longer Needed</option>
+                  <option value="delivery_too_late">Delivery Taking Too Long</option>
+                  <option value="changed_my_mind">Changed My Mind</option>
+                  <option value="wrong_item_ordered">Wrong Item Ordered</option>
+                  <option value="other">Other (please specify)</option>
+                </select>
+                 <div class="text-danger error-msg" id="error-${index}" style="display:none;">Please select a reason.</div>
             </td>
         </tr>`;
     });
@@ -730,7 +745,7 @@ $(document).ready(function () {
     $(".return-check").each(function () {
       let index = $(this).data("index");
       let isChecked = $(this).is(":checked");
-      let reason = $(`textarea[data-index="${index}"]`).val().trim();
+      let reason = $(`select[data-index="${index}"]`).val().trim();
 
       $(`#error-${index}`).hide();
 
