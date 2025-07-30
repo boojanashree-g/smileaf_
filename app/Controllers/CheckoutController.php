@@ -605,7 +605,7 @@ class CheckoutController extends BaseController
         $loginStatus = session()->get("loginStatus");
 
         if ($userVerify == "YES" && $loginStatus == "YES") {
-            $query = "SELECT a.*, b.state_title, c.dist_name  , d.`user_id`,d.`username`,d.`number`,d.`email`
+            $query = "SELECT a.*, b.state_title, c.dist_name  , d.`user_id`,d.`username`,d.`number`,d.`email`, d.`whatsapp_number`
             FROM tbl_user_address AS a 
             INNER JOIN tbl_state AS b ON a.state_id = b.state_id
             INNER JOIN tbl_district AS c ON a.dist_id = c.dist_id

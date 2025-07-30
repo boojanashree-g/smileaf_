@@ -269,9 +269,23 @@ class MyaccountController extends BaseController
         $request = $this->request;
         $userID = $this->session->get('user_id');
 
+        $userNum = $this->db->query("SELECT `number`  FROM `tbl_users` WHERE `flag` =  1 AND `user_id` = ?", [$userID])->getRow();
+        $currentNumber = $userNum->number;
+
+        $data = $this->request->getPost();
+        $isVerify = $this->request->getPost('isverify');
+        $whatsapp = $this->request->getPost('whatapp_number');
+
+        if ($whatsapp == $currentNumber) {
+            $whatsappNum = $currentNumber;
+        } else {
+            $whatsappNum = ($isVerify == "no") ? $whatsapp : $currentNumber;
+        }
+
         $userData = [
             'username' => $request->getPost('username'),
             'email' => $request->getPost('email'),
+            'whatsapp_number' => $whatsappNum,
         ];
 
         $UserModel->update($userID, $userData);
