@@ -186,6 +186,7 @@ class Home extends BaseController
             'related_products' => $relatedProd
         ];
 
+       
 
         $res = array_merge($res, $this->getMenuData(), [
             'page_title' => 'Product View',
@@ -565,7 +566,6 @@ class Home extends BaseController
 
         $userID = $this->session->get("user_id");
 
-
         $res['userData'] = $this->db->query("SELECT * FROM `tbl_users` WHERE `flag` = 1 AND `user_id` = $userID")->getResultArray();
         $res['state'] = $this->db->query("SELECT `state_id`,`state_title` FROM `tbl_state` WHERE `flag` =1")->getResultArray();
 
@@ -593,6 +593,7 @@ class Home extends BaseController
             $query = "SELECT * FROM `tbl_order_item` WHERE `flag` = 1 AND `order_id` = ?";
             $itemDetails = $this->db->query($query, [$orderID])->getResultArray();
 
+
             $orderSummaries[$orderID] = [
                 'order_id' => $orderID,
                 'order_no' => $orders['order_no'],
@@ -609,8 +610,12 @@ class Home extends BaseController
                 'order_total_amt' => $OrderTotalAmt,
                 'delivered_time' => $deliveryTime,
                 'is_returned' => $orders['is_returned'],
+                'discount_amt' => $orders['discount_amt'],
+                'is_discount' => $orders['is_discount'],
                 'items' => []
             ];
+
+
 
             foreach ($itemDetails as $item) {
                 $prodID = $item['prod_id'];
@@ -647,6 +652,7 @@ class Home extends BaseController
 
         krsort($orderSummaries);
         $res['summary'] = $orderSummaries;
+
 
         return view('myaccount', $res);
     }

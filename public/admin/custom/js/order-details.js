@@ -383,6 +383,8 @@ $(document).ready(function () {
     let cancel_status = orderDetails.cancel_status;
     let cancel_reason = orderDetails.cancel_reason;
     let cancelOrderDisp = cancel_status == 0 ? "d-none" : "";
+    let dispDiscount = parseInt(orderDetails.discount_amt) == 0 ? '-' : '-' + orderDetails.discount_amt;
+    let ShippingCharge = parseInt(orderDetails.courier_charge) == 0 ? 'Free' : '₹' + orderDetails.courier_charge;
 
     orderItemsData.forEach(function (items, i) {
       let offerType = items.offer_type;
@@ -682,6 +684,19 @@ $(document).ready(function () {
                                               ₹${orderDetails.sgst}</span>
                                       </td>
                                   </tr>
+                                   <tr>
+                                      <td colspan="4"></td>
+                                      <td colspan="4">
+                                          <div class="fw-semibold"
+                                              style="text-align: right;">
+                                              Discount
+                                              :</div>
+                                      </td>
+                                      <td colspan="5">
+                                          <span class="fs-16 fw-semibold">
+                                              ₹${dispDiscount}</span>
+                                      </td>
+                                  </tr>
                                   <tr>
                                       <td colspan="4"></td>
                                       <td colspan="4">
@@ -692,7 +707,7 @@ $(document).ready(function () {
                                       </td>
                                       <td colspan="5">
                                           <span class="fs-16 fw-semibold">
-                                              ₹${orderDetails.courier_charge}</span>
+                                              ${ShippingCharge}</span>
                                       </td>
                                   </tr>
 

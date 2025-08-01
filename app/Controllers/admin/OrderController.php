@@ -150,6 +150,8 @@ class OrderController extends BaseController
             'is_returned' => $orders[0]['is_returned'],
             'cancel_status' => $orders[0]['cancel_status'],
             'cancel_reason' => $orders[0]['cancel_reason'],
+            'discount_amt' => $orders[0]['discount_amt'],
+            'is_discount' => $orders[0]['is_discount'],
         ];
 
 
@@ -538,7 +540,10 @@ class OrderController extends BaseController
             'sgst' => $orders[0]['sgst'],
             'gst' => $orders[0]['gst'],
             'items' => [],
-            'user_details' => $userDetails
+            'user_details' => $userDetails,
+            'discount_amt' => $orders[0]['discount_amt'],
+            'is_discount' => $orders[0]['is_discount'],
+
         ];
 
 

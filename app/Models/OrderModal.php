@@ -47,6 +47,10 @@ class OrderModal extends Model
         'gst',
         'sgst',
         'cgst',
-        'is_returned'
+        'is_returned',
+        'is_discount',
+        'discount_amt',
+        'main_total',
+        'main_courier_charge'
     ];
 }

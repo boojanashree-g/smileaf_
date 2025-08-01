@@ -275,11 +275,23 @@ $(document).ready(function () {
       success: function (resultData) {
         let orderItemsHTML = "";
         let returnItemsHTML = "";
+        console.log(resultData.summary);
+        
+        let ShippingCharge = parseInt(resultData.summary["courier_charge"]);
 
-        let ShippingCharge = 100.0;
+        let dispCharge =
+          ShippingCharge == 0
+            ? "Free"
+            : "₹" + resultData.summary["courier_charge"] + ".00";
 
         let orderSummary = resultData.summary["order_status"];
+        let is_discount = resultData.summary["is_discount"];
+        let dispDiscount =
+          is_discount == 1
+            ? '-'+ '₹'+ resultData.summary["discount_amt"]
+            : "-";
 
+        console.log(resultData.summary);
         let returnedProdDisplay =
           resultData.summary["is_returned"] == 1 ? "" : "d-none";
         let CommonClass = "";
@@ -485,8 +497,9 @@ $(document).ready(function () {
                                                             <td>Sub total</td>
                                                             <td class="order-subtotal amt">₹${formattedOrderSubTotal}</td>
                                                         </tr>
+                                                      
                                                         <tr>
-                                                            <td>CGST(Includes)</td>
+                                                            <td>CGST</td>
                                                             <td class="gst-td amt">₹${
                                                               resultData
                                                                 .summary[
@@ -495,7 +508,7 @@ $(document).ready(function () {
                                                             }</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>SGST(Includes)</td>
+                                                            <td>SGST</td>
                                                             <td class="sgst-td amt">₹${
                                                               resultData
                                                                 .summary[
@@ -503,9 +516,13 @@ $(document).ready(function () {
                                                               ] ?? "-"
                                                             }</td>
                                                         </tr>
+                                                           <tr>
+                                                            <td>Discount</td>
+                                                            <td class="order-subtotal amt">${dispDiscount}</td>
+                                                        </tr>
                                                         <tr>
                                                             <td>Shipping Charge</td>
-                                                            <td class="shipping-charge amt">₹${ShippingCharge}.00</td>
+                                                            <td class="shipping-charge amt">${dispCharge}</td>
                                                         </tr>
 
                                                         <tr>
@@ -594,13 +611,13 @@ $(document).ready(function () {
       showToast("Please Enter cancel reason!!", "warning");
       return;
     } else {
-      submitCancel(canclOrderID, canclOrderStatus, reason ,otherCancelReason);
+      submitCancel(canclOrderID, canclOrderStatus, reason, otherCancelReason);
     }
   });
 
   token = localStorage.getItem("token");
 
-  function submitCancel(orderID, orderStatus, reason ,otherCancelReason) {
+  function submitCancel(orderID, orderStatus, reason, otherCancelReason) {
     $.ajax({
       type: "POST",
       url: base_Url + "update-cancel-reason",
@@ -608,7 +625,7 @@ $(document).ready(function () {
         order_id: orderID,
         order_status: orderStatus,
         cancel_reason: reason,
-        other_cancel_reason : otherCancelReason
+        other_cancel_reason: otherCancelReason,
       },
       dataType: "JSON",
       headers: { Authorization: "Bearer " + token },
