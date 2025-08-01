@@ -8562,20 +8562,21 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 }
 
 .product-badge li {
-  list-style: none;
-  display: inline-block;
-  font-size: 13px;
-  font-weight: 700;
-  background-color: #cf1300;
-  color: var(--white);
-  padding: 1px 12px;
-  text-transform: uppercase;
-  border-radius: 15px 0px 15px 0px;
+list-style: none;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 700;
+    background-color: #cf1300;
+    color: var(--white);
+    padding: 3px 20px;
+    text-transform: uppercase;
+    border-radius: 15px 0px 15px 0px;
+    margin-top: 12px;
 }
-
+/* 
 .product-badge li:first-child {
   margin-top: 0;
-}
+} */
 
 .product-badge li::before {
   position: absolute;
@@ -9558,8 +9559,8 @@ ul.wp-block-latest-posts.is-grid.alignwide {
   }
 
   .product-badge li {
-    font-size: 10px;
-    padding: 1px 8px;
+    font-size: 13px;
+        padding: 5px 18px;
   }
 
   .product-badge li::before {

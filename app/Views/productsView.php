@@ -30,7 +30,7 @@
 
 
 
-
+ 
 </style>
 
 <body>
@@ -52,8 +52,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="ltn__shop-details-img-gallery">
+                                      
                                         <div class="ltn__shop-details-large-img">
                                             <div class="single-large-img">
+                                               <div class="product-badge">
+                                                    <ul>
+                                                        <li class="sale-badge">-19%</li>
+                                                    </ul>
+                                                </div>
                                                 <a class="main-url" href="<?= esc(base_url() . $products[0]['main_image']) ?>"
                                                     data-rel="lightcase:myCollection">
                                                     <img id="main-image" src="<?= esc(base_url() . $products[0]['main_image']) ?>"

@@ -357,13 +357,29 @@
                                     </tr>
                                     <tr>
                                         <td><strong>Shipping</strong></td>
-                                        <td><strong>₹<?= number_format($delivery_charge, 2) ?></strong></td>
+                                     <?php
+                                    if ($offer_delivery_charge == 0) {
+                                        $displayCharge = '<span style="color:#699403;">Free</span> <del>₹' . number_format($delivery_charge, 2) . '</del>';
+                                    } else {
+                                        $displayCharge = '₹' . number_format($delivery_charge, 2);
+                                    }
+                                    ?>
+                                    <td><strong><?= $displayCharge ?></strong></td>
+
+
                                     </tr>
                                     <tr>
-                                        <td><strong> Total</strong></td>
-                                        <td><strong
-                                                class="order_total_amt">₹<?= number_format($final_total, 2) ?></strong>
-                                        </td>
+                                        <td><strong>Total</strong></td>
+
+                                   <?php
+                                    if ($total_order_count == 0) {
+                                        $order_total_amt = '₹' . number_format($final_total, 2) . ' <span style="color:#699403;">10% OFF</span> <del>₹' . number_format($main_total, 2) . '</del>';
+                                    } else {
+                                        $order_total_amt = '₹' . number_format($final_total, 2);
+                                    }
+                                    ?>
+                                    <td><strong class="order_total_amt"><?= $order_total_amt ?></strong></td>
+
                                     </tr>
                                 </tbody>
                             </table>
@@ -371,6 +387,21 @@
                             <?php foreach ($gst_subid_list as $item): ?>
                                 <input type="hidden" class="sub-id" value="<?= $item ?>" />
                             <?php endforeach; ?>
+
+                            <div class="advantages">
+                                <div class="advantage-item">
+                                    <span>🚚 Free courier charge on orders above ₹500!</span>
+                                </div>
+                                <div class="advantage-item">
+                                    <?php if ($total_order_count == 0) { ?>      
+                                    <span>🎉 Hey New Customer! We’re Giving You 10% OFF on Your First Order!</span>
+                                    <?php }
+                                    else if(($total_order_count == -1)) { ?>
+                                      <span>🛍️ Welcome back! We’re glad to see you again. Stay tuned for future offers!</span>
+                                <?php }  ?>
+                                    
+                                </div>
+                            </div>
 
 
                             <div class="place-order-wrapper">

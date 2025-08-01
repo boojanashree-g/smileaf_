@@ -395,6 +395,8 @@ class MyaccountController extends BaseController
             'returned_items' => [],
             'items' => [],
             'is_returned' => $orders[0]['is_returned'],
+            'discount_amt' => $orders[0]['discount_amt'],
+            'is_discount' => $orders[0]['is_discount'],
         ];
 
         foreach ($itemDetails as $item) {

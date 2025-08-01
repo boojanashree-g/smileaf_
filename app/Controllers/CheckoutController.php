@@ -155,13 +155,12 @@ class CheckoutController extends BaseController
             $cartTotal = $cartData[0]['total_price'];
             $originalPrice = $cartPrice;
 
-            $subIDs = isset($subid[0]) ? $subid[0] : [];
 
+            $subIDs = isset($subid[0]) ? $subid[0] : [];
 
             // Main Product
             $mainProductQuery = "SELECT main_quantity, has_variant, submenu_id FROM tbl_products WHERE `prod_id` = ?";
             $mainProductData = $this->db->query($mainProductQuery, [$prodID])->getRow();
-
 
 
             if (!$mainProductData) {
@@ -182,7 +181,6 @@ class CheckoutController extends BaseController
             $finalPrice = ($cartPrice == $mainPrice) ? $cartPrice : $mainPrice;
 
 
-
             if ($cartQuantity <= $mainQuantity && $cartPrice == $mainPrice && $cartPrice != 0 && $originalPrice != 0) {
                 $OrderPrice += $cartTotal;
                 $prodPrice = $cartTotal;
@@ -194,7 +192,6 @@ class CheckoutController extends BaseController
                 $OrderPrice += $mainPrice * $cartQuantity;
                 $prodPrice = $mainPrice * $cartQuantity;
             }
-
 
 
             // Handle array of subIDs
@@ -231,14 +228,33 @@ class CheckoutController extends BaseController
         $totalGstValue = round($totalGSTvalue, 2);
         $halfGst = floor(($totalGstValue / 2) * 100) / 100;
 
-
         // Shipping 100rs 
         $totalShipping = 100;
         $courierType = "Default";
 
-        $finalOrderPrice = $OrderPrice + $totalShipping;
-        $finalSubTotal = $finalOrderPrice - $totalShipping;
+        $mainTotal = $OrderPrice + $totalShipping;
+        $finalSubTotal = $OrderPrice - $totalGstValue;
 
+        $finalDeliveryCharge = ($OrderPrice > 500) ? 0 : $totalShipping;
+        $is_discount = 0;
+        // 10% final price calculation
+        $loginStatus = session()->get('loginStatus');
+        $otp_verify = session()->get('otp_verify');
+        $userIDD = session()->get('user_id');
+
+        if ($otp_verify == 'YES' && $loginStatus == 'YES') {
+            // Check the verified user already purchased or not
+            $orderData = $this->db->query("SELECT COUNT( `order_id` ) AS total_order FROM `tbl_orders` WHERE `user_id`  = ? AND `payment_status` = 'COMPLETED'", [$userIDD])->getRow();
+            $user_order_total = $orderData->total_order;
+
+            if ($user_order_total <= 0) {
+                $firstOrderDiscount = 0.10 * $OrderPrice;
+                $is_discount = 1;
+                $OrderPrice -= $firstOrderDiscount;
+            }
+        }
+
+        $finalOrderPrice = $OrderPrice + $finalDeliveryCharge;
 
 
         // Fetch default address for the user
@@ -263,16 +279,20 @@ class CheckoutController extends BaseController
             $orderData = [
                 'order_no' => $orderNO,
                 'user_id' => $userID,
-                'total_amt' => $finalOrderPrice,
-                'sub_total' => $finalSubTotal,
+                'total_amt' => round($finalOrderPrice),
+                'sub_total' => round($finalSubTotal),
                 'add_id' => $addID,
                 'order_status' => "initiated",
                 'order_date' => date('Y-m-d H:i:s'),
-                'courier_charge' => $totalShipping,
+                'courier_charge' => round($finalDeliveryCharge),
+                'main_courier_charge' => $totalShipping,
+                'discount_amt' => round($firstOrderDiscount),
+                'main_total' => $mainTotal,
                 'courier_type' => $courierType,
                 'gst' => $totalGstValue,
                 'cgst' => $halfGst,
                 'sgst' => $halfGst,
+                'is_discount' => $is_discount
 
             ];
 
@@ -426,9 +446,7 @@ class CheckoutController extends BaseController
 
 
             }
-
         }
-
 
     }
 
@@ -577,28 +595,75 @@ class CheckoutController extends BaseController
             }
         }
 
-
         // Final calculations
         $totalAmt = round($totalAmt, 2);
         $totalGstValue = round($totalGstValue, 2);
         $subTotal = $totalAmt - $totalGstValue;
-        $finalTotal = $totalAmt + $deliveryCharge;
+        $mainTotal = $totalAmt + $deliveryCharge;
         $halfGst = floor(($totalGstValue / 2) * 100) / 100;
 
 
+        $finalDeliveryCharge = ($totalAmt > 500) ? 0 : $deliveryCharge;
+        $finalTotal = $totalAmt + $finalDeliveryCharge;
+
+
+        // 10% final price calculation
+        $loginStatus = session()->get('loginStatus');
+        $otp_verify = session()->get('otp_verify');
+        $userIDD = session()->get('user_id');
+
+        if ($otp_verify == 'YES' && $loginStatus == 'YES') {
+
+            // Check the verified user already purchased or not
+            $orderData = $this->db->query("SELECT COUNT( `order_id` ) AS total_order FROM `tbl_orders` 
+            WHERE `user_id`  = ? AND `payment_status` = 'COMPLETED' AND `flag` = 1", [$userIDD])->getRow();
+            $user_order_total = $orderData->total_order;
+
+            if ($user_order_total <= 0) {
+                $firstOrderDiscount = 0.10 * $finalTotal;
+                $finalTotal -= $firstOrderDiscount;
+                $res['total_order_count'] = $user_order_total;
+            } else {
+                $res['total_order_count'] = -1;
+            }
+
+        } else {
+            $res['total_order_count'] = -1;
+        }
+
 
         // Send to view
-        $res['total_amt'] = $totalAmt;
+        $res['total_amt'] = round($totalAmt);
         $res['total_gst'] = $totalGstValue;
         $res['cgst'] = $halfGst;
         $res['sgst'] = $halfGst;
-        $res['subtotal'] = $subTotal;
+        $res['subtotal'] = round($subTotal);
         $res['delivery_charge'] = $deliveryCharge;
-        $res['final_total'] = $finalTotal;
+        $res['offer_delivery_charge'] = $finalDeliveryCharge;
+        $res['final_total'] = round($finalTotal);
+        $res['main_total'] = round($mainTotal);
         $res['gst_subid_list'] = $gst_subid_list;
         $res['type'] = $sourceType;
 
+        // $response = [
+        //     'total_amt' => $totalAmt,
+        //     'total_gst' => $totalGstValue,
+        //     'cgst' => $halfGst,
+        //     'sgst' => $halfGst,
+        //     'subtotal' => $subTotal,
+        //     'delivery_charge' => $deliveryCharge,
+        //     'delivery_charge_offer' => $finalDeliveryCharge,
+        //     'final_total' => $finalTotal,
+        //     'main_total' => $mainTotal,
+        //     'gst_subid_list' => $gst_subid_list,
+        //     'type' => $sourceType,
+        // ];
+
+
+
+
         $userID = session()->get("user_id");
+
 
         // Addres Details
         $userVerify = session()->get("otp_verify");

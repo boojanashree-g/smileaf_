@@ -152,9 +152,9 @@
                 <td style="width:75% ;vertical-align: top;">
                     <b>Shipping Address:</b><br>
                     <?= $user_details['address'] ?><br>
-                    <?= $user_details['landmark'] ?><br>
-                    <?= $user_details['city'] ?><br>
-                    <?= $user_details['dist_name'] ?><br>
+                    <?= $user_details['landmark'] ?>,
+                    <?= $user_details['city'] ?>,
+                    <?= $user_details['dist_name'] ?>,
                     <?= $user_details['state_title'] ?> - <?= $user_details['pincode'] ?><br>
                 </td>
                 <td style="width:25% ;vertical-align: top;text-align:left;">
@@ -226,10 +226,11 @@
 
                         <tr class="item amt-details">
 
-                            <td colspan="4" rowspan="5" style="text-align:justify;margin-top:0">
+                            <td colspan="4" style="text-align:justify;margin-top:0">
                                 <strong style="font-size:15px">Notes:</strong><br>
-                                This is a system-generated invoice and does not require a signature.
-                                Smileaf products are eco-friendly and made from natural or reusable materials.
+                                This system-generated invoice requires no signature; Smileaf products are eco-friendly
+                                and made from natural.
+
 
                             </td>
                             <td style="text-align: right" colspan="2">
@@ -240,6 +241,7 @@
                             </td>
                         </tr>
                         <tr class="item amt-details">
+                            <td colspan="4"></td>
                             <td style="text-align: right" colspan="2">
                                 <b>CGST(Includes) :</b>
                             </td>
@@ -248,6 +250,7 @@
                             </td>
                         </tr>
                         <tr class="item amt-details">
+                            <td colspan="4"></td>
                             <td style="text-align: right" colspan="2">
                                 <b>SGST(Includes) :</b>
                             </td>
@@ -256,15 +259,25 @@
                             </td>
                         </tr>
                         <tr class="item amt-details">
+                            <td colspan="4"></td>
+                            <td style="text-align: right" colspan="2">
+                                <b>Discount :</b>
+                            </td>
+                            <td colspan="1" style="text-align: left">
+                                <?= ((int) $discount_amt != 0) ? '-' . $discount_amt : '-' ?>
+                            </td>
+                        </tr>
+                        <tr class="item amt-details">
+                            <td colspan="4"></td>
                             <td style="text-align: right" colspan="2">
                                 <b>Shipping :</b>
                             </td>
                             <td colspan="1" style="text-align: left">
-                                <?= $courier_charge ?>
+                                <?= ((int) $courier_charge != 0) ? $courier_charge : 'Free' ?>
                             </td>
                         </tr>
-
                         <tr class="item amt-details">
+                            <td colspan="4"></td>
                             <td style="text-align: right" colspan="2">
                                 <b>Total Price :</b>
                             </td>

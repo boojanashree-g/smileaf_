@@ -41,9 +41,9 @@ class SigninController extends BaseController
 
         if ($user && $user->is_verfied == 1) {
             $oldUserID = $user->user_id;
-            $response = $this->signinAPI($apiKey, $number, $otp, $templateName);
-
-            if ($response['Status'] == "Success") {
+            // $response = $this->signinAPI($apiKey, $number, $otp, $templateName);
+            // if ($response['Status'] == "Success") {
+            if (true) {
                 $updateQry = "UPDATE tbl_users SET otp = ?, otp_expiry = ? WHERE user_id = ?";
                 $updateData = $this->db->query($updateQry, [$otp, $otp_expiry, $oldUserID]);
 
@@ -70,9 +70,9 @@ class SigninController extends BaseController
 
         if ($user && $user->is_verfied == 0) {
             $oldUserID = $user->user_id;
-            $response = $this->signinAPI($apiKey, $number, $otp, $templateName);
-
-            if ($response['Status'] == "Success") {
+            // $response = $this->signinAPI($apiKey, $number, $otp, $templateName);
+            // if ($response['Status'] == "Success") {
+            if (true) {
                 $updateQry = "UPDATE tbl_users SET otp = ?, otp_expiry = ? WHERE user_id = ?";
                 $updateData = $this->db->query($updateQry, [$otp, $otp_expiry, $oldUserID]);
 
@@ -99,9 +99,10 @@ class SigninController extends BaseController
 
         // New user (no record found)
         if (!$user) {
-            $response = $this->signinAPI($apiKey, $number, $otp, $templateName);
+            // $response = $this->signinAPI($apiKey, $number, $otp, $templateName);
 
-            if ($response['Status'] == "Success") {
+            // if ($response['Status'] == "Success") {
+            if (true) {
                 $userData = [
                     'number' => $number,
                     'otp' => $otp,
@@ -141,7 +142,6 @@ class SigninController extends BaseController
     {
         $verifyOTP = $this->request->getPost('otp');
         $userID = $this->session->get('user_id');
-
 
         // Fetch user data including OTP and expiry
         $userData = $this->db->query("SELECT otp, user_id, otp_expiry FROM tbl_users WHERE flag = 1 AND user_id = ?", [$userID])->getRow();
@@ -183,6 +183,8 @@ class SigninController extends BaseController
             }
 
 
+
+
             return $this->signinSessionSMS([
                 'code' => 200,
                 'user_id' => $userID,
@@ -218,9 +220,7 @@ class SigninController extends BaseController
 
     public function signinSessionSMS($response)
     {
-
         if ($response['code'] == 200) {
-
 
             $data = $this->request->getPost();
 
@@ -228,6 +228,7 @@ class SigninController extends BaseController
             $oldUserID = $this->session->get('old_userid');
 
             $getUserNumber = $this->db->query("SELECT `number` FROM `tbl_users` WHERE `flag` = 1 AND `user_id` =  ?", [$newUserID])->getRow();
+
             // Cart Updates
             $query = "SELECT * FROM tbl_user_cart WHERE user_id = ? AND flag = 1";
             $resultData = $this->db->query($query, [$oldUserID])->getResultArray();
@@ -271,13 +272,13 @@ class SigninController extends BaseController
 
                 }
             }
-
             // Cart Updates End
-
 
             $jwtSecret = $_ENV['JWT_SECRET'];
 
             $newToken = $this->generateJWT($newUserID, $jwtSecret);
+
+          
 
             $sess = [
                 'user_id' => $newUserID,
@@ -287,8 +288,8 @@ class SigninController extends BaseController
                 'jwt' => $newToken,
                 'c_url' => $response['c_url'],
                 'number' => $getUserNumber->number,
+                
             ];
-
 
             $this->session->set($sess);
 

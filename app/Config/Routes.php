@@ -126,7 +126,6 @@ $routes->group('admin/sub-category', ['namespace' => 'App\Controllers\admin', 'f
 });
 
 
-
 // Filter Types
 $routes->group('admin/filter-types', ['namespace' => 'App\Controllers\admin', 'filter' => 'adminAuth'], function ($routes) {
     $routes->get('/', 'FilterTypeController::filterType');
