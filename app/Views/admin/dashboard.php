@@ -174,32 +174,68 @@
                                     </a>
                                 </div>
                             </div>
+
+
                         </div>
-                        <!-- /Cards Draggable ends -->
 
+
+                        <h4>Product Stock Details</h4>
+
+                        <div class="row g-6 mt-5    ">
+                            <div class="row mb-6" id="sortable-cards">
+
+                                <div class="col-lg-3 col-md-6 col-sm-12">
+                                    <a href="<?= base_url('admin/stock?status=outofstock') ?>"
+                                        class="text-decoration-none">
+                                        <div class="card drag-item cursor-move mb-lg-0 mb-6">
+                                            <div class="card-body text-center">
+                                                <h2>
+                                                    <i class="ti ti-ban text-danger display-6"></i>
+                                                </h2>
+                                                <h5 class="text-dark">Out of Stock</h5>
+                                                <h5 class="text-dark"><?= $out_of_stock ?></h5>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-lg-3 col-md-6 col-sm-12">
+                                    <a href="<?= base_url('admin/stock?status=lowqty') ?>" class="text-decoration-none">
+                                        <div class="card drag-item cursor-move mb-lg-0 mb-6">
+                                            <div class="card-body text-center">
+                                                <h2>
+                                                    <i class="ti ti-alert-circle text-warning display-6"></i>
+                                                </h2>
+                                                <h5 class="text-dark">Quantity (< 10)</h5>
+                                                <h5 class="text-dark"><?= $lowqty ?></h5>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- / Content -->
+
+
+                        <div class="content-backdrop fade"></div>
                     </div>
+                    <!-- Content wrapper -->
                 </div>
-                <!-- / Content -->
 
-
-                <div class="content-backdrop fade"></div>
             </div>
-            <!-- Content wrapper -->
+
+
+
+
+            <div class="layout-overlay layout-menu-toggle"></div>
+            <div class="drag-target"></div>
+
         </div>
 
-    </div>
 
 
-
-
-    <div class="layout-overlay layout-menu-toggle"></div>
-    <div class="drag-target"></div>
-
-    </div>
-
-
-
-    <?php require("components/footer.php"); ?>
+        <?php require("components/footer.php"); ?>
 
 
 

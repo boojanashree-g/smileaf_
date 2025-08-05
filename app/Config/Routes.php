@@ -198,3 +198,10 @@ $routes->group('admin/order-details', ['namespace' => 'App\Controllers\admin', '
     $routes->get('pdf-viewpage', 'OrderController::pdfView');
 
 });
+
+$routes->group('admin/stock', ['namespace' => 'App\Controllers\admin', 'filter' => 'adminAuth'], function ($routes) {
+    $routes->get('/', 'StockController::stockDetails');
+    $routes->post('get-data', 'StockController::getData');
+    $routes->post('update-data', 'StockController::updateData');
+
+});

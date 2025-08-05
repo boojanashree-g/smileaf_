@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed layout-compact " dir="ltr"
+    data-theme="theme-default" data-assets-path="<?php echo base_url(); ?>assets/"
+    data-template="vertical-menu-template" data-style="light">
+
+<?php require "components/head.php"; ?>
+
+<body>
+
+    <!-- Loader -->
+    <div id="ajax-loader" class="d-none">
+        <div class="loader"></div>
+    </div>
+
+    <div class="layout-wrapper layout-content-navbar  ">
+        <div class="layout-container">
+
+            <!-- Menu -->
+            <?php require "components/sidenavbar.php"; ?>
+            <!-- / Menu -->
+
+            <div class="layout-page">
+
+                <?php require "components/topnavbar.php"; ?>
+
+
+                <div class="content-wrapper">
+                    <div class="container-xxl flex-grow-1 container-p-y">
+
+                        <!-- Page Header -->
+                        <div
+                            class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
+                            <h4 class="page-title fw-semibold fs-18 mb-0">Manage Stock Details</h4>
+                            <div class="ms-md-1 ms-0">
+
+                            </div>
+                        </div>
+                        <!-- Page Header Close -->
+
+
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="card custom-card">
+
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table id="datatable" class="table table-bordered text-nowrap w-100">
+                                                <thead>
+                                                    <tr>
+                                                        <th>S.No</th>
+                                                        <th>Menu</th>
+                                                        <th>SubMenu</th>
+                                                        <th>Product Name</th>
+                                                        <th>Image</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- data -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add Modal -->
+                        <div class="modal fade" id="product-modal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-xl modal-simple">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                        <div class="text-center mb-6">
+                                            <h4 class="subcat-title mb-2"></h4>
+                                        </div>
+                                        <form id="product-form" class="row g-6" onsubmit="return false">
+
+                                            <div class="col-lg-12 mt-3">
+                                                <div class="form-check form-switch mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="hasVariant"
+                                                        name="has_variant" value="0">
+                                                    <label class="form-check-label">Has Variant?</label>
+                                                </div>
+                                            </div>
+
+                                            <!-- default section -->
+                                            <div id="defaultSection" class="row g-3 mt-2">
+                                                <h5>Product Variants</h5>
+                                                <div class="col-3 col-md-3">
+                                                    <input type="number" name="pack_qty" class="form-control pack_qty"
+                                                        placeholder="Pack Quantity*" />
+                                                    <span class="error text-danger pack_qty mt-5"></span>
+                                                </div>
+
+                                                <div class="col-3 col-md-3">
+                                                    <input type="number" name="quantity" class="form-control quantity"
+                                                        placeholder="Quantity*" />
+                                                    <span class="error text-danger quantity mt-5"></span>
+                                                </div>
+
+
+                                                <div class="col-3 col-md-3">
+                                                    <input type="number" name="mrp" class="form-control mrp"
+                                                        placeholder="MRP*" />
+                                                    <span class="error text-danger mrp mt-5"></span>
+                                                </div>
+
+                                                <div class="col-3 col-md-3">
+                                                    <select class="form-select offer_type" for="offer_type"
+                                                        name="offer_type">
+                                                        <option value="">Select Offer Type</option>
+                                                        <option value="0">None</option>
+                                                        <option value="1">Flat Discount</option>
+                                                        <option value="2">Percentage</option>
+                                                    </select>
+                                                    <span class="error text-danger offer_type mt-5"></span>
+
+                                                </div>
+                                                <div class="col-3 col-md-3">
+                                                    <input type="text" name="offer_details"
+                                                        class="form-control offer_details"
+                                                        placeholder="Offer Details*" />
+                                                    <span class="error text-danger offer_details mt-5"></span>
+                                                </div>
+
+                                                <div class="col-3 col-md-3">
+                                                    <input type="text" name="offer_price"
+                                                        class="form-control offer_price" placeholder="Offer Price*" />
+                                                    <span class="error text-danger offer_price mt-5"></span>
+                                                </div>
+
+                                                <div class="col-3 col-md-3">
+                                                    <select class="form-select stock_status" for="stock_status"
+                                                        name="stock_status">
+                                                        <option value="">Select Stock Status</option>
+                                                        <option value="1">Available</option>
+                                                        <option value="0">Out of Stock</option>
+
+                                                    </select>
+                                                    <span class="error text-danger stock_status mt-5"></span>
+                                                </div>
+
+                                                <div class="col-3 col-md-3">
+                                                    <input type="text" name="weight" class="form-control weight"
+                                                        placeholder="Weight(g)*" />
+                                                    <span class="error text-danger weight mt-5"></span>
+                                                </div>
+                                            </div>
+
+
+                                            <!-- Variant Section -->
+                                            <div id="variant-container" style="display:none">
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <h5>Product Variants</h5>
+                                                    </div>
+                                                    <div class="col-md-4 text-end mb-3"> <button type="button"
+                                                            class="btn btn-label-success waves-effect add-variant"><i
+                                                                class="fa-solid fa-plus"></i>&nbsp; &nbsp; Add
+                                                            Variant</button></div>
+                                                </div>
+                                                <div id="variant-list">
+                                                    <!-- Dynamic Data  -->
+                                                </div>
+
+                                            </div>
+
+
+                                            <div class="col-12 text-end">
+                                                <a class="btn btn-primary text-white" id="btn-submit">Submit</a>
+
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="status" id="status" value="<?= $status ?>" />
+
+                        <!-- /Modal -->
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <?php require "components/bottomfooter.php"; ?>
+                <!-- / Footer -->
+
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+    <!-- CK editor -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.3.1/classic/ckeditor.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+
+            ClassicEditor
+                .create(document.querySelector('#description')).then(e => {
+                    description = e;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        });
+
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+
+            ClassicEditor
+                .create(document.querySelector('#product_usage')).then(e => {
+                    produsage = e;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        });
+    </script>
+
+    <?php require "components/footer.php"; ?>
+    <script src="<?php echo base_url(); ?>public/admin/custom/js/stock-detail.js"></script>
+    <!-- <! File upload js---->
+    <script src="<?php echo base_url() ?>public/admin/js/forms-file-upload.js"></script>
+    <script src="<?php echo base_url(); ?>public/admin/custom/js/product.js"></script>
+
+
+
+    <!-- Variants js -->
+    <script>
+        let variantIndex = 0;
+        $(".add-variant").click(function () {
+            const variantHtml = `
+            <div class="variant-block row g-2" data-index="${variantIndex}">
+                <div class="row g-3 mt-2">
+                    <div class="col-md-3"><input type="number" name="variants[${variantIndex}][pack_qty]" class="form-control pack_qty" placeholder="Pack Quantity*"></div>
+                    <div class="col-md-3"><input type="number" name="variants[${variantIndex}][quantity]" class="form-control quantity" placeholder="Quantity*"></div>
+                    <div class="col-md-3"><input type="text" name="variants[${variantIndex}][mrp]" class="form-control mrp" placeholder="MRP*"></div>
+                    <div class="col-md-3">
+                        <select name="variants[${variantIndex}][offer_type]" class="form-select offer_type">
+                            <option value="">Select Offer Type</option>
+                            <option value="0">None</option>
+                            <option value="1">Flat</option>
+                            <option value="2">Percentage</option>   
+                        </select>
+                    </div>
+                    <div class="col-md-3"><input type="text" name="variants[${variantIndex}][offer_details]" class="form-control offer_details" placeholder="Offer Details*"></div>
+                    <div class="col-md-3"><input type="text" name="variants[${variantIndex}][offer_price]" class="form-control offer_price" placeholder="Offer Price*"></div>
+                    <div class="col-md-3">
+                        <select name="variants[${variantIndex}][stock_status]" class="form-select stock_status">
+                            <option value="1">Available</option>
+                            <option value="0">Out Of Stock</option> 
+                        </select>
+                    </div>
+                    <div class="col-md-3"><input type="text" class="form-control weight" name="variants[${variantIndex}][weight]" placeholder="Weight*"></div>
+                </div>
+
+                <div class="text-end mt-2">
+                    <button type="button" class="btn btn-label-danger waves-effect remove-variant" data-rid="${variantIndex}">
+                        <i class="fa-solid fa-trash-arrow-up"></i> &nbsp;&nbsp; Delete
+                    </button>
+                </div>
+                <hr>
+            </div>`;
+
+            $("#variant-list").append(variantHtml);
+            variantIndex++;
+        });
+
+        // Delete variant with confirmation
+        $("#variant-list").on("click", ".remove-variant", function () {
+            const button = $(this);
+            const deleteIndex = button.data("rid");
+            const containerIndex = button.closest(".variant-block").data("index");
+
+            console.log("Deleting index:", deleteIndex);
+            console.log("Container Index:", containerIndex);
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Do you really want to delete this variant?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    button.closest(".variant-block").remove();
+
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "The variant has been removed.",
+                        icon: "success",
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+
+
+        $(".add-variant").click();
+
+        function removeAllVariantBlocks() {
+            $("#variant-list").empty();
+            variantIndex = 0;
+            $(".add-variant").click();
+        }
+
+        function removeVariantBlocks() {
+            $("#variant-list").empty();
+            variantIndex = 0;
+        }
+
+    </script>
+
+</body>
+
+</html>

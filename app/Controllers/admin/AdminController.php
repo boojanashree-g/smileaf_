@@ -86,6 +86,10 @@ class AdminController extends BaseController
         $res['failed_count'] = $this->failedOrderCount();
         $res['returned_count'] = $this->returnedOrderCount();
 
+        $res['out_of_stock'] = $this->outofStockCount();
+        $res['lowqty'] = $this->lowStockCount();
+
+
         return view("admin/dashboard", $res);
     }
 
@@ -95,6 +99,41 @@ class AdminController extends BaseController
         $session->remove(['admin_login', 'admin_type', 'admin_name']);
         return redirect()->to('admin/');
     }
+    private function outofStockCount()
+    {
+        $productIDs = $this->db->query("SELECT `prod_id` FROM `tbl_products` WHERE `flag` = 1")->getResultArray();
+        $totalCount = 0;
+
+        foreach ($productIDs as $prod) {
+            $prodID = $prod['prod_id'];
+
+            $variantQry = "SELECT COUNT(*) as count FROM `tbl_variants` WHERE `flag` = 1 AND `prod_id` = ? AND `quantity` <= 0";
+            $result = $this->db->query($variantQry, [$prodID])->getRow();
+
+            $totalCount += (int) $result->count;
+        }
+
+        return $totalCount;
+    }
+
+
+    private function lowStockCount()
+    {
+        $productIDs = $this->db->query("SELECT `prod_id` FROM `tbl_products` WHERE `flag` = 1")->getResultArray();
+        $totalCount = 0;
+
+        foreach ($productIDs as $prod) {
+            $prodID = $prod['prod_id'];
+
+            $variantQry = "SELECT COUNT(*) as count FROM `tbl_variants` WHERE `flag` = 1 AND `prod_id` = ? AND `quantity` <= 0 AND quantity  <= 10 AND quantity <> 0 ";
+            $result = $this->db->query($variantQry, [$prodID])->getRow();
+
+            $totalCount += (int) $result->count;
+        }
+
+        return $totalCount;
+    }
+
 
     private function newOrderCount()
     {
