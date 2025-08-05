@@ -270,7 +270,7 @@ class ProductController extends BaseController
 
         }
 
-   
+
 
         echo json_encode($productDetails);
     }
@@ -285,8 +285,7 @@ class ProductController extends BaseController
 
         try {
             $getData = $this->request->getPost();
-
-
+             
             $productName = $request->getPost('prod_name');
             $productID = $request->getPost('prod_id');
 
@@ -297,9 +296,7 @@ class ProductController extends BaseController
 
             $MainImg = $request->getFile('main_image');
 
-            // echo "<pre>";
-            // print_r( $MainImg);
-            // die;
+
 
             $randomName = '';
 
@@ -374,13 +371,15 @@ class ProductController extends BaseController
                 }
 
                 $affectedRows = $this->db->affectedRows();
-
-                if ($lastInsertedID) {
+                $totalQuantity = 0;
+                if ($productID) {
 
                     if ((int) $hasVariant == 0) {
+                       
+
                         $quantity = $request->getPost('quantity');
                         $variantData = [
-                            'prod_id' => $lastInsertedID,
+                            'prod_id' => $productID,
                             'pack_qty' => $request->getPost('pack_qty') ?? 0,
                             'mrp' => $request->getPost('mrp'),
                             'offer_type' => $request->getPost('offer_type'),
@@ -391,20 +390,25 @@ class ProductController extends BaseController
                             'weight' => $request->getPost('weight'),
                         ];
 
+
+
                         $VariantModel->insert($variantData);
 
 
                         $affected = $this->db->affectedRows();
                         if ($affected > 0) {
                             $updateQry = "UPDATE tbl_products SET main_quantity = ? WHERE prod_id = ?";
-                            $updateData = $this->db->query($updateQry, [$quantity, $lastInsertedID]);
+                            $updateData = $this->db->query($updateQry, [$quantity, $productID]);
+                            $affectedRows = $this->db->affectedRows();
                         }
                     } else {
+
                         for ($i = 0; $i < count($variants); $i++) {
 
                             $totalQuantity += (int) $variants[$i]['quantity'];
+                            
                             $variantData = [
-                                'prod_id' => $lastInsertedID,
+                                'prod_id' => $productID,
                                 'pack_qty' => $variants[$i]['pack_qty'],
                                 'mrp' => $variants[$i]['mrp'],
                                 'offer_type' => $variants[$i]['offer_type'],
@@ -414,13 +418,14 @@ class ProductController extends BaseController
                                 'quantity' => $variants[$i]['quantity'],
                                 'weight' => $variants[$i]['weight'],
                             ];
+                          
                             $VariantModel->insert($variantData);
                             $affectedRows = $this->db->affectedRows();
 
                         }
 
                         $updateQry = "UPDATE tbl_products SET main_quantity = ? WHERE prod_id = ?";
-                        $updateData = $this->db->query($updateQry, [$totalQuantity, $lastInsertedID]);
+                        $updateData = $this->db->query($updateQry, [$totalQuantity, $productID]);
                     }
 
 

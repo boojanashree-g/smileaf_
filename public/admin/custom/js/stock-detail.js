@@ -5,45 +5,6 @@ $(document).ready(function () {
     dispProductDetails(JSON);
   });
 
-  // *************************** [  Filter  Submenu] **************************************************************
-
-  $("#menu_id").change(function () {
-    let menu_id = $(this).val();
-    if (mode == "new") {
-      $.ajax({
-        type: "POST",
-        url: base_Url + "admin/product-details/submenu",
-        data: { menu_id: menu_id },
-        dataType: "json",
-        success: function (res) {
-          var subMenu = "";
-
-          for (let i = 0; i < res.length; i++) {
-            subMenu += `
-            <option value="${res[i]["sub_id"]}">${res[i]["submenu"]}</option>`;
-          }
-          $("#sub_id").html(subMenu);
-        },
-      });
-    } else if (mode == "edit") {
-      $.ajax({
-        type: "POST",
-        url: base_Url + "admin/product-details/submenu",
-        data: { menu_id: menu_id },
-        dataType: "json",
-        success: function (res) {
-          var subMenu = "";
-          subMenu += `<option value="${subMenuID}">${subMenuu}</option>`;
-          for (let i = 0; i < res.length; i++) {
-            subMenu += `<option value="${res[i]["sub_id"]}">${res[i]["submenu"]}</option>`;
-          }
-
-          $("#sub_id").html(subMenu);
-        },
-      });
-    }
-  });
-
   // *************************** [ Functions] ********************************************************************
 
   $("#add-detail").click(function () {
@@ -117,83 +78,20 @@ $(document).ready(function () {
     }
   });
 
-  // *************************** [Validation] ********************************************************************
-
   $("#btn-submit").click(function () {
-    $(".error").hide();
-
-    var mainImageInput = $("#main_image")[0];
-    var file = mainImageInput.files[0];
-    var maxSize = 500 * 1024; // 500 KB
-
-    if ($("#menu_id").val() === "") {
-      $(".menu_id").html("Please Select Menu*").show();
-      return;
-    }
-
-    if ($("#prod_name").val() === "" && mode == "new") {
-      $(".prod_name").html("Please Enter Product Name*").show();
-      return;
-    }
-
-    if (mainImageInput.files.length === 0 && mode == "new") {
-      $(".main_image").html("Please Select Image*").show();
-      return;
-    }
-
-    if (file && file.size > maxSize && mode == "new") {
-      $(".main_image").html("Image size must be less than 500KB*").show();
-      return;
-    }
-
-    if (description.getData() === "" && mode == "new") {
-      $(".description").html("Please Enter Description*").show();
-      return;
-    }
-
-    if (produsage.getData() === "" && mode == "new") {
-      $(".product_usage").html("Please Enter ProductUsage*").show();
-      return;
-    }
-
-    console.log("Calling insertData()");
     insertData();
   });
 
   //*************************** [Insert] **************************************************************************
 
   function insertData() {
-    mode == "new";
     var form = $("#product-form")[0];
     data = new FormData(form);
-    let proddesc = description.getData();
-    let usage = produsage.getData();
     let hasVariant = $("#hasVariant").val();
-    let bestsellers = $("#best_seller").val();
 
-    selectedFiles.forEach((file, i) => {
-      data.append("images[]", file);
-    });
-
-    var url;
-    if (mode == "new") {
-      url = base_Url + "admin/product-details/insert-data";
-      data.append("description", proddesc);
-      data.append("product_usage", usage);
-      data.append("has_variant", hasVariant);
-      data.append("best_seller", bestsellers);
-    } else if (mode == "edit") {
-      url = base_Url + "admin/product-details/update-data";
-      data.append("description", proddesc);
-      data.append("product_usage", usage);
-      data.append("has_variant", hasVariant);
-      data.append("best_seller", bestsellers);
-
-      $("input[name='existing_images[]']").each(function () {
-        data.append("existing_images[]", $(this).val());
-      });
-      data.append("prod_id", prod_id);
-    }
+    url = base_Url + "admin/stock/update-data";
+    data.append("has_variant", hasVariant);
+    data.append("prod_id", prod_id);
 
     $.ajax({
       type: "POST",
@@ -241,9 +139,12 @@ $(document).ready(function () {
   // *************************** [get Data] *************************************************************************
   function getProductDetails() {
     $("#ajax-loader").removeClass("d-none");
+    let Status = $("#status").val();
+
     $.ajax({
       type: "POST",
-      url: base_Url + "admin/product-details/get-data",
+      url: base_Url + "admin/stock/get-data",
+      data: { status: Status },
       dataType: "json",
       success: function (data) {
         $("#ajax-loader").addClass("d-none");
@@ -317,84 +218,27 @@ $(document).ready(function () {
     });
   }
 
-  // *************************** [Display the image on Modal ] ****************************************************
-
-  $("#main_image").on("change", function () {
-    dispImg(this, "main_image_url");
-  });
-  function dispImg(input, id) {
-    if (input.files && input.files[0]) {
-      var reader = new FileReader();
-      reader.onload = function (e) {
-        $("#" + id).attr("src", e.target.result);
-        $("#" + id).css("display", "block");
-      };
-      reader.readAsDataURL(input.files[0]);
-    }
-  }
-
   // *************************** [Edit Data] *************************************************************************
-
-  var MenuID;
-  var Menu;
-  var subMenuID;
-  var subMenuu;
 
   $(document).on("click", ".btnEdit", function () {
     $("#product-modal").modal("show");
-    $("#main_image_url").css("display", "none");
-    $("#images").val("");
-    $("#main_image").val("");
 
     $("#preview").empty();
-    if (description) {
-      description.setData("");
-    }
 
-    if (produsage) {
-      produsage.setData("");
-    }
-
-    selectedFiles = [];
-    existingImages = [];
     mode = "edit";
 
     if (mode == "edit") {
       $("#btn-submit").html("Update");
-      $(".subcat-title").text("Edit Product Details");
+      $(".subcat-title").text("Edit Product Quantity");
     }
 
     var index = $(this).attr("id");
     prod_id = res_DATA[index].prod_id;
-    MenuID = res_DATA[index].menu_id;
-    subMenuID = res_DATA[index].submenu_id;
-    subMenuu = res_DATA[index].submenu;
-    $("#menu_id").val(MenuID).trigger("change");
-
-    $("#type_id").val(res_DATA[index].type_id);
-    $("#shape_id").val(res_DATA[index].shape_id);
-    $("#size_id").val(res_DATA[index].size_id);
-
-    $("#prod_name").val(res_DATA[index].prod_name);
-    $("#prod_name").val(res_DATA[index].prod_name);
-    description.setData(res_DATA[index].description);
-    produsage.setData(res_DATA[index].product_usage);
-
-    if (res_DATA[index].main_image) {
-      $("#main_image_url").attr("src", base_Url + res_DATA[index].main_image);
-      $("#main_image_url").css("display", "block");
-    } else {
-      $("#main_image_url").css("display", "none");
-    }
-
     let has_variant = res_DATA[index].has_variant;
     let isVariantChecked = Number(has_variant) === 1;
     $("#hasVariant").prop("checked", isVariantChecked).trigger("change");
 
-    let bestsellers = res_DATA[index].best_seller;
-    $("#best_seller")
-      .prop("checked", bestsellers == 1 || bestsellers == "1")
-      .trigger("change");
+    var variantIDs = [];
 
     if (isVariantChecked) {
       let variants = res_DATA[index].variants;
@@ -423,35 +267,6 @@ $(document).ready(function () {
           .removeClass("readonly-style");
       }
     }
-
-    // Multi Images
-    let images = res_DATA[index].product_images;
-    existingImages = images;
-
-    images.forEach((imgPath) => {
-      const fileName = imgPath.split("/").pop();
-      const $container = $("<div>").addClass("preview-box");
-      const $img = $("<img>")
-        .attr("src", base_Url + imgPath)
-        .css("width", "100px");
-      const $caption = $("<p>").text(fileName);
-      const $removeBtn = $("<button>").addClass("remove-btn").text("Remove");
-
-      // Create hidden input for existing image
-      const $hiddenInput = $("<input>")
-        .attr("type", "hidden")
-        .attr("name", "existing_images[]")
-        .val(imgPath);
-
-      $removeBtn.on("click", function () {
-        $container.remove();
-        existingImages = existingImages.filter((path) => path !== imgPath);
-        $hiddenInput.remove();
-      });
-
-      $container.append($img, $caption, $removeBtn, $hiddenInput);
-      $("#preview").append($container);
-    });
   });
 
   // If variant exist
@@ -461,6 +276,11 @@ $(document).ready(function () {
       const variantHtml = `
             <div class="variant-block row g-2" data-index="${variantIndex}">
                 <div class="row g-3 mt-2">
+
+                <input type="hidden" name="variants[${variantIndex}][variant_id]" class="form-control pack_qty" value="${
+        variant.variant_id
+      }" placeholder="Pack Quantity*">
+
                     <div class="col-md-3"><input type="text" name="variants[${variantIndex}][pack_qty]" class="form-control pack_qty" value="${
         variant.pack_qty
       }" placeholder="Pack Quantity*"></div>
@@ -534,70 +354,6 @@ $(document).ready(function () {
       variantIndex++;
     });
   };
-
-  // *************************** [Multi file upload Start] *************************************************************************
-  let selectedFiles = [];
-  let existingImages = [];
-
-  function formatFileSize(bytes) {
-    const kb = bytes / 1024;
-    return kb < 1024 ? kb.toFixed(2) + " KB" : (kb / 1024).toFixed(2) + " MB";
-  }
-
-  $(document).ready(function () {
-    $(window).on("keydown", function (e) {
-      if (e.key === "Enter" || e.keyCode === 13) {
-        // Prevent Enter ONLY if not focused on textarea or button
-        const tag = e.target.tagName.toLowerCase();
-        if (tag !== "textarea" && tag !== "button") {
-          e.preventDefault();
-          return false;
-        }
-      }
-    });
-    $("#images").on("change", function (e) {
-      const files = Array.from(e.target.files);
-      const $preview = $("#preview");
-
-      files.forEach((file) => {
-        // Check if file already exist
-        const exists = selectedFiles.some(
-          (f) => f.name === file.name && f.size === file.size
-        );
-        if (exists) return;
-
-        selectedFiles.push(file);
-
-        const reader = new FileReader();
-        reader.onload = function (event) {
-          const $container = $("<div>").addClass("preview-box");
-          const $img = $("<img>").attr("src", event.target.result);
-          const size = formatFileSize(file.size);
-
-          const $caption = $("<p>").text(file.name);
-          const $sizeCaption = $("<p>").addClass("img-size").text(`(${size})`);
-
-          const $removeBtn = $("<button>")
-            .addClass("remove-btn")
-            .text("Remove");
-
-          $removeBtn.on("click", function () {
-            $container.remove();
-            // Remove from array by matching name + size
-            selectedFiles = selectedFiles.filter(
-              (f) => !(f.name === file.name && f.size === file.size)
-            );
-          });
-
-          $container.append($img, $caption, $sizeCaption, $removeBtn);
-          $preview.append($container);
-        };
-
-        reader.readAsDataURL(file);
-      });
-      $("#images").val("");
-    });
-  });
 
   // *************************** [Delete Data] *************************************************************************
   $(document).on("click", ".BtnDelete", function () {

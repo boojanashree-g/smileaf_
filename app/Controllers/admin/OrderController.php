@@ -37,7 +37,6 @@ class OrderController extends BaseController
 
     public function getData()
     {
-        $status = $this->request->getPost('status');
 
         $orderqry = "SELECT
                 a.*,
@@ -59,6 +58,7 @@ class OrderController extends BaseController
         }
 
         $orderDetails = $this->db->query($orderqry, $params)->getResultArray();
+
 
 
         echo json_encode($orderDetails);
