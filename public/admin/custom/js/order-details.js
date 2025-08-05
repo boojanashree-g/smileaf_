@@ -383,8 +383,14 @@ $(document).ready(function () {
     let cancel_status = orderDetails.cancel_status;
     let cancel_reason = orderDetails.cancel_reason;
     let cancelOrderDisp = cancel_status == 0 ? "d-none" : "";
-    let dispDiscount = parseInt(orderDetails.discount_amt) == 0 ? '-' : '-' + orderDetails.discount_amt;
-    let ShippingCharge = parseInt(orderDetails.courier_charge) == 0 ? 'Free' : '₹' + orderDetails.courier_charge;
+    let dispDiscount =
+      parseInt(orderDetails.discount_amt) == 0
+        ? "-"
+        : "-" + orderDetails.discount_amt;
+    let ShippingCharge =
+      parseInt(orderDetails.courier_charge) == 0
+        ? "Free"
+        : "₹" + orderDetails.courier_charge;
 
     orderItemsData.forEach(function (items, i) {
       let offerType = items.offer_type;
@@ -820,11 +826,19 @@ $(document).ready(function () {
   });
 
   $("#update-tracking").click(function () {
+    $(".error").html("");
     var form = $("#tracking_details_form")[0];
     var formData = new FormData(form);
     formData.append("orderID", trackingOrderID);
-
-    updateTrackingDetails(formData);
+    if ($("#courier_partner").val() == "") {
+      $(".courier_partner").text("Please Enter courier partner");
+    } else if ($("#tracking_link").val() == "") {
+      $(".tracking_link").text("Please Enter tracking link");
+    } else if ($("#tracking_id").val() == "") {
+      $(".tracking_id").text("Please Enter tracking id");
+    } else {
+      updateTrackingDetails(formData);
+    }
   });
 
   function updateTrackingDetails(formData) {

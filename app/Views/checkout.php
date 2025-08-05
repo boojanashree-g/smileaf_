@@ -309,11 +309,8 @@
                                          <div class="col-lg-6">
                                              <button class="continue-btn" id="address-checkout">CONTINUE</button> 
                                         </div>
-                                      
                                         </div>
                                         
-                                        
-                        
                                     </div>
                                 </div>
                                 <?php endif; ?>
@@ -322,7 +319,13 @@
 
                     </div>
                     <div class="col-lg-5 col-md-12 col-12">
-                        <div class="shoping-cart-total mt-0">
+
+                        <div class="shoping-cart-total mt-0 mb-2">
+                             <div class="advantages">
+                                <div class="advantage-item">
+                                    <span>🚚 Free courier charge on orders above ₹500!</span>
+                                </div>
+                        </div>
                             <h4 class="title-2 mb-2">Cart Totals</h4>
                             <table class="table">
                                 <tbody>
@@ -379,7 +382,6 @@
                                     }
                                     ?>
                                     <td><strong class="order_total_amt"><?= $order_total_amt ?></strong></td>
-
                                     </tr>
                                 </tbody>
                             </table>
@@ -402,6 +404,7 @@
                                     
                                 </div>
                             </div>
+                             
 
 
                             <div class="place-order-wrapper">

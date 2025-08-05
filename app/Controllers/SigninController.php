@@ -278,7 +278,7 @@ class SigninController extends BaseController
 
             $newToken = $this->generateJWT($newUserID, $jwtSecret);
 
-          
+
 
             $sess = [
                 'user_id' => $newUserID,
@@ -288,7 +288,7 @@ class SigninController extends BaseController
                 'jwt' => $newToken,
                 'c_url' => $response['c_url'],
                 'number' => $getUserNumber->number,
-                
+
             ];
 
             $this->session->set($sess);
@@ -345,7 +345,7 @@ class SigninController extends BaseController
 
             $login1 = $_ENV['LOGIN_TEMPLATE2'];
             $login2 = $_ENV['LOGIN_TEMPLATE1'];
-
+            
             $templates = [$login1, $login2];
             // Randomly select one template from the array
             $templateName = $templates[array_rand($templates)];

@@ -340,7 +340,18 @@ class OrderController extends BaseController
             $cancelStatus = 1;
         }
 
-        $order = $this->db->query("SELECT order_status FROM `tbl_orders` WHERE `order_id` =  ?", [$orderID])->getRow();
+        $orderDetail = $this->db->query('SELECT `user_id`   FROM `tbl_orders` WHERE `flag` = 1 AND `order_id` = ?', [$orderID])->getRow();
+        $userID = $orderDetail->user_id;
+
+
+        $users = $this->db->query('SELECT `number` ,`username` FROM `tbl_users` WHERE `flag` = 1 AND `user_id` = ?', [$userID])->getRow();
+        $number = $users->number;
+        $username = $users->username;
+
+        $order = $this->db->query("SELECT order_status ,order_no ,`tracking_link` ,`tracking_id`  FROM `tbl_orders` WHERE `order_id` =  ?", [$orderID])->getRow();
+        $orderNo = $order->order_no;
+        $trackingLink = $order->tracking_link;
+        $trackingId = $order->tracking_id;
 
         if (!$order) {
             return $this->response->setJSON(['code' => 400, 'status' => false, 'message' => 'Order not found']);
@@ -372,8 +383,6 @@ class OrderController extends BaseController
                 'message' => "Invalid status change: $currentStatus → $newStatus"
             ]);
         }
-
-
 
         // Initialize fields
         $shipped_date = null;
@@ -413,6 +422,40 @@ class OrderController extends BaseController
         }
 
 
+        if ($delivery_status == 'Shipped') {
+            $apiKey = $_ENV['SMS_API_KEY'];
+            $templateName = $_ENV['ORDER_SHIPPED'];
+
+
+            $getTrackingDetails = $this->db->query("SELECT `courier_partner` ,`tracking_link`,`tracking_id` FROM `tbl_orders` WHERE `order_id` = ? AND `user_id` = ?", [$orderID, $userID])->getRow();
+            $courierPartner = $getTrackingDetails->courier_partner;
+            $trackingLink = $getTrackingDetails->tracking_link;
+            $trackingId = $getTrackingDetails->tracking_id;
+
+            if ($courierPartner != "" && $trackingLink != "" && $trackingId != "") {
+                $response = $this->shippedAPI($apiKey, $number, $username, $templateName, $orderNo, $trackingId, $trackingLink);
+
+                echo "<pre>";
+                print_R($response);
+                die;
+            } else {
+
+                return $this->response->setJSON([
+                    'code' => 400,
+                    'status' => false,
+                    'message' => "Please Enter Tracking ID, Tracking Link & Courier Partner"
+                ]);
+            }
+
+
+
+        } else if ($delivery_status == 'Delivered') {
+            $apiKey = $_ENV['SMS_API_KEY'];
+            $templateName = $_ENV['ORDER_DELIVERED'];
+            $response = $this->deliveredAPI($apiKey, $number, $username, $templateName, $orderNo);
+
+        }
+
         $updateOrderQry = "
            UPDATE tbl_orders 
             SET 
@@ -426,11 +469,7 @@ class OrderController extends BaseController
                 `cancel_status` = ?
             WHERE 
                 `flag` = 1 AND `order_id` = ?
-
         ";
-
-
-
 
         $this->db->query($updateOrderQry, [
             $newStatus,
@@ -462,6 +501,90 @@ class OrderController extends BaseController
 
         return $this->response->setJSON($result);
     }
+
+    private function shippedAPI($apiKey, $number, $username, $templateName, $orderNo, $trackingId, $trackingLink)
+    {
+        $from = 'SMLEFO';
+
+
+        $userName = str_replace(' ', '', ucwords(strtolower(trim($username))));
+
+        $VAR1 = $trackingId;
+        $VAR2 = $trackingLink;
+        $VAR3 = $trackingId;
+        $msg = "Dear customer, your order has been shipped. Tracking ID: $VAR1. Track your shipment here: $VAR2$VAR3. - Smileaf";
+
+        $client = \Config\Services::curlrequest();
+        $url = 'https://2factor.in/API/R1/';
+
+        try {
+            $response = $client->request('POST', $url, [
+                'form_params' => [
+                    'module' => 'TRANS_SMS',
+                    'apikey' => $apiKey,
+                    'to' => $number,
+                    'from' => $from,
+                    'msg' => $msg,
+                    'peid' => '1101541910000087087',
+                    'ctid' => '1107175396465873081',
+                ],
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                ],
+            ]);
+            return json_decode($response->getBody(), true);
+
+        } catch (\Exception $e) {
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+    private function deliveredAPI($apiKey, $number, $username, $templateName, $orderNo)
+    {
+        $from = 'SMLEFO';
+
+        $userName = str_replace(' ', '', ucwords(strtolower(trim($username))));
+
+        $msg = "Hi $username, Your order $orderNo has been delivered. We hope you enjoy your purchase!- Smileaf";
+
+        $peid = $_ENV['PE_ID'];
+        $ctid = $_ENV['CT_ID'];
+
+        $client = \Config\Services::curlrequest();
+        $url = 'https://2factor.in/API/R1/';
+
+        try {
+            $response = $client->request('POST', $url, [
+                'form_params' => [
+                    'module' => 'TRANS_SMS',
+                    'apikey' => $apiKey,
+                    'to' => $number,
+                    'from' => $from,
+                    'msg' => $msg,
+                    'peid' => $peid,
+                    'ctid' => '1107175396473342596'
+                ],
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                ],
+            ]);
+
+            $result = json_decode($response->getBody(), true);
+
+
+            return $result;
+
+        } catch (\Exception $e) {
+            // Log or handle the error
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
 
     public function pdfView()
     {

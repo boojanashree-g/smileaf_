@@ -346,15 +346,8 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- /Modal -->
-
-
-
                     </div>
-
-
-
                 </div>
 
                 <!-- Footer -->

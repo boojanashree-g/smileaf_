@@ -145,7 +145,6 @@ class RazorpayController extends BaseController
         session()->set('payment_status', 'cancelled');
         session()->set('payment_redirect', 'cancel');
 
-
         $request = service('request');
         $data = $request->getGet();
 
@@ -297,6 +296,21 @@ class RazorpayController extends BaseController
             $payment_status = "COMPLETED";
             $orderstatus = "New";
 
+            $users = $this->db->query('SELECT `number` ,`username` FROM `tbl_users` WHERE `flag` = 1 AND `user_id` = ?', [$userID])->getRow();
+            $number = $users->number;
+            $username = $users->username;
+
+            $order = $this->db->query("SELECT order_status ,order_no FROM `tbl_orders` WHERE `order_id` =  ?", [$orderID])->getRow();
+            $orderNo = $order->order_no;
+
+
+            if ($orderstatus == 'New') {
+                $apiKey = $_ENV['SMS_API_KEY'];
+                $templateName = $_ENV['ORDER_DELIVERED'];
+                $response = $this->orderPlacedAPI($apiKey, $number, $username, $templateName, $orderNo);
+            }
+
+
 
             $orderQry = "UPDATE tbl_orders SET razerpay_payment_id = ?,razerpay_order_id = ?,razerpay_signature = ?,order_status = ? ,delivery_message = ?,delivery_status = ?,payment_status = ?,payment_method = ? WHERE order_id = ?";
             $updateData = $this->db->query($orderQry, [$razorpay_payment_id, $razorpay_order_id, $signature, $orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $payment_method, $orderID]);
@@ -336,6 +350,49 @@ class RazorpayController extends BaseController
             $orderQry = "UPDATE tbl_orders SET razerpay_payment_id = ?,razerpay_order_id = ?,razerpay_signature = ?,order_status = ? ,
 						 delivery_message = ?,delivery_status = ?,payment_status = ? WHERE order_id = ?";
             $updateData = $this->db->query($orderQry, [$razorpay_payment_id, $razorpay_order_id, $signature, $Orderstatus, $deliveryMsg, $deliveryStatus, $payment_status, $orderid]);
+        }
+    }
+
+    private function orderPlacedAPI($apiKey, $number, $username, $templateName, $orderNo)
+    {
+        $from = 'SMLEFO';
+
+        $userName = str_replace(' ', '', ucwords(strtolower(trim($username))));
+
+        $msg = "Hi $userName, We've received your order $orderNo. We'll notify you once it's packed and ready to ship. Thank you for shopping with us!- Smileaf";
+
+        $peid = $_ENV['PE_ID'];
+
+        $client = \Config\Services::curlrequest();
+        $url = 'https://2factor.in/API/R1/';
+
+        try {
+            $response = $client->request('POST', $url, [
+                'form_params' => [
+                    'module' => 'TRANS_SMS',
+                    'apikey' => $apiKey,
+                    'to' => $number,
+                    'from' => $from,
+                    'msg' => $msg,
+                    'peid' => $peid,
+                    'ctid' => '1107175396397211834'
+                ],
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                ],
+            ]);
+
+            $result = json_decode($response->getBody(), true);
+
+
+            return $result;
+
+        } catch (\Exception $e) {
+
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
         }
     }
 
