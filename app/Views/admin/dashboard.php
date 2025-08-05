@@ -186,24 +186,21 @@
             </div>
             <!-- Content wrapper -->
         </div>
-        <!-- / Layout page -->
+
     </div>
 
 
 
-    <!-- Overlay -->
+
     <div class="layout-overlay layout-menu-toggle"></div>
-
-
-    <!-- Drag Target Area To SlideIn Menu On Small Screens -->
     <div class="drag-target"></div>
 
     </div>
-    <!-- / Layout wrapper -->
+
 
 
     <?php require("components/footer.php"); ?>
-    <!-- <script src="<?php echo base_url(); ?>custom/js/dashboard.js"></script> -->
+
 
 
 </body>

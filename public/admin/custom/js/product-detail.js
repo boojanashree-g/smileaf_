@@ -380,7 +380,6 @@ $(document).ready(function () {
     description.setData(res_DATA[index].description);
     produsage.setData(res_DATA[index].product_usage);
 
-    
     if (res_DATA[index].main_image) {
       $("#main_image_url").attr("src", base_Url + res_DATA[index].main_image);
       $("#main_image_url").css("display", "block");

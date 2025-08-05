@@ -28,9 +28,6 @@
         margin: 10px;
     }
 
-
-
- 
 </style>
 
 <body>
@@ -55,9 +52,9 @@
                                       
                                         <div class="ltn__shop-details-large-img">
                                             <div class="single-large-img">
-                                               <div class="product-badge">
+                                               <div class="product-badge d-none">
                                                     <ul>
-                                                        <li class="sale-badge">-19%</li>
+                                                        <li class="sale-badge disp-offer">-19%</li>
                                                     </ul>
                                                 </div>
                                                 <a class="main-url" href="<?= esc(base_url() . $products[0]['main_image']) ?>"
@@ -140,6 +137,7 @@
 
                                                         $mrp = $variant['mrp'];
                                                         $offerPrice = $variant['offer_price'];
+                                                        $offerDetails = $variant['offer_details'];
 
                                                         $isDisabled = ($quantity == 0) ? 'disabled' : '';
                                                         $labelClass = ($quantity == 0) ? 'blurred-label' : '';
@@ -153,6 +151,7 @@
                                                             name="pack_qty" value="<?= $packQty ?>" data-mrp="<?= $mrp ?>"
                                                             data-offer="<?= $offerPrice ?>" data-quantity="<?= $quantity ?>"
                                                             data-prodid="<?= $products[0]['prod_id'] ?>" <?= $isChecked ?>
+                                                            data-odetails = "<?= $offerDetails?>" 
                                                             <?= $isDisabled ?>>
 
                                                         <label for="<?= $inputId ?>"
@@ -377,14 +376,27 @@
     <!-- Body main wrapper end -->
     <script>
         $(document).ready(function () {
+           
+       
             $('input[name="pack_qty"]').on('change', function () {
                 var $initialInput = $('.cart-plus-minus input[name="quantity"]');
                 $initialInput.val(1).data("maxqty", $initialInput.val());
 
+                var checked  = $('input[name="pack_qty"]:checked');
 
-
-                var offer = parseFloat($(this).data('offer')) ||0;
-                var mrp = parseFloat($(this).data('mrp')) ||0;
+                var offer = parseFloat(checked.data('offer')) ||0;
+                var mrp = parseFloat(checked.data('mrp')) ||0;
+                var offerDetails  = parseFloat(checked.data('odetails'))||0;
+                
+                if(offerDetails != 0)
+                {
+                $(".product-badge").removeClass('d-none').addClass('d-block');
+                $(".disp-offer").html(offerDetails + "%"); 
+                }
+                else {
+                $(".product-badge").removeClass('d-block').addClass('d-none');
+                }
+                
 
                 var qty = parseInt($(this).data('quantity')) || 1;
                 if (qty <= 0) {
@@ -420,6 +432,8 @@
 
 
             });
+
+               $('input[name="pack_qty"]').trigger('change');
 
             // Quantity +/- logic
             $(".cart-plus-minus").prepend('<div class="dec qtybutton">-</div>');
