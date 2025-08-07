@@ -319,14 +319,18 @@
 
                     </div>
                     <div class="col-lg-5 col-md-12 col-12">
-
-                        <div class="shoping-cart-total mt-0 mb-2">
-                             <div class="advantages">
-                                <div class="advantage-item">
-                                    <span>🚚 Free courier charge on orders above ₹500!</span>
-                                </div>
-                        </div>
-                            <h4 class="title-2 mb-2">Cart Totals</h4>
+                        <?php  if($is_alert)
+                            { ?>
+                            <div class="shoping-cart-total mt-2 mb-5">
+                                 <div class="free-courier">
+                                    <div class="advantage-item">
+                                        <span style='color: #0f5681;'>🛒 You're just ₹<?= $remain_amt ?> away from <strong>Free Shipping</strong>! Add more to your cart now!!</span>
+                                    </div>
+                                 
+                            </div>
+                           <?php }?>
+                       
+                            <h4 class="title-2 mb-2 mt-3">Cart Totals</h4>
                             <table class="table">
                                 <tbody>
                                     <?php foreach ($checkout_product as $product) { ?>
@@ -395,7 +399,7 @@
                                     <span>🚚 Free courier charge on orders above ₹500!</span>
                                 </div>
                                 <div class="advantage-item">
-                                    <?php if ($total_order_count == 0) { ?>      
+                                    <?php if ($total_order_count == 0 ||$total_order_count == -2 ) { ?>      
                                     <span>🎉 Hey New Customer! We’re Giving You 10% OFF on Your First Order!</span>
                                     <?php }
                                     else if(($total_order_count == -1)) { ?>

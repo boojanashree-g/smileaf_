@@ -1648,6 +1648,12 @@ a.theme-btn-1.btn:focus {
   font-weight: 600;
   color: #333;
 }
+.free-courier > .advantage-item {
+    background-color: #00bbff1f;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #00bbff1f;
+}
 
 .checkout_page input {
   /* height: 45px !important;

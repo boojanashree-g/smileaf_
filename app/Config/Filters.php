@@ -29,6 +29,8 @@ class Filters extends BaseConfig
         'SessionAuth' => \App\Filters\SessionAuth::class,
         'checkLogin' => \App\Filters\CheckLogin::class,
         'PaymentAuth' => \App\Filters\PaymentAuthFilter::class,
+        'cors' => \App\Filters\CorsFilter::class,
+
     ];
 
     /**
@@ -42,6 +44,7 @@ class Filters extends BaseConfig
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
+            'cors',
         ],
         'after' => [
             'toolbar',

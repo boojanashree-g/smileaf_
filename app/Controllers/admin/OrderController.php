@@ -37,6 +37,7 @@ class OrderController extends BaseController
 
     public function getData()
     {
+        $status = $this->request->getPost('status');
 
         $orderqry = "SELECT
                 a.*,
@@ -236,7 +237,6 @@ class OrderController extends BaseController
 
         krsort($orderSummaries);
 
-
         if ($orderSummaries) {
             $res['summary'] = $orderSummaries;
             $res['code'] = 200;
@@ -435,9 +435,6 @@ class OrderController extends BaseController
             if ($courierPartner != "" && $trackingLink != "" && $trackingId != "") {
                 $response = $this->shippedAPI($apiKey, $number, $username, $templateName, $orderNo, $trackingId, $trackingLink);
 
-                echo "<pre>";
-                print_R($response);
-                die;
             } else {
 
                 return $this->response->setJSON([
@@ -446,9 +443,6 @@ class OrderController extends BaseController
                     'message' => "Please Enter Tracking ID, Tracking Link & Courier Partner"
                 ]);
             }
-
-
-
         } else if ($delivery_status == 'Delivered') {
             $apiKey = $_ENV['SMS_API_KEY'];
             $templateName = $_ENV['ORDER_DELIVERED'];
@@ -506,13 +500,10 @@ class OrderController extends BaseController
     {
         $from = 'SMLEFO';
 
+        $message = "Dear customer, your order has been shipped. Tracking ID: $trackingId. Track your shipment here: $trackingLink. - Smileaf";
 
-        $userName = str_replace(' ', '', ucwords(strtolower(trim($username))));
-
-        $VAR1 = $trackingId;
-        $VAR2 = $trackingLink;
-        $VAR3 = $trackingId;
-        $msg = "Dear customer, your order has been shipped. Tracking ID: $VAR1. Track your shipment here: $VAR2$VAR3. - Smileaf";
+        $peid = $_ENV['PE_ID'];
+        $ctid = $_ENV['ORDERSHIPPED_CT_ID'];
 
         $client = \Config\Services::curlrequest();
         $url = 'https://2factor.in/API/R1/';
@@ -524,9 +515,9 @@ class OrderController extends BaseController
                     'apikey' => $apiKey,
                     'to' => $number,
                     'from' => $from,
-                    'msg' => $msg,
-                    'peid' => '1101541910000087087',
-                    'ctid' => '1107175396465873081',
+                    'msg' => $message,
+                    'peid' => $peid,
+                    'ctid' => $ctid,
                 ],
                 'headers' => [
                     'Content-Type' => 'application/x-www-form-urlencoded',
@@ -550,7 +541,7 @@ class OrderController extends BaseController
         $msg = "Hi $username, Your order $orderNo has been delivered. We hope you enjoy your purchase!- Smileaf";
 
         $peid = $_ENV['PE_ID'];
-        $ctid = $_ENV['CT_ID'];
+        $ctid = $_ENV['ORDERDEL_CT_ID'];
 
         $client = \Config\Services::curlrequest();
         $url = 'https://2factor.in/API/R1/';
@@ -564,7 +555,7 @@ class OrderController extends BaseController
                     'from' => $from,
                     'msg' => $msg,
                     'peid' => $peid,
-                    'ctid' => '1107175396473342596'
+                    'ctid' => $ctid
                 ],
                 'headers' => [
                     'Content-Type' => 'application/x-www-form-urlencoded',

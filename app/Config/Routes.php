@@ -46,7 +46,8 @@ $routes->post('update-cancel-reason', 'MyaccountController::updateCancelReason',
 $routes->post('get-return-products', 'MyaccountController::getReturnProducts', ['filter' => 'AuthFilter']);
 $routes->post('submit-return-products', 'MyaccountController::submitReturnProducts', ['filter' => 'AuthFilter']);
 
-$routes->post('place-order', 'CheckoutController::placeOrder', ['filter' => 'AuthFilter']);
+$routes->post('place-order', 'CheckoutController::placeOrder', ['filters' => ['before' => ['cors', 'AuthFilter']]]
+);
 $routes->get('checkout', 'CheckoutController::checkout');
 $routes->post('get-single-address', 'CheckoutController::getSingleAddress');
 $routes->post('check-product-status', 'CheckoutController::checkProductStatus');

@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  $(".free-courier").addClass("d-none");
   //Cart quantity
 
   var inputField, currentQty, sellingPrice;
@@ -37,6 +38,7 @@ $(document).ready(function () {
   });
 
   function subTotal(qty, cartID, sellingPrice) {
+    $(".free-courier").addClass("d-none");
     let prodPrice = sellingPrice;
 
     let p1 = prodPrice.replace(",", "");
@@ -52,6 +54,17 @@ $(document).ready(function () {
     });
 
     $(displayPrice).text("₹" + formattedPrice);
+
+    let courierFreeAmt = 500;
+    let finalSubTotal = Number(formattedPrice);
+    let remainingAmt;
+    if (finalSubTotal > 450 && finalSubTotal <= 500) {
+      remainingAmt = courierFreeAmt - finalSubTotal;
+      $(".free-courier").removeClass("d-none");
+      $(".courier-alert-msg").html(
+        `🛒 You're just ₹${remainingAmt} away from <strong>Free Shipping</strong>! Add more to your cart now!!`
+      );
+    }
 
     // update the quantity and subtotal into cart tbl
     $.ajax({
@@ -74,7 +87,6 @@ $(document).ready(function () {
       },
     });
   }
-
   function totalAmount() {
     let totalAmt = 0;
     let totalGstValue = 0;
@@ -119,6 +131,17 @@ $(document).ready(function () {
           maximumFractionDigits: 2,
         })
     );
+
+    let courierFreeAmt = 500;
+    let finalSubTotal = Number(subTotal);
+    let remainingAmt;
+    if (finalSubTotal > 450 && finalSubTotal <= 500) {
+      remainingAmt = courierFreeAmt - finalSubTotal;
+      $(".free-courier").removeClass("d-none");
+      $(".courier-alert-msg").html(
+        `🛒 You're just ₹${remainingAmt} away from <strong>Free Shipping</strong>! Add more to your cart now!!`
+      );
+    }
 
     // Split GST
     if (totalGstValue > 0) {
