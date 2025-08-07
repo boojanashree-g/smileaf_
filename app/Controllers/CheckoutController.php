@@ -27,6 +27,7 @@ class CheckoutController extends BaseController
         $OrderItemModal = new OrderItemModal();
 
         $userID = session()->get("user_id");
+
         $type = $this->request->getPost("type");
         $subid = $this->request->getPost("subid");
 
@@ -68,6 +69,8 @@ class CheckoutController extends BaseController
             return json_encode(['code' => 400, 'status' => false, 'message' => 'No products have been selected!!.']);
         }
 
+
+
         //if 0
         $price_count = 0;
         $OrderPrice = 0;
@@ -75,6 +78,7 @@ class CheckoutController extends BaseController
         $totalGSTvalue = 0;
 
         if ($type == "cart") {
+
             foreach ($cartData as $i => $item) {
                 $prodID = $item['prod_id'];
                 $cartQuantity = $item['quantity'];
@@ -96,9 +100,13 @@ class CheckoutController extends BaseController
                 $mainVariantQuery = "SELECT * FROM `tbl_variants` WHERE `prod_id` = ? AND pack_qty = ? AND `flag` = 1";
                 $mainVariantData = $this->db->query($mainVariantQuery, [$prodID, $cartPackqty])->getRow();
 
+
+
+
                 if (!$mainVariantData) {
                     return json_encode(['code' => 400, 'status' => false, 'message' => 'Invalid Product Variants in cart.']);
                 }
+
 
                 $mainQuantity = $mainVariantData->quantity;
                 $mainPrice = $mainVariantData->offer_price;
@@ -148,6 +156,7 @@ class CheckoutController extends BaseController
                 }
             }
         } else if ($type == "buy_now") {
+
             $prodID = $cartData[0]['prod_id'];
             $cartQuantity = $cartData[0]['quantity'];
             $cartPackqty = $cartData[0]['pack_qty'];
@@ -169,6 +178,7 @@ class CheckoutController extends BaseController
 
             $mainVariantQuery = "SELECT * FROM `tbl_variants` WHERE `prod_id` = ? AND pack_qty = ? AND `flag` = 1";
             $mainVariantData = $this->db->query($mainVariantQuery, [$prodID, $cartPackqty])->getRow();
+
 
             if (!$mainVariantData) {
                 return json_encode(['code' => 400, 'status' => false, 'message' => 'Invalid Product Variants in cart.']);
@@ -628,9 +638,8 @@ class CheckoutController extends BaseController
             }
 
         } else {
-            $res['total_order_count'] = -1;
+            $res['total_order_count'] = -2;
         }
-
 
         // Send to view
         $res['total_amt'] = round($totalAmt);
@@ -645,6 +654,19 @@ class CheckoutController extends BaseController
         $res['gst_subid_list'] = $gst_subid_list;
         $res['type'] = $sourceType;
 
+
+        $courierFreeAmt = 500;
+        $finalSubTotal = round($subTotal);
+
+        if ($finalSubTotal >= 450 && $finalSubTotal <= 500) {
+
+            $remainingAmt = $courierFreeAmt - $finalSubTotal;
+            $res['is_alert'] = true;
+            $res['remain_amt'] = $remainingAmt;
+        } else {
+            $res['is_alert'] = false;
+            $res['remain_amt'] = '';
+        }
         // $response = [
         //     'total_amt' => $totalAmt,
         //     'total_gst' => $totalGstValue,

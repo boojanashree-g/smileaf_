@@ -117,22 +117,33 @@ class AdminController extends BaseController
     }
 
 
-    private function lowStockCount()
+    private function lowStockCount($status = 'lowqty')
     {
         $productIDs = $this->db->query("SELECT `prod_id` FROM `tbl_products` WHERE `flag` = 1")->getResultArray();
         $totalCount = 0;
-
+        $status == 'lowqty';
         foreach ($productIDs as $prod) {
             $prodID = $prod['prod_id'];
 
-            $variantQry = "SELECT COUNT(*) as count FROM `tbl_variants` WHERE `flag` = 1 AND `prod_id` = ? AND `quantity` <= 0 AND quantity  <= 10 AND quantity <> 0 ";
-            $result = $this->db->query($variantQry, [$prodID])->getRow();
+            $variantQry = "SELECT COUNT(*) as tcount FROM `tbl_variants` WHERE `flag` = 1 AND `prod_id` = ? ";
 
-            $totalCount += (int) $result->count;
+
+            if ($status == 'outofstock') {
+                $variantQry .= 'AND quantity <= 0';
+            } elseif ($status == 'lowqty') {
+                $variantQry .= 'AND quantity <= 10 AND quantity <> 0';
+            }
+
+            $result = $this->db->query($variantQry, [$prodID])->getResultArray();
+
+            if (count($result) > 0) {
+                $totalCount += (int) $result[0]['tcount'];
+            }
         }
 
         return $totalCount;
     }
+
 
 
     private function newOrderCount()

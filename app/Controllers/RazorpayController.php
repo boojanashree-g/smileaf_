@@ -362,6 +362,7 @@ class RazorpayController extends BaseController
         $msg = "Hi $userName, We've received your order $orderNo. We'll notify you once it's packed and ready to ship. Thank you for shopping with us!- Smileaf";
 
         $peid = $_ENV['PE_ID'];
+        $ctid = $_ENV['ORDERNEW_CT_ID'];
 
         $client = \Config\Services::curlrequest();
         $url = 'https://2factor.in/API/R1/';
@@ -375,7 +376,7 @@ class RazorpayController extends BaseController
                     'from' => $from,
                     'msg' => $msg,
                     'peid' => $peid,
-                    'ctid' => '1107175396397211834'
+                    'ctid' => $ctid
                 ],
                 'headers' => [
                     'Content-Type' => 'application/x-www-form-urlencoded',

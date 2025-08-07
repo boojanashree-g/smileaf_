@@ -186,7 +186,7 @@ class Home extends BaseController
             'related_products' => $relatedProd
         ];
 
-       
+
 
         $res = array_merge($res, $this->getMenuData(), [
             'page_title' => 'Product View',
@@ -320,9 +320,7 @@ class Home extends BaseController
 
         $res['cart_product'] = $productDetails;
 
-
-
-
+     
 
         return view('cart', $res);
     }

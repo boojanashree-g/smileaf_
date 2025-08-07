@@ -206,7 +206,7 @@
                                                     <i class="ti ti-alert-circle text-warning display-6"></i>
                                                 </h2>
                                                 <h5 class="text-dark">Quantity (< 10)</h5>
-                                                <h5 class="text-dark"><?= $lowqty ?></h5>
+                                                        <h5 class="text-dark"><?= $lowqty ?></h5>
                                             </div>
                                         </div>
                                     </a>
@@ -224,10 +224,6 @@
                 </div>
 
             </div>
-
-
-
-
             <div class="layout-overlay layout-menu-toggle"></div>
             <div class="drag-target"></div>
 
