@@ -98,6 +98,7 @@
             </ul>
         </li>
         <!-- <li class="menu-item parent-item">
+            .
             <a href="javascript:void(0);" class="menu-link menu-toggle">
 
                 <i class="menu-icon tf-icons ti ti-filter"></i>
@@ -115,8 +116,10 @@
         </li>
         <li class="menu-item parent-item">
             <a href="<?= base_url() ?>admin/courier" class="menu-link menu-toggle-">
-                <i class="menu-icon tf-icons ti ti-wallet"></i>
-                <div data-i18n="Manage Banner">Manage Courier</div>
+
+                <i class="menu-icon tf-icons ti ti-truck"></i>
+
+                <div data-i18n="Manage Banner">Manage Delivery Offers</div>
             </a>
 
         </li>

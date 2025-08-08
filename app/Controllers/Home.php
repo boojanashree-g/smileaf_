@@ -320,6 +320,10 @@ class Home extends BaseController
 
         $res['cart_product'] = $productDetails;
 
+        $courier = $this->db->query("SELECT `offer_amount` FROM `tbl_delivery_offer` WHERE `flag` = 1 ")->getRow();
+        $offerAmt = $courier->offer_amount;
+        $res['courier_offer'] = $offerAmt;
+        $res['courier_offer_limit'] = $offerAmt - 50;
 
 
         return view('cart', $res);

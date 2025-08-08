@@ -31,7 +31,6 @@ $routes->get('search-suggestions', 'SearchController::suggestions');
 // For Order Tracking
 $routes->get('track-order', 'OrderTracking::trackOrder');
 
-
 // new
 $routes->post('signin-otp', 'SigninController::signinOTP');
 $routes->post('verify-otp', 'SigninController::verifyOTP');
@@ -211,5 +210,15 @@ $routes->group('admin/stock', ['namespace' => 'App\Controllers\admin', 'filter' 
     $routes->get('/', 'StockController::stockDetails');
     $routes->post('get-data', 'StockController::getData');
     $routes->post('update-data', 'StockController::updateData');
+
+});
+
+
+$routes->group('admin/courier', ['namespace' => 'App\Controllers\admin', 'filter' => 'adminAuth'], function ($routes) {
+    $routes->get('/', 'CourierController::courierCharge');
+    $routes->post('insert-data', 'CourierController::insertData');
+    $routes->post('get-data', 'CourierController::getData');
+    $routes->post('update-data', 'CourierController::updateData');
+    $routes->post('delete-data', 'CourierController::deleteData');
 
 });

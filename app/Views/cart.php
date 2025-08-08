@@ -205,6 +205,12 @@
 
                         <input type="hidden" id="outof_stock_status" value="<?= session()->get('outof_status') ?>"
                             data-checkout="<?= session()->get('checkout') ?>">
+
+
+                        <input type="hidden" id="courier_offer" value="<?= $courier_offer ?>">
+                        <input type="hidden" id="courier_offer_limit" value="<?= $courier_offer_limit ?>">
+
+
                         <div class="col-lg-4">
 
                             <div class="shoping-cart-total <?= $shoppingTotalClass ?>">
