@@ -54,7 +54,7 @@
                                             <div class="single-large-img">
                                                <div class="product-badge d-none">
                                                     <ul>
-                                                        <li class="sale-badge disp-offer">-19%</li>
+                                                        <li class="sale-badge disp-offer"></li>
                                                     </ul>
                                                 </div>
                                                 <a class="main-url" href="<?= esc(base_url() . $products[0]['main_image']) ?>"
@@ -391,7 +391,7 @@
                 if(offerDetails != 0)
                 {
                 $(".product-badge").removeClass('d-none').addClass('d-block');
-                $(".disp-offer").html(offerDetails + "%"); 
+                $(".disp-offer").html(offerDetails + "% Off"); 
                 }
                 else {
                 $(".product-badge").removeClass('d-block').addClass('d-none');

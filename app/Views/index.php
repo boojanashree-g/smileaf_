@@ -56,7 +56,7 @@
                 <?php foreach ($bannerData as $banner): ?>
                     <div class="banner-block">
                         <img src="<?= base_url($banner['banner_image']) ?>"
-                            alt="<?= esc($banner['banner_title'] ?? 'Banner Image') ?>" class="banner-image">
+                            alt="<?= esc($banner['banner_title'] ?? 'Banner Image') ?>" class="banner-image" loading="lazy">
                         <div class="banner-content ">
                             <h6 class="banner-subtitle allura-regular">
                                 <?= esc($banner['banner_desc1'] ?? 'Title here') ?>
@@ -85,7 +85,8 @@
                     <div class="ltn__banner-item">
                         <div class="ltn__banner-img">
                             <a href="<?= base_url() ?>products/sugarcane-bagasse/MTI=">
-                                <img src="<?= base_url() ?>public/assets/img/adcard/Card_5.jpg" alt="Banner Image">
+                                <img src="<?= base_url() ?>public/assets/img/adcard/Card_5.jpg" alt="Banner Image"
+                                    loading="lazy">
                             </a>
                         </div>
                     </div>
@@ -94,7 +95,8 @@
                     <div class="ltn__banner-item">
                         <div class="ltn__banner-img">
                             <a href="<?= base_url() ?>product-categories/disposable-plates">
-                                <img src="<?= base_url() ?>public/assets/img/adcard/Card_6.jpg" alt="Banner Image">
+                                <img src="<?= base_url() ?>public/assets/img/adcard/Card_6.jpg" alt="Banner Image"
+                                    loading="lazy">
                             </a>
                         </div>
                     </div>
@@ -103,7 +105,8 @@
                     <div class="ltn__banner-item">
                         <div class="ltn__banner-img">
                             <a href="<?= base_url() ?>products/rice-husk-dinnerware/OA==">
-                                <img src="<?= base_url() ?>public/assets/img/adcard/Card_7.jpg" alt="Banner Image">
+                                <img src="<?= base_url() ?>public/assets/img/adcard/Card_7.jpg" alt="Banner Image"
+                                    loading="lazy">
                             </a>
                         </div>
                     </div>
@@ -133,7 +136,7 @@
                                     <a href="<?= base_url('/products/' . $product['slug'] . '/' . base64_encode($product['sub_id'])) ?>"
                                         class="d-flex justify-content-center">
                                         <img src="<?= base_url() . $product['image_url'] ?>" alt="#" class="featured_img"
-                                            style="max-height: 270px;">
+                                            style="max-height: 270px;" loading="lazy">
                                     </a>
                                 </div>
                                 <div class="home_products product-info">
@@ -170,7 +173,7 @@
                                     <a href="<?= base_url('product-details/' . base64_encode($product['prod_id'])) ?>"
                                         class="d-flex justify-content-center">
                                         <img src="<?= base_url() . $product['main_image'] ?>" alt="#" class="featured_img"
-                                            style="min-height: 270px;">
+                                            style="min-height: 270px;" loading="lazy">
                                     </a>
                                 </div>
                                 <?php if ($product['available_status'] == 0): ?>
@@ -239,7 +242,7 @@
                     <div class="ltn__testimonial-item ltn__testimonial-item-4">
                         <div class="ltn__testimoni-img">
                             <img src="<?php echo base_url() ?>public/assets/img/plate_img/cactus/icon2-removebg-preview.png"
-                                alt="#">
+                                alt="#" loading="lazy">
                         </div>
                         <div class="ltn__testimoni-info">
                             <p>“The wedding was great and the plates were awesome! Got lots of compliments
@@ -256,7 +259,7 @@
                     <div class="ltn__testimonial-item ltn__testimonial-item-4">
                         <div class="ltn__testimoni-img">
                             <img src="<?php echo base_url() ?>public/assets/img/plate_img/cactus/icon2-removebg-preview.png"
-                                alt="#">
+                                alt="#" loading="lazy">
                         </div>
                         <div class="ltn__testimoni-info">
                             <p>“The wedding was great and the plates were awesome! Got lots of compliments
@@ -273,7 +276,7 @@
                     <div class="ltn__testimonial-item ltn__testimonial-item-4">
                         <div class="ltn__testimoni-img">
                             <img src="<?php echo base_url() ?>public/assets/img/plate_img/cactus/icon2-removebg-preview.png"
-                                alt="#">
+                                alt="#" loading="lazy">
                         </div>
                         <div class="ltn__testimoni-info">
                             <p>“Thanks so much for bringing by the little bowls! They are perfect for our
@@ -316,111 +319,7 @@
     <?php require("components/footer.php") ?>
     <!-- FOOTER AREA END -->
 
-    <!-- MODAL AREA START (Quick View Modal) -->
-    <div class="ltn__modal-area ltn__quick-view-modal-area">
-        <div class="modal fade" id="quick_view_modal" tabindex="-1">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            <!-- <i class="fas fa-times"></i> -->
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="ltn__quick-view-modal-inner">
-                            <div class="modal-product-item">
-                                <div class="row">
-                                    <div class="col-lg-6 col-12">
-                                        <div class="modal-product-img">
-                                            <img src="<?php echo base_url() ?>public/assets/img/product/4.png" alt="#">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-12">
-                                        <div class="modal-product-info">
-                                            <div class="product-ratting">
-                                                <ul>
-                                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                                    <li><a href="#"><i class="fas fa-star-half-alt"></i></a></li>
-                                                    <li><a href="#"><i class="far fa-star"></i></a></li>
-                                                    <li class="review-total"> <a href="#"> ( 95 Reviews )</a></li>
-                                                </ul>
-                                            </div>
-                                            <h3>Vegetables Juices</h3>
-                                            <div class="product-price">
-                                                <span>$149.00</span>
-                                                <del>$165.00</del>
-                                            </div>
-                                            <div class="modal-product-meta ltn__product-details-menu-1">
-                                                <ul>
-                                                    <li>
-                                                        <strong>Categories:</strong>
-                                                        <span>
-                                                            <a href="#">Parts</a>
-                                                            <a href="#">Car</a>
-                                                            <a href="#">Seat</a>
-                                                            <a href="#">Cover</a>
-                                                        </span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="ltn__product-details-menu-2">
-                                                <ul>
-                                                    <li>
-                                                        <div class="cart-plus-minus">
-                                                            <input type="text" value="02" name="qtybutton"
-                                                                class="cart-plus-minus-box">
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#" class="theme-btn-1 btn btn-effect-1"
-                                                            title="Add to Cart" data-bs-toggle="modal"
-                                                            data-bs-target="#add_to_cart_modal">
-                                                            <i class="fas fa-shopping-cart"></i>
-                                                            <span>ADD TO CART</span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="ltn__product-details-menu-3">
-                                                <ul>
-                                                    <li>
-                                                        <a href="#" class="" title="Compare" data-bs-toggle="modal"
-                                                            data-bs-target="#quick_view_modal">
-                                                            <i class="fas fa-exchange-alt"></i>
-                                                            <span>Compare</span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <hr>
-                                            <div class="ltn__social-media">
-                                                <ul>
-                                                    <li>Share:</li>
-                                                    <li><a href="#" title="Facebook"><i
-                                                                class="fab fa-facebook-f"></i></a></li>
-                                                    <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
-                                                    </li>
-                                                    <li><a href="#" title="Linkedin"><i class="fab fa-linkedin"></i></a>
-                                                    </li>
-                                                    <li><a href="#" title="Instagram"><i
-                                                                class="fab fa-instagram"></i></a></li>
 
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- MODAL AREA END -->
 
     </div>
     <script>

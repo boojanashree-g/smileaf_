@@ -276,7 +276,7 @@ $(document).ready(function () {
         let orderItemsHTML = "";
         let returnItemsHTML = "";
         console.log(resultData.summary);
-        
+
         let ShippingCharge = parseInt(resultData.summary["courier_charge"]);
 
         let dispCharge =
@@ -288,7 +288,7 @@ $(document).ready(function () {
         let is_discount = resultData.summary["is_discount"];
         let dispDiscount =
           is_discount == 1
-            ? '-'+ '₹'+ resultData.summary["discount_amt"]
+            ? "-" + "₹" + resultData.summary["discount_amt"]
             : "-";
 
         console.log(resultData.summary);
@@ -733,8 +733,6 @@ $(document).ready(function () {
                     <option value="Product not as described">Product not as described</option>
                     <option value="Poor quality">Poor quality</option>
                     <option value="Delivered late">Delivered late</option>
-                    <option value="Changed my mind">Changed my mind</option>
-                    <option value="No longer needed">No longer needed</option>
                     <option value="other">Other</option>
                 </select>
                  <textarea name="return_items[${index}][custom_reason]"  data-index="${index}" class="form-control mt-2 d-none other-reason" rows="3"

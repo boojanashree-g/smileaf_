@@ -590,6 +590,7 @@ class CheckoutController extends BaseController
             $gstValue = 0;
 
             if ($cartQuantity <= $mainQuantity) {
+
                 $priceCalculation = $productPrice * $cartQuantity;
                 $res['checkout_product'][$i]['final_prod_price'] = round($priceCalculation, 2);
 
@@ -667,20 +668,21 @@ class CheckoutController extends BaseController
             $res['is_alert'] = false;
             $res['remain_amt'] = '';
         }
-        // $response = [
-        //     'total_amt' => $totalAmt,
-        //     'total_gst' => $totalGstValue,
-        //     'cgst' => $halfGst,
-        //     'sgst' => $halfGst,
-        //     'subtotal' => $subTotal,
-        //     'delivery_charge' => $deliveryCharge,
-        //     'delivery_charge_offer' => $finalDeliveryCharge,
-        //     'final_total' => $finalTotal,
-        //     'main_total' => $mainTotal,
-        //     'gst_subid_list' => $gst_subid_list,
-        //     'type' => $sourceType,
-        // ];
+        $response = [
+            'total_amt' => $totalAmt,
+            'total_gst' => $totalGstValue,
+            'cgst' => $halfGst,
+            'sgst' => $halfGst,
+            'subtotal' => $subTotal,
+            'delivery_charge' => $deliveryCharge,
+            'delivery_charge_offer' => $finalDeliveryCharge,
+            'final_total' => $finalTotal,
+            'main_total' => $mainTotal,
+            'gst_subid_list' => $gst_subid_list,
+            'type' => $sourceType,
+        ];
 
+   
 
 
 
