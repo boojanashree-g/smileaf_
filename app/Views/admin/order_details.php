@@ -183,8 +183,17 @@
                                             <div class="col-12 col-md-6">
                                                 <label class="form-label" for="tracking_link">Courier Tracking
                                                     Link</label>
-                                                <input type="text" id="tracking_link" name="tracking_link"
-                                                    class="form-control" placeholder="Tracking link*" />
+                                                <select id="tracking_link" name="tracking_link" class="form-control">
+                                                    <option value="Select a tracking link" disabled selected>Select a
+                                                        tracking link</option>
+                                                    <option value="https://trackcourier.io/">https://trackcourier.io/
+                                                    </option>
+                                                    <!-- <option value="https://example.com/tracking2">Tracking Link 2
+                                                    </option>
+                                                    <option value="https://example.com/tracking3">Tracking Link 3 -->
+                                                    </option>
+                                                </select>
+
                                                 <span class="error text-danger tracking_link mt-5"></span>
                                             </div>
                                             <div class="col-12 col-md-6">

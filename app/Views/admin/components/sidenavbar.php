@@ -113,5 +113,12 @@
             </a>
 
         </li>
+        <li class="menu-item parent-item">
+            <a href="<?= base_url() ?>admin/courier" class="menu-link menu-toggle-">
+                <i class="menu-icon tf-icons ti ti-wallet"></i>
+                <div data-i18n="Manage Banner">Manage Courier</div>
+            </a>
+
+        </li>
     </ul>
 </aside>

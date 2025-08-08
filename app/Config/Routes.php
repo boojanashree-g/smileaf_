@@ -28,6 +28,10 @@ $routes->get('product-sort', 'Home::getSortProducts');
 $routes->get('search-suggestions', 'SearchController::suggestions');
 
 
+// For Order Tracking
+$routes->get('track-order', 'OrderTracking::trackOrder');
+
+
 // new
 $routes->post('signin-otp', 'SigninController::signinOTP');
 $routes->post('verify-otp', 'SigninController::verifyOTP');
@@ -46,7 +50,10 @@ $routes->post('update-cancel-reason', 'MyaccountController::updateCancelReason',
 $routes->post('get-return-products', 'MyaccountController::getReturnProducts', ['filter' => 'AuthFilter']);
 $routes->post('submit-return-products', 'MyaccountController::submitReturnProducts', ['filter' => 'AuthFilter']);
 
-$routes->post('place-order', 'CheckoutController::placeOrder', ['filters' => ['before' => ['cors', 'AuthFilter']]]
+$routes->post(
+    'place-order',
+    'CheckoutController::placeOrder',
+    ['filters' => ['before' => ['cors', 'AuthFilter']]]
 );
 $routes->get('checkout', 'CheckoutController::checkout');
 $routes->post('get-single-address', 'CheckoutController::getSingleAddress');

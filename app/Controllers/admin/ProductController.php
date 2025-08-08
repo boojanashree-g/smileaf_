@@ -285,7 +285,7 @@ class ProductController extends BaseController
 
         try {
             $getData = $this->request->getPost();
-             
+
             $productName = $request->getPost('prod_name');
             $productID = $request->getPost('prod_id');
 
@@ -375,7 +375,7 @@ class ProductController extends BaseController
                 if ($productID) {
 
                     if ((int) $hasVariant == 0) {
-                       
+
 
                         $quantity = $request->getPost('quantity');
                         $variantData = [
@@ -406,7 +406,7 @@ class ProductController extends BaseController
                         for ($i = 0; $i < count($variants); $i++) {
 
                             $totalQuantity += (int) $variants[$i]['quantity'];
-                            
+
                             $variantData = [
                                 'prod_id' => $productID,
                                 'pack_qty' => $variants[$i]['pack_qty'],
@@ -418,7 +418,7 @@ class ProductController extends BaseController
                                 'quantity' => $variants[$i]['quantity'],
                                 'weight' => $variants[$i]['weight'],
                             ];
-                          
+
                             $VariantModel->insert($variantData);
                             $affectedRows = $this->db->affectedRows();
 
@@ -486,8 +486,6 @@ class ProductController extends BaseController
                                     'image_path' => '/uploads/' . $randomName
                                 ]);
                                 $affectedRows = $this->db->affectedRows();
-
-
                             }
 
                         }
@@ -507,7 +505,6 @@ class ProductController extends BaseController
                             'msg' => 'Product not updated.'
                         ]);
                     }
-
 
 
                 } else {

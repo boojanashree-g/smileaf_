@@ -25,7 +25,24 @@
     .address-delete{
         border: 1px solid red;
         color: red;
-    }    
+    }  
+    
+ .resource {
+    margin: 10px 0;
+    padding: 15px;
+    background: #f1ede1;
+    border-left: 5px solid #d7941fc7;
+    border-radius: 8px;
+    text-align: left;
+}
+
+.resource a {
+  display: inline-block;
+  margin-top: 5px;
+  text-decoration: none;
+  color: #007bff;
+  font-size:14px
+}
 </style>
 
 <body class="checkout_page">
@@ -396,7 +413,7 @@
 
                             <div class="advantages">
                                 <div class="advantage-item">
-                                    <span>🚚 Free courier charge on orders above ₹500!</span>
+                                    <span>🚚 Enjoy free delivery on purchases above ₹500</span>
                                 </div>
                                 <div class="advantage-item">
                                     <?php if ($total_order_count == 0 ||$total_order_count == -2 ) { ?>      
@@ -407,6 +424,11 @@
                                 <?php }  ?>
                                     
                                 </div>
+                            </div>
+
+
+                            <div class="resource">
+                                <a  target="_blank">Order cancellations are not allowed after shipment.</a>
                             </div>
                              
 

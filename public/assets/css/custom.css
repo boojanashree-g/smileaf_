@@ -1631,6 +1631,8 @@ a.theme-btn-1.btn:focus {
   font-size: 14px;
 }
 
+
+
 .address-edit button:hover {
   color: #000 !important;
   border: 1px solid;
@@ -1649,10 +1651,10 @@ a.theme-btn-1.btn:focus {
   color: #333;
 }
 .free-courier > .advantage-item {
-    background-color: #00bbff1f;
-    padding: 10px 15px;
-    border-radius: 8px;
-    border: 1px solid #00bbff1f;
+  background-color: #00bbff1f;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #00bbff1f;
 }
 
 .checkout_page input {
