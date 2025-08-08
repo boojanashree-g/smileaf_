@@ -656,18 +656,7 @@ class CheckoutController extends BaseController
         $res['type'] = $sourceType;
 
 
-        $courierFreeAmt = 500;
-        $finalSubTotal = round($subTotal);
 
-        if ($finalSubTotal >= 450 && $finalSubTotal <= 500) {
-
-            $remainingAmt = $courierFreeAmt - $finalSubTotal;
-            $res['is_alert'] = true;
-            $res['remain_amt'] = $remainingAmt;
-        } else {
-            $res['is_alert'] = false;
-            $res['remain_amt'] = '';
-        }
         $response = [
             'total_amt' => $totalAmt,
             'total_gst' => $totalGstValue,
@@ -682,7 +671,7 @@ class CheckoutController extends BaseController
             'type' => $sourceType,
         ];
 
-   
+
 
 
 
@@ -707,6 +696,27 @@ class CheckoutController extends BaseController
             $res['user_details'] = $this->db->query($userqry, [$userID])->getResultArray();
 
         }
+
+
+
+        $courier = $this->db->query("SELECT `offer_amount` FROM `tbl_delivery_offer` WHERE `flag` = 1 ")->getRow();
+        $offerAmt = $courier->offer_amount;
+        $courierFreeAmt = $offerAmt;
+        $courierOfferLimit = $offerAmt - 50;
+
+        $finalSubTotal = round($totalAmt);
+
+        if ($finalSubTotal >= $courierOfferLimit && $finalSubTotal <= $courierFreeAmt) {
+
+            $remainingAmt = $courierFreeAmt - $finalSubTotal;
+            $res['is_alert'] = true;
+            $res['remain_amt'] = $remainingAmt;
+        } else {
+            $res['is_alert'] = false;
+            $res['remain_amt'] = '';
+        }
+
+
         return view('checkout', $res);
     }
 

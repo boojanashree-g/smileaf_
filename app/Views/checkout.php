@@ -428,7 +428,7 @@
 
 
                             <div class="resource">
-                                <a  target="_blank">Order cancellations are not allowed after shipment.</a>
+                                <a  target="_blank">Note: Orders cannot be cancelled after shipment.</a>
                             </div>
                              
 

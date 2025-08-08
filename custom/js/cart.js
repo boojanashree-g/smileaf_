@@ -55,16 +55,6 @@ $(document).ready(function () {
 
     $(displayPrice).text("₹" + formattedPrice);
 
-    let courierFreeAmt = 500;
-    let finalSubTotal = Number(formattedPrice);
-    let remainingAmt;
-    if (finalSubTotal > 450 && finalSubTotal <= 500) {
-      remainingAmt = courierFreeAmt - finalSubTotal;
-      $(".free-courier").removeClass("d-none");
-      $(".courier-alert-msg").html(
-        `🛒 You're just ₹${remainingAmt} away from <strong>Free Shipping</strong>! Add more to your cart now!!`
-      );
-    }
 
     // update the quantity and subtotal into cart tbl
     $.ajax({
@@ -132,10 +122,14 @@ $(document).ready(function () {
         })
     );
 
-    let courierFreeAmt = 500;
-    let finalSubTotal = Number(subTotal);
+    let courierFreeAmt = $("#courier_offer").val();
+    let courierOfferLimit = $("#courier_offer_limit").val();
+
+    let finalSubTotal = Number(totalAmt);
     let remainingAmt;
-    if (finalSubTotal > 450 && finalSubTotal <= 500) {
+   
+    if (finalSubTotal > courierOfferLimit && finalSubTotal <= courierFreeAmt) {
+     
       remainingAmt = courierFreeAmt - finalSubTotal;
       $(".free-courier").removeClass("d-none");
       $(".courier-alert-msg").html(

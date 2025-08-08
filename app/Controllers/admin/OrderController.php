@@ -673,7 +673,9 @@ class OrderController extends BaseController
                             a.`pack_qty`,
                             a.offer_type,a.offer_details,a.offer_price,
                             b.prod_name,
-                            b.main_image
+                            b.main_image,
+                            b.submenu_id,
+                            b.prod_id
                         FROM
                             `tbl_variants` AS a
                         INNER JOIN tbl_products AS b
@@ -682,7 +684,16 @@ class OrderController extends BaseController
                             b.`flag` = 1 AND a.flag = 1 AND a.variant_id = ? AND a.prod_id = ?";
             $packData = $this->db->query($packQtyQuery, [$variantID, $prodID])->getRow();
 
-            if ($packData) {
+
+            $subemenuID = $packData->submenu_id;
+            if ($subemenuID) {
+                $gstVal = $this->db->query("SELECT `gst` FROM `tbl_submenu` WHERE `flag` = 1 AND `sub_id` = ?", [$subemenuID])->getRow();
+                $GST = $gstVal->gst;
+                $cgst = $GST / 2;
+                $sgst = $GST / 2;
+            }
+
+            if ($packData && $subemenuID) {
                 $productDetails = [
                     'prod_name' => $packData->prod_name,
                     'main_image' => $packData->main_image,
@@ -693,10 +704,17 @@ class OrderController extends BaseController
                     'offer_type' => $packData->offer_type,
                     'offer_details' => $packData->offer_details,
                     'offer_price' => $packData->offer_price,
+                    'gst' => $GST,
+                    'cgst' => $cgst,
+                    'sgst' => $sgst,
+                    'prod_id' => $prodID
+
                 ];
                 $orderSummaries['items'][] = $productDetails;
             }
         }
+
+
 
 
         krsort($orderSummaries);
