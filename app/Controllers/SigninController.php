@@ -41,9 +41,8 @@ class SigninController extends BaseController
 
         if ($user && $user->is_verfied == 1) {
             $oldUserID = $user->user_id;
-            // $response = $this->signinAPI($apiKey, $number, $otp, $templateName);
-            // if ($response['Status'] == "Success") {
-            if (true) {
+            $response = $this->signinAPI($apiKey, $number, $otp, $templateName);
+            if ($response['Status'] == "Success") {
                 $updateQry = "UPDATE tbl_users SET otp = ?, otp_expiry = ? WHERE user_id = ?";
                 $updateData = $this->db->query($updateQry, [$otp, $otp_expiry, $oldUserID]);
 
@@ -70,9 +69,9 @@ class SigninController extends BaseController
 
         if ($user && $user->is_verfied == 0) {
             $oldUserID = $user->user_id;
-            // $response = $this->signinAPI($apiKey, $number, $otp, $templateName);
-            // if ($response['Status'] == "Success") {
-            if (true) {
+            $response = $this->signinAPI($apiKey, $number, $otp, $templateName);
+            if ($response['Status'] == "Success") {
+
                 $updateQry = "UPDATE tbl_users SET otp = ?, otp_expiry = ? WHERE user_id = ?";
                 $updateData = $this->db->query($updateQry, [$otp, $otp_expiry, $oldUserID]);
 
@@ -99,10 +98,10 @@ class SigninController extends BaseController
 
         // New user (no record found)
         if (!$user) {
-            // $response = $this->signinAPI($apiKey, $number, $otp, $templateName);
+            $response = $this->signinAPI($apiKey, $number, $otp, $templateName);
 
-            // if ($response['Status'] == "Success") {
-            if (true) {
+            if ($response['Status'] == "Success") {
+
                 $userData = [
                     'number' => $number,
                     'otp' => $otp,
@@ -345,7 +344,7 @@ class SigninController extends BaseController
 
             $login1 = $_ENV['LOGIN_TEMPLATE2'];
             $login2 = $_ENV['LOGIN_TEMPLATE1'];
-            
+
             $templates = [$login1, $login2];
             // Randomly select one template from the array
             $templateName = $templates[array_rand($templates)];

@@ -139,9 +139,9 @@
                                 <b> Sold By :&nbsp; Smileaf </b> <br>
                                 3/142,Near Varadaraja Mills(Unit 2),SundakkamPalayam,Nambiyam Palayam Post,
                                 Avinashi,Tirupur,Tamilnadu, India - 641670.<br>
-                                <b>Email :</b>&nbsp;info@smileaf.in <br>
-                                <b>Phone:</b>&nbsp;9842578248 <br>
-                                <b>Order Date:</b><?= $order_date ?><br>
+                                <b>Email :</b>&nbsp;info@smileaf.in &nbsp;
+                                <b>Phone:</b>&nbsp;9842578248 &nbsp;
+                                <b>Order Date:</b><?= $order_date ?>
                             </td>
                         </tr>
                     </table>
@@ -180,8 +180,13 @@
                                 ProductName
                             </td>
                             <td style="width:10%; text-align:left;">
-                                MRP
+                                Price
                             </td>
+
+                            <td style="width:10%; text-align:left;">
+                                GST %
+                            </td>
+
                             <td style="width:10%; text-align:left;">
                                 OfferPrice
                             </td>
@@ -207,17 +212,20 @@
                                     <sub>Pack Qty: <?= $item['pack_qty'] ?></sub>
                                 </td>
                                 <td style="width:15%; text-align:left;">
-                                    <?= $item['prod_price'] ?>
+                                    <?= $item['prod_price'] ?><br>
+                                </td>
+                                <td style="text-align:left;">
+                                    <?= $item['gst_percent'] ?>
                                 </td>
                                 <td style="width:15%; text-align:left;">
-                                    <?= $item['offer_price'] ?>
+                                    <?= $item['offer_price'] ?><br>
+                                    (<?= $item['total_bal_amt'] ?> +<?= $item['total_gst_amt'] ?> )
                                 </td>
                                 <td style="width:15%; text-align:left;">
                                     <?= $item['quantity'] ?>
                                 </td>
                                 <td style="width:15%; text-align:left;">
                                     <?= $item['sub_total'] ?>
-
                             </tr>
                         <?php } ?>
 
@@ -226,12 +234,11 @@
 
                         <tr class="item amt-details">
 
-                            <td colspan="4" style="text-align:justify;margin-top:0">
+                            <td colspan="5" style="text-align:justify;margin-top:0">
                                 <strong style="font-size:15px">Notes:</strong><br>
-                                This system-generated invoice requires no signature; Smileaf products are eco-friendly
+                                This is a system-generated invoice requires no signature; Smileaf products are
+                                eco-friendly
                                 and made from natural.
-
-
                             </td>
                             <td style="text-align: right" colspan="2">
                                 <b>Sub Total :</b>
@@ -241,7 +248,7 @@
                             </td>
                         </tr>
                         <tr class="item amt-details">
-                            <td colspan="4"></td>
+                            <td colspan="5"></td>
                             <td style="text-align: right" colspan="2">
                                 <b>CGST(Includes) :</b>
                             </td>
@@ -250,7 +257,7 @@
                             </td>
                         </tr>
                         <tr class="item amt-details">
-                            <td colspan="4"></td>
+                            <td colspan="5"></td>
                             <td style="text-align: right" colspan="2">
                                 <b>SGST(Includes) :</b>
                             </td>
@@ -259,7 +266,7 @@
                             </td>
                         </tr>
                         <tr class="item amt-details">
-                            <td colspan="4"></td>
+                            <td colspan="5"></td>
                             <td style="text-align: right" colspan="2">
                                 <b>Discount :</b>
                             </td>
@@ -268,7 +275,7 @@
                             </td>
                         </tr>
                         <tr class="item amt-details">
-                            <td colspan="4"></td>
+                            <td colspan="5"></td>
                             <td style="text-align: right" colspan="2">
                                 <b>Shipping :</b>
                             </td>
@@ -277,7 +284,7 @@
                             </td>
                         </tr>
                         <tr class="item amt-details">
-                            <td colspan="4"></td>
+                            <td colspan="5"></td>
                             <td style="text-align: right" colspan="2">
                                 <b>Total Price :</b>
                             </td>
@@ -287,7 +294,7 @@
                         </tr>
 
                         <tr>
-                            <td colspan="7"
+                            <td colspan="8"
                                 style="padding: 20px; text-align: center; font-family: Arial, sans-serif; font-size: 14px; border-top: 1px solid #ccc;">
                                 <strong
                                     style="font-size: 16px; display: block; margin-bottom: 5px; color: #07641fff;">Thank

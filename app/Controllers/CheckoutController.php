@@ -7,6 +7,7 @@ use App\Models\OrderItemModal;
 
 use App\Models\admin\MainmenuModel;
 use App\Models\admin\SubmenuModel;
+use App\Models\DeliveryOfferModel;
 
 class CheckoutController extends BaseController
 {
@@ -156,7 +157,6 @@ class CheckoutController extends BaseController
                 }
             }
         } else if ($type == "buy_now") {
-
             $prodID = $cartData[0]['prod_id'];
             $cartQuantity = $cartData[0]['quantity'];
             $cartPackqty = $cartData[0]['pack_qty'];
@@ -454,7 +454,6 @@ class CheckoutController extends BaseController
                     echo json_encode($res);
                 }
 
-
             }
         }
 
@@ -472,10 +471,12 @@ class CheckoutController extends BaseController
     {
         $mainmenuModel = new MainmenuModel();
         $submenuModel = new SubmenuModel();
+        $DeliveryOfferModel = new DeliveryOfferModel();
 
         $mainmenus = $mainmenuModel->where('flag !=', 0)->findAll();
 
         $submenus = $submenuModel->where('flag !=', 0)->findAll();
+        $deliveryOffer = $DeliveryOfferModel->select('offer_amount')->where('flag !=', 0)->findAll();
 
         $groupedSubmenus = [];
         foreach ($submenus as $submenu) {
@@ -495,7 +496,8 @@ class CheckoutController extends BaseController
         return [
             'mainmenu' => $mainmenus,
             'submenu' => $groupedSubmenus,
-            'cart_count' => $cartCount
+            'cart_count' => $cartCount,
+            'deleivery_offer' => $deliveryOffer[0]['offer_amount']
         ];
     }
     public function checkout()

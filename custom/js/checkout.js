@@ -295,7 +295,7 @@ $(document).ready(function () {
     ) {
       showToast("Please enter a valid 6-digit pincode", "info");
     } else {
-      // checkoutAddAddress();
+      checkoutAddAddress();
     }
   });
 

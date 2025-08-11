@@ -296,8 +296,6 @@ class ProductController extends BaseController
 
             $MainImg = $request->getFile('main_image');
 
-
-
             $randomName = '';
 
             if ($MainImg && $MainImg->isValid()) {
@@ -396,10 +394,16 @@ class ProductController extends BaseController
 
 
                         $affected = $this->db->affectedRows();
-                        if ($affected > 0) {
+                        if ($affected >= 0) {
                             $updateQry = "UPDATE tbl_products SET main_quantity = ? WHERE prod_id = ?";
                             $updateData = $this->db->query($updateQry, [$quantity, $productID]);
                             $affectedRows = $this->db->affectedRows();
+
+                            return $this->response->setJSON([
+                                'code' => 200,
+                                'status' => 'success',
+                                'msg' => 'Data Updated Successfully'
+                            ]);
                         }
                     } else {
 
@@ -492,22 +496,16 @@ class ProductController extends BaseController
                     }
 
 
-                    if ($affectedRows > 0) {
-                        return $this->response->setJSON([
-                            'code' => 200,
-                            'status' => 'success',
-                            'msg' => 'Data Updated Successfully'
-                        ]);
-                    } else {
-                        return $this->response->setJSON([
-                            'code' => 400,
-                            'status' => 'error',
-                            'msg' => 'Product not updated.'
-                        ]);
-                    }
+                    return $this->response->setJSON([
+                        'code' => 200,
+                        'status' => 'success',
+                        'msg' => 'Data Updated Successfully'
+                    ]);
 
 
                 } else {
+                    print_r("res 2");
+                    die;
                     return $this->response->setJSON([
                         'code' => 400,
                         'status' => 'error',

@@ -3,7 +3,8 @@
     <div class="ltn__header-top-area">
         <div class="container">
             <div class="row">
-                <h5 class="top-banner-title">Kickstart Your Shopping – 10% Off | Free Delivery on Orders Over ₹500!</h5>
+                <h5 class="top-banner-title">Kickstart Your Shopping – 10% Off | Free Delivery on Orders Over
+                    ₹<?= $deleivery_offer ?>!</h5>
             </div>
         </div>
     </div>
