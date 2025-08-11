@@ -433,7 +433,7 @@ class OrderController extends BaseController
             $trackingId = $getTrackingDetails->tracking_id;
 
             if ($courierPartner != "" && $trackingLink != "" && $trackingId != "") {
-                $response = $this->shippedAPI($apiKey, $number, $username, $templateName, $orderNo, $trackingId, $trackingLink);
+                $response = $this->shippedAPI($apiKey, $number, $templateName, $orderNo, $trackingId, $trackingLink, $orderID);
 
             } else {
 
@@ -496,11 +496,19 @@ class OrderController extends BaseController
         return $this->response->setJSON($result);
     }
 
-    private function shippedAPI($apiKey, $number, $username, $templateName, $orderNo, $trackingId, $trackingLink)
+    private function shippedAPI($apiKey, $number, $templateName, $orderNo, $trackingId, $trackingLink, $orderID)
     {
-        $from = 'SMLEFO';
 
-        $message = "Dear customer, your order has been shipped. Tracking ID: $trackingId. Track your shipment here: $trackingLink. - Smileaf";
+        helper('url');
+
+        $url = base_url();
+
+        $encodedOrderID = base64_encode($orderID);
+
+        $from = 'SMLEFO';
+        $trackingURL = $url . 'track-order/?orderid=' . $encodedOrderID;
+
+        $message = "Dear customer, your order has been shipped. Tracking ID: $trackingId. Track your shipment here: $trackingURL. - Smileaf";
 
         $peid = $_ENV['PE_ID'];
         $ctid = $_ENV['ORDERSHIPPED_CT_ID'];

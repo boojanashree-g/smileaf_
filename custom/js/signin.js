@@ -4,6 +4,13 @@ $(document).ready(function () {
   let isOTPModalActive = false;
   let timeLeft = 60;
 
+  $('input[name="number"]').val("");
+  let userHasTypedNumber = false;
+
+  $("#number").on("input", function () {
+    userHasTypedNumber = true;
+  });
+
   $("#login-form").keypress(function (e) {
     if (e.which === 13) {
       e.preventDefault();
@@ -18,25 +25,31 @@ $(document).ready(function () {
   });
 
   $("#btn-submit").click(function (e) {
+    e.preventDefault();
+
     const $button = $("#verify-otp");
     const $loader = $(".spinner-overlay");
-    $button.prop("disabled", false).text("Verify OTP");
+    const $numberField = $("#login-form").find('input[name="number"]');
+    const numberVal = $numberField.val().trim();
 
-    e.preventDefault();
-    let isValid = true;
-    let errorMessage = "";
-    const form = $("#login-form");
-    const number = form.find('input[name="number"]');
+    $button.prop("disabled", false).text("Verify OTP");
     $("input").css("border-color", "#ccc");
     $loader.show();
-    if (!$.trim(number.val())) {
+
+    let isValid = true;
+    let errorMessage = "";
+
+    if (!userHasTypedNumber) {
       isValid = false;
-      number.css("border-color", "red");
+      errorMessage = "Please type your mobile number manually.";
+    } else if (!numberVal) {
+      isValid = false;
+      $numberField.css("border-color", "red");
       errorMessage = "Please enter your mobile number.";
-    } else if (!isPhoneNumber($.trim(number.val()))) {
+    } else if (!isPhoneNumber(numberVal)) {
       isValid = false;
-      number.css("border-color", "red");
-      errorMessage = "Please enter valid mobile number.";
+      $numberField.css("border-color", "red");
+      errorMessage = "Please enter a valid mobile number.";
     } else {
       sendOTP();
     }
