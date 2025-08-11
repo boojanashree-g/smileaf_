@@ -172,7 +172,7 @@
                                 <div class="product-img">
                                     <a href="<?= base_url('product-details/' . base64_encode($product['prod_id'])) ?>"
                                         class="d-flex justify-content-center">
-                                        <img src="<?= base_url() . $product['main_image'] ?>" alt="#" class="featured_img"
+                                        <img src="<?= base_url() . $product['main_images'] ?>" alt="#" class="featured_img"
                                             style="min-height: 270px;" loading="lazy">
                                     </a>
                                 </div>

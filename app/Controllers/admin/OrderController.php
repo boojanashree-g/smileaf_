@@ -582,7 +582,6 @@ class OrderController extends BaseController
         $encodedorderID = $this->request->getGet('orderID');
         $orderID = base64_decode($encodedorderID);
 
-
         // Get Order Summary
         $Orderquery = "SELECT * FROM `tbl_orders` WHERE order_id = ? AND `flag` = 1 AND order_status <> 'initiated' ORDER BY order_id DESC";
 
@@ -618,7 +617,6 @@ class OrderController extends BaseController
             $userDetails = $this->db->query($userQuery, [$userID, $addID])->getRowArray();
         }
 
-
         $orderSummaries = [];
 
         $orderID = $orders[0]['order_id'];
@@ -629,8 +627,6 @@ class OrderController extends BaseController
 
         $query = "SELECT * FROM `tbl_order_item` WHERE `flag` = 1 AND `order_id` = ?";
         $itemDetails = $this->db->query($query, [$orderID])->getResultArray();
-
-
 
 
         $orderSummaries = [
@@ -657,7 +653,6 @@ class OrderController extends BaseController
             'user_details' => $userDetails,
             'discount_amt' => $orders[0]['discount_amt'],
             'is_discount' => $orders[0]['is_discount'],
-
         ];
 
 
@@ -667,33 +662,54 @@ class OrderController extends BaseController
             $variantID = $item['variant_id'];
             $quantity = $item['quantity'];
             $prod_price = $item['prod_price'];
+            $offer_price = $item['offer_price'];
             $sub_total = $item['sub_total'];
 
+            // Fetch product data
             $packQtyQuery = "SELECT
-                            a.`pack_qty`,
-                            a.offer_type,a.offer_details,a.offer_price,
-                            b.prod_name,
-                            b.main_image,
-                            b.submenu_id,
-                            b.prod_id
-                        FROM
-                            `tbl_variants` AS a
-                        INNER JOIN tbl_products AS b
-                            ON a.prod_id = b.prod_id
-                        WHERE
-                            b.`flag` = 1 AND a.flag = 1 AND a.variant_id = ? AND a.prod_id = ?";
+                        a.`pack_qty`,
+                        a.offer_type,
+                        a.offer_details,
+                        a.offer_price,
+                        b.prod_name,
+                        b.main_image,
+                        b.submenu_id,
+                        b.prod_id
+                    FROM `tbl_variants` AS a
+                    INNER JOIN tbl_products AS b
+                        ON a.prod_id = b.prod_id
+                    WHERE b.`flag` = 1 AND a.flag = 1 
+                        AND a.variant_id = ? AND a.prod_id = ?";
             $packData = $this->db->query($packQtyQuery, [$variantID, $prodID])->getRow();
 
+            $gst_percent = 0;
+            $cgst_amt = 0;
+            $sgst_amt = 0;
 
-            $subemenuID = $packData->submenu_id;
-            if ($subemenuID) {
-                $gstVal = $this->db->query("SELECT `gst` FROM `tbl_submenu` WHERE `flag` = 1 AND `sub_id` = ?", [$subemenuID])->getRow();
-                $GST = $gstVal->gst;
-                $cgst = $GST / 2;
-                $sgst = $GST / 2;
+            if ($packData && $packData->submenu_id) {
+                $gstVal = $this->db->query(
+                    "SELECT `gst` FROM `tbl_submenu` WHERE `flag` = 1 AND `sub_id` = ?",
+                    [$packData->submenu_id]
+                )->getRow();
+
+                if ($gstVal && $gstVal->gst > 0) {
+                    $gst_percent = round($gstVal->gst, 2);
+
+
+                    $total_gst_amt = $this->calculateGstInclusive($offer_price, $gst_percent);
+                    $bal_amt = $offer_price - $total_gst_amt;
+
+
+                    $cgst_amt = round($total_gst_amt / 2, 2);
+                    $sgst_amt = $cgst_amt;
+                } else {
+                    $total_gst_amt = 0;
+                    $bal_amt = $offer_price - $total_gst_amt;
+                }
             }
 
-            if ($packData && $subemenuID) {
+            // Build product details
+            if ($packData) {
                 $productDetails = [
                     'prod_name' => $packData->prod_name,
                     'main_image' => $packData->main_image,
@@ -701,25 +717,24 @@ class OrderController extends BaseController
                     'quantity' => $quantity,
                     'prod_price' => $prod_price,
                     'sub_total' => $sub_total,
+                    'gst_percent' => $gst_percent,
+                    'cgst' => $cgst_amt,
+                    'sgst' => $sgst_amt,
+                    'total_gst_amt' => isset($total_gst_amt) ? $total_gst_amt : 0,
+                    'total_bal_amt' => isset($bal_amt) ? $bal_amt : 0,
                     'offer_type' => $packData->offer_type,
                     'offer_details' => $packData->offer_details,
                     'offer_price' => $packData->offer_price,
-                    'gst' => $GST,
-                    'cgst' => $cgst,
-                    'sgst' => $sgst,
                     'prod_id' => $prodID
-
                 ];
                 $orderSummaries['items'][] = $productDetails;
             }
+
+
         }
 
 
-
-
         krsort($orderSummaries);
-
-
 
         ob_start();
 
@@ -747,6 +762,16 @@ class OrderController extends BaseController
 
         echo $dompdf->output();
         exit;
+
+    }
+
+    private function calculateGstInclusive($price, $gstPercent)
+    {
+
+        $gstValue = ($price * $gstPercent) / (100 + $gstPercent);
+
+        $paise = round(fmod($gstValue, 1) * 100, 2);
+        return $paise < 50 ? floor($gstValue) : ceil($gstValue);
 
     }
 

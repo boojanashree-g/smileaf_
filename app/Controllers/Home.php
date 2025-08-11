@@ -6,6 +6,7 @@ use App\Models\admin\MainmenuModel;
 use App\Models\admin\SubmenuModel;
 use App\Models\admin\BannerModel;
 use App\Models\ProductModel;
+use App\Models\DeliveryOfferModel;
 
 
 class Home extends BaseController
@@ -53,15 +54,15 @@ class Home extends BaseController
                 ->getResultArray();
 
             // Fetch product images
-            $imageQuery = $db->table('tbl_images')
-                ->select('image_path')
-                ->where(['flag' => 1, 'prod_id' => $prodId])
-                ->get()
-                ->getResultArray();
+            // $imageQuery = $db->table('tbl_images')
+            //     ->select('image_path')
+            //     ->where(['flag' => 1, 'prod_id' => $prodId])
+            //     ->get()
+            //     ->getResultArray();
 
             $product['variants'] = $variantQuery;
-            $product['product_images'] = array_column($imageQuery, 'image_path');
-            $product['main_image'] = !empty($product['product_images']) ? $product['product_images'][0] : 'assets/images/default.png';
+            // $product['product_images'] = array_column($imageQuery, 'image_path');
+            $product['main_images'] = $product['main_image'];
 
             // Find lowest offer & stock availability
             $totalVariant = count($variantQuery);
@@ -115,10 +116,12 @@ class Home extends BaseController
     {
         $mainmenuModel = new MainmenuModel();
         $submenuModel = new SubmenuModel();
+        $DeliveryOfferModel = new DeliveryOfferModel();
 
         $mainmenus = $mainmenuModel->where('flag !=', 0)->findAll();
 
         $submenus = $submenuModel->where('flag !=', 0)->findAll();
+        $deliveryOffer = $DeliveryOfferModel->select('offer_amount')->where('flag !=', 0)->findAll();
 
         $groupedSubmenus = [];
         foreach ($submenus as $submenu) {
@@ -138,7 +141,8 @@ class Home extends BaseController
         return [
             'mainmenu' => $mainmenus,
             'submenu' => $groupedSubmenus,
-            'cart_count' => $cartCount
+            'cart_count' => $cartCount,
+            'deleivery_offer' => $deliveryOffer[0]['offer_amount']
         ];
     }
 
