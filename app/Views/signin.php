@@ -3,7 +3,7 @@
 
 <?php require("components/head.php") ?>
 <style>
-   
+
 </style>
 
 <body>
@@ -49,7 +49,10 @@
                                 <!-- OTP Login -->
                                 <div class="tab-pane fade show active" id="otp-login" role="tabpanel">
                                     <form class="ltn__form-box contact-form-box" id="login-form">
-                                        <input type="number" id="number" placeholder="Mobile Number*" name="number">
+                                        <input type="number" id="number" placeholder="Mobile Number*" name="number"
+                                            autocomplete="off" autocorrect="off" autocapitalize="none"
+                                            spellcheck="false" inputmode="numeric" pattern="[0-9]*" value="">
+
                                         <div class="btn-wrapper mt-0">
                                             <button type="button" class="theme-btn-1 btn reverse-color btn-block"
                                                 id="btn-submit">Send OTP
@@ -122,6 +125,14 @@
         </div>
 
         <!-- JS -->
+        <script>
+            window.addEventListener('pageshow', function (event) {
+                const numberField = document.getElementById('number');
+                if (numberField) {
+                    numberField.value = '';
+                }
+            });
+        </script>
         <script src="<?php echo base_url() ?>public/assets/js/plugins.js"></script>
         <script src="<?php echo base_url() ?>public/assets/js/main.js"></script>
         <script src="<?php echo base_url() ?>custom/js/signin.js"></script>

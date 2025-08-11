@@ -63,7 +63,7 @@ $(document).ready(function () {
       confirm_password.css("border-color", "red");
       errorMessage = "Passwords do not match.";
     } else {
-      sendOTP();
+      // sendOTP();
     }
 
     if (!isValid) {
