@@ -141,10 +141,10 @@ $(document).ready(function () {
       return;
     }
 
-    if (file && file.size > maxSize && mode == "new") {
-      $(".main_image").html("Image size must be less than 500KB*").show();
-      return;
-    }
+    // if (file && file.size > maxSize && mode == "new") {
+    //   $(".main_image").html("Image size must be less than 500KB*").show();
+    //   return;
+    // }
 
     if (description.getData() === "" && mode == "new") {
       $(".description").html("Please Enter Description*").show();
@@ -163,6 +163,7 @@ $(document).ready(function () {
   //*************************** [Insert] **************************************************************************
 
   function insertData() {
+    $("#ajax-loader").removeClass("d-none");
     mode == "new";
     var form = $("#product-form")[0];
     data = new FormData(form);
@@ -206,6 +207,7 @@ $(document).ready(function () {
       dataType: "json",
 
       success: function (data) {
+        $("#ajax-loader").addClass("d-none");
         var resultData = data;
 
         if (resultData.code == 200) {
@@ -228,6 +230,7 @@ $(document).ready(function () {
         }
       },
       error: function (xhr, status, error) {
+        $("#ajax-loader").addClass("d-none");
         Swal.fire({
           title: "Request Failed",
           text: "Something went wrong. Please try again later.",
