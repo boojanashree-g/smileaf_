@@ -172,7 +172,7 @@
 
                                             <div class="col-5 col-md-5">
                                                 <label for="main_image" class="form-label">Product Primary Image(Allowed
-                                                    size below 500KB)</label>
+                                                    size below 25MB)</label>
                                                 <input class="form-control" type="file" id="main_image"
                                                     name="main_image" accept="image/*">
 
@@ -202,7 +202,7 @@
 
                                             <div class="col-12">
                                                 <label for="images" class="form-label">Product's Secondary Images
-                                                    (Allowed size below 500KB*)</label>
+                                                    (Allowed size below 25MB*)</label>
                                                 <div class="upload-box">
                                                     <label class="upload-label" for="images"><i
                                                             class="fa-solid fa-arrow-up-from-bracket"></i> &nbsp; &nbsp;

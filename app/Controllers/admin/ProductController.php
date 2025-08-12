@@ -53,45 +53,51 @@ class ProductController extends BaseController
         $ImageModel = new ImageModel();
         $data = $request->getPost();
 
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+        $maxSize = 20971520; // 20MB
 
         try {
             $productName = $request->getPost('prod_name');
             $hasVariant = $request->getPost('has_variant');
             $variants = $request->getPost('variants');
-            $data = $request->getPost();
-
-
 
             $url = strtolower(trim(preg_replace('/-+/', '-', preg_replace('/[^A-Za-z0-9-]+/', '-', $productName)), '-'));
 
             $MainImg = $request->getFile('main_image');
-            $randomName = '';
 
             if ($MainImg && $MainImg->isValid()) {
-                $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
-                if (in_array($MainImg->getMimeType(), $allowedTypes)) {
-                    if ($MainImg->getSize() < 10485760) {  // 2 MB
-                        $randomName = $MainImg->getRandomName();
-                        $MainImg->move('./uploads/', $randomName);
-                    } else {
-                        return $this->response->setJSON([
-                            'code' => 400,
-                            'status' => 'error',
-                            'msg' => 'Main image must be less than 10MB.'
-                        ]);
-                    }
-                } else {
+                if ($MainImg->getSize() > $maxSize) {
+                    return $this->response->setJSON([
+                        'code' => 400,
+                        'status' => 'error',
+                        'msg' => 'Main image must be less than 20MB.'
+                    ]);
+                }
+
+                if (!in_array($MainImg->getMimeType(), $allowedTypes)) {
                     return $this->response->setJSON([
                         'code' => 400,
                         'status' => 'error',
                         'msg' => 'Invalid image type. Only JPG, JPEG, PNG allowed.'
                     ]);
                 }
+
+                $newName = pathinfo($MainImg->getRandomName(), PATHINFO_FILENAME) . '.webp';
+                $savePath = FCPATH . 'uploads/' . $newName;
+
+                \Config\Services::image()
+                    ->withFile($MainImg->getTempName())
+                    ->convert(IMAGETYPE_WEBP)
+                    ->save($savePath, 90);
+
+                $data['main_image'] = '/uploads/' . $newName;
+            } else {
+                $data['main_image'] = null;
             }
 
-
             if (!empty($productName)) {
+
                 $data = [
                     'prod_name' => $productName,
                     'menu_id' => $request->getPost('menu_id'),
@@ -99,18 +105,20 @@ class ProductController extends BaseController
                     'url' => $url,
                     'description' => $request->getPost('description'),
                     'product_usage' => $request->getPost('product_usage'),
-                    'main_image' => '/uploads/' . $randomName,
-                    'has_variant' => $request->getPost('has_variant'),
+                    'has_variant' => $hasVariant,
                     'type_id' => $request->getPost('type_id'),
                     'shape_id' => $request->getPost('shape_id'),
                     'size_id' => $request->getPost('size_id'),
                     'best_seller' => $request->getPost('best_seller'),
+                    'main_image' => $data['main_image']
                 ];
+
                 $ProductModel->insert($data);
                 $lastInsertedID = $ProductModel->insertID();
 
                 if ($lastInsertedID) {
                     $quantity = $request->getPost('quantity');
+
                     if ((int) $hasVariant == 0) {
                         $variantData = [
                             'prod_id' => $lastInsertedID,
@@ -125,13 +133,11 @@ class ProductController extends BaseController
                         ];
 
                         $VariantModel->insert($variantData);
-                        $affected = $this->db->affectedRows();
-                        if ($affected > 0) {
-                            $updateQry = "UPDATE tbl_products SET main_quantity = ? WHERE prod_id = ?";
-                            $updateData = $this->db->query($updateQry, [$quantity, $lastInsertedID]);
+                        if ($this->db->affectedRows() > 0) {
+                            $this->db->query("UPDATE tbl_products SET main_quantity = ? WHERE prod_id = ?", [$quantity, $lastInsertedID]);
                         }
-
                     } else {
+                        $totalQuantity = 0;
                         for ($i = 0; $i < count($variants); $i++) {
                             $totalQuantity += (int) $variants[$i]['quantity'];
 
@@ -148,41 +154,39 @@ class ProductController extends BaseController
                             ];
                             $VariantModel->insert($variantData);
                         }
-
-                        $updateQry = "UPDATE tbl_products SET main_quantity = ? WHERE prod_id = ?";
-                        $updateData = $this->db->query($updateQry, [$totalQuantity, $lastInsertedID]);
+                        $this->db->query("UPDATE tbl_products SET main_quantity = ? WHERE prod_id = ?", [$totalQuantity, $lastInsertedID]);
                     }
 
                     $images = $this->request->getFiles();
                     foreach ($images['images'] as $subImg) {
                         if ($subImg->isValid()) {
-                            $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-
-                            if (in_array($subImg->getMimeType(), $allowedTypes)) {
-                                if ($subImg->getSize() <= 10485760) {  // 2 MB
-                                    $randomName = $subImg->getRandomName();
-                                    $subImg->move('./uploads/', $randomName);
-
-                                    $imageData = [
-                                        'prod_id' => $lastInsertedID,
-                                        'image_path' => '/uploads/' . $randomName,
-                                    ];
-
-                                    $ImageModel->insert($imageData);
-                                } else {
-                                    return $this->response->setJSON([
-                                        'code' => 400,
-                                        'status' => 'error',
-                                        'msg' => 'Images  must be less than 10MB.'
-                                    ]);
-                                }
-                            } else {
+                            if (!in_array($subImg->getMimeType(), $allowedTypes)) {
                                 return $this->response->setJSON([
                                     'code' => 400,
                                     'status' => 'error',
                                     'msg' => 'Invalid image type. Only JPG, JPEG, PNG allowed.'
                                 ]);
                             }
+                            if ($subImg->getSize() > $maxSize) {
+                                return $this->response->setJSON([
+                                    'code' => 400,
+                                    'status' => 'error',
+                                    'msg' => 'Images must be less than 20MB.'
+                                ]);
+                            }
+
+                            $newName = pathinfo($subImg->getRandomName(), PATHINFO_FILENAME) . '.webp';
+                            $savePath = FCPATH . 'uploads/' . $newName;
+
+                            \Config\Services::image()
+                                ->withFile($subImg->getTempName())
+                                ->convert(IMAGETYPE_WEBP)
+                                ->save($savePath, 90);
+
+                            $ImageModel->insert([
+                                'prod_id' => $lastInsertedID,
+                                'image_path' => '/uploads/' . $newName,
+                            ]);
                         }
                     }
 
@@ -191,8 +195,6 @@ class ProductController extends BaseController
                         'status' => 'success',
                         'msg' => 'Data Inserted Successfully'
                     ]);
-
-
                 } else {
                     return $this->response->setJSON([
                         'code' => 400,
@@ -207,7 +209,6 @@ class ProductController extends BaseController
                     'msg' => 'Product name is required.'
                 ]);
             }
-
         } catch (\Exception $e) {
             return $this->response->setJSON([
                 'code' => 500,
@@ -216,6 +217,7 @@ class ProductController extends BaseController
             ]);
         }
     }
+
 
     public function getData()
     {
@@ -284,241 +286,167 @@ class ProductController extends BaseController
         $ImageModel = new ImageModel();
 
         try {
-            $getData = $this->request->getPost();
-
-            $productName = $request->getPost('prod_name');
             $productID = $request->getPost('prod_id');
-
+            $productName = $request->getPost('prod_name');
             $hasVariant = $request->getPost('has_variant');
             $variants = $request->getPost('variants');
 
+            if (empty($productID) || empty($productName)) {
+                return $this->response->setJSON([
+                    'code' => 400,
+                    'status' => 'error',
+                    'msg' => 'Product ID and name are required.'
+                ]);
+            }
+
             $url = strtolower(trim(preg_replace('/-+/', '-', preg_replace('/[^A-Za-z0-9-]+/', '-', $productName)), '-'));
 
+            // Main image handling
             $MainImg = $request->getFile('main_image');
-
-            $randomName = '';
+            $main_image = null;
+            $maxSize = 20971520;
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
             if ($MainImg && $MainImg->isValid()) {
-                // Get Old image
-                $query = "SELECT main_image FROM tbl_products WHERE `prod_id`  = ?";
-                $mainImg = $this->db->query($query, [$productID])->getRow();
-
-                $imagePath = FCPATH . $mainImg->main_image;
-                if (file_exists($imagePath)) {
-                    unlink($imagePath);
+                // Delete old image
+                $oldMainImg = $this->db->query("SELECT main_image FROM tbl_products WHERE prod_id = ?", [$productID])->getRow();
+                if ($oldMainImg && file_exists(FCPATH . ltrim($oldMainImg->main_image, '/'))) {
+                    unlink(FCPATH . ltrim($oldMainImg->main_image, '/'));
                 }
 
-                $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-                if (in_array($MainImg->getMimeType(), $allowedTypes)) {
-                    if ($MainImg->getSize() <= 10485760) {  // 2 MB
-                        $randomName = $MainImg->getRandomName();
-                        $MainImg->move('./uploads/', $randomName);
-
-                        $main_image = '/uploads/' . $randomName;
-
-                    } else {
-                        return $this->response->setJSON([
-                            'code' => 400,
-                            'status' => 'error',
-                            'msg' => 'Main image must be less than 10MB.'
-                        ]);
-                    }
-                } else {
+                if (!in_array($MainImg->getMimeType(), $allowedTypes)) {
                     return $this->response->setJSON([
                         'code' => 400,
                         'status' => 'error',
                         'msg' => 'Invalid image type. Only JPG, JPEG, PNG allowed.'
                     ]);
                 }
-            } else {
-                // Get Old image
-                $query = "SELECT main_image FROM tbl_products WHERE `prod_id`  = ?";
-                $mainImg = $this->db->query($query, [$productID])->getRow();
 
-                $main_image = $mainImg->main_image;
-
-            }
-
-
-            if (!empty($productID)) {
-                $data = [
-                    'prod_name' => $productName,
-                    'menu_id' => $request->getPost('menu_id'),
-                    'submenu_id' => $request->getPost('sub_id'),
-                    'url' => $url,
-                    'description' => $request->getPost('description'),
-                    'product_usage' => $request->getPost('product_usage'),
-                    'main_image' => $main_image,
-                    'has_variant' => $request->getPost('has_variant'),
-                    'type_id' => $request->getPost('type_id'),
-                    'shape_id' => $request->getPost('shape_id'),
-                    'size_id' => $request->getPost('size_id'),
-                    'best_seller' => $request->getPost('best_seller'),
-                ];
-
-
-                if (!empty($productID)) {
-                    $ProductModel->update($productID, $data);
-                    $lastInsertedID = $productID;
-
-                    $VariantModel->where('prod_id', $productID)->delete();
-                } else {
-                    // Insert new product
-                    $ProductModel->insert($data);
-                    $lastInsertedID = $ProductModel->insertID();
-                }
-
-                $affectedRows = $this->db->affectedRows();
-                $totalQuantity = 0;
-                if ($productID) {
-
-                    if ((int) $hasVariant == 0) {
-
-
-                        $quantity = $request->getPost('quantity');
-                        $variantData = [
-                            'prod_id' => $productID,
-                            'pack_qty' => $request->getPost('pack_qty') ?? 0,
-                            'mrp' => $request->getPost('mrp'),
-                            'offer_type' => $request->getPost('offer_type'),
-                            'offer_details' => $request->getPost('offer_details'),
-                            'offer_price' => $request->getPost('offer_price'),
-                            'stock_status' => $request->getPost('stock_status'),
-                            'quantity' => $quantity,
-                            'weight' => $request->getPost('weight'),
-                        ];
-
-
-
-                        $VariantModel->insert($variantData);
-
-
-                        $affected = $this->db->affectedRows();
-                        if ($affected >= 0) {
-                            $updateQry = "UPDATE tbl_products SET main_quantity = ? WHERE prod_id = ?";
-                            $updateData = $this->db->query($updateQry, [$quantity, $productID]);
-                            $affectedRows = $this->db->affectedRows();
-
-                            return $this->response->setJSON([
-                                'code' => 200,
-                                'status' => 'success',
-                                'msg' => 'Data Updated Successfully'
-                            ]);
-                        }
-                    } else {
-
-                        for ($i = 0; $i < count($variants); $i++) {
-
-                            $totalQuantity += (int) $variants[$i]['quantity'];
-
-                            $variantData = [
-                                'prod_id' => $productID,
-                                'pack_qty' => $variants[$i]['pack_qty'],
-                                'mrp' => $variants[$i]['mrp'],
-                                'offer_type' => $variants[$i]['offer_type'],
-                                'offer_details' => $variants[$i]['offer_details'],
-                                'offer_price' => $variants[$i]['offer_price'],
-                                'stock_status' => $variants[$i]['stock_status'],
-                                'quantity' => $variants[$i]['quantity'],
-                                'weight' => $variants[$i]['weight'],
-                            ];
-
-                            $VariantModel->insert($variantData);
-                            $affectedRows = $this->db->affectedRows();
-
-                        }
-
-                        $updateQry = "UPDATE tbl_products SET main_quantity = ? WHERE prod_id = ?";
-                        $updateData = $this->db->query($updateQry, [$totalQuantity, $productID]);
-                    }
-
-
-
-                    $existingImages = $this->request->getPost('existing_images');
-
-                    // Ensure no duplicates
-                    if (is_array($existingImages)) {
-                        $existingImages = array_unique($existingImages);
-                    } else {
-                        $existingImages = [];
-                    }
-
-
-
-                    $images = $this->request->getFiles();
-                    $allOldImages = $ImageModel->where('prod_id', $productID)->findAll();
-
-                    // Delete from uploads if not in existingImages
-                    foreach ($allOldImages as $img) {
-                        $imgPath = $img['image_path'];
-                        if (!in_array($imgPath, $existingImages)) {
-                            $filePath = FCPATH . ltrim($imgPath, '/');
-                            if (file_exists($filePath)) {
-                                unlink($filePath);
-                            }
-                            $ImageModel->delete($img['image_id']);
-                        }
-                    }
-
-                    if (!empty($images['images'])) {
-                        foreach ($images['images'] as $subImg) {
-                            if ($subImg->isValid() && !$subImg->hasMoved()) {
-                                $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-                                $maxSize = 10485760;
-
-                                if (!in_array($subImg->getMimeType(), $allowedTypes)) {
-                                    return $this->response->setJSON([
-                                        'code' => 400,
-                                        'status' => 'error',
-                                        'msg' => 'Invalid image type. Only JPG, JPEG, PNG allowed.'
-                                    ]);
-                                }
-
-                                if ($subImg->getSize() > $maxSize) {
-                                    return $this->response->setJSON([
-                                        'code' => 400,
-                                        'status' => 'error',
-                                        'msg' => 'Images must be less than 10MB.'
-                                    ]);
-                                }
-
-                                $randomName = $subImg->getRandomName();
-                                $subImg->move(FCPATH . 'uploads/', $randomName);
-
-                                $ImageModel->insert([
-                                    'prod_id' => $productID,
-                                    'image_path' => '/uploads/' . $randomName
-                                ]);
-                                $affectedRows = $this->db->affectedRows();
-                            }
-
-                        }
-                    }
-
-
-                    return $this->response->setJSON([
-                        'code' => 200,
-                        'status' => 'success',
-                        'msg' => 'Data Updated Successfully'
-                    ]);
-
-
-                } else {
-                    print_r("res 2");
-                    die;
+                if ($MainImg->getSize() > $maxSize) {
                     return $this->response->setJSON([
                         'code' => 400,
                         'status' => 'error',
-                        'msg' => 'Product not updated.'
+                        'msg' => 'Main image must be less than or equal to 20MB.'
                     ]);
                 }
+
+                $newName = pathinfo($MainImg->getRandomName(), PATHINFO_FILENAME) . '.webp';
+                $savePath = FCPATH . 'uploads/' . $newName;
+
+                \Config\Services::image()
+                    ->withFile($MainImg->getTempName())
+                    ->convert(IMAGETYPE_WEBP)
+                    ->save($savePath, 90);
+
+                $main_image = '/uploads/' . $newName;
             } else {
-                return $this->response->setJSON([
-                    'code' => 400,
-                    'status' => 'error',
-                    'msg' => 'Product name is required.'
-                ]);
+                // Keep old image
+                $oldMainImg = $this->db->query("SELECT main_image FROM tbl_products WHERE prod_id = ?", [$productID])->getRow();
+                $main_image = $oldMainImg->main_image ?? null;
             }
+
+            // Update product data
+            $data = [
+                'prod_name' => $productName,
+                'menu_id' => $request->getPost('menu_id'),
+                'submenu_id' => $request->getPost('sub_id'),
+                'url' => $url,
+                'description' => $request->getPost('description'),
+                'product_usage' => $request->getPost('product_usage'),
+                'main_image' => $main_image,
+                'has_variant' => $hasVariant,
+                'type_id' => $request->getPost('type_id'),
+                'shape_id' => $request->getPost('shape_id'),
+                'size_id' => $request->getPost('size_id'),
+                'best_seller' => $request->getPost('best_seller'),
+            ];
+
+            $ProductModel->update($productID, $data);
+            $lastInsertedID = $productID;
+
+            // Remove old variants
+            $VariantModel->where('prod_id', $productID)->delete();
+
+            // Insert variants
+            $totalQuantity = 0;
+            if ((int) $hasVariant === 0) {
+                $quantity = $request->getPost('quantity');
+                $VariantModel->insert([
+                    'prod_id' => $productID,
+                    'pack_qty' => $request->getPost('pack_qty') ?? 0,
+                    'mrp' => $request->getPost('mrp'),
+                    'offer_type' => $request->getPost('offer_type'),
+                    'offer_details' => $request->getPost('offer_details'),
+                    'offer_price' => $request->getPost('offer_price'),
+                    'stock_status' => $request->getPost('stock_status'),
+                    'quantity' => $quantity,
+                    'weight' => $request->getPost('weight'),
+                ]);
+                $totalQuantity = $quantity;
+            } elseif (is_array($variants)) {
+                foreach ($variants as $variant) {
+                    $totalQuantity += (int) $variant['quantity'];
+                    $VariantModel->insert([
+                        'prod_id' => $productID,
+                        'pack_qty' => $variant['pack_qty'],
+                        'mrp' => $variant['mrp'],
+                        'offer_type' => $variant['offer_type'],
+                        'offer_details' => $variant['offer_details'],
+                        'offer_price' => $variant['offer_price'],
+                        'stock_status' => $variant['stock_status'],
+                        'quantity' => $variant['quantity'],
+                        'weight' => $variant['weight'],
+                    ]);
+                }
+            }
+
+            $this->db->query("UPDATE tbl_products SET main_quantity = ? WHERE prod_id = ?", [$totalQuantity, $productID]);
+
+            // Update additional images
+            $existingImages = $request->getPost('existing_images');
+            if (!is_array($existingImages))
+                $existingImages = [];
+
+            $allOldImages = $ImageModel->where('prod_id', $productID)->findAll();
+            foreach ($allOldImages as $img) {
+                if (!in_array($img['image_path'], $existingImages)) {
+                    $filePath = FCPATH . ltrim($img['image_path'], '/');
+                    if (file_exists($filePath))
+                        unlink($filePath);
+                    $ImageModel->delete($img['image_id']);
+                }
+            }
+
+            $images = $request->getFiles();
+            if (!empty($images['images'])) {
+                foreach ($images['images'] as $subImg) {
+                    if ($subImg->isValid() && !$subImg->hasMoved()) {
+                        if (!in_array($subImg->getMimeType(), $allowedTypes))
+                            continue;
+                        if ($subImg->getSize() > $maxSize)
+                            continue;
+
+                        $newName = pathinfo($subImg->getRandomName(), PATHINFO_FILENAME) . '.webp';
+                        $savePath = FCPATH . 'uploads/' . $newName;
+
+                        \Config\Services::image()
+                            ->withFile($subImg->getTempName())
+                            ->convert(IMAGETYPE_WEBP)
+                            ->save($savePath, 90);
+
+                        $ImageModel->insert([
+                            'prod_id' => $lastInsertedID,
+                            'image_path' => '/uploads/' . $newName,
+                        ]);
+                    }
+                }
+            }
+
+            return $this->response->setJSON([
+                'code' => 200,
+                'status' => 'success',
+                'msg' => 'Data Updated Successfully'
+            ]);
 
         } catch (\Exception $e) {
             return $this->response->setJSON([
