@@ -44,58 +44,64 @@ class SubmenuController extends BaseController
             $SubmenuModel = new SubmenuModel();
             $SubmenuImg = $this->request->getFile('image_url');
 
-            if ($SubmenuImg && $SubmenuImg->isValid()) {
-                $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-
-                if (in_array($SubmenuImg->getMimeType(), $allowedTypes)) {
-                    if ($SubmenuImg->getSize() <= 2097152) {
-                        $randomName = $SubmenuImg->getRandomName();
-                        $SubmenuImg->move('./uploads/', $randomName);
-
-                        $data = [
-                            'image_url' => '/uploads/' . $randomName,
-                            'menu_id' => $menu,
-                            'submenu' => $subMenu,
-                            'slug' => $slug,
-                            'gst' => $gst,
-                        ];
-
-                        $SubmenuModel->insert($data);
-
-                        if ($SubmenuModel->db->affectedRows() == 1) {
-                            return $this->response->setJSON([
-                                'code' => 200,
-                                'msg' => 'Data Inserted Successfully',
-                                'status' => 'success'
-                            ]);
-                        } else {
-                            return $this->response->setJSON([
-                                'code' => 400,
-                                'status' => 'error',
-                                'msg' => 'Data insertion failed'
-                            ]);
-                        }
-                    } else {
-                        return $this->response->setJSON([
-                            'code' => 400,
-                            'status' => 'error',
-                            'msg' => 'Image must be less than 2MB'
-                        ]);
-                    }
-                } else {
-                    return $this->response->setJSON([
-                        'code' => 400,
-                        'status' => 'error',
-                        'msg' => 'Only JPG, JPEG, and PNG files are allowed.'
-                    ]);
-                }
-            } else {
+            if (!$SubmenuImg || !$SubmenuImg->isValid()) {
                 return $this->response->setJSON([
                     'code' => 400,
                     'status' => 'error',
                     'msg' => 'Image is not uploaded or is invalid.'
                 ]);
             }
+
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+            $maxSize = 20971520; // 20MB
+
+            if (!in_array($SubmenuImg->getMimeType(), $allowedTypes)) {
+                return $this->response->setJSON([
+                    'code' => 400,
+                    'status' => 'error',
+                    'msg' => 'Invalid image type. Only JPG, JPEG, PNG allowed.'
+                ]);
+            }
+
+            if ($SubmenuImg->getSize() > $maxSize) {
+                return $this->response->setJSON([
+                    'code' => 400,
+                    'status' => 'error',
+                    'msg' => 'Image must be less than 20MB.'
+                ]);
+            }
+
+            $newName = pathinfo($SubmenuImg->getRandomName(), PATHINFO_FILENAME) . '.webp';
+            $savePath = FCPATH . 'uploads/' . $newName;
+
+            \Config\Services::image()
+                ->withFile($SubmenuImg->getTempName())
+                ->convert(IMAGETYPE_WEBP)
+                ->save($savePath, 90);
+
+            $data = [
+                'image_url' => '/uploads/' . $newName,
+                'menu_id' => $menu,
+                'submenu' => $subMenu,
+                'slug' => $slug,
+                'gst' => $gst,
+            ];
+
+
+            if ($SubmenuModel->insert($data)) {
+                return $this->response->setJSON([
+                    'code' => 200,
+                    'msg' => 'Data Inserted Successfully',
+                    'status' => 'success'
+                ]);
+            }
+
+            return $this->response->setJSON([
+                'code' => 400,
+                'status' => 'error',
+                'msg' => 'Data insertion failed'
+            ]);
+
         } catch (\Exception $e) {
             return $this->response->setJSON([
                 'code' => 500,
@@ -104,6 +110,7 @@ class SubmenuController extends BaseController
             ]);
         }
     }
+
 
 
 
@@ -127,16 +134,20 @@ class SubmenuController extends BaseController
 
     public function updateData()
     {
-        $submenu = $this->request->getPost('submenu');
-        $menuID = $this->request->getPost('menu_id');
-        $subID = $this->request->getPost('sub_id');
-        $gst = $this->request->getPost('gst');
-        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $submenu), '-'));
-
-        $SubmenuModel = new SubmenuModel();
-        $SubmenuImg = $this->request->getFile('image_url');
-
         try {
+            $submenu = $this->request->getPost('submenu');
+            $menuID = $this->request->getPost('menu_id');
+            $subID = $this->request->getPost('sub_id');
+            $gst = $this->request->getPost('gst');
+            $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $submenu), '-'));
+
+            $SubmenuModel = new SubmenuModel();
+            $SubmenuImg = $this->request->getFile('image_url');
+
+            $maxSize = 20971520; // 20MB
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+
             $data = [
                 'submenu' => $submenu,
                 'menu_id' => $menuID,
@@ -145,56 +156,64 @@ class SubmenuController extends BaseController
                 'status' => 1
             ];
 
+
             if ($SubmenuImg && $SubmenuImg->isValid() && !$SubmenuImg->hasMoved()) {
-                $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
-                if (in_array($SubmenuImg->getMimeType(), $allowedTypes)) {
-                    if ($SubmenuImg->getSize() <= 2097152) {
 
-                        $query = "SELECT image_url FROM tbl_submenu WHERE sub_id = ?";
-                        $oldImg = $this->db->query($query, [$subID])->getRow();
-                        if ($oldImg && !empty($oldImg->image_url)) {
-                            $imagePath = FCPATH . ltrim($oldImg->image_url, '/');
-                            if (file_exists($imagePath)) {
-                                unlink($imagePath);
-                            }
-                        }
-
-                        // Save new image
-                        $randomName = $SubmenuImg->getRandomName();
-                        $SubmenuImg->move('./uploads/', $randomName);
-                        $data['image_url'] = '/uploads/' . $randomName;
-                    } else {
-                        return $this->response->setJSON([
-                            'code' => 400,
-                            'status' => 'error',
-                            'msg' => 'Image must be less than 2MB.'
-                        ]);
-                    }
-                } else {
+                if (!in_array($SubmenuImg->getMimeType(), $allowedTypes)) {
                     return $this->response->setJSON([
                         'code' => 400,
                         'status' => 'error',
-                        'msg' => 'Only JPG, JPEG, and PNG files are allowed.'
+                        'msg' => 'Invalid image type. Only JPG, JPEG, PNG allowed.'
                     ]);
                 }
+
+
+                if ($SubmenuImg->getSize() > $maxSize) {
+                    return $this->response->setJSON([
+                        'code' => 400,
+                        'status' => 'error',
+                        'msg' => 'Image must be less than 20MB.'
+                    ]);
+                }
+
+                // Delete old image if exists
+                $oldImg = $this->db->query("SELECT image_url FROM tbl_submenu WHERE sub_id = ?", [$subID])->getRow();
+                if ($oldImg && !empty($oldImg->image_url)) {
+                    $imagePath = FCPATH . ltrim($oldImg->image_url, '/');
+                    if (file_exists($imagePath)) {
+                        unlink($imagePath);
+                    }
+                }
+
+                // Save new image as webp
+                $newName = pathinfo($SubmenuImg->getRandomName(), PATHINFO_FILENAME) . '.webp';
+                $savePath = FCPATH . 'uploads/' . $newName;
+
+                \Config\Services::image()
+                    ->withFile($SubmenuImg->getTempName())
+                    ->convert(IMAGETYPE_WEBP)
+                    ->save($savePath, 90);
+
+                $data['image_url'] = '/uploads/' . $newName;
             }
 
-            // Update database
+
             $SubmenuModel->update($subID, $data);
+
             if ($SubmenuModel->db->affectedRows() >= 0) {
                 return $this->response->setJSON([
                     'code' => 200,
                     'msg' => 'Data Updated Successfully',
                     'status' => 'success'
                 ]);
-            } else {
-                return $this->response->setJSON([
-                    'code' => 400,
-                    'status' => 'error',
-                    'msg' => 'Data update failed.'
-                ]);
             }
+
+            return $this->response->setJSON([
+                'code' => 400,
+                'status' => 'error',
+                'msg' => 'Data update failed.'
+            ]);
 
         } catch (\Exception $e) {
             return $this->response->setJSON([
@@ -204,6 +223,7 @@ class SubmenuController extends BaseController
             ]);
         }
     }
+
 
 
     public function deleteData()

@@ -49,6 +49,7 @@ $(document).ready(function () {
   //*************************** [Insert] **************************************************************************
 
   function insertData() {
+    $("#ajax-loader").removeClass("d-none");
     var form = $("#banner-form")[0];
     data = new FormData(form);
 
@@ -71,6 +72,7 @@ $(document).ready(function () {
       dataType: "json",
 
       success: function (data) {
+        $("#ajax-loader").addClass("d-none");
         var resultData = data;
 
         if (resultData.code == 200) {
@@ -83,6 +85,7 @@ $(document).ready(function () {
           $("#banner-modal").modal("hide");
           refreshDetails();
         } else {
+           $("#ajax-loader").addClass("d-none");
           Swal.fire({
             title: "Failure",
             text: resultData["msg"],

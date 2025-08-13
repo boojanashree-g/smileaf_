@@ -51,6 +51,7 @@ $(document).ready(function () {
   //*************************** [Insert] **************************************************************************
 
   function insertData() {
+    $("#ajax-loader").removeClass("d-none");
     var form = $("#submenu-form")[0];
     data = new FormData(form);
 
@@ -73,6 +74,7 @@ $(document).ready(function () {
       dataType: "json",
 
       success: function (data) {
+        $("#ajax-loader").addClass("d-none");
         var resultData = data;
 
         if (resultData.code == 200) {
@@ -95,6 +97,7 @@ $(document).ready(function () {
         }
       },
       error: function (xhr, status, error) {
+        $("#ajax-loader").addClass("d-none");
         Swal.fire({
           title: "Request Failed",
           text: "Something went wrong. Please try again later.",
