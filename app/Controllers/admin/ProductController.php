@@ -567,9 +567,34 @@ class ProductController extends BaseController
         $prod_name = $this->request->getPost('prod_name');
         $file = $this->request->getFile('main_image');
 
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+        $maxSize = 20971520; // 20MB
+
+        if (!in_array($file->getMimeType(), $allowedTypes)) {
+            return $this->response->setJSON([
+                'code' => 400,
+                'status' => 'error',
+                'msg' => 'Invalid image type. Only JPG, JPEG, PNG allowed.'
+            ]);
+        }
+
+        if ($file->getSize() > $maxSize) {
+            return $this->response->setJSON([
+                'code' => 400,
+                'status' => 'error',
+                'msg' => 'Image must be less than 20MB.'
+            ]);
+        }
+
         if ($file && $file->isValid() && !$file->hasMoved()) {
-            $newName = $file->getRandomName();
-            $file->move(FCPATH . 'uploads', $newName);
+            $newName = pathinfo($file->getRandomName(), PATHINFO_FILENAME) . '.webp';
+            $savePath = FCPATH . 'uploads/' . $newName;
+
+            // Convert and save as WebP
+            \Config\Services::image()
+                ->withFile($file->getTempName())
+                ->save($savePath, 90);
+
             $imagePath = 'uploads/' . $newName;
         } else {
             return $this->response->setJSON([
@@ -629,7 +654,7 @@ class ProductController extends BaseController
                 'prod_name' => $prod['prod_name'],
                 'submenu_id' => $prod['sub_id'],
                 'submenu' => $prod['submenu'],
-                'image_url' => $prod['image_url'], // use correct key here
+                'image_url' => $prod['image_url'],
             ];
         }
 
@@ -688,11 +713,28 @@ class ProductController extends BaseController
                 ]);
             }
 
-            // Prepare image
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+            $maxSize = 20971520; // 20MB
             $image_url = null;
 
-            if ($MainImg && $MainImg->isValid()) {
-                // Get old image
+
+            if ($MainImg && $MainImg->isValid() && !$MainImg->hasMoved()) {
+                if (!in_array($MainImg->getMimeType(), $allowedTypes)) {
+                    return $this->response->setJSON([
+                        'code' => 400,
+                        'status' => 'error',
+                        'msg' => 'Only JPG, JPEG, PNG allowed.'
+                    ]);
+                }
+
+                if ($MainImg->getSize() > $maxSize) {
+                    return $this->response->setJSON([
+                        'code' => 400,
+                        'status' => 'error',
+                        'msg' => 'Image must be less than 20MB.'
+                    ]);
+                }
+
                 $query = "SELECT image_url FROM tbl_featured_products WHERE featured_prod_id = ?";
                 $result = $this->db->query($query, [$productID])->getRow();
 
@@ -703,29 +745,19 @@ class ProductController extends BaseController
                     }
                 }
 
-                $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-                if (!in_array($MainImg->getMimeType(), $allowedTypes)) {
-                    return $this->response->setJSON([
-                        'code' => 400,
-                        'status' => 'error',
-                        'msg' => 'Only JPG, JPEG, PNG allowed.'
-                    ]);
-                }
 
-                if ($MainImg->getSize() > 10485760) {
-                    return $this->response->setJSON([
-                        'code' => 400,
-                        'status' => 'error',
-                        'msg' => 'Image must be less than 10MB.'
-                    ]);
-                }
+                // Convert and save as WebP
+                $newName = pathinfo($MainImg->getRandomName(), PATHINFO_FILENAME) . '.webp';
+                $savePath = FCPATH . 'uploads/' . $newName;
 
-                $randomName = $MainImg->getRandomName();
-                $MainImg->move('uploads/', $randomName);
-                $image_url = '/uploads/' . $randomName;
+                \Config\Services::image()
+                    ->withFile($MainImg->getTempName())
+                    ->save($savePath, 90);
+
+                $image_url = 'uploads/' . $newName;
             }
 
-            // Prepare update data
+
             $updateData = [
                 'prod_name' => $productName,
                 'sub_id' => $subID
@@ -735,7 +767,7 @@ class ProductController extends BaseController
                 $updateData['image_url'] = $image_url;
             }
 
-            // Perform update
+
             $this->db->table('tbl_featured_products')
                 ->where('featured_prod_id', $productID)
                 ->update($updateData);
@@ -753,6 +785,7 @@ class ProductController extends BaseController
             ]);
         }
     }
+
 
 }
 

@@ -32,7 +32,7 @@ class App extends BaseConfig
     //     $this->baseURL = $protocol . '://' . $host . $scriptName . '/';
     // }
 
-    public string $baseURL = 'https://13ee9faf92eb.ngrok-free.app/smileaf/';
+    public string $baseURL = 'https://283c98b16fc0.ngrok-free.app/smileaf/';
 
 
     /**

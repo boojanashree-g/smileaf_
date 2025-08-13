@@ -128,7 +128,7 @@
                                             </div>
 
                                             <div class="col-12 col-md-6">
-                                                <label for="image_url" class="form-label">Image</label>
+                                                <label for="image_url" class="form-label">Image (Maximum size 20MB)</label>
                                                 <input class="form-control" type="file" id="image_url"
                                                     name="image_url" accept="image/png, image/jpeg, image/jpg">
                                                 <img src="" id="image_url_disp" alt="image" width="130px"
