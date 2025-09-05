@@ -16,7 +16,7 @@ class App extends BaseConfig
      *
      *    http://example.com/
      */
-    // public string $baseURL = 'http://localhost/ci4projects/smileaf';
+    public string $baseURL = 'http://localhost/smileaf';
 
     // public function __construct()
     // {
@@ -32,7 +32,7 @@ class App extends BaseConfig
     //     $this->baseURL = $protocol . '://' . $host . $scriptName . '/';
     // }
 
-    public string $baseURL = 'https://283c98b16fc0.ngrok-free.app/smileaf/';
+    // public string $baseURL = 'https://283c98b16fc0.ngrok-free.app/smileaf/';
 
 
     /**
