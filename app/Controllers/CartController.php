@@ -197,28 +197,190 @@ class CartController extends BaseController
 
     public function updateCart()
     {
-        $qty = $this->request->getPost('quantity');
-        $total_price = $this->request->getPost('total_price');
-        $formated = number_format((float) $total_price, 2, '.', '');
+        $qty = (int) $this->request->getPost('quantity');
         $cartID = $this->request->getPost('cart_id');
+        $userID = session()->get("user_id");
 
-
-        $query = "UPDATE tbl_user_cart SET quantity =?, total_price = ? 
-                  WHERE cart_id = ?  AND flag = 1 ";
-        $updateData = $this->db->query($query, [$qty, $formated, $cartID]);
-
-        $affectedRow = $this->db->affectedRows();
-
-        if ($updateData && $affectedRow == 1) {
-            $res['code'] = 200;
-            $res['status'] = "success";
-            echo json_encode($res);
-        } else {
-            $res['code'] = 400;
-            $res['status'] = "Failure";
-            echo json_encode($res);
+        $getCart = $this->db->query("SELECT * FROM tbl_user_cart WHERE cart_id = ?", [$cartID])->getRowArray();
+        if (!$getCart) {
+            return json_encode([
+                'code' => 404,
+                'status' => 'Cart item not found',
+            ]);
         }
+
+        $prodID = $getCart['prod_id'];
+        $packQty = $getCart['pack_qty'];
+
+        // Get product price and GST (if GST is stored)
+        $getPrice = $this->db->query(
+            "SELECT offer_price FROM tbl_variants WHERE prod_id = ? AND pack_qty = ?",
+            [$prodID, $packQty]
+        )->getRowArray();
+
+
+        if (!$getPrice) {
+            return json_encode([
+                'code' => 404,
+                'status' => 'Product not found',
+            ]);
+        }
+
+        $getMenu = $this->db->query("SELECT `menu_id` , `submenu_id` FROM tbl_products WHERE `prod_id` = ? AND flag =1", [$prodID])->getRowArray();
+        $menuID = $getMenu['menu_id'];
+        $submenuID = $getMenu['submenu_id'];
+
+        $getGst = $this->db->query("SELECT `gst` FROM `tbl_submenu`  WHERE `sub_id` = ?  AND  `menu_id` = ? AND flag =1", [$submenuID, $menuID])->getRowArray();
+
+        $price = (float) $getPrice['offer_price'];
+        $gstPercent = (float) $getGst['gst'] ?? 0;
+
+        // Calculate item subtotal
+        $subTotal = $qty * $price;
+        $formattedSubTotal = number_format($subTotal, 2, '.', '');
+
+        // Update cart with new quantity and price
+        $query = "UPDATE tbl_user_cart SET quantity = ?, total_price = ? WHERE cart_id = ? AND flag = 1";
+        $updateData = $this->db->query($query, [$qty, $formattedSubTotal, $cartID]);
+
+        if (!$updateData) {
+            return json_encode([
+                'code' => 400,
+                'status' => 'Failure'
+            ]);
+        }
+
+        // Recalculate grand total for the user
+        $cartItems = $this->db->query(
+            "SELECT total_price, prod_id, pack_qty FROM tbl_user_cart WHERE user_id = ? AND flag = 1",
+            [$userID]
+        )->getResultArray();
+
+        $grandTotal = 0;
+        $totalGstValue = 0;
+
+        foreach ($cartItems as $item) {
+            $itemTotal = (float) $item['total_price'];
+            $grandTotal += $itemTotal;
+
+
+            $getMenu = $this->db->query("SELECT `menu_id` , `submenu_id` FROM tbl_products WHERE `prod_id` = ? AND flag =1", [$item['prod_id']])->getRowArray();
+            $menuID = $getMenu['menu_id'];
+            $submenuID = $getMenu['submenu_id'];
+
+            $getGst = $this->db->query("SELECT `gst` FROM `tbl_submenu`  WHERE `sub_id` = ?  AND  `menu_id` = ? AND flag =1", [$submenuID, $menuID])->getRowArray();
+
+
+            $itemGstPercent = (float) $getGst['gst'] ?? 0;
+
+            if ($itemGstPercent > 0) {
+                $itemGstValue = ($itemTotal * $itemGstPercent) / (100 + $itemGstPercent);
+                $itemGstValue = round($itemGstValue);
+                $totalGstValue += $itemGstValue;
+            }
+        }
+
+        $subTotalWithoutGst = $grandTotal - $totalGstValue;
+        $finalTotal = $grandTotal;
+
+
+        $shippingCharge = 100;
+        $courierOfferLimit = 500;
+        $showCourierMessage = '';
+        if ($grandTotal < $courierOfferLimit) {
+            $finalTotal += $shippingCharge;
+            $remaining = $courierOfferLimit - $grandTotal;
+            $showCourierMessage = "🛒 You're just ₹" . number_format($remaining, 2) . " away from <strong>Free Shipping</strong>! Add more to your cart now!!";
+        }
+
+
+        $cgst = $sgst = round($totalGstValue / 2, 2);
+
+
+        $res = [
+            'code' => 200,
+            'status' => 'success',
+            'sub_total' => number_format($formattedSubTotal, 2, '.', ''),
+            'total' => number_format($grandTotal, 2, '.', ''),
+            'final_total' => number_format($finalTotal, 2, '.', ''),
+            'sub_total_without_gst' => number_format($subTotalWithoutGst, 2, '.', ''),
+            'gst' => number_format($totalGstValue, 2, '.', ''),
+            'cgst' => number_format($cgst, 2, '.', ''),
+            'sgst' => number_format($sgst, 2, '.', ''),
+            'free_shipping_msg' => $showCourierMessage,
+            'remaining' => $remaining ?? 0,
+        ];
+
+
+        return json_encode($res);
     }
+
+    public function getIntialCart()
+    {
+        $userID = session()->get("user_id");
+
+
+        $cartItems = $this->db->query(
+            "SELECT total_price, prod_id, pack_qty FROM tbl_user_cart WHERE user_id = ? AND flag = 1",
+            [$userID]
+        )->getResultArray();
+
+        $grandTotal = 0;
+        $totalGstValue = 0;
+
+        foreach ($cartItems as $item) {
+            $itemTotal = (float) $item['total_price'];
+            $grandTotal += $itemTotal;
+
+            // Fetch GST % for each item
+            $getMenu = $this->db->query("SELECT `menu_id` , `submenu_id` FROM tbl_products WHERE `prod_id` = ? AND flag =1", [$item['prod_id']])->getRowArray();
+            $menuID = $getMenu['menu_id'];
+            $submenuID = $getMenu['submenu_id'];
+
+            $getGst = $this->db->query("SELECT `gst` FROM `tbl_submenu`  WHERE `sub_id` = ?  AND  `menu_id` = ? AND flag =1", [$submenuID, $menuID])->getRowArray();
+
+
+            $itemGstPercent = (float) $getGst['gst'] ?? 0;
+
+            if ($itemGstPercent > 0) {
+                $itemGstValue = ($itemTotal * $itemGstPercent) / (100 + $itemGstPercent);
+                $itemGstValue = round($itemGstValue);
+                $totalGstValue += $itemGstValue;
+            }
+        }
+
+        $subTotalWithoutGst = $grandTotal - $totalGstValue;
+        $finalTotal = $grandTotal;
+
+        // Add shipping charge if applicable
+        $shippingCharge = 100;
+        $courierOfferLimit = 500;
+        $showCourierMessage = '';
+        if ($grandTotal < $courierOfferLimit) {
+            $finalTotal += $shippingCharge;
+            $remaining = $courierOfferLimit - $grandTotal;
+            $showCourierMessage = "🛒 You're just ₹" . number_format($remaining, 2) . " away from <strong>Free Shipping</strong>! Add more to your cart now!!";
+        }
+
+
+        $cgst = $sgst = round($totalGstValue / 2, 2);
+
+        $res = [
+            'code' => 200,
+            'status' => 'success',
+            'total' => number_format($grandTotal, 2, '.', ''),
+            'final_total' => number_format($finalTotal, 2, '.', ''),
+            'sub_total_without_gst' => number_format($subTotalWithoutGst, 2, '.', ''),
+            'gst' => number_format($totalGstValue, 2, '.', ''),
+            'cgst' => number_format($cgst, 2, '.', ''),
+            'sgst' => number_format($sgst, 2, '.', ''),
+            'free_shipping_msg' => $showCourierMessage,
+            'remaining' => $remaining ?? 0,
+        ];
+
+        echo json_encode($res);
+    }
+
 
 
     public function deleteCart()

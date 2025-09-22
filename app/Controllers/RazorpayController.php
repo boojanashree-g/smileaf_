@@ -3,6 +3,8 @@ namespace App\Controllers;
 
 use Razorpay\Api\Api;
 use Config\Razorpay as RazorpayConfig;
+use App\Models\WebhookPaymentLog;
+use App\Models\PaymentRequestLog;
 
 class RazorpayController extends BaseController
 {
@@ -16,12 +18,14 @@ class RazorpayController extends BaseController
     }
     public function payment()
     {
+        $paymentRequestLogModel = new PaymentRequestLog;
         $previousURL = previous_url();
         $orderID = session()->get('order_id');
         $userID = session()->get('user_id');
         $type = $this->request->getGet('type');
 
         $paymentStatus = ['PENDING', 'COMPLETED', 'FAILED', 'CANCELLED'];
+
         // Check the orderID is already has rzporderID
         $orderQuery = "SELECT `order_id` 
                         FROM `tbl_orders` 
@@ -88,7 +92,8 @@ class RazorpayController extends BaseController
 
 
         $amount = $userData->total_amt;
-        $totalAmt = $amount * 100;
+        // $totalAmt = $amount * 100;
+        $totalAmt = 1 * 100;
 
 
         $order = $api->order->create([
@@ -115,6 +120,51 @@ class RazorpayController extends BaseController
             'address' => $userData->address,
 
         ];
+
+        // Payment request Log
+        $createdAt = time();
+        $dateTime = (new \DateTime("@$createdAt"))
+            ->setTimezone(new \DateTimeZone('Asia/Kolkata'))
+            ->format('Y-m-d H:i:s');
+
+        $getOrderItem = $this->db->query("SELECT * FROM `tbl_order_item` WHERE `order_id` = ? AND `flag` = 1", [$orderID])->getResultArray();
+
+
+
+        for ($i = 0; $i <= count($getOrderItem); $i++) {
+            $prodID = $getOrderItem[$i]['prod_id'];
+            $quantity = $getOrderItem[$i]['quantity'];
+            $prod_price = $getOrderItem[$i]['prod_price'];
+            $sub_total = $getOrderItem[$i]['sub_total'];
+            $mrp = $getOrderItem[$i]['mrp'];
+            $offer_type = $getOrderItem[$i]['offer_type'];
+            $offer_details = $getOrderItem[$i]['offer_details'];
+            $offer_price = $getOrderItem[$i]['offer_price'];
+
+            if (empty($prodID)) {
+                continue;
+            }
+
+            $logData = [
+                'order_id' => $orderID,
+                'user_id' => $userID,
+                'username' => $userData->username,
+                'date_time' => $dateTime,
+                'total_amount' => $totalAmt,
+                'prod_id' => (int) $prodID,
+                'quantity' => (int) ($quantity ?? 0),
+                'prod_price' => $prod_price ?? null,
+                'sub_total' => $sub_total ?? null,
+                'mrp' => $mrp ?? null,
+                'offer_type' => $offer_type ?? null,
+                'offer_details' => $offer_details ?? null,
+                'offer_price' => $offer_price ?? null,
+            ];
+
+
+            $paymentRequestLogModel->insert($logData);
+        }
+
 
         return view("payment", ['customerdata' => $customerData, 'order' => $order, 'key_id' => $key_id, 'secret' => $secret, 'previous_url' => $previousURL, 'cancel_orderid' => $orderID]);
     }
@@ -182,6 +232,8 @@ class RazorpayController extends BaseController
     public function webhookPaymentStatus()
     {
 
+
+        $webhookLog = new WebhookPaymentLog();
         $payload = file_get_contents("php://input");
 
         $signature = $_SERVER['HTTP_X_RAZORPAY_SIGNATURE'] ?? '';
@@ -200,7 +252,7 @@ class RazorpayController extends BaseController
 
         $payment = $data['payload']['payment']['entity'];
 
-        // For Filure
+        // For Failure
         $reason = $payment['error_reason'] ?? '';
         $code = $payment['error_code'] ?? '';
         $description = $payment['error_description'] ?? '';
@@ -212,10 +264,48 @@ class RazorpayController extends BaseController
         $orderid = $payment['notes']['order_id'] ?? null;
         $notes = $payment['notes'];
 
+
+        $this->db->table('webhook_event')->insert([
+            'event' => $event,
+            'orderid' => $orderid
+        ]);
+
         if (!$orderid) {
             return $this->response->setStatusCode(400)->setJSON(['message' => 'Order ID missing in notes']);
         }
+
+
+
         if ($event === 'payment.captured') {
+            // webhook-log
+            $createdAt = time();
+            $dateTime = (new \DateTime("@$createdAt"))
+                ->setTimezone(new \DateTimeZone('Asia/Kolkata'))
+                ->format('Y-m-d H:i:s');
+
+            $webhook_log_data = [
+                'order_id' => $notes['order_id'],
+                'user_id' => $notes['user_id'],
+                'username' => $notes['username'],
+                'razorpay_payment_id' => $razorpay_payment_id,
+                'razorpay_order_id' => $razorpay_order_id,
+                'razorpay_signature' => $signature,
+                'date_time' => $dateTime,
+                'payment_method' => $payment['method'],
+                'total_amount' => $payment['amount'],
+                'payment_status' => $payment['status']
+            ];
+            $webhookLog->insert($webhook_log_data);
+
+            $insertID = $webhookLog->getInsertID();
+            if ($insertID) {
+                log_message('debug', 'Webhook log inserted with ID: ' . $insertID);
+            } else {
+                log_message('error', 'Webhook insert failed: ' . json_encode($webhookLog->errors()));
+            }
+
+
+        } else if ($event === 'order.paid') {
 
             $payment_method = $payment['method'];
 
@@ -232,61 +322,6 @@ class RazorpayController extends BaseController
                 'otp_verify' => "YES"
             ];
             $this->session->set($sess);
-
-            // Delete Products from cart 
-            $getCartqry = "SELECT * FROM `tbl_user_cart` WHERE `user_id` =  ? AND flag = 1 AND  source_type = ?";
-            $cartData = $this->db->query($getCartqry, [$userID, $type])->getResultArray();
-
-            foreach ($cartData as $cartItem) {
-                $prodID = $cartItem['prod_id'];
-                $cartID = $cartItem['cart_id'];
-                $dltcart = "DELETE FROM tbl_user_cart WHERE cart_id = ? AND prod_id = ?";
-                $dltRes = $this->db->query($dltcart, [$cartID, $prodID]);
-            }
-
-            $itemList = $this->db->query("SELECT * FROM `tbl_order_item` WHERE `order_id` = ? AND `flag` = 1", [$orderID])->getResultArray();
-
-            foreach ($itemList as $items) {
-                $prodID = $items['prod_id'];
-                $variantID = $items['variant_id'];
-                $checkoutQty = $items['quantity'];
-
-                // Main Product Table 
-                $mainProdQry = "SELECT `main_quantity` FROM `tbl_products` WHERE `flag` = 1 AND `prod_id` = ?";
-                $mainProd = $this->db->query($mainProdQry, [$prodID])->getRow();
-
-                $oldMainQty = $mainProd ? $mainProd->main_quantity : 0;
-
-
-                // Variant Table 
-                $variantQry = "SELECT `quantity` FROM `tbl_variants` WHERE `flag` = 1 AND `variant_id` = ? AND `prod_id` = ?";
-                $variant = $this->db->query($variantQry, [$variantID, $prodID])->getRow();
-
-                $oldVariantQty = $variant ? $variant->quantity : 0;
-                $newVariantQty = $oldVariantQty - $checkoutQty;
-
-
-                $newMainQty = $oldMainQty - $checkoutQty;
-
-                // Prevent negative values
-                $newVariantQty = ($newVariantQty <= 0) ? 0 : $newVariantQty;
-                $newMainQty = ($newMainQty < 0) ? 0 : $newMainQty;
-                $newVariantStatus = ($newVariantQty <= 0) ? '0' : '1';
-
-
-                $this->db->query("UPDATE `tbl_variants` SET `quantity` = ?, `stock_status` =?  WHERE `variant_id` = ? AND `prod_id` = ?", [
-                    $newVariantQty,
-                    $newVariantStatus,
-                    $variantID,
-                    $prodID
-                ]);
-
-
-                $this->db->query("UPDATE `tbl_products` SET `main_quantity` = ? WHERE `prod_id` = ?", [
-                    $newMainQty,
-                    $prodID
-                ]);
-            }
 
 
             // Updating Order Status
@@ -316,7 +351,62 @@ class RazorpayController extends BaseController
 
             $OrderaffectedRows = $this->db->affectedRows();
 
-            if ($OrderaffectedRows == 1) {
+            if ($OrderaffectedRows > 0) {
+
+                // Delete Products from cart 
+                $getCartqry = "SELECT * FROM `tbl_user_cart` WHERE `user_id` =  ? AND flag = 1 AND  source_type = ?";
+                $cartData = $this->db->query($getCartqry, [$userID, $type])->getResultArray();
+
+                foreach ($cartData as $cartItem) {
+                    $prodID = $cartItem['prod_id'];
+                    $cartID = $cartItem['cart_id'];
+                    $dltcart = "DELETE FROM tbl_user_cart WHERE cart_id = ? AND prod_id = ?";
+                    $dltRes = $this->db->query($dltcart, [$cartID, $prodID]);
+                }
+
+                $itemList = $this->db->query("SELECT * FROM `tbl_order_item` WHERE `order_id` = ? AND `flag` = 1", [$orderID])->getResultArray();
+
+                foreach ($itemList as $items) {
+                    $prodID = $items['prod_id'];
+                    $variantID = $items['variant_id'];
+                    $checkoutQty = $items['quantity'];
+
+                    // Main Product Table 
+                    $mainProdQry = "SELECT `main_quantity` FROM `tbl_products` WHERE `flag` = 1 AND `prod_id` = ?";
+                    $mainProd = $this->db->query($mainProdQry, [$prodID])->getRow();
+
+                    $oldMainQty = $mainProd ? $mainProd->main_quantity : 0;
+
+
+                    // Variant Table 
+                    $variantQry = "SELECT `quantity` FROM `tbl_variants` WHERE `flag` = 1 AND `variant_id` = ? AND `prod_id` = ?";
+                    $variant = $this->db->query($variantQry, [$variantID, $prodID])->getRow();
+
+                    $oldVariantQty = $variant ? $variant->quantity : 0;
+                    $newVariantQty = $oldVariantQty - $checkoutQty;
+
+
+                    $newMainQty = $oldMainQty - $checkoutQty;
+
+                    // Prevent negative values
+                    $newVariantQty = ($newVariantQty <= 0) ? 0 : $newVariantQty;
+                    $newMainQty = ($newMainQty < 0) ? 0 : $newMainQty;
+                    $newVariantStatus = ($newVariantQty <= 0) ? '0' : '1';
+
+
+                    $this->db->query("UPDATE `tbl_variants` SET `quantity` = ?, `stock_status` =?  WHERE `variant_id` = ? AND `prod_id` = ?", [
+                        $newVariantQty,
+                        $newVariantStatus,
+                        $variantID,
+                        $prodID
+                    ]);
+
+
+                    $this->db->query("UPDATE `tbl_products` SET `main_quantity` = ? WHERE `prod_id` = ?", [
+                        $newMainQty,
+                        $prodID
+                    ]);
+                }
                 $result['code'] = 200;
                 $result['status'] = 'success';
                 $result['message'] = "Orders updated successfully";
@@ -395,7 +485,6 @@ class RazorpayController extends BaseController
             ];
         }
     }
-
 
     public function checkPaymentStatus()
     {

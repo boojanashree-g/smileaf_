@@ -373,7 +373,6 @@ $(document).ready(function () {
 
     let orderItemsData = orderDetails.items;
     let returnOrderItemsData = orderDetails.returned_items;
-    console.log(returnOrderItemsData);
     let orderItemHtml = "";
     let returnOrderItemHtml = "";
 

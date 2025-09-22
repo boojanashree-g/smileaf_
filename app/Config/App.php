@@ -16,7 +16,7 @@ class App extends BaseConfig
      *
      *    http://example.com/
      */
-    public string $baseURL = 'http://localhost/smileaf';
+    public string $baseURL = 'http://localhost/smileaf/';
 
     // public function __construct()
     // {

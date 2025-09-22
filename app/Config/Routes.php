@@ -68,6 +68,7 @@ $routes->post('quick-view-details', 'QuickViewController::quickViewDetails');
 $routes->post('insert-cart', 'CartController::insertCart');
 $routes->post('update-cart', 'CartController::updateCart');
 $routes->post('delete-cart', 'CartController::deleteCart');
+$routes->get('get-inital-cart', 'CartController::getIntialCart');
 
 $routes->post('insert-buynow', 'CartController::insertBuynow');
 
